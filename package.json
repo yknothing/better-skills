@@ -1,0 +1,33 @@
+{
+  "name": "better-skills",
+  "version": "1.0.0",
+  "description": "A curated toolkit of elite Agent Skills for software development, product design, visual design, and content creation — built by studying the best skill repositories across the industry",
+  "main": "skills.json",
+  "files": [
+    "skills/",
+    "skills.json",
+    "CLAUDE.md",
+    "external/",
+    "docs/patterns/",
+    "tools/"
+  ],
+  "scripts": {
+    "sync": "bash tools/sync.sh",
+    "validate": "bash tools/validate.sh",
+    "eval": "node evaluation/harness/runner.js"
+  },
+  "keywords": [
+    "agent-skills",
+    "claude-code",
+    "cursor",
+    "codex",
+    "ai-agent",
+    "skills",
+    "prompt-engineering"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yknothing/better-skills"
+  }
+}

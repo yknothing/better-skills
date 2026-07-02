@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "overall_pass": {
+      "type": "boolean",
+      "description": "Whether the skill output passes all critical requirements"
+    },
+    "score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Overall quality score (0-100)"
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for this check (e.g., 'vite-scaffold', 'tailwind-config', 'component-structure')"
+          },
+          "pass": {
+            "type": "boolean",
+            "description": "Whether this specific check passed"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Specific evidence or explanation for the pass/fail determination"
+          }
+        },
+        "required": ["id", "pass", "notes"],
+        "additionalProperties": false
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "properties": {
+        "correctness": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "How correct is the output relative to requirements?"
+        },
+        "completeness": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Are all required artifacts present?"
+        },
+        "style_adherence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Does the output follow style conventions?"
+        },
+        "constraint_satisfaction": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Are all MUST/SHOULD constraints satisfied?"
+        },
+        "edge_case_handling": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "How well are edge cases handled?"
+        }
+      },
+      "required": ["correctness", "completeness", "style_adherence", "constraint_satisfaction", "edge_case_handling"],
+      "additionalProperties": false
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "major", "minor", "cosmetic"]
+          },
+          "description": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string",
+            "description": "File path or artifact where the issue was found"
+          }
+        },
+        "required": ["severity", "description"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["overall_pass", "score", "checks", "dimensions"],
+  "additionalProperties": false
+}

@@ -1,0 +1,20 @@
+# External skill sources — referenced, not copied.
+# Sync to local agent directory: bash tools/sync.sh [--target claude|codex|cursor]
+
+sources:
+  superpowers:
+    name: Superpowers
+    repo: https://github.com/obra/superpowers
+    ref: main
+    skills_path: skills
+    skills:
+      - brainstorming
+
+  anthropic-agent-skills:
+    name: Anthropic Agent Skills
+    repo: https://github.com/anthropics/skills
+    ref: main
+    skills_path: skills
+    skills:
+      - prose-craft
+      - pptx

@@ -1,0 +1,51 @@
+{
+  "name": "better-skills",
+  "version": "1.0.0",
+  "description": "A curated toolkit of elite Agent Skills. See CLAUDE.md for the full methodology.",
+  "batches": {
+    "batch-1": {
+      "theme": "Foundation — Core capabilities + meta-skills",
+      "date": "2026-06",
+      "status": "active",
+      "skills": [
+        "brainstorming",
+        "requirements-engineering",
+        "prose-craft",
+        "visual-design",
+        "social-card",
+        "article-illustrate",
+        "pptx",
+        "dev-flow",
+        "skill-health",
+        "skill-bootstrap"
+      ]
+    },
+    "batch-2": {
+      "theme": "Deepen & Expand — Audio, product design, debugging",
+      "status": "planned",
+      "skills": []
+    },
+    "batch-3": {
+      "theme": "Creative Suite — Video, data viz, brand, landing pages",
+      "status": "planned",
+      "skills": []
+    }
+  },
+  "skills": {
+    "self-developed": {},
+    "external": {}
+  },
+  "domains": [
+    "engineering",
+    "design",
+    "content",
+    "general",
+    "meta"
+  ],
+  "depth_tiers": {
+    "deep": "High frequency + high failure cost — CE-style exhaustive precision",
+    "standard": "Normal frequency + moderate cost — Anthropic-style principles + hard gates",
+    "lightweight": "High frequency + low failure cost — Cursor-style minimal, one thing well"
+  },
+  "sources": {}
+}
