@@ -79,7 +79,13 @@ parse_sources() {
 COUNT=0
 while IFS='|' read -r source repo ref skills_path skill; do
   SOURCE_DIR="$CACHE_DIR/$source"
-  SKILL_SRC="$SOURCE_DIR/$skills_path/$skill"
+  # skills_path: "." means the repo root IS the skill directory (single-skill repos
+  # like koganei/learn-anything-skill where SKILL.md lives at the repo root).
+  if [ "$skills_path" = "." ]; then
+    SKILL_SRC="$SOURCE_DIR"
+  else
+    SKILL_SRC="$SOURCE_DIR/$skills_path/$skill"
+  fi
   SKILL_DST="$SKILLS_DIR/$skill"
 
   echo ""

@@ -1,177 +1,166 @@
 # Pattern Library
 
-> 从 10+ 个顶级 Agent Skills 仓库中提取的 50+ 可复用设计模式
-> 按功能分为 8 个类别
+A library of reusable design patterns extracted from 10 top Agent Skills repositories. Phase 1.C of the project: each pattern lives in its own machine-readable file under `<NN-category>/<slug>.md`, with frontmatter, source attribution, and reverse links to the skills that use it.
 
----
+**59 patterns** in 8 categories — **22 active** (referenced by skills in `skills.json`) + **37 proposed** (extracted from upstream research, not yet validated by an in-repo skill).
 
-## 1. 行为约束模式（Behavior Constraint）
+## How this library works
 
-防止 agent 跳过关键步骤或走捷径。
+- **One file per pattern**, named by its kebab-case slug. Filename matches the `name:` frontmatter field, which is the same string `skills.json` references.
+- **Status**:
+  - `active` — at least one skill in `skills.json` references this pattern.
+  - `proposed` — extracted from research; awaiting first real use.
+  - `deprecated` — kept for history; new skills should not reference. (None today.)
+- **Schema**: see [`_schema.md`](./_schema.md) for required frontmatter and body sections.
+- **Authoring**: copy [`_template.md`](./_template.md) into the right category directory.
+- **Validation**: run `bash tools/check-patterns.sh` from the repo root. It detects ghost references (a skill cites a pattern with no file), orphan active patterns (a file claims `active` but no skill cites it), filename/frontmatter mismatches, and missing required fields. Phase 2.C automates this gate.
 
-| 模式 | 描述 | 来源 |
-|------|------|------|
-| **格式显著性门禁** | 用 XML 标签/全大写创建视觉上不可忽视的屏障 | Anthropic |
-| **反模式预命名** | 提前命名 agent 可能使用的合理化借口 | Anthropic, CE |
-| **硬规则前置** | 关键约束在流程描述之前，确保 agent 在读取流程前已被约束 | Cursor |
-| **精确终端状态** | 明确命名下一步 + 明确列出禁止的操作 | Anthropic, Cursor |
-| **Karpathy 行为护栏** | Think before coding, Simplicity first, Surgical changes, Goal-driven execution | Karpathy |
-| **反合理化预命名** | 精确列举 agent 会使用的借口让 agent 自我识别 | Addy Osmani, CE |
+## Categories
 
-## 2. 交互设计模式（Interaction Design）
+### 01. 行为约束模式 — Behavior Constraint
+*Prevent the agent from skipping critical steps or taking shortcuts.*
 
-控制 agent 如何与用户交互。
+| Pattern | Status | Sources | Used by |
+|---------|:-:|---------|---------|
+| [`anti-pattern-pre-naming`](./01-behavior-constraint/anti-pattern-pre-naming.md) — 反模式预命名 | active | Anthropic, CE, Addy Osmani | requirements-engineering, prose-craft, skill-health |
+| [`format-significance-gates`](./01-behavior-constraint/format-significance-gates.md) — 格式显著性门禁 | active | Anthropic | requirements-engineering, visual-design |
+| [`hard-rules-first`](./01-behavior-constraint/hard-rules-first.md) — 硬规则前置 | active | Cursor | (6 skills) |
+| [`karpathy-behavior-guardrails`](./01-behavior-constraint/karpathy-behavior-guardrails.md) — Karpathy 行为护栏 | proposed | Karpathy | — |
+| [`precise-terminal-states`](./01-behavior-constraint/precise-terminal-states.md) — 精确终端状态 | proposed | Anthropic, Cursor | — |
 
-| 模式 | 描述 | 来源 |
-|------|------|------|
-| **一次一个问题** | 每条消息只问一个问题，避免稀释回答质量 | Anthropic, CE |
-| **独立消息规则** | 重要信息必须独占一条消息，不与其他内容混合 | Anthropic |
-| **每次决策重判断** | 不因"已启用"而默认使用某功能，每次决策都重新判断 | Anthropic |
-| **阻塞式提问工具** | 优先使用平台的 AskUserQuestion 等阻塞式工具 | CE |
-| **Rigor Gap 探测** | 系统性检测 6 种需求缺口（Evidence/Specificity/Counterfactual/Attachment/Durability/Stakeholder） | CE |
-| **Scoping Synthesis** | 内部三桶草稿（Stated/Inferred/Out of scope）→ 用户确认 | CE, Gstack |
+### 02. 交互设计模式 — Interaction Design
+*Control how the agent talks to the user.*
 
-## 3. 质量保证模式（Quality Assurance）
+| Pattern | Status | Sources | Used by |
+|---------|:-:|---------|---------|
+| [`blocking-question-tools`](./02-interaction-design/blocking-question-tools.md) — 阻塞式提问工具 | active | CE | requirements-engineering |
+| [`one-question-at-a-time`](./02-interaction-design/one-question-at-a-time.md) — 一次一个问题 | active | Anthropic, CE | requirements-engineering, prose-craft |
+| [`per-decision-rejudgment`](./02-interaction-design/per-decision-rejudgment.md) — 每次决策重判断 | proposed | Anthropic | — |
+| [`rigor-gap`](./02-interaction-design/rigor-gap.md) — Rigor Gap 探测 | active | CE | requirements-engineering |
+| [`scoping-synthesis`](./02-interaction-design/scoping-synthesis.md) — Scoping Synthesis | active | CE, Gstack | requirements-engineering |
+| [`standalone-message-rule`](./02-interaction-design/standalone-message-rule.md) — 独立消息规则 | proposed | Anthropic | — |
 
-确保技能产出质量。
+### 03. 质量保证模式 — Quality Assurance
+*Make sure what the skill ships is actually good.*
 
-| 模式 | 描述 | 来源 |
-|------|------|------|
-| **自我审查清单** | Placeholder scan → Consistency → Scope → Ambiguity | Anthropic, CE |
-| **多视角审查面板** | 从多个角色视角（CEO/Design/Engineering/DX）审查同一产出 | Gstack, CE |
-| **Confidence Anchor** | 离散锚点（0/25/50/75/100）替代连续分数，防止假精度 | CE |
-| **独立验证 Pass** | 独立验证 agent 检查发现，不参与原始审查 | CE |
-| **Cross-reviewer Agreement** | 2+ 审查者同意时置信度 +1 级 | CE |
-| **验证规则 + 自动路由** | 检测反模式并自动推荐修复路径 | Vercel |
-| **两层测试系统** | 免费静态验证 + 付费动态评估（LLM judge + E2E） | Gstack |
-| **分级反模式规则** | P0（必须修复）/ P1（应该修复）/ P2（最好修复） | Open Design |
-| **交互状态强制** | 要求实现 Loading/Empty/Error/Active 完整循环 | Taste Skill |
+| Pattern | Status | Sources | Used by |
+|---------|:-:|---------|---------|
+| [`confidence-anchors`](./03-quality-assurance/confidence-anchors.md) — Confidence Anchor | active | CE | visual-design, skill-health |
+| [`cross-reviewer-agreement`](./03-quality-assurance/cross-reviewer-agreement.md) — Cross-reviewer Agreement | proposed | CE | — |
+| [`independent-verification-pass`](./03-quality-assurance/independent-verification-pass.md) — 独立验证 Pass | proposed | CE | — |
+| [`interaction-state-enforcement`](./03-quality-assurance/interaction-state-enforcement.md) — 交互状态强制 | active | Taste Skill | visual-design |
+| [`multi-perspective-review`](./03-quality-assurance/multi-perspective-review.md) — 多视角审查面板 | active | Gstack, CE | (3 skills) |
+| [`self-review-checklist`](./03-quality-assurance/self-review-checklist.md) — 自我审查清单 | active | Anthropic, CE | (4 skills) |
+| [`tiered-anti-pattern-rules`](./03-quality-assurance/tiered-anti-pattern-rules.md) — 分级反模式规则 | proposed | Open Design | — |
+| [`two-layer-testing`](./03-quality-assurance/two-layer-testing.md) — 两层测试系统 | proposed | Gstack | — |
+| [`verification-rules`](./03-quality-assurance/verification-rules.md) — 验证规则 + 自动路由 | active | Vercel | skill-health |
 
-## 4. 上下文管理模式（Context Management）
+### 04. 上下文管理模式 — Context Management
+*Keep the skill's token footprint honest.*
 
-管理技能在上下文窗口中的 token 消耗。
+| Pattern | Status | Sources | Used by |
+|---------|:-:|---------|---------|
+| [`context-as-commons`](./04-context-management/context-as-commons.md) — 上下文是公共品 | proposed | Anthropic | — |
+| [`evidence-dossier`](./04-context-management/evidence-dossier.md) — Evidence Dossier | proposed | CE | — |
+| [`load-stub`](./04-context-management/load-stub.md) — Load Stub | proposed | CE | — |
+| [`progressive-disclosure`](./04-context-management/progressive-disclosure.md) — 渐进式披露 | active | Anthropic, CE | (7 skills) |
+| [`template-generation`](./04-context-management/template-generation.md) — 模板生成 | proposed | Gstack | — |
 
-| 模式 | 描述 | 来源 |
-|------|------|------|
-| **渐进式披露** | 三级加载：元数据 → SKILL.md body → 引用文件（按需） | Anthropic, CE |
-| **Load Stub** | 内容移到引用文件后，在主体中留下精确的加载指令 | CE |
-| **上下文是公共品** | 每个 token 都在排挤用户对话和其他技能——简洁是道德责任 | Anthropic |
-| **Evidence Dossier** | 侦察 agent 收集的批量证据写入暂存区而非内联返回 | CE |
-| **模板生成** | 用代码（.tmpl → gen-skill-docs.ts → SKILL.md）生成技能 | Gstack |
+### 05. 任务路由模式 — Task Routing
+*Decide which skill or which pipeline stage handles what.*
 
-## 5. 任务路由模式（Task Routing）
+| Pattern | Status | Sources | Used by |
+|---------|:-:|---------|---------|
+| [`depth-tiers`](./05-task-routing/depth-tiers.md) — 深度分层 | proposed | CE | — |
+| [`headless-mode`](./05-task-routing/headless-mode.md) — Headless Mode | proposed | CE, Gstack | — |
+| [`multi-signal-trigger`](./05-task-routing/multi-signal-trigger.md) — 多信号触发 | proposed | Vercel | — |
+| [`pipeline-architecture`](./05-task-routing/pipeline-architecture.md) — 管道架构 | active | CE, Anthropic | dev-flow |
+| [`task-domain-classification`](./05-task-routing/task-domain-classification.md) — 任务域分类 | proposed | CE | — |
+| [`three-layer-separation`](./05-task-routing/three-layer-separation.md) — 三层分离架构 | proposed | Addy Osmani | — |
+| [`trigger-condition-separation`](./05-task-routing/trigger-condition-separation.md) — 触发条件分离 | proposed | Anthropic, Superpowers | — |
 
-控制 agent 如何选择技能和工作流。
+### 06. 执行控制模式 — Execution Control
+*Govern how the agent actually does the work.*
 
-| 模式 | 描述 | 来源 |
-|------|------|------|
-| **多信号触发** | 通过路径/命令/对话多个信号检测技能需求 | Vercel |
-| **触发条件分离** | description 只写触发条件，不写工作流总结（CSO 原则） | Anthropic, Superpowers |
-| **管道架构** | 明确的上游→下游技能链，每阶段产出耐用工件 | CE, Anthropic |
-| **任务域分类** | 区分软件任务/非软件任务/快速帮助 | CE |
-| **深度分层** | Lightweight/Standard/Deep 三级，根据任务复杂度选层级 | CE |
-| **Headless Mode** | 无值守运行，保守推迟模糊决策 | CE, Gstack |
-| **三层分离架构** | Skills/Personas/Commands 各司其职 | Addy Osmani |
+| Pattern | Status | Sources | Used by |
+|---------|:-:|---------|---------|
+| [`async-verification`](./06-execution-control/async-verification.md) — 异步验证 | proposed | CE | — |
+| [`continuous-execution`](./06-execution-control/continuous-execution.md) — 连续执行 | proposed | Superpowers | — |
+| [`execution-posture-signals`](./06-execution-control/execution-posture-signals.md) — 执行姿态信号 | active | CE, Superpowers | dev-flow |
+| [`freedom-spectrum`](./06-execution-control/freedom-spectrum.md) — 自由度框架 | proposed | Anthropic | — |
+| [`model-tiering`](./06-execution-control/model-tiering.md) — 模型分层 | proposed | CE, Superpowers | — |
+| [`parallel-safety-check`](./06-execution-control/parallel-safety-check.md) — Parallel Safety Check | proposed | CE | — |
+| [`performance-guardrails`](./06-execution-control/performance-guardrails.md) — 性能护栏 | proposed | Taste Skill | — |
+| [`precise-commands`](./06-execution-control/precise-commands.md) — 精确命令替代模糊指令 | active | Cursor | dev-flow, social-card |
+| [`safety-hook-interception`](./06-execution-control/safety-hook-interception.md) — 安全 Hook 拦截 | proposed | Gstack | — |
+| [`sentinel-mechanism`](./06-execution-control/sentinel-mechanism.md) — 哨兵机制 | proposed | Cursor | — |
+| [`system-level-test-checks`](./06-execution-control/system-level-test-checks.md) — 系统级测试检查 | proposed | CE | — |
+| [`worktree-isolation`](./06-execution-control/worktree-isolation.md) — Worktree 隔离 | proposed | CE | — |
 
-## 6. 执行控制模式（Execution Control）
+### 07. 知识管理模式 — Knowledge Management
+*Capture, organize, and reuse knowledge.*
 
-控制 agent 如何执行任务。
+| Pattern | Status | Sources | Used by |
+|---------|:-:|---------|---------|
+| [`concept-glossary`](./07-knowledge-management/concept-glossary.md) — 概念词汇表 | proposed | CE | — |
+| [`cross-session-decision-memory`](./07-knowledge-management/cross-session-decision-memory.md) — 跨会话决策记忆 | proposed | Gstack | — |
+| [`knowledge-distillation-pipeline`](./07-knowledge-management/knowledge-distillation-pipeline.md) — 知识沉淀管道 | proposed | CE | — |
+| [`knowledge-graph-linking`](./07-knowledge-management/knowledge-graph-linking.md) — 知识图谱关联 | proposed | Vercel | — |
+| [`pattern-library`](./07-knowledge-management/pattern-library.md) — 模式库 | active | CE | skill-bootstrap |
+| [`upstream-doc-sync`](./07-knowledge-management/upstream-doc-sync.md) — 上游文档同步 | proposed | Vercel | — |
 
-| 模式 | 描述 | 来源 |
-|------|------|------|
-| **自由度框架** | 根据任务脆弱性匹配指令精确度（高/中/低自由度） | Anthropic |
-| **Worktree 隔离** | 并行子 agent 在独立 worktree 中工作，避免文件冲突 | CE |
-| **Parallel Safety Check** | 并行派发前构建 file-to-unit 映射，检测文件重叠 | CE |
-| **异步验证** | 在用户思考时派发验证 agent，不增加感知延迟 | CE |
-| **执行姿态信号** | 轻量级信号（test-first/characterization-first）而非微步骤展开 | CE, Superpowers |
-| **哨兵机制** | 唯一标识符防止不同循环的输出互相干扰 | Cursor |
-| **安全 Hook 拦截** | 在操作系统层面（PreToolUse hook）拦截破坏性命令 | Gstack |
-| **系统级测试检查** | 5 个跨层问题（触发链/真实链/孤立状态/其他接口/错误策略一致性） | CE |
-| **连续执行** | 不在任务间暂停或确认，减少用户打断 | Superpowers |
-| **模型分层** | 机械任务用便宜模型，架构/审查用最强模型 | CE, Superpowers |
-| **精确命令替代模糊指令** | 用具体 bash 命令（git stash create + git update-ref）替代"做 X" | Cursor |
-| **性能护栏** | API 级别的性能约束（useMotionValue 而非 useState 用于动画） | Taste Skill |
+### 08. 技能创建模式 — Skill Creation
+*Meta-patterns: how to design and create the skills themselves.*
 
-## 7. 知识管理模式（Knowledge Management）
+| Pattern | Status | Sources | Used by |
+|---------|:-:|---------|---------|
+| [`80-20-design-rules`](./08-skill-creation/80-20-design-rules.md) — 80/20 设计规则 | active | Open Design | visual-design |
+| [`beta-skill-pattern`](./08-skill-creation/beta-skill-pattern.md) — Beta Skill 模式 | proposed | CE | — |
+| [`exhaustive-precision`](./08-skill-creation/exhaustive-precision.md) — 穷举式精确 | proposed | CE | — |
+| [`minimal-precision`](./08-skill-creation/minimal-precision.md) — 极简精确 | active | Cursor | social-card |
+| [`named-anti-patterns`](./08-skill-creation/named-anti-patterns.md) — 命名禁止模式 | active | Taste Skill | visual-design |
+| [`platform-degradation-rules`](./08-skill-creation/platform-degradation-rules.md) — 平台降级规则 | active | CE | skill-bootstrap |
+| [`quantifiable-design-knobs`](./08-skill-creation/quantifiable-design-knobs.md) — 可量化设计旋钮 | proposed | Taste Skill | — |
+| [`soul-test`](./08-skill-creation/soul-test.md) — "灵魂" 测试 | proposed | Open Design | — |
+| [`tdd-skill-creation`](./08-skill-creation/tdd-skill-creation.md) — TDD 技能创建 | active | Superpowers | skill-bootstrap |
 
-捕获、组织和复用知识。
+## Sources
 
-| 模式 | 描述 | 来源 |
-|------|------|------|
-| **知识沉淀管道** | 结构化捕获问题解决方案（Bug track / Knowledge track） | CE |
-| **模式库** | 从多个解决方案中泛化的更广泛规则 | CE |
-| **概念词汇表** | 项目共享领域词汇（CONCEPTS.md） | CE |
-| **上游文档同步** | 从官方文档自动同步最新信息 | Vercel |
-| **知识图谱关联** | 技能之间的结构化交叉引用（upgradeToSkill） | Vercel |
-| **跨会话决策记忆** | 附加式、事件溯源的决策存储（decisions.jsonl） | Gstack |
-
-## 8. 技能创建模式（Skill Creation）
-
-用于设计和创建技能本身的元模式。
-
-| 模式 | 描述 | 来源 |
-|------|------|------|
-| **TDD 技能创建** | RED（基线失败）→ GREEN（合规）→ REFACTOR（堵漏洞） | Superpowers |
-| **极简精确** | 用最少行数完成完整工作流（13 行 babysit） | Cursor |
-| **穷举式精确** | 每个可能的歧义点都被显式处理 | CE |
-| **Beta Skill 模式** | 稳定技能旁创建 -beta 并行副本进行试验 | CE |
-| **平台降级规则** | 当平台不支持某功能时的回退策略 | CE |
-| **可量化设计旋钮** | 用数值参数（1-10）替代模糊风格描述 | Taste Skill |
-| **命名禁止模式** | 给 AI 审美偏差起名字（THE LILA BAN, NO Inter Font） | Taste Skill |
-| **80/20 设计规则** | 80% 验证模式 + 20% 独特选择 | Open Design |
-| **"灵魂" 测试** | 截图中能识别出哪个产品 → 有灵魂；不能 → 是模板 | Open Design |
-
----
-
-## 模式组合示例
-
-### 高频代码审查技能
-```
-格式显著性门禁 + 多视角审查面板 + Confidence Anchor + 独立验证 Pass + 渐进式披露
-```
-
-### 轻量级开发辅助技能
-```
-极简精确 + 硬规则前置 + 精确命令替代模糊指令 + 哨兵机制
-```
-
-### 需求分析/头脑风暴技能
-```
-Rigor Gap 探测 + 一次一个问题 + 阻塞式提问工具 + 自我审查清单 + Scoping Synthesis
-```
-
-### 知识沉淀技能
-```
-知识沉淀管道 + 模式库 + 概念词汇表 + 上游文档同步
-```
-
----
-
-## 模式选择决策树
-
-```
-任务特征评估：
-├─ 高频使用（每天 10+ 次）→ 穷举式精确 + 多视角审查
-├─ 高失败成本（部署/安全）→ 多视角审查 + 独立验证 + Confidence Anchor
-├─ 需要探索/对话 → Rigor Gap + 一次一个问题 + Scoping Synthesis
-├─ 简单操作 → 极简精确 + 硬规则前置 + 精确命令
-├─ 知识需要积累 → 知识沉淀管道 + 模式库 + 概念词汇表
-└─ 多技能协作 → 管道架构 + Headless Mode + 渐进式披露
-```
-
----
-
-## 来源缩写
-
-| 缩写 | 全称 |
-|------|------|
-| Anthropic | Anthropic 官方内置 skills |
-| Cursor | Cursor 官方内置 skills |
-| CE | Compound Engineering Plugin (EveryInc) |
-| Gstack | Gstack (Garry Tan) |
-| Vercel | Vercel Plugin |
+| Code | Repository / origin |
+|------|---------------------|
+| Anthropic   | Anthropic-built skills (Claude Code skill-creator, brainstorming, etc.) |
+| Cursor      | Cursor-built skills (`~/.cursor/skills-cursor/`) |
+| CE          | Compound Engineering plugin (EveryInc) |
+| Gstack      | Gstack (Garry Tan) |
+| Vercel      | Vercel plugin |
 | Superpowers | Superpowers (obra) |
-| Karpathy | Karpathy Guidelines |
+| Karpathy    | Karpathy guidelines (forrestchang/andrej-karpathy-skills) |
 | Taste Skill | Taste Skill (Leonxlnx) |
 | Open Design | Open Design (nexu-io) |
 | Addy Osmani | Addy Osmani Agent Skills |
+
+URL citations for each source land in Phase 3 of the project roadmap. See `docs/research/` for the underlying analysis files.
+
+## Selecting patterns for a new skill
+
+A first-pass decision tree (refine inside the skill itself):
+
+```
+Task shape:
+├─ High frequency, high failure cost  → exhaustive-precision + multi-perspective-review + confidence-anchors
+├─ High failure cost (deploy/security) → multi-perspective-review + independent-verification-pass + verification-rules
+├─ Conversational discovery           → rigor-gap + one-question-at-a-time + scoping-synthesis + self-review-checklist
+├─ Simple imperative operation        → minimal-precision + hard-rules-first + precise-commands
+├─ Knowledge that needs to compound   → knowledge-distillation-pipeline + pattern-library + concept-glossary
+└─ Multi-skill orchestration          → pipeline-architecture + headless-mode + progressive-disclosure
+```
+
+Always pair the chosen patterns with [`hard-rules-first`](./01-behavior-constraint/hard-rules-first.md) and [`progressive-disclosure`](./04-context-management/progressive-disclosure.md) — they are the two patterns that benefit nearly every skill regardless of category.
+
+## Related
+
+- [`tools/check-patterns.sh`](../../tools/check-patterns.sh) — pattern library integrity checker
+- [`_schema.md`](./_schema.md) — schema for individual pattern files
+- [`_template.md`](./_template.md) — copy-paste starting point
+- [`docs/research/`](../research/) — the upstream analyses these patterns were extracted from
+- [`skills.json`](../../skills.json) — canonical registry; the source of truth for which patterns are `active`

@@ -16,5 +16,32 @@ sources:
     ref: main
     skills_path: skills
     skills:
-      - prose-craft
       - pptx
+
+  mattpocock-skills:
+    name: Matt Pocock Skills
+    repo: https://github.com/mattpocock/skills
+    ref: main
+    skills_path: skills/productivity
+    skills:
+      - grill-me
+      - grilling
+      - writing-great-skills
+
+  learn-anything-skill:
+    name: Learn Anything Skill (koganei)
+    repo: https://github.com/koganei/learn-anything-skill
+    ref: main
+    skills_path: .
+    skills:
+      - learn-skill
+
+  emilkowalski-skills:
+    name: Emil Kowalski Skills
+    repo: https://github.com/emilkowalski/skills
+    ref: main
+    skills_path: skills
+    skills:
+      - emil-design-eng
+      - review-animations
+      - animation-vocabulary

@@ -36,6 +36,7 @@
 | **Karpathy Guidelines** | 社区/个人 | `karpathy-guidelines` | 对抗 LLM 系统性弱点的行为约束 |
 | **Taste Skill** | 社区/个人 | `taste-skill-v1` | 可量化设计旋钮 + 禁止模式 |
 | **Open Design** | 社区/开源 | `anti-ai-slop.md` | 分级反模式规则（P0/P1/P2） |
+| **Emil Kowalski** | 个人/Design Eng | `emil-design-eng`, `review-animations` | 动效 craft + 严格 diff 审查 + 术语表三件套 |
 
 ### 工程纪律类
 

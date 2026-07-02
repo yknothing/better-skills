@@ -1,91 +1,159 @@
 # Better-Skills
 
-A curated toolkit of elite Agent Skills — built by systematically studying the top 10 skill repositories across the industry and extracting what makes them work.
+A curated toolkit of Agent Skills, built by studying top skill repositories across the industry.
 
-## What Makes This Different
+- **Status: Phase 2 shipped.** This repo currently ships 8 self-developed `SKILL.md` files plus 9 declared external references, a 59-pattern machine-readable library under `docs/patterns/`, a zero-dependency CLI (`bin/better-skills.js`) for installing skills, and a 4-gate review pipeline that is now mechanized end-to-end: Gate 1 (`tools/validate.js`), Gate 2 (`tools/peer-review.js`), Gate 3 (`tools/pattern-alignment.js` + `tools/check-patterns.sh`), Gate 4 (`evaluation/harness/runner.js`). See [Roadmap](#roadmap) for what's deferred (LLM-judge / A/B tests / npm publish). Content claims that haven't been verified by the evaluation pipeline yet are explicitly marked **TBD**.
 
-Most skill collections are flat lists. Better-Skills is a **curated toolkit with a methodology**:
+## What's actually in here today
 
-1. **STUDY** — Deeply analyze elite skills from the best repositories
-2. **EXTRACT** — Identify reusable patterns and techniques
-3. **DEVELOP** — Build custom skills combining the best patterns
-4. **REVIEW** — Every skill passes a 4-gate review pipeline
-5. **DEPLOY** — Register, version, and sync
+- **8 self-developed skills** under `skills/` (~2,500 lines total): `requirements-engineering`, `visual-design`, `dev-flow`, `prose-craft`, `article-illustrate`, `social-card`, `skill-bootstrap`, `skill-health`
+- **9 external references** declared in `external/sources.yaml` (`brainstorming`, `pptx`, `grill-me`, `grilling`, `writing-great-skills`, `learn-skill`, `emil-design-eng`, `review-animations`, `animation-vocabulary`); `bash tools/sync.sh` clones the upstream repos and symlinks them under `external/`
+- **Pattern index** at `docs/patterns/README.md` — currently a single-file index of ~60 named patterns; per-pattern files are coming in Phase 1.C
+- **Research notes** at `docs/research/` — analysis of 12 top skill repositories, including [`mattpocock-analysis.md`](docs/research/mattpocock-analysis.md), [`learn-skill-analysis.md`](docs/research/learn-skill-analysis.md), and [`emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md). Other citations are missing today and will be added in Phase 3.
+- **Tooling**: `tools/validate.sh` (Gate 1) and `tools/sync.sh` (external sync). `evaluation/harness/runner.js` exists but is not wired up yet — see Roadmap.
 
-## Batch 1: Foundation (10 Skills)
+## Core methodology
 
-| # | Skill | Strategy | Depth | Domain |
-|---|-------|----------|-------|--------|
-| 1 | `brainstorming` | Reference | — | General |
-| 2 | `requirements-engineering` | Build | Deep | General |
-| 3 | `prose-craft` | Reference | — | Content |
-| 4 | `visual-design` | Build | Deep | Design |
-| 5 | `social-card` | Build | Lightweight | Design |
-| 6 | `article-illustrate` | Build | Standard | Content |
-| 7 | `pptx` | Reference | — | Design |
-| 8 | `dev-flow` | Build | Standard | Engineering |
-| 9 | `skill-health` | Meta | Standard | Meta |
-| 10 | `skill-bootstrap` | Meta | Standard | Meta |
+`STUDY → EXTRACT → DEVELOP → REVIEW → DEPLOY`. Full description and review-pipeline definitions live in [`CLAUDE.md`](CLAUDE.md).
 
-See [skills.json](skills.json) for the authoritative registry.
+## Batch 1: Foundation
 
-## Scenario Coverage
+| # | Skill | Strategy | Tier | Domain |
+|---|-------|----------|------|--------|
+| 1 | `brainstorming` | Reference | standard | General |
+| 2 | `requirements-engineering` | Build | deep | General |
+| 3 | `prose-craft` | Build | standard | Content |
+| 4 | `visual-design` | Build | deep | Design |
+| 5 | `social-card` | Build | lightweight | Design |
+| 6 | `article-illustrate` | Build | standard | Content |
+| 7 | `pptx` | Reference | standard | Design |
+| 8 | `dev-flow` | Build | standard | Engineering |
+| 9 | `skill-health` | Build | standard | Meta |
+| 10 | `skill-bootstrap` | Build | standard | Meta |
+| 11 | `grill-me` | Reference | standard | General |
+| 12 | `grilling` | Reference | standard | General |
+| 13 | `writing-great-skills` | Reference | standard | Meta |
+| 14 | `learn-skill` | Reference | deep | General |
+| 15 | `emil-design-eng` | Reference | deep | Design |
+| 16 | `review-animations` | Reference | standard | Design |
+| 17 | `animation-vocabulary` | Reference | lightweight | Design |
 
-| Scenario | Primary Skill | Coverage |
-|----------|--------------|----------|
-| Software Development | `dev-flow` | 95% |
-| Requirements Analysis | `requirements-engineering` | 95% |
-| Product Design | `requirements-engineering` | 85% |
-| Visual Design | `visual-design` | 100% |
-| PPT Design | `pptx` (Reference) | 90% |
-| Social Media Cards | `social-card` | 90% |
-| Writing (all types) | `prose-craft` (Reference) | 100% |
-| Brainstorming | `brainstorming` (Reference) | 100% |
-| Article Illustration | `article-illustrate` | 90% |
-| Podcast Production | `prose-craft` (script) | 60% → Batch 2 |
+`Strategy: Build` means the skill is implemented in this repo (`skills/<name>/SKILL.md`). `Strategy: Reference` means we curate the upstream skill via `external/sources.yaml` and pull it on demand. `grill-me` is a user-invoked wrapper that delegates to the model-invoked `grilling`; both come from [mattpocock/skills](https://github.com/mattpocock/skills) and must be synced together. `writing-great-skills` is a reference skill (no steps, all in `GLOSSARY.md`) covering skill-writing vocabulary. `learn-skill` is a CE-style exhaustive sample from [koganei/learn-anything-skill](https://github.com/koganei/learn-anything-skill), kept as a deep-tier reference of the "exhaustive spec" school. Motion craft references (`emil-design-eng`, `review-animations`, `animation-vocabulary`) come from [emilkowalski/skills](https://github.com/emilkowalski/skills) and pair with Build skill `visual-design` — see [`docs/research/emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md).
 
-## Quick Start
+See [`skills.json`](skills.json) for the authoritative registry.
+
+## Scenario coverage (TBD — pending baseline tests)
+
+A coverage matrix with empirical pass-rates against `evaluation/datasets/batch-1-test-prompts.json` will land once Gate 4 (Baseline Test) is wired up in Phase 2.B. Earlier drafts of this README claimed specific coverage percentages without an evaluation pipeline behind them; those numbers have been removed.
+
+| Scenario | Primary Skill |
+|----------|--------------|
+| Software Development | `dev-flow` |
+| Requirements Analysis | `requirements-engineering` |
+| Visual Design | `visual-design` |
+| UI motion craft | `emil-design-eng` (Reference) |
+| Animation diff review | `review-animations` (Reference, user-invoked) |
+| Motion effect naming | `animation-vocabulary` (Reference) |
+| Social Media Cards | `social-card` |
+| Writing (general) | `prose-craft` |
+| Brainstorming | `brainstorming` (Reference) |
+| Article Illustration | `article-illustrate` |
+| PPT Design | `pptx` (Reference) |
+| Plan Stress-Test (interview) | `grill-me` / `grilling` (Reference) |
+| Skill Writing Vocabulary | `writing-great-skills` (Reference) |
+| Structured Learning Path | `learn-skill` (Reference) |
+
+## Quick start
+
+The CLI is shipped as the npm package [`@yknothing/better-skills`](https://www.npmjs.com/package/@yknothing/better-skills). You can run it directly with `npx` — no global install needed.
+
+> **Requires**: Node.js 18+, `git` (for cloning external skills), network access on first external-skill install.
 
 ```bash
-# Install via npm
-npm install better-skills
+# List all skills in the registry (8 self-developed + 9 external references)
+npx @yknothing/better-skills list
 
-# Sync external referenced skills
-npm run sync
+# Install a skill into your Claude Code skills directory
+npx @yknothing/better-skills add visual-design                  # → ~/.claude/skills/visual-design
+npx @yknothing/better-skills add emil-design-eng                # motion craft (Reference)
+npx @yknothing/better-skills add grill-me --target cursor      # → ~/.cursor/skills/grill-me
+npx @yknothing/better-skills add learn-skill                   # CE-style deep learning skill
 
-# Validate a skill
-npm run validate skills/<skill-name>
+# Manage installed skills
+npx @yknothing/better-skills list --installed                  # show what's installed
+npx @yknothing/better-skills update grill-me                   # re-pull latest from source
+npx @yknothing/better-skills remove visual-design
+
+# Targets: --target claude | codex | cursor | /abs/path
 ```
 
-## Repository Structure
+### Alternative: clone-and-symlink (offline / development)
+
+If you want to hack on the skills themselves, clone the repo and run the CLI locally — it behaves identically.
+
+```bash
+git clone https://github.com/yknothing/better-skills
+cd better-skills
+
+# Validate any skill against Gate 1
+bash tools/validate.sh skills/visual-design/
+
+# Run the CLI from source
+node bin/better-skills.js list
+node bin/better-skills.js add visual-design
+
+# Or pull all external references at once (brainstorming, pptx, grill-me, grilling, writing-great-skills, learn-skill, emil-design-eng, review-animations, animation-vocabulary)
+bash tools/sync.sh
+```
+
+### For maintainers: publishing
+
+```bash
+# Bump version in package.json, then:
+npm publish --access public
+
+# prepublishOnly hook auto-runs: list smoke test + tools/test-cli.sh (45 assertions)
+```
+
+## Repository structure
 
 ```
 better-skills/
-├── skills/                # Self-developed skills
+├── skills/                # Self-developed skills (8 today)
 ├── external/sources.yaml  # Declared external skill sources
 ├── skills.json            # Canonical registry
 ├── docs/
-│   ├── research/          # Deep analysis of 10+ top repos
-│   ├── patterns/          # 50+ extracted reusable patterns
-│   └── reviews/           # Skill review records
-├── evaluation/            # Quality evaluation harness
-└── tools/                 # Validation and sync scripts
+│   ├── research/          # Analysis of 12 top skill repos (citations TBD)
+│   ├── patterns/          # Pattern index (per-pattern files in Phase 1.C)
+│   └── reviews/           # Skill review records (Gates 1–3 today; Gate 4 TBD)
+├── evaluation/            # Evaluation harness + datasets (runner not yet wired)
+├── tools/                 # validate.sh (Gate 1) + sync.sh (external sync)
+└── LICENSE                # MIT
 ```
 
-## Key Documents
+## Roadmap
 
-- [CLAUDE.md](CLAUDE.md) — Project instructions and methodology
-- [skills.json](skills.json) — Authoritative skill registry
-- [docs/patterns/](docs/patterns/) — Extracted pattern library (50+ patterns, 8 categories)
-- [docs/research/](docs/research/) — Deep analysis of 10+ top skill repositories
+This repo is honest about its phase. Progress against the published plan:
 
-## Design Principles
+| Phase | Status | What it delivers |
+|-------|--------|------------------|
+| **0 — Integrity fixes** | ✅ complete | LICENSE; `validate.sh` `set -e` bug fixed; Potemkin dirs removed; unverified claims stripped; LLM-judge contradiction resolved |
+| **1.A — Bundled resources for 8 skills** | ✅ complete | Each skill grew a `references/`, `scripts/`, or `assets/` directory; main SKILL.md trimmed; tier + Test prompts unified |
+| **1.B — Unified gate / frontmatter conventions** | ✅ complete (in 1.A) | Single `<HARD-GATE>` syntax; consistent tier declaration; ≥3 test prompts per skill |
+| **1.C — Patterns library upgrade** | ✅ complete | 59 pattern files (22 active / 37 proposed) under `docs/patterns/`; `tools/check-patterns.sh` enforces 8 schema rules + ghost / orphan detection |
+| **1.D — `npx better-skills` CLI MVP** | ✅ complete | `add`, `list`, `remove`, `update`, `validate` subcommands; zero deps; copy semantics + manifest; `tools/test-cli.sh` runs 45 assertions including adversarial cases |
+| **2.A — `validate.sh` rewrite** | ✅ complete | Real Gate 1 as `tools/validate.js` (16 checks: frontmatter schema, name/dir match, pattern-reference integrity, gate-syntax conformance, bundled-resource existence); `validate.sh` is now a backward-compat wrapper |
+| **2.B — Evaluation harness wiring** | ✅ complete | Gate 4 runner (`evaluation/harness/runner.js`) — deterministic graders (Gate 1 pass-rate, test-prompt structure, happy/edge/adversarial coverage); LLM-judge / A/B deferred to Round 3 |
+| **2.C — Pattern alignment + peer review automation** | ✅ complete | Gate 2 (`tools/peer-review.js`: generates advocate/adversary prompts, validates review files against an 8-point schema) + Gate 3 (`tools/pattern-alignment.js`: registry↔body alignment, drift as warn, `--strict` to fail); `check-patterns.sh` retains ghost/orphan detection |
+| **3 — Research citations + first npm publish** | CLI ready; publish pending | Package `@yknothing/better-skills` is publish-ready (`prepublishOnly` hook runs `tools/test-cli.sh`); `npx` verified via local `npm pack`. First actual publish awaits npm credentials. URL citations across `docs/research/` still TBD. |
 
-- **Reference over Rebuild** — If a skill is already excellent, curate it, don't reimplement
-- **Depth Tiers** — Deep (CE-style), Standard (Anthropic-style), Lightweight (Cursor-style)
-- **Batch Iteration** — Batch 1 is 10 skills. Batch 2/3/N expand to new domains.
-- **Rigorous Review** — 4-gate pipeline (Self-Review → Peer Review → Pattern Alignment → Baseline Test)
+## Design principles
+
+- **Reference over rebuild** — If a skill is already excellent upstream, curate and sync; don't reimplement.
+- **Depth tiers** — `deep` (high-stakes, exhaustive precision), `standard` (principles + hard gates), `lightweight` (do one thing well).
+- **Batch iteration** — Batch 1 is 14 skills. Batch 2 / 3 are explicitly frozen until every Batch 1 skill passes all 4 review gates.
+- **Evidence over claims** — Quality numbers in this README must be backed by the evaluation pipeline. Anything not yet measured is marked TBD.
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE).

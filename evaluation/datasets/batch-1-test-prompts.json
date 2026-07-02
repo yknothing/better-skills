@@ -1,0 +1,214 @@
+{
+  "description": "Evaluation test prompts for all Batch 1 self-developed skills. Each skill has 3 prompts: happy path, edge case, adversarial.",
+  "created": "2026-06-17",
+  "skills": {
+    "requirements-engineering": {
+      "tier": "deep",
+      "evals": [
+        {
+          "id": "req-happy",
+          "name": "Happy path: structured feature request",
+          "prompt": "I need to build a notification system for our SaaS platform. Users should get notified when someone comments on their project, when they're @mentioned, and when a deadline is approaching. We have about 500 users, mostly engineering teams.",
+          "expected_behavior": "Agent follows the full pipeline: triage → understand → detect gaps → clarify one question at a time → synthesize scope → prioritize → document → self-review. Produces a structured requirements document with all 10 sections.",
+          "failure_mode_without_skill": "Agent jumps to solutioning (suggesting WebSocket, polling, specific tech) without understanding the problem, stakeholders, or constraints."
+        },
+        {
+          "id": "req-edge",
+          "name": "Edge case: vague one-liner",
+          "prompt": "Add dark mode to the app.",
+          "expected_behavior": "Agent recognizes this as a vague prompt (<3 sentences), enters Stage 1 triage, asks scope tier question, then proceeds through gap detection. Identifies Specificity gaps (what counts as 'dark mode'? system preference? toggle? both?).",
+          "failure_mode_without_skill": "Agent says 'OK' and starts writing CSS variables without clarifying scope, persistence, system preference behavior, or which surfaces need dark mode."
+        },
+        {
+          "id": "req-adversarial",
+          "name": "Adversarial: user tries to skip steps",
+          "prompt": "I need requirements for a payment integration. Just give me the bullet points, don't do the whole questionnaire thing.",
+          "expected_behavior": "Agent applies Refusal Protocol: names the risk (payment integration has compliance, security, failure mode implications), offers lighter alternative (targeted gap analysis), and if user still insists, documents the skip under Assumptions & Risks.",
+          "failure_mode_without_skill": "Agent complies and produces shallow bullet points missing critical compliance, error handling, and edge case requirements."
+        }
+      ]
+    },
+    "visual-design": {
+      "tier": "deep",
+      "evals": [
+        {
+          "id": "vis-happy",
+          "name": "Happy path: full landing page design",
+          "prompt": "Design a landing page for a developer tool called 'DeployKit' — it simplifies CI/CD pipeline configuration. Target audience: DevOps engineers and tech leads. Brand colors: we use a dark navy (#0F172A) and an emerald green (#10B981). Tone should be technical but approachable. Deliver as Tailwind HTML/CSS.",
+          "expected_behavior": "Agent follows all 10 phases. Identifies this as greenfield. Defines color system around provided navy+emerald (no LILA BAN). Picks non-Inter font. Defines typography/spacing tokens. Produces 80/20 design with distinctive 20%. Includes all interaction states. Runs multi-perspective review and Visual QA.",
+          "failure_mode_without_skill": "Agent produces a generic purple-gradient hero with Inter font, three-column card layout, and lorem ipsum placeholder text."
+        },
+        {
+          "id": "vis-edge",
+          "name": "Edge case: brownfield extension",
+          "prompt": "Add a settings page to our existing dashboard. We use shadcn/ui with Tailwind. Our primary color is #2563EB (blue-600), we use Inter font, and the design is already established. Just need the settings page to match.",
+          "expected_behavior": "Agent enters brownfield/extension mode. Catalogs existing tokens (blue, Inter, shadcn/ui conventions). Designs within existing language. Skips phases already defined. 80/20 becomes 80% existing system + 20% extension.",
+          "failure_mode_without_skill": "Agent creates a parallel design system with new colors, different fonts, or inconsistent spacing that clashes with the existing dashboard."
+        },
+        {
+          "id": "vis-adversarial",
+          "name": "Adversarial: triggering anti-patterns",
+          "prompt": "Design a modern SaaS homepage. Make it look really polished and professional. Use a nice gradient hero section and some feature cards to show what we do.",
+          "expected_behavior": "Agent detects the anti-pattern triggers: 'modern SaaS' + 'gradient hero' + 'feature cards' = high risk of LILA BAN + NO 3-COLUMN CARDS + NO INTER FONT. Agent gathers context (Phase 1) before designing, asks clarifying questions one at a time, and produces a distinctive 80/20 design that avoids all named anti-patterns.",
+          "failure_mode_without_skill": "Agent produces a purple-to-blue gradient hero with Inter font, three generic feature cards with emoji icons, and lorem ipsum text — the canonical AI slop template."
+        }
+      ]
+    },
+    "prose-craft": {
+      "tier": "standard",
+      "evals": [
+        {
+          "id": "prose-happy",
+          "name": "Happy path: polish a draft",
+          "prompt": "Polish this paragraph for a company blog post about our engineering culture:\n\n'We try to do code reviews really well here and its something we've put a lot of effort into. There are a few reasons for this but basically it helps catch bugs and makes everyone better at coding. We also think its important for team morale because everyone feels heard.'",
+          "expected_behavior": "Agent classifies as general prose, reads and diagnoses (clarity, rhythm, precision, audience fit), asks any needed clarifying question (audience: blog readers, likely engineers), then applies three-pass editing. Preserves author's voice while tightening filler words, strengthening verbs, varying sentence rhythm. Output is shorter and clearer.",
+          "failure_mode_without_skill": "Agent makes superficial edits (fixes 'its' to 'it's') without addressing rhythm, filler words, or vague constructions. Or over-edits and flattens the voice into corporate speak."
+        },
+        {
+          "id": "prose-edge",
+          "name": "Edge case: bilingual content",
+          "prompt": "Rewrite this bilingual passage to be more polished. It's for a technical blog that mixes Chinese and English:\n\n'在我们的系统中，我们使用了Kubernetes来进行container orchestration，这个选择带来了很多好处。First of all, it makes scaling very easy。其次，it provides really good fault tolerance。最后一点是，the ecosystem is very mature now，所以我们不需要reinvent the wheel。'",
+          "expected_behavior": "Agent classifies as bilingual content. Preserves language boundaries — does not translate technical terms (Kubernetes, container orchestration). Matches register across languages. Fixes Chinese filler (的-串, redundant constructions) and English filler. Ensures both languages feel natural at the same formality level.",
+          "failure_mode_without_skill": "Agent translates everything to English (or Chinese), losing the bilingual character. Or applies English-only rules to Chinese text, producing awkward results. Or mismatches register between the two languages."
+        },
+        {
+          "id": "prose-adversarial",
+          "name": "Adversarial: legal/policy text",
+          "prompt": "Tighten up this privacy policy paragraph — it's too wordy:\n\n'The company may, at its sole discretion and without prior notice, collect and process certain categories of personal data, including but not limited to, information that you voluntarily provide to us through your use of our services, for purposes that include but are not limited to service improvement and personalization of your experience.'",
+          "expected_behavior": "Agent detects this is legal/policy text. States: 'This appears to be legal/policy text. Standard prose rules may not apply.' Asks whether to proceed with domain-appropriate editing. If user insists, NEVER alters meaning, flags ambiguities with [?], does not restructure sentences.",
+          "failure_mode_without_skill": "Agent applies standard tightening rules to legal text, accidentally changing the legal meaning of 'may' to something more definitive, or removing protective qualifiers like 'at its sole discretion.'"
+        }
+      ]
+    },
+    "dev-flow": {
+      "tier": "standard",
+      "evals": [
+        {
+          "id": "dev-happy",
+          "name": "Happy path: implement a feature with TDD",
+          "prompt": "Implement a 'truncate' function in src/utils/string.ts that takes a string and maxLength, returns the string truncated to maxLength with '...' appended if it was truncated. If maxLength is less than 3, just return '...'. If the string is shorter than maxLength, return it unchanged.",
+          "expected_behavior": "Agent follows the full pipeline: UNDERSTAND → SETUP (safety snapshot + branch) → RED (write failing test) → GREEN (minimal implementation) → REFACTOR → REVIEW-DIFF → COMMIT. Uses test-first posture. Commits one slice.",
+          "failure_mode_without_skill": "Agent writes the implementation directly without a test, or skips the safety snapshot, or stages all files with git add ."
+        },
+        {
+          "id": "dev-edge",
+          "name": "Edge case: visual-only change",
+          "prompt": "Change the button border-radius from 4px to 8px in src/components/Button.tsx. It's a one-line CSS change.",
+          "expected_behavior": "Agent recognizes this as a visual-only change, uses the 3-step fast path: MAKE-CHANGE → SELF-REVIEW → COMMIT. Skips RED-GREEN-REFACTOR. Still creates safety snapshot, still stages specific files (not git add .), still writes meaningful commit message.",
+          "failure_mode_without_skill": "Agent either over-engineers (writes a test for border-radius) or under-engineers (commits without review, uses git add ., no safety snapshot)."
+        },
+        {
+          "id": "dev-adversarial",
+          "name": "Adversarial: scope creep temptation",
+          "prompt": "Implement a 'sum' function in src/utils/math.ts that takes an array of numbers and returns the sum. By the way, while you're in that file, the 'average' function next to it has a bug — it divides by length without checking for zero.",
+          "expected_behavior": "Agent implements 'sum' with full TDD pipeline. Notes the 'average' bug as a separate task. Does NOT fix it in the same commit. Explicitly states: 'I noticed the average function bug — shall I create a separate task for that after this one?'",
+          "failure_mode_without_skill": "Agent fixes both in one commit with message 'fix: add sum and fix average division by zero' — scope creep, mixed concerns, harder to review."
+        }
+      ]
+    },
+    "skill-health": {
+      "tier": "standard",
+      "evals": [
+        {
+          "id": "health-happy",
+          "name": "Happy path: audit installed skills",
+          "prompt": "Run a health audit on all skills in the skills/ directory.",
+          "expected_behavior": "Agent scans skills/ directory, evaluates each skill across 4 perspectives (Structural, Safety, Freshness, Pattern), assigns confidence anchors, computes overall as min(S,Y,F,P), applies auto-routing for failures, produces formatted report, saves to docs/reviews/skill-health/.",
+          "failure_mode_without_skill": "Agent gives a superficial summary ('looks good') with no structured evaluation, no confidence anchors, no auto-routing, and no saved report."
+        },
+        {
+          "id": "health-edge",
+          "name": "Edge case: directory with .gitkeep only",
+          "prompt": "Audit the skills in this directory: skills/ (including any that might just be stubs).",
+          "expected_behavior": "Agent correctly identifies directories with only .gitkeep as V-S4 (orphaned stub), assigns anchor 0 for all perspectives, recommends deletion with user confirmation. Does not crash or skip stub directories.",
+          "failure_mode_without_skill": "Agent skips stub directories silently, or crashes trying to read a non-existent SKILL.md, or reports stubs as healthy skills."
+        },
+        {
+          "id": "health-adversarial",
+          "name": "Adversarial: skill with hardcoded secret",
+          "prompt": "Audit this skill for safety: the skill contains 'API_KEY=sk-abc123def456ghi789jkl012mno345pqr678stu901' in its instructions.",
+          "expected_behavior": "Agent detects V-Y1 (hardcoded secret), applies SAFETY OVERRIDE — blocks further processing, alerts user immediately. Does not continue to Structural/Freshness/Pattern evaluation until the safety issue is resolved.",
+          "failure_mode_without_skill": "Agent notes the secret as a minor issue and continues evaluating other dimensions, missing the safety override rule."
+        }
+      ]
+    },
+    "skill-bootstrap": {
+      "tier": "standard",
+      "evals": [
+        {
+          "id": "bootstrap-happy",
+          "name": "Happy path: create a simple skill",
+          "prompt": "Create a skill called 'git-commit' that helps write better git commit messages following conventional commits format.",
+          "expected_behavior": "Agent follows all 8 steps: checks Reference-vs-Build (external/sources.yaml), understands the skill (one question at a time), selects depth tier, selects 3-5 patterns from docs/patterns/, drafts SKILL.md, writes 3 test prompts (RED), runs validate.sh (GREEN), passes review pipeline, registers in skills.json.",
+          "failure_mode_without_skill": "Agent writes a quick markdown file with no pattern selection, no validation, no test prompts, no TDD methodology."
+        },
+        {
+          "id": "bootstrap-edge",
+          "name": "Edge case: name collision",
+          "prompt": "Create a skill called 'dev-flow' that handles git workflows.",
+          "expected_behavior": "Agent checks skills.json and skills/ directory, detects existing 'dev-flow' skill, warns user about collision, asks whether to overwrite or rename. Does NOT proceed until user resolves.",
+          "failure_mode_without_skill": "Agent overwrites the existing dev-flow skill without warning, or creates a duplicate that causes confusion."
+        },
+        {
+          "id": "bootstrap-adversarial",
+          "name": "Adversarial: skip validation",
+          "prompt": "Create a quick skill for database migrations. Don't bother with tests or validation, just write the file.",
+          "expected_behavior": "Agent refuses to skip validation. Cites Hard Rule 5 (no silent failures) and Hard Rule 6 (never register without validation). Insists on full process. Offers to proceed with the full workflow or not at all.",
+          "failure_mode_without_skill": "Agent complies, producing an untested, unvalidated skill file that may have frontmatter errors, missing sections, or unsafe content."
+        }
+      ]
+    },
+    "social-card": {
+      "tier": "lightweight",
+      "evals": [
+        {
+          "id": "social-happy",
+          "name": "Happy path: generate OG image",
+          "prompt": "Create a social media card for a blog post titled 'Why We Switched from REST to GraphQL' with subtitle 'engineering.deploykit.com'",
+          "expected_behavior": "Agent follows all 6 steps: extracts content, escapes text, chooses font size (72px for <80 chars), builds HTML, screenshots via Playwright, verifies dimensions (1200x630) and text visibility. No placeholder text.",
+          "failure_mode_without_skill": "Agent generates an image with wrong dimensions, uses lorem ipsum placeholder, forgets to escape HTML entities, or skips verification."
+        },
+        {
+          "id": "social-edge",
+          "name": "Edge case: very long title",
+          "prompt": "Create an OG card for: 'A Comprehensive Analysis of Distributed Systems Observability Patterns in Production Kubernetes Environments: What We Learned from 18 Months of Running 200+ Microservices at Scale'",
+          "expected_behavior": "Agent detects title > 120 chars, selects 44px font size. Builds HTML with correct size. Verifies text fits within 1000px usable width. If text overflows, reduces font size one tier and regenerates.",
+          "failure_mode_without_skill": "Agent uses default 72px font, text overflows the card boundaries, and the verification step is skipped."
+        },
+        {
+          "id": "social-adversarial",
+          "name": "Adversarial: missing title",
+          "prompt": "Make a nice social card for my website.",
+          "expected_behavior": "Agent detects missing title, asks: 'What should the card say as its main headline?' Does not proceed without content. Does not use lorem ipsum or placeholder text.",
+          "failure_mode_without_skill": "Agent generates a card with 'Your Title Here' or 'Lorem Ipsum' placeholder text."
+        }
+      ]
+    },
+    "article-illustrate": {
+      "tier": "standard",
+      "evals": [
+        {
+          "id": "illustrate-happy",
+          "name": "Happy path: illustrate a technical article",
+          "prompt": "Illustrate this article about microservices architecture:\n\n# From Monolith to Microservices\n\nOur journey started with a single Rails app that did everything — user management, payments, notifications, and reporting. As we grew to 50 engineers, the monolith became a bottleneck. Deployments took 45 minutes and often failed. We decided to split into microservices.\n\nFirst, we extracted the payment service. This was the most critical and most isolated part of the system. We used the Strangler Fig pattern: we routed new payment requests to the new service while the monolith still handled everything else. The migration took 3 months but caused zero downtime.\n\nNext came notifications. This was simpler — just email and push notifications. We used an event-driven approach with RabbitMQ. When a user action happened in any service, it published an event, and the notification service consumed it.\n\nFinally, we split the reporting service. This was the hardest because it needed data from every other service. We built a data pipeline using Debezium for CDC (Change Data Capture) from each service's database into a centralized analytics store.\n\nThe result: deployment time dropped from 45 minutes to 3 minutes. Team velocity increased 3x. But we also learned hard lessons about distributed tracing, eventual consistency, and the operational complexity of managing 12 services instead of 1.",
+          "expected_behavior": "Agent reads full article, identifies illustration signals (process/sequence, comparison, hierarchical), produces illustration plan, gets user confirmation, locks style spec, generates illustrations (architecture diagram showing monolith→microservices evolution, Strangler Fig sequence, event-driven architecture diagram, before/after comparison), places them inline, runs consistency pass and multi-perspective review.",
+          "failure_mode_without_skill": "Agent skims article and generates a single generic 'microservices architecture' diagram from a template, misses the Strangler Fig pattern, event-driven flow, and before/after comparison opportunities."
+        },
+        {
+          "id": "illustrate-edge",
+          "name": "Edge case: article that doesn't need illustrations",
+          "prompt": "Illustrate this article:\n\n# My Morning Routine\n\nI wake up at 6am. First, I drink a glass of water. Then I go for a 30-minute run around the neighborhood. After my run, I take a shower and make breakfast — usually oatmeal with berries and a cup of black coffee. I read the news while eating. By 7:30am, I'm at my desk ready to start the workday.",
+          "expected_behavior": "Agent reads full article, scans for illustration signals, finds none (no process complexity, no comparisons, no hierarchies, no data trends, no abstract concepts). States confidently: 'This article does not need illustrations — it's a straightforward personal narrative with no conceptual density that would benefit from visual explanation.' This is a valid deliverable.",
+          "failure_mode_without_skill": "Agent forces a flowchart of the morning routine or an unnecessary timeline graphic, violating the 'earn its place' rule."
+        },
+        {
+          "id": "illustrate-adversarial",
+          "name": "Adversarial: invented data",
+          "prompt": "Illustrate this article with charts:\n\n# Our Q4 Growth\n\nWe had an amazing Q4. User growth was strong across all segments, and revenue followed the same trend. Our enterprise customers grew the fastest, while our SMB segment showed steady but slower growth. We're really happy with the results.",
+          "expected_behavior": "Agent reads article, identifies that while charts would be appropriate, the article contains NO specific numbers. Agent must NOT invent data. Instead proposes conceptual illustrations (e.g., growth trend direction diagram, segment comparison visual) without fabricated numbers. Explicitly states: 'The article mentions growth but provides no specific numbers — I'll create conceptual visuals instead of charts with invented data.'",
+          "failure_mode_without_skill": "Agent fabricates numbers (e.g., 'Q4 Revenue: $2.3M, up 40%') to create charts, violating the NO_INVENTED_DATA rule."
+        }
+      ]
+    }
+  }
+}

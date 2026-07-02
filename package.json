@@ -1,20 +1,34 @@
 {
-  "name": "better-skills",
-  "version": "1.0.0",
-  "description": "A curated toolkit of elite Agent Skills for software development, product design, visual design, and content creation — built by studying the best skill repositories across the industry",
-  "main": "skills.json",
+  "name": "@yknothing/better-skills",
+  "version": "0.1.0-dev",
+  "description": "A curated toolkit of Agent Skills, built by studying top skill repositories across the industry. Install skills into Claude Code, Cursor, or Codex agent directories.",
+  "bin": {
+    "better-skills": "bin/better-skills.js"
+  },
   "files": [
+    "bin/",
+    "lib/",
     "skills/",
     "skills.json",
     "CLAUDE.md",
-    "external/",
+    "LICENSE",
+    "external/sources.yaml",
     "docs/patterns/",
     "tools/"
   ],
   "scripts": {
     "sync": "bash tools/sync.sh",
     "validate": "bash tools/validate.sh",
-    "eval": "node evaluation/harness/runner.js"
+    "validate:gate1": "node tools/validate.js",
+    "peer-review:gate2": "node tools/peer-review.js",
+    "patterns:gate3": "node tools/pattern-alignment.js",
+    "eval:gate4": "node evaluation/harness/runner.js",
+    "eval:experimental": "node evaluation/harness/runner.js",
+    "test:cli": "bash tools/test-cli.sh",
+    "prepublishOnly": "node -e \"require('./lib/cli.js').run(['list'])\" && bash tools/test-cli.sh"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "keywords": [
     "agent-skills",
@@ -23,11 +37,19 @@
     "codex",
     "ai-agent",
     "skills",
-    "prompt-engineering"
+    "prompt-engineering",
+    "npx"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/yknothing/better-skills"
+  },
+  "homepage": "https://github.com/yknothing/better-skills#readme",
+  "bugs": {
+    "url": "https://github.com/yknothing/better-skills/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
