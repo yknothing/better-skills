@@ -10,6 +10,7 @@
       "skills": [
         "brainstorming",
         "requirements-engineering",
+        "first-customer-finder",
         "prose-craft",
         "visual-design",
         "social-card",
@@ -47,6 +48,13 @@
         "batch": "batch-1",
         "tier": "deep",
         "patterns": ["rigor-gap", "one-question-at-a-time", "scoping-synthesis", "self-review-checklist", "format-significance-gates", "hard-rules-first", "anti-pattern-pre-naming", "blocking-question-tools"],
+        "status": "active"
+      },
+      "first-customer-finder": {
+        "path": "skills/first-customer-finder/SKILL.md",
+        "batch": "batch-1",
+        "tier": "deep",
+        "patterns": ["hard-rules-first", "progressive-disclosure", "one-question-at-a-time", "scoping-synthesis", "multi-perspective-review", "confidence-anchors"],
         "status": "active"
       },
       "visual-design": {
