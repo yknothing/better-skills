@@ -1,0 +1,60 @@
+replaceOrThrow("lib/commands/add.js", `        src.sourceMeta,
+        name`, `        src.sourceMeta,
+        src.meta.upstream_skill || path.basename(src.meta.path || name)`);
+replaceOrThrow("lib/commands/add.js", `    const files = installer.copyTree(absSourceDir, destDir, { dryRun: true });`, `    const files = installer.copyTree(absSourceDir, destDir, { dryRun: true, canonicalName: name, aliases: src.aliases });`);
+replaceOrThrow("lib/commands/add.js", `    files = installer.copyTree(absSourceDir, destDir);`, `    files = installer.copyTree(absSourceDir, destDir, { canonicalName: name, aliases: src.aliases });`);
+replaceOrThrow("lib/commands/add.js", `    fromDescriptor = \`external:\${src.meta.source}/\${name}\`;`, `    fromDescriptor = \`external:\${src.meta.source}/\${src.meta.upstream_skill || name}\`;`);
+
+replaceOrThrow("lib/commands/remove.js", `  const name = _[0];
+  if (!name) {`, `  const requestedName = _[0];
+  if (!requestedName) {`);
+replaceOrThrow("lib/commands/remove.js", `  if (!resolver.isValidName(name)) {
+    const e = new Error(\`invalid skill name: \${JSON.stringify(name)}\`);`, `  if (!resolver.isValidName(requestedName)) {
+    const e = new Error(\`invalid skill name: \${JSON.stringify(requestedName)}\`);`);
+replaceOrThrow("lib/commands/remove.js",
+`  const target = paths.resolveTarget(flags.target);
+  const m = manifest.readManifest(target.dir);
+  const entry = m.installed[name];
+  if (!entry) {
+    const e = new Error(\`'\${name}' is not installed at \${target.dir}\`);`,
+`  const target = paths.resolveTarget(flags.target);
+  const m = manifest.readManifest(target.dir);
+  const canonical = resolver.canonicalizeName(requestedName);
+  const candidates = [requestedName, canonical, ...resolver.legacyNamesFor(canonical)];
+  const installedName = candidates.find((candidate) => m.installed[candidate]);
+  const entry = installedName ? m.installed[installedName] : null;
+  if (!entry) {
+    const e = new Error(\`'\${requestedName}' is not installed at \${target.dir}\`);`);
+replaceOrThrow("lib/commands/remove.js", `  const destDir = path.join(target.dir, name);`, `  const destDir = path.join(target.dir, installedName);`);
+replaceOrThrow("lib/commands/remove.js", `  delete m.installed[name];`, `  delete m.installed[installedName];`);
+replaceOrThrow("lib/commands/remove.js", `  log.ok(\`removed '\${name}' from manifest\`);`, `  log.ok(\`removed '\${installedName}' from manifest\`);`);
+
+replaceOrThrow("lib/commands/list.js",
+`      const flag = meta.source === "external" ? "[external]" : "[self]";
+      process.stdout.write(
+        \`  \${flag.padEnd(11)} \${name}  (from \${meta.from}, installed \${meta.installed_at || "unknown"})\\n\`
+      );`,
+`      const flag = meta.source === "external" ? "[external]" : "[self]";
+      const canonical = resolver.canonicalizeName(name);
+      const migration = canonical !== name ? \` -> \${canonical} (legacy)\` : "";
+      process.stdout.write(
+        \`  \${flag.padEnd(11)} \${name}\${migration}  (from \${meta.from}, installed \${meta.installed_at || "unknown"})\\n\`
+      );`);
+
+replaceOrThrow("tools/sync.sh",
+`  SKILL_DST="$SKILLS_DIR/$skill"
+
+  echo ""
+  echo "--- $skill (from $source) ---"`,
+`  canonical="bs-$skill"
+  SKILL_DST="$SKILLS_DIR/$canonical"
+
+  echo ""
+  echo "--- $canonical (upstream: $skill, source: $source) ---"`);
+replaceOrThrow("tools/sync.sh",
+`    echo "Linking $skill..."
+    if [ "$DRY_RUN" = false ]; then
+      rm -rf "$SKILL_DST"
+      ln -sf "$SKILL_SRC" "$SKILL_DST"
+      echo "  $skill -> $SKILL_SRC"`,
+`    echo "Linking $canonical..."
