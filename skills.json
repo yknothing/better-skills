@@ -10,6 +10,7 @@
       "skills": [
         "brainstorming",
         "requirements-engineering",
+        "first-customer-finder",
         "prose-craft",
         "visual-design",
         "social-card",
@@ -46,56 +47,122 @@
         "path": "skills/requirements-engineering/SKILL.md",
         "batch": "batch-1",
         "tier": "deep",
-        "patterns": ["rigor-gap", "one-question-at-a-time", "scoping-synthesis", "self-review-checklist", "format-significance-gates", "hard-rules-first", "anti-pattern-pre-naming", "blocking-question-tools"],
+        "patterns": [
+          "rigor-gap",
+          "one-question-at-a-time",
+          "scoping-synthesis",
+          "self-review-checklist",
+          "format-significance-gates",
+          "hard-rules-first",
+          "anti-pattern-pre-naming",
+          "blocking-question-tools"
+        ],
+        "status": "active"
+      },
+      "first-customer-finder": {
+        "path": "skills/first-customer-finder/SKILL.md",
+        "batch": "batch-1",
+        "tier": "deep",
+        "patterns": [
+          "hard-rules-first",
+          "progressive-disclosure",
+          "one-question-at-a-time",
+          "scoping-synthesis",
+          "multi-perspective-review",
+          "confidence-anchors"
+        ],
         "status": "active"
       },
       "visual-design": {
         "path": "skills/visual-design/SKILL.md",
         "batch": "batch-1",
         "tier": "deep",
-        "patterns": ["format-significance-gates", "multi-perspective-review", "confidence-anchors", "progressive-disclosure", "named-anti-patterns", "80-20-design-rules", "interaction-state-enforcement"],
+        "patterns": [
+          "format-significance-gates",
+          "multi-perspective-review",
+          "confidence-anchors",
+          "progressive-disclosure",
+          "named-anti-patterns",
+          "80-20-design-rules",
+          "interaction-state-enforcement"
+        ],
         "status": "active"
       },
       "prose-craft": {
         "path": "skills/prose-craft/SKILL.md",
         "batch": "batch-1",
         "tier": "standard",
-        "patterns": ["self-review-checklist", "one-question-at-a-time", "progressive-disclosure", "hard-rules-first", "anti-pattern-pre-naming"],
+        "patterns": [
+          "self-review-checklist",
+          "one-question-at-a-time",
+          "progressive-disclosure",
+          "hard-rules-first",
+          "anti-pattern-pre-naming"
+        ],
         "status": "active"
       },
       "dev-flow": {
         "path": "skills/dev-flow/SKILL.md",
         "batch": "batch-1",
         "tier": "standard",
-        "patterns": ["pipeline-architecture", "execution-posture-signals", "hard-rules-first", "progressive-disclosure", "precise-commands"],
+        "patterns": [
+          "pipeline-architecture",
+          "execution-posture-signals",
+          "hard-rules-first",
+          "progressive-disclosure",
+          "precise-commands"
+        ],
         "status": "active"
       },
       "skill-health": {
         "path": "skills/skill-health/SKILL.md",
         "batch": "batch-1",
         "tier": "standard",
-        "patterns": ["multi-perspective-review", "confidence-anchors", "verification-rules", "self-review-checklist", "progressive-disclosure", "anti-pattern-pre-naming"],
+        "patterns": [
+          "multi-perspective-review",
+          "confidence-anchors",
+          "verification-rules",
+          "self-review-checklist",
+          "progressive-disclosure",
+          "anti-pattern-pre-naming"
+        ],
         "status": "active"
       },
       "skill-bootstrap": {
         "path": "skills/skill-bootstrap/SKILL.md",
         "batch": "batch-1",
         "tier": "standard",
-        "patterns": ["tdd-skill-creation", "progressive-disclosure", "hard-rules-first", "pattern-library", "platform-degradation-rules"],
+        "patterns": [
+          "tdd-skill-creation",
+          "progressive-disclosure",
+          "hard-rules-first",
+          "pattern-library",
+          "platform-degradation-rules"
+        ],
         "status": "active"
       },
       "social-card": {
         "path": "skills/social-card/SKILL.md",
         "batch": "batch-1",
         "tier": "lightweight",
-        "patterns": ["minimal-precision", "hard-rules-first", "precise-commands", "progressive-disclosure"],
+        "patterns": [
+          "minimal-precision",
+          "hard-rules-first",
+          "precise-commands",
+          "progressive-disclosure"
+        ],
         "status": "active"
       },
       "article-illustrate": {
         "path": "skills/article-illustrate/SKILL.md",
         "batch": "batch-1",
         "tier": "standard",
-        "patterns": ["progressive-disclosure", "hard-rules-first", "self-review-checklist", "multi-perspective-review"],
+        "patterns": [
+          "progressive-disclosure",
+          "hard-rules-first",
+          "self-review-checklist",
+          "multi-perspective-review"
+        ],
         "status": "active"
       }
     },
