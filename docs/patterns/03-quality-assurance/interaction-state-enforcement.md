@@ -35,11 +35,11 @@ Skip it for static, non-interactive outputs (posters, social cards, SVGs without
 
 ## Used by
 
-- `visual-design` — Phase 6 (ITERATE) enforces all four interaction states as a blocking requirement. The phase reference file (`phase-6-iterate.md`) includes a table mapping each state to its visual treatment and example, plus hover states, edge cases, and a polish pass checklist.
+- `bs-visual-design` — Phase 6 (ITERATE) enforces all four interaction states as a blocking requirement. The phase reference file (`phase-6-iterate.md`) includes a table mapping each state to its visual treatment and example, plus hover states, edge cases, and a polish pass checklist.
 
 ## Examples
 
-From `skills/visual-design/references/phase-6-iterate.md`:
+From `skills/bs-visual-design/references/phase-6-iterate.md`:
 
 ```markdown
 ## Interaction State Enforcement

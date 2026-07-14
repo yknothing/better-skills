@@ -1,1 +1,0 @@
-console.log(`Migrated ${selfSkills.length} self-developed and ${externalSkills.length} external identities to ${PREFIX}*.`);

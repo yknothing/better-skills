@@ -33,11 +33,11 @@ Skip it for deep-tier skills where the failure cost justifies exhaustive explana
 
 ## Used by
 
-- `social-card` — the repo's only lightweight-tier skill, at 116 lines total. It covers content extraction, layout selection, text escaping, font sizing, HTML building, screenshot, and verification — all in a single compact file. No `references/` files, no multi-paragraph rationale blocks. The Hard Rules are 4 numbered items. The workflow is 7 short steps.
+- `bs-social-card` — the repo's only lightweight-tier skill, at 116 lines total. It covers content extraction, layout selection, text escaping, font sizing, HTML building, screenshot, and verification — all in a single compact file. No `references/` files, no multi-paragraph rationale blocks. The Hard Rules are 4 numbered items. The workflow is 7 short steps.
 
 ## Examples
 
-From `skills/social-card/SKILL.md`, the entire Hard Rules block (4 rules, 4 lines):
+From `skills/bs-social-card/SKILL.md`, the entire Hard Rules block (4 rules, 4 lines):
 
 ```markdown
 ## HARD RULES

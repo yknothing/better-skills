@@ -1,6 +1,6 @@
 {
   "name": "better-skills",
-  "version": "0.1.0-dev",
+  "version": "0.2.0-dev",
   "description": "A curated toolkit of Agent Skills. See CLAUDE.md for the full methodology.",
   "batches": {
     "batch-1": {
@@ -8,24 +8,24 @@
       "date": "2026-06",
       "status": "active",
       "skills": [
-        "brainstorming",
-        "requirements-engineering",
-        "first-customer-finder",
-        "prose-craft",
-        "visual-design",
-        "social-card",
-        "article-illustrate",
-        "pptx",
-        "dev-flow",
-        "skill-health",
-        "skill-bootstrap",
-        "grill-me",
-        "grilling",
-        "writing-great-skills",
-        "learn-skill",
-        "emil-design-eng",
-        "review-animations",
-        "animation-vocabulary"
+        "bs-brainstorming",
+        "bs-requirements-engineering",
+        "bs-first-customer-finder",
+        "bs-prose-craft",
+        "bs-visual-design",
+        "bs-social-card",
+        "bs-article-illustrate",
+        "bs-pptx",
+        "bs-dev-flow",
+        "bs-skill-health",
+        "bs-skill-bootstrap",
+        "bs-grill-me",
+        "bs-grilling",
+        "bs-writing-great-skills",
+        "bs-learn-skill",
+        "bs-emil-design-eng",
+        "bs-review-animations",
+        "bs-animation-vocabulary"
       ]
     },
     "batch-2": {
@@ -43,147 +43,215 @@
   },
   "skills": {
     "self-developed": {
-      "requirements-engineering": {
-        "path": "skills/requirements-engineering/SKILL.md",
+      "bs-requirements-engineering": {
+        "path": "skills/bs-requirements-engineering/SKILL.md",
         "batch": "batch-1",
         "tier": "deep",
-        "patterns": ["rigor-gap", "one-question-at-a-time", "scoping-synthesis", "self-review-checklist", "format-significance-gates", "hard-rules-first", "anti-pattern-pre-naming", "blocking-question-tools"],
+        "patterns": [
+          "rigor-gap",
+          "one-question-at-a-time",
+          "scoping-synthesis",
+          "self-review-checklist",
+          "format-significance-gates",
+          "hard-rules-first",
+          "anti-pattern-pre-naming",
+          "blocking-question-tools"
+        ],
         "status": "active"
       },
-      "first-customer-finder": {
-        "path": "skills/first-customer-finder/SKILL.md",
+      "bs-first-customer-finder": {
+        "path": "skills/bs-first-customer-finder/SKILL.md",
         "batch": "batch-1",
         "tier": "deep",
-        "patterns": ["hard-rules-first", "progressive-disclosure", "one-question-at-a-time", "scoping-synthesis", "multi-perspective-review", "confidence-anchors"],
+        "patterns": [
+          "hard-rules-first",
+          "progressive-disclosure",
+          "one-question-at-a-time",
+          "scoping-synthesis",
+          "multi-perspective-review",
+          "confidence-anchors"
+        ],
         "status": "active"
       },
-      "visual-design": {
-        "path": "skills/visual-design/SKILL.md",
+      "bs-visual-design": {
+        "path": "skills/bs-visual-design/SKILL.md",
         "batch": "batch-1",
         "tier": "deep",
-        "patterns": ["format-significance-gates", "multi-perspective-review", "confidence-anchors", "progressive-disclosure", "named-anti-patterns", "80-20-design-rules", "interaction-state-enforcement"],
+        "patterns": [
+          "format-significance-gates",
+          "multi-perspective-review",
+          "confidence-anchors",
+          "progressive-disclosure",
+          "named-anti-patterns",
+          "80-20-design-rules",
+          "interaction-state-enforcement"
+        ],
         "status": "active"
       },
-      "prose-craft": {
-        "path": "skills/prose-craft/SKILL.md",
+      "bs-prose-craft": {
+        "path": "skills/bs-prose-craft/SKILL.md",
         "batch": "batch-1",
         "tier": "standard",
-        "patterns": ["self-review-checklist", "one-question-at-a-time", "progressive-disclosure", "hard-rules-first", "anti-pattern-pre-naming"],
+        "patterns": [
+          "self-review-checklist",
+          "one-question-at-a-time",
+          "progressive-disclosure",
+          "hard-rules-first",
+          "anti-pattern-pre-naming"
+        ],
         "status": "active"
       },
-      "dev-flow": {
-        "path": "skills/dev-flow/SKILL.md",
+      "bs-dev-flow": {
+        "path": "skills/bs-dev-flow/SKILL.md",
         "batch": "batch-1",
         "tier": "standard",
-        "patterns": ["pipeline-architecture", "execution-posture-signals", "hard-rules-first", "progressive-disclosure", "precise-commands"],
+        "patterns": [
+          "pipeline-architecture",
+          "execution-posture-signals",
+          "hard-rules-first",
+          "progressive-disclosure",
+          "precise-commands"
+        ],
         "status": "active"
       },
-      "skill-health": {
-        "path": "skills/skill-health/SKILL.md",
+      "bs-skill-health": {
+        "path": "skills/bs-skill-health/SKILL.md",
         "batch": "batch-1",
         "tier": "standard",
-        "patterns": ["multi-perspective-review", "confidence-anchors", "verification-rules", "self-review-checklist", "progressive-disclosure", "anti-pattern-pre-naming"],
+        "patterns": [
+          "multi-perspective-review",
+          "confidence-anchors",
+          "verification-rules",
+          "self-review-checklist",
+          "progressive-disclosure",
+          "anti-pattern-pre-naming"
+        ],
         "status": "active"
       },
-      "skill-bootstrap": {
-        "path": "skills/skill-bootstrap/SKILL.md",
+      "bs-skill-bootstrap": {
+        "path": "skills/bs-skill-bootstrap/SKILL.md",
         "batch": "batch-1",
         "tier": "standard",
-        "patterns": ["tdd-skill-creation", "progressive-disclosure", "hard-rules-first", "pattern-library", "platform-degradation-rules"],
+        "patterns": [
+          "tdd-skill-creation",
+          "progressive-disclosure",
+          "hard-rules-first",
+          "pattern-library",
+          "platform-degradation-rules"
+        ],
         "status": "active"
       },
-      "social-card": {
-        "path": "skills/social-card/SKILL.md",
+      "bs-social-card": {
+        "path": "skills/bs-social-card/SKILL.md",
         "batch": "batch-1",
         "tier": "lightweight",
-        "patterns": ["minimal-precision", "hard-rules-first", "precise-commands", "progressive-disclosure"],
+        "patterns": [
+          "minimal-precision",
+          "hard-rules-first",
+          "precise-commands",
+          "progressive-disclosure"
+        ],
         "status": "active"
       },
-      "article-illustrate": {
-        "path": "skills/article-illustrate/SKILL.md",
+      "bs-article-illustrate": {
+        "path": "skills/bs-article-illustrate/SKILL.md",
         "batch": "batch-1",
         "tier": "standard",
-        "patterns": ["progressive-disclosure", "hard-rules-first", "self-review-checklist", "multi-perspective-review"],
+        "patterns": [
+          "progressive-disclosure",
+          "hard-rules-first",
+          "self-review-checklist",
+          "multi-perspective-review"
+        ],
         "status": "active"
       }
     },
     "external": {
-      "brainstorming": {
+      "bs-brainstorming": {
         "source": "superpowers",
         "path": "external/superpowers/brainstorming",
         "batch": "batch-1",
         "tier": "standard",
-        "status": "active"
+        "status": "active",
+        "upstream_skill": "brainstorming"
       },
-      "pptx": {
+      "bs-pptx": {
         "source": "anthropic-agent-skills",
         "path": "external/anthropic-agent-skills/pptx",
         "batch": "batch-1",
         "tier": "standard",
-        "status": "active"
+        "status": "active",
+        "upstream_skill": "pptx"
       },
-      "grill-me": {
+      "bs-grill-me": {
         "source": "mattpocock-skills",
         "path": "external/mattpocock-skills/grill-me",
         "batch": "batch-1",
         "tier": "standard",
         "invocation": "user-invoked",
         "status": "active",
-        "notes": "Thin wrapper; delegates to 'grilling'. Both must be synced together."
+        "notes": "Thin wrapper; delegates to 'bs-grilling'. Both must be synced together.",
+        "upstream_skill": "grill-me"
       },
-      "grilling": {
+      "bs-grilling": {
         "source": "mattpocock-skills",
         "path": "external/mattpocock-skills/grilling",
         "batch": "batch-1",
         "tier": "standard",
         "invocation": "model-invoked",
         "status": "active",
-        "notes": "Runtime for grill-me / grill-with-docs. See docs/research/mattpocock-analysis.md."
+        "notes": "Runtime for bs-grill-me / grill-with-docs. See docs/research/mattpocock-analysis.md.",
+        "upstream_skill": "grilling"
       },
-      "writing-great-skills": {
+      "bs-writing-great-skills": {
         "source": "mattpocock-skills",
         "path": "external/mattpocock-skills/writing-great-skills",
         "batch": "batch-1",
         "tier": "standard",
         "invocation": "user-invoked",
         "status": "active",
-        "notes": "Reference skill; GLOSSARY.md is disclosed reference."
+        "notes": "Reference skill; GLOSSARY.md is disclosed reference.",
+        "upstream_skill": "writing-great-skills"
       },
-      "learn-skill": {
+      "bs-learn-skill": {
         "source": "learn-anything-skill",
         "path": "external/learn-anything-skill/learn-skill",
         "batch": "batch-1",
         "tier": "deep",
         "invocation": "model-invoked",
         "status": "active",
-        "notes": "CE-style exhaustive sample (1397 lines). Root-level SKILL.md repo. See docs/research/learn-skill-analysis.md."
+        "notes": "CE-style exhaustive sample (1397 lines). Root-level SKILL.md repo. See docs/research/learn-skill-analysis.md.",
+        "upstream_skill": "learn-skill"
       },
-      "emil-design-eng": {
+      "bs-emil-design-eng": {
         "source": "emilkowalski-skills",
         "path": "external/emilkowalski-skills/emil-design-eng",
         "batch": "batch-1",
         "tier": "deep",
         "invocation": "model-invoked",
         "status": "active",
-        "notes": "Motion and UI craft reference (Emil Kowalski). Pairs with Build skill visual-design. See docs/research/emilkowalski-analysis.md."
+        "notes": "Motion and UI craft reference (Emil Kowalski). Pairs with Build skill visual-design. See docs/research/emilkowalski-analysis.md.",
+        "upstream_skill": "emil-design-eng"
       },
-      "review-animations": {
+      "bs-review-animations": {
         "source": "emilkowalski-skills",
         "path": "external/emilkowalski-skills/review-animations",
         "batch": "batch-1",
         "tier": "standard",
         "invocation": "user-invoked",
         "status": "active",
-        "notes": "Upstream sets disable-model-invocation: true. Strict motion diff review; user-invoked only."
+        "notes": "Upstream sets disable-model-invocation: true. Strict motion diff review; user-invoked only.",
+        "upstream_skill": "review-animations"
       },
-      "animation-vocabulary": {
+      "bs-animation-vocabulary": {
         "source": "emilkowalski-skills",
         "path": "external/emilkowalski-skills/animation-vocabulary",
         "batch": "batch-1",
         "tier": "lightweight",
         "invocation": "model-invoked",
         "status": "active",
-        "notes": "Reverse-lookup glossary for motion effect names. Narrow trigger: naming/describing effects, not implementing them."
+        "notes": "Reverse-lookup glossary for motion effect names. Narrow trigger: naming/describing effects, not implementing them.",
+        "upstream_skill": "animation-vocabulary"
       }
     }
   },
@@ -199,5 +267,30 @@
     "standard": "Normal frequency + moderate cost — Anthropic-style principles + hard gates",
     "lightweight": "High frequency + low failure cost — Cursor-style minimal, one thing well"
   },
-  "sources": {}
+  "sources": {},
+  "namespace": {
+    "prefix": "bs-",
+    "policy": "All public Better-Skills IDs use the bs- prefix.",
+    "legacy_aliases": "Deprecated; remove after one migration release and a clean compatibility review."
+  },
+  "aliases": {
+    "requirements-engineering": "bs-requirements-engineering",
+    "first-customer-finder": "bs-first-customer-finder",
+    "visual-design": "bs-visual-design",
+    "prose-craft": "bs-prose-craft",
+    "dev-flow": "bs-dev-flow",
+    "skill-health": "bs-skill-health",
+    "skill-bootstrap": "bs-skill-bootstrap",
+    "social-card": "bs-social-card",
+    "article-illustrate": "bs-article-illustrate",
+    "brainstorming": "bs-brainstorming",
+    "pptx": "bs-pptx",
+    "grill-me": "bs-grill-me",
+    "grilling": "bs-grilling",
+    "writing-great-skills": "bs-writing-great-skills",
+    "learn-skill": "bs-learn-skill",
+    "emil-design-eng": "bs-emil-design-eng",
+    "review-animations": "bs-review-animations",
+    "animation-vocabulary": "bs-animation-vocabulary"
+  }
 }

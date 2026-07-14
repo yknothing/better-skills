@@ -35,11 +35,11 @@ Skip it for skills where user interaction is purely informational and no blockin
 
 ## Used by
 
-- `requirements-engineering` — Hard Rule #4 (`BLOCKING QUESTIONS ONLY. Use AskUserQuestion or equivalent blocking tools.`) makes blocking the default mechanism for every gate in the pipeline (scope confirmation, gap clarification, priority approval, direction lock).
+- `bs-requirements-engineering` — Hard Rule #4 (`BLOCKING QUESTIONS ONLY. Use AskUserQuestion or equivalent blocking tools.`) makes blocking the default mechanism for every gate in the pipeline (scope confirmation, gap clarification, priority approval, direction lock).
 
 ## Examples
 
-From `skills/requirements-engineering/SKILL.md` Hard Rules:
+From `skills/bs-requirements-engineering/SKILL.md` Hard Rules:
 
 ```markdown
 ## HARD RULES — READ FIRST

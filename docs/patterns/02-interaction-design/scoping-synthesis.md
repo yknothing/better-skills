@@ -40,11 +40,11 @@ Skip it for skills where the scope is trivially obvious (e.g., "fix this bug in 
 
 ## Used by
 
-- `requirements-engineering` — Stage 4 (SYNTHESIZE) produces the three-bucket draft (Stated/Inferred/Out of Scope) with discrete confidence anchors on every inference. The `<HARD-GATE id="scope-confirmed">` blocks progression until the user confirms.
+- `bs-requirements-engineering` — Stage 4 (SYNTHESIZE) produces the three-bucket draft (Stated/Inferred/Out of Scope) with discrete confidence anchors on every inference. The `<HARD-GATE id="scope-confirmed">` blocks progression until the user confirms.
 
 ## Examples
 
-From `skills/requirements-engineering/SKILL.md`:
+From `skills/bs-requirements-engineering/SKILL.md`:
 
 ```markdown
 ## Stage 4: SYNTHESIZE — Scoping Synthesis
@@ -78,7 +78,7 @@ your understanding? What would you add, remove, or change?"
 
 The confidence anchor table is integral to the pattern: it converts "I'm pretty sure" into a specific number with a behavioral description that tells the agent what to do at each level (present as option at 25, state as revisable at 50, commit at 75).
 
-From `skills/visual-design/SKILL.md` (Phase 1.2, scope synthesis variant):
+From `skills/bs-visual-design/SKILL.md` (Phase 1.2, scope synthesis variant):
 
 ```markdown
 ### 1.2 Scope synthesis

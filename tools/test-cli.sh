@@ -77,8 +77,8 @@ echo
 echo "T2: list (registry)"
 out=$(run_cli list 2>&1); rc=$?
 assert_exit "list exit 0" 0 "$rc"
-echo "$out" | grep -q "social-card" && PASS=$((PASS + 1)) && echo "  $(green PASS) list contains 'social-card'" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) list missing 'social-card'"; }
-echo "$out" | grep -q "brainstorming" && PASS=$((PASS + 1)) && echo "  $(green PASS) list contains 'brainstorming'" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) list missing 'brainstorming'"; }
+echo "$out" | grep -q "bs-social-card" && PASS=$((PASS + 1)) && echo "  $(green PASS) list contains 'bs-social-card'" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) list missing 'bs-social-card'"; }
+echo "$out" | grep -q "bs-brainstorming" && PASS=$((PASS + 1)) && echo "  $(green PASS) list contains 'bs-brainstorming'" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) list missing 'bs-brainstorming'"; }
 echo
 
 echo "T3: list --installed (empty manifest)"
@@ -86,60 +86,60 @@ run_cli list --installed --target "$SANDBOX" >/dev/null 2>&1; rc=$?
 assert_exit "list --installed empty exit 0" 0 "$rc"
 echo
 
-echo "T4: add social-card --dry-run"
-run_cli add social-card --target "$SANDBOX" --dry-run >/dev/null 2>&1; rc=$?
+echo "T4: add bs-social-card --dry-run"
+run_cli add bs-social-card --target "$SANDBOX" --dry-run >/dev/null 2>&1; rc=$?
 assert_exit "dry-run exit 0" 0 "$rc"
-assert_path_missing "dry-run did not write skill dir" "$SANDBOX/social-card"
+assert_path_missing "dry-run did not write skill dir" "$SANDBOX/bs-social-card"
 assert_path_missing "dry-run did not write manifest" "$SANDBOX/.better-skills.json"
 echo
 
-echo "T5: add social-card (real)"
-run_cli add social-card --target "$SANDBOX" >/dev/null 2>&1; rc=$?
+echo "T5: add bs-social-card (real)"
+run_cli add bs-social-card --target "$SANDBOX" >/dev/null 2>&1; rc=$?
 assert_exit "add exit 0" 0 "$rc"
-assert_path_exists "skill dir created" "$SANDBOX/social-card"
-assert_path_exists "SKILL.md copied" "$SANDBOX/social-card/SKILL.md"
-assert_path_exists "asset copied" "$SANDBOX/social-card/assets/centered.html"
+assert_path_exists "skill dir created" "$SANDBOX/bs-social-card"
+assert_path_exists "SKILL.md copied" "$SANDBOX/bs-social-card/SKILL.md"
+assert_path_exists "asset copied" "$SANDBOX/bs-social-card/assets/centered.html"
 assert_path_exists "manifest written" "$SANDBOX/.better-skills.json"
 node -e "
 const m = JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'));
-if (!m.installed['social-card']) { console.error('manifest missing social-card entry'); process.exit(1); }
-if (!Array.isArray(m.installed['social-card'].files) || m.installed['social-card'].files.length === 0) {
+if (!m.installed['bs-social-card']) { console.error('manifest missing bs-social-card entry'); process.exit(1); }
+if (!Array.isArray(m.installed['bs-social-card'].files) || m.installed['bs-social-card'].files.length === 0) {
   console.error('manifest files[] empty'); process.exit(1);
 }
 " "$SANDBOX/.better-skills.json"; rc=$?
 assert_exit "manifest schema valid" 0 "$rc"
 echo
 
-echo "T6: add social-card again (conflict)"
-run_cli add social-card --target "$SANDBOX" >/dev/null 2>&1; rc=$?
+echo "T6: add bs-social-card again (conflict)"
+run_cli add bs-social-card --target "$SANDBOX" >/dev/null 2>&1; rc=$?
 assert_exit "conflict exit 4" 4 "$rc"
 echo
 
-echo "T7: add social-card --force"
+echo "T7: add bs-social-card --force"
 sleep 1
-run_cli add social-card --target "$SANDBOX" --force >/dev/null 2>&1; rc=$?
+run_cli add bs-social-card --target "$SANDBOX" --force >/dev/null 2>&1; rc=$?
 assert_exit "force exit 0" 0 "$rc"
 echo
 
 echo "T8: list --installed (one skill)"
 out=$(run_cli list --installed --target "$SANDBOX" 2>&1); rc=$?
 assert_exit "list --installed exit 0" 0 "$rc"
-echo "$out" | grep -q "social-card" && PASS=$((PASS + 1)) && echo "  $(green PASS) installed list contains 'social-card'" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) installed list missing 'social-card'"; }
+echo "$out" | grep -q "bs-social-card" && PASS=$((PASS + 1)) && echo "  $(green PASS) installed list contains 'bs-social-card'" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) installed list missing 'bs-social-card'"; }
 echo
 
-echo "T9: remove social-card"
-run_cli remove social-card --target "$SANDBOX" >/dev/null 2>&1; rc=$?
+echo "T9: remove bs-social-card"
+run_cli remove bs-social-card --target "$SANDBOX" >/dev/null 2>&1; rc=$?
 assert_exit "remove exit 0" 0 "$rc"
-assert_path_missing "skill dir removed" "$SANDBOX/social-card"
+assert_path_missing "skill dir removed" "$SANDBOX/bs-social-card"
 node -e "
 const m = JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'));
-if (m.installed['social-card']) { console.error('manifest still has social-card entry'); process.exit(1); }
+if (m.installed['bs-social-card']) { console.error('manifest still has bs-social-card entry'); process.exit(1); }
 " "$SANDBOX/.better-skills.json"; rc=$?
-assert_exit "manifest no longer tracks social-card" 0 "$rc"
+assert_exit "manifest no longer tracks bs-social-card" 0 "$rc"
 echo
 
 echo "T10: remove non-installed skill (not found)"
-run_cli remove social-card --target "$SANDBOX" >/dev/null 2>&1; rc=$?
+run_cli remove bs-social-card --target "$SANDBOX" >/dev/null 2>&1; rc=$?
 assert_exit "remove not-found exit 3" 3 "$rc"
 echo
 
@@ -156,34 +156,34 @@ assert_exit "shell-meta exit 2" 2 "$rc"
 echo
 
 echo "T13: bad target rejected"
-run_cli add social-card --target "relative/path" >/dev/null 2>&1; rc=$?
+run_cli add bs-social-card --target "relative/path" >/dev/null 2>&1; rc=$?
 assert_exit "relative target exit 2" 2 "$rc"
-run_cli add social-card --target "/tmp/foo/../../etc" >/dev/null 2>&1; rc=$?
+run_cli add bs-social-card --target "/tmp/foo/../../etc" >/dev/null 2>&1; rc=$?
 assert_exit "target with .. exit 2" 2 "$rc"
 echo
 
 echo "T14: untracked existing dir refused without --force"
-mkdir -p "$SANDBOX/social-card"
-echo "preexisting" > "$SANDBOX/social-card/marker.txt"
-run_cli add social-card --target "$SANDBOX" >/dev/null 2>&1; rc=$?
+mkdir -p "$SANDBOX/bs-social-card"
+echo "preexisting" > "$SANDBOX/bs-social-card/marker.txt"
+run_cli add bs-social-card --target "$SANDBOX" >/dev/null 2>&1; rc=$?
 assert_exit "untracked dir conflict exit 4" 4 "$rc"
 # --force on untracked dir should also refuse (deliberate safety net)
-run_cli add social-card --target "$SANDBOX" --force >/dev/null 2>&1; rc=$?
+run_cli add bs-social-card --target "$SANDBOX" --force >/dev/null 2>&1; rc=$?
 assert_exit "untracked dir + --force still refuses (exit 4)" 4 "$rc"
-rm -rf "$SANDBOX/social-card"
+rm -rf "$SANDBOX/bs-social-card"
 echo
 
 echo "T15: add + update flow"
-run_cli add visual-design --target "$SANDBOX" >/dev/null 2>&1; rc=$?
-assert_exit "add visual-design exit 0" 0 "$rc"
+run_cli add bs-visual-design --target "$SANDBOX" >/dev/null 2>&1; rc=$?
+assert_exit "add bs-visual-design exit 0" 0 "$rc"
 sleep 1
-run_cli update visual-design --target "$SANDBOX" >/dev/null 2>&1; rc=$?
+run_cli update bs-visual-design --target "$SANDBOX" >/dev/null 2>&1; rc=$?
 assert_exit "update exit 0" 0 "$rc"
-assert_path_exists "visual-design still present after update" "$SANDBOX/visual-design/SKILL.md"
+assert_path_exists "bs-visual-design still present after update" "$SANDBOX/bs-visual-design/SKILL.md"
 echo
 
 echo "T16: validate against self-developed skill"
-run_cli validate visual-design >/dev/null 2>&1; rc=$?
+run_cli validate bs-visual-design >/dev/null 2>&1; rc=$?
 assert_exit "validate exit 0" 0 "$rc"
 echo
 
@@ -192,7 +192,7 @@ echo "not-json" > "$SANDBOX/.better-skills.json"
 run_cli list --installed --target "$SANDBOX" >/dev/null 2>&1; rc=$?
 assert_exit "corrupt manifest exit 5" 5 "$rc"
 # Restore valid manifest for cleanup
-echo '{"version":"0.1.0-dev","installed":{}}' > "$SANDBOX/.better-skills.json"
+echo '{"version":"0.2.0-dev","installed":{}}' > "$SANDBOX/.better-skills.json"
 echo
 
 echo "T18: help variants"
@@ -248,18 +248,34 @@ echo
 echo "T22: update with missing source preserves files (no half-erase)"
 T22_DIR="$SANDBOX/t22"
 mkdir -p "$T22_DIR"
-run_cli add visual-design --target "$T22_DIR" >/dev/null 2>&1
+run_cli add bs-visual-design --target "$T22_DIR" >/dev/null 2>&1
 # Move source aside so the update will fail
-mv "$REPO_ROOT/skills/visual-design" "$REPO_ROOT/skills/visual-design.bak.$$"
-run_cli update visual-design --target "$T22_DIR" >/dev/null 2>&1; rc=$?
-mv "$REPO_ROOT/skills/visual-design.bak.$$" "$REPO_ROOT/skills/visual-design"
+mv "$REPO_ROOT/skills/bs-visual-design" "$REPO_ROOT/skills/bs-visual-design.bak.$$"
+run_cli update bs-visual-design --target "$T22_DIR" >/dev/null 2>&1; rc=$?
+mv "$REPO_ROOT/skills/bs-visual-design.bak.$$" "$REPO_ROOT/skills/bs-visual-design"
 assert_exit "update with missing source exit 5" 5 "$rc"
-assert_path_exists "tracked file preserved on failed update" "$T22_DIR/visual-design/SKILL.md"
+assert_path_exists "tracked file preserved on failed update" "$T22_DIR/bs-visual-design/SKILL.md"
 echo
 
 echo "T23: --target / yields friendly EINTEGRITY (not raw ENOENT)"
-run_cli add social-card --target / >/dev/null 2>&1; rc=$?
+run_cli add bs-social-card --target / >/dev/null 2>&1; rc=$?
 assert_exit "--target / exit 5" 5 "$rc"
+echo
+
+echo "T24: legacy alias installs canonical identity"
+ALIAS_DIR="$SANDBOX/alias"
+mkdir -p "$ALIAS_DIR"
+run_cli add social-card --target "$ALIAS_DIR" >/dev/null 2>&1; rc=$?
+assert_exit "legacy alias add exit 0" 0 "$rc"
+assert_path_exists "alias created canonical directory" "$ALIAS_DIR/bs-social-card/SKILL.md"
+assert_path_missing "alias did not create legacy directory" "$ALIAS_DIR/social-card"
+if grep -q "^name: bs-social-card$" "$ALIAS_DIR/bs-social-card/SKILL.md"; then
+  PASS=$((PASS + 1))
+  echo "  $(green PASS) installed frontmatter is canonical"
+else
+  FAIL=$((FAIL + 1))
+  echo "  $(red FAIL) installed frontmatter not canonical"
+fi
 echo
 
 echo "==> Result: $(green "$PASS pass") / $(red "$FAIL fail")"
