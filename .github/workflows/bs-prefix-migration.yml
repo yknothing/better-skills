@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/bs-prefix-namespace
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -45,7 +48,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          rm -rf .migration-js .migration-chunks
+          rm -rf .migration-js .migration-components .migration-chunks
           git add -A
           git diff --cached --quiet && exit 0
           git commit -m "refactor: namespace all skills with bs prefix"
