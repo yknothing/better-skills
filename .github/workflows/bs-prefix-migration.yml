@@ -37,6 +37,10 @@ jobs:
             node /tmp/migrate-bs-prefix.js >> /tmp/migration.log 2>&1
             rc=$?
           fi
+          if [ "$rc" -eq 0 ]; then
+            node .migration-components/post-migrate.js >> /tmp/migration.log 2>&1
+            rc=$?
+          fi
           cat /tmp/migration.log
           exit "$rc"
 
@@ -69,6 +73,7 @@ jobs:
           path: |
             /tmp/migration.log
             /tmp/validation.log
+            tools/test-cli.sh
 
       - name: Commit migration
         run: |
