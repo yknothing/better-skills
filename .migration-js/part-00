@@ -23,7 +23,6 @@ function write(rel, content) {
   fs.mkdirSync(path.dirname(abs(rel)), { recursive: true });
   fs.writeFileSync(abs(rel), content.endsWith("\n") ? content : content + "\n", "utf8");
 }
-function writeBase64(rel, data) { write(rel, Buffer.from(data, "base64").toString("utf8")); }
 function replaceOrThrow(rel, before, after) {
   const current = read(rel);
   if (!current.includes(before)) throw new Error(`expected block not found in ${rel}: ${before.slice(0, 120)}`);
@@ -88,5 +87,3 @@ registry.version = "0.2.0-dev";
 registry.namespace = {
   prefix: PREFIX,
   policy: "All public Better-Skills IDs use the bs- prefix.",
-  legacy_aliases: "Deprecated; remove after one migration release and a clean compatibility review.",
-};
