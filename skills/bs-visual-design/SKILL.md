@@ -322,7 +322,7 @@ Every animation must have a purpose: guide attention, provide feedback, or creat
 
 The reference covers: the frequency-of-use gate (whether to animate at all), the 5 easing tokens (entrance/exit/emphasis/decelerate/accelerate), the 5-tier duration scale (instant→ceremonial), stagger orchestration (50-80ms intervals, ≤10 element groups, no entrance animations on first paint), mandatory `prefers-reduced-motion` handling, and the GPU-composited-property allow-list (opacity + transform only).
 
-**Scope boundary:** Phase 7 and `references/motion.md` define the motion *language* for this design (tokens, gates, QA). They do not replace expert implementation or line-by-line audit of animation code. After tokens are locked, hand off to Reference skills `bs-emil-design-eng` (implementation polish), `bs-review-animations` (user-invoked strict diff review), or `bs-animation-vocabulary` (naming an effect the user describes vaguely).
+**Scope boundary:** Phase 7 and `references/motion.md` define the motion *language* for this design (tokens, gates, QA). They do not replace expert implementation or line-by-line audit of animation code. After tokens are locked, hand off to Reference skills `emil-design-eng` (implementation polish), `review-animations` (user-invoked strict diff review), or `animation-vocabulary` (naming an effect the user describes vaguely).
 
 ***
 
@@ -485,9 +485,9 @@ After delivering the design:
 - If the design was generated as code: suggest `code-review` before merging.
 - If the design direction needs to be applied to additional screens: invoke this skill again with the established tokens as input (confidence 100 for all Phase 2 decisions).
 - **Motion craft (Reference — do not reimplement here):**
-  - Implementation polish on animation/interaction code → `bs-emil-design-eng` (Reference, [emilkowalski/skills](https://github.com/emilkowalski/skills))
-  - Strict review of motion diffs before merge → `bs-review-animations` (Reference, **user-invoked only**)
-  - User describes an effect without knowing the term → `bs-animation-vocabulary` (Reference)
+  - Implementation polish on animation/interaction code → `emil-design-eng` (Reference, [emilkowalski/skills](https://github.com/emilkowalski/skills))
+  - Strict review of motion diffs before merge → `review-animations` (Reference, **user-invoked only**)
+  - User describes an effect without knowing the term → `animation-vocabulary` (Reference)
 - Do NOT implement, deploy, or modify the design after delivery unless the user explicitly requests iteration. This skill's scope ends at design delivery.
 
 ***

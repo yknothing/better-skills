@@ -40,9 +40,9 @@ This file defines tokens and gates for `bs-visual-design`. For expert motion **i
 
 | Need | Reference skill |
 |------|-----------------|
-| Polish animation/interaction code | `bs-emil-design-eng` |
-| Audit motion diffs (Block/Approve) | `bs-review-animations` (user-invoked) |
-| "What's this effect called?" | `bs-animation-vocabulary` |
+| Polish animation/interaction code | `emil-design-eng` |
+| Audit motion diffs (Block/Approve) | `review-animations` (user-invoked) |
+| "What's this effect called?" | `animation-vocabulary` |
 
 Do not duplicate upstream skill bodies in this repo. See `docs/research/emilkowalski-analysis.md` for curation notes.
 

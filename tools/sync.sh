@@ -86,11 +86,10 @@ while IFS='|' read -r source repo ref skills_path skill; do
   else
     SKILL_SRC="$SOURCE_DIR/$skills_path/$skill"
   fi
-  canonical="bs-$skill"
-  SKILL_DST="$SKILLS_DIR/$canonical"
+  SKILL_DST="$SKILLS_DIR/$skill"
 
   echo ""
-  echo "--- $canonical (upstream: $skill, source: $source) ---"
+  echo "--- $skill (from $source) ---"
 
   # Clone or pull the source repo
   if [ ! -d "$SOURCE_DIR" ]; then
@@ -113,12 +112,11 @@ while IFS='|' read -r source repo ref skills_path skill; do
 
   # Symlink the skill
   if [ -d "$SKILL_SRC" ]; then
-    echo "Linking $canonical..."
+    echo "Linking $skill..."
     if [ "$DRY_RUN" = false ]; then
-      node "$(dirname "$0")/rewrite-skill-namespace.js" "$SKILL_SRC" "$canonical"
       rm -rf "$SKILL_DST"
       ln -sf "$SKILL_SRC" "$SKILL_DST"
-      echo "  $canonical -> $SKILL_SRC"
+      echo "  $skill -> $SKILL_SRC"
     else
       echo "  [DRY RUN] would link $SKILL_SRC -> $SKILL_DST"
     fi

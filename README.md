@@ -6,12 +6,12 @@ A curated toolkit of Agent Skills, built by studying top skill repositories acro
 
 ## Skill namespace
 
-All public Better-Skills IDs use the `bs-` prefix, including curated external skills. For example: `bs-visual-design`, `bs-first-customer-finder`, and `bs-brainstorming`. Upstream repositories keep their original source names; the CLI maps and rewrites them during installation. Legacy unprefixed CLI names remain deprecated aliases for one migration release and are never shown as canonical registry entries.
+Better-Skills self-developed skills use the `bs-` prefix, such as `bs-visual-design` and `bs-first-customer-finder`. Curated external skills retain their upstream names, such as `brainstorming`, `pptx`, and `grill-me`. Legacy unprefixed names for self-developed skills remain deprecated CLI aliases for one migration release.
 
 ## What's actually in here today
 
 - **9 self-developed skills** under `skills/` (~2,800 lines total): `bs-requirements-engineering`, `bs-first-customer-finder`, `bs-visual-design`, `bs-dev-flow`, `bs-prose-craft`, `bs-article-illustrate`, `bs-social-card`, `bs-skill-bootstrap`, `bs-skill-health`
-- **9 external references** declared in `external/sources.yaml` (`bs-brainstorming`, `bs-pptx`, `bs-grill-me`, `bs-grilling`, `bs-writing-great-skills`, `bs-learn-skill`, `bs-emil-design-eng`, `bs-review-animations`, `bs-animation-vocabulary`); `bash tools/sync.sh` clones the upstream repos and symlinks them under `external/`
+- **9 external references** declared in `external/sources.yaml` (`brainstorming`, `pptx`, `grill-me`, `grilling`, `writing-great-skills`, `learn-skill`, `emil-design-eng`, `review-animations`, `animation-vocabulary`); `bash tools/sync.sh` clones the upstream repos and symlinks them under `external/`
 - **Pattern index** at `docs/patterns/README.md` — currently a single-file index of ~60 named patterns; per-pattern files are coming in Phase 1.C
 - **Research notes** at `docs/research/` — analysis of 12 top skill repositories, including [`mattpocock-analysis.md`](docs/research/mattpocock-analysis.md), [`learn-skill-analysis.md`](docs/research/learn-skill-analysis.md), and [`emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md). Other citations are missing today and will be added in Phase 3.
 - **Tooling**: `tools/validate.sh` (Gate 1) and `tools/sync.sh` (external sync). `evaluation/harness/runner.js` exists but is not wired up yet — see Roadmap.
@@ -24,26 +24,26 @@ All public Better-Skills IDs use the `bs-` prefix, including curated external sk
 
 | # | Skill | Strategy | Tier | Domain |
 |---|-------|----------|------|--------|
-| 1 | `bs-brainstorming` | Reference | standard | General |
+| 1 | `brainstorming` | Reference | standard | General |
 | 2 | `bs-requirements-engineering` | Build | deep | General |
 | 3 | `bs-first-customer-finder` | Build | deep | General |
 | 4 | `bs-prose-craft` | Build | standard | Content |
 | 5 | `bs-visual-design` | Build | deep | Design |
 | 6 | `bs-social-card` | Build | lightweight | Design |
 | 7 | `bs-article-illustrate` | Build | standard | Content |
-| 8 | `bs-pptx` | Reference | standard | Design |
+| 8 | `pptx` | Reference | standard | Design |
 | 9 | `bs-dev-flow` | Build | standard | Engineering |
 | 10 | `bs-skill-health` | Build | standard | Meta |
 | 11 | `bs-skill-bootstrap` | Build | standard | Meta |
-| 12 | `bs-grill-me` | Reference | standard | General |
-| 13 | `bs-grilling` | Reference | standard | General |
-| 14 | `bs-writing-great-skills` | Reference | standard | Meta |
-| 15 | `bs-learn-skill` | Reference | deep | General |
-| 16 | `bs-emil-design-eng` | Reference | deep | Design |
-| 17 | `bs-review-animations` | Reference | standard | Design |
-| 18 | `bs-animation-vocabulary` | Reference | lightweight | Design |
+| 12 | `grill-me` | Reference | standard | General |
+| 13 | `grilling` | Reference | standard | General |
+| 14 | `writing-great-skills` | Reference | standard | Meta |
+| 15 | `learn-skill` | Reference | deep | General |
+| 16 | `emil-design-eng` | Reference | deep | Design |
+| 17 | `review-animations` | Reference | standard | Design |
+| 18 | `animation-vocabulary` | Reference | lightweight | Design |
 
-`Strategy: Build` means the skill is implemented in this repo (`skills/<name>/SKILL.md`). `Strategy: Reference` means we curate the upstream skill via `external/sources.yaml` and pull it on demand. `bs-grill-me` is a user-invoked wrapper that delegates to the model-invoked `bs-grilling`; both come from [mattpocock/skills](https://github.com/mattpocock/skills) and must be synced together. `bs-writing-great-skills` is a reference skill (no steps, all in `GLOSSARY.md`) covering skill-writing vocabulary. `bs-learn-skill` is a CE-style exhaustive sample from [koganei/learn-anything-skill](https://github.com/koganei/learn-anything-skill), kept as a deep-tier reference of the "exhaustive spec" school. Motion craft references (`bs-emil-design-eng`, `bs-review-animations`, `bs-animation-vocabulary`) come from [emilkowalski/skills](https://github.com/emilkowalski/skills) and pair with Build skill `bs-visual-design` — see [`docs/research/emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md).
+`Strategy: Build` means the skill is implemented in this repo (`skills/<name>/SKILL.md`). `Strategy: Reference` means we curate the upstream skill via `external/sources.yaml` and pull it on demand. `grill-me` is a user-invoked wrapper that delegates to the model-invoked `grilling`; both come from [mattpocock/skills](https://github.com/mattpocock/skills) and must be synced together. `writing-great-skills` is a reference skill (no steps, all in `GLOSSARY.md`) covering skill-writing vocabulary. `learn-skill` is a CE-style exhaustive sample from [koganei/learn-anything-skill](https://github.com/koganei/learn-anything-skill), kept as a deep-tier reference of the "exhaustive spec" school. Motion craft references (`emil-design-eng`, `review-animations`, `animation-vocabulary`) come from [emilkowalski/skills](https://github.com/emilkowalski/skills) and pair with Build skill `bs-visual-design` — see [`docs/research/emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md).
 
 See [`skills.json`](skills.json) for the authoritative registry.
 
@@ -57,17 +57,17 @@ A coverage matrix with empirical pass-rates against `evaluation/datasets/batch-1
 | Requirements Analysis | `bs-requirements-engineering` |
 | First-customer discovery | `bs-first-customer-finder` |
 | Visual Design | `bs-visual-design` |
-| UI motion craft | `bs-emil-design-eng` (Reference) |
-| Animation diff review | `bs-review-animations` (Reference, user-invoked) |
-| Motion effect naming | `bs-animation-vocabulary` (Reference) |
+| UI motion craft | `emil-design-eng` (Reference) |
+| Animation diff review | `review-animations` (Reference, user-invoked) |
+| Motion effect naming | `animation-vocabulary` (Reference) |
 | Social Media Cards | `bs-social-card` |
 | Writing (general) | `bs-prose-craft` |
-| Brainstorming | `bs-brainstorming` (Reference) |
+| Brainstorming | `brainstorming` (Reference) |
 | Article Illustration | `bs-article-illustrate` |
-| PPT Design | `bs-pptx` (Reference) |
-| Plan Stress-Test (interview) | `bs-grill-me` / `bs-grilling` (Reference) |
-| Skill Writing Vocabulary | `bs-writing-great-skills` (Reference) |
-| Structured Learning Path | `bs-learn-skill` (Reference) |
+| PPT Design | `pptx` (Reference) |
+| Plan Stress-Test (interview) | `grill-me` / `grilling` (Reference) |
+| Skill Writing Vocabulary | `writing-great-skills` (Reference) |
+| Structured Learning Path | `learn-skill` (Reference) |
 
 ## Quick start
 
@@ -82,13 +82,13 @@ npx @yknothing/better-skills list
 # Install a skill into your Claude Code skills directory
 npx @yknothing/better-skills add bs-first-customer-finder
 npx @yknothing/better-skills add bs-visual-design                  # → ~/.claude/skills/bs-visual-design
-npx @yknothing/better-skills add bs-emil-design-eng                # motion craft (Reference)
-npx @yknothing/better-skills add bs-grill-me --target cursor      # → ~/.cursor/skills/bs-grill-me
-npx @yknothing/better-skills add bs-learn-skill                   # CE-style deep learning skill
+npx @yknothing/better-skills add emil-design-eng                # motion craft (Reference)
+npx @yknothing/better-skills add grill-me --target cursor      # → ~/.cursor/skills/grill-me
+npx @yknothing/better-skills add learn-skill                   # CE-style deep learning skill
 
 # Manage installed skills
 npx @yknothing/better-skills list --installed                  # show what's installed
-npx @yknothing/better-skills update bs-grill-me                   # re-pull latest from source
+npx @yknothing/better-skills update grill-me                   # re-pull latest from source
 npx @yknothing/better-skills remove bs-visual-design
 
 # Targets: --target claude | codex | cursor | /abs/path

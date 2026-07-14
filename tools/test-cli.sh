@@ -78,7 +78,7 @@ echo "T2: list (registry)"
 out=$(run_cli list 2>&1); rc=$?
 assert_exit "list exit 0" 0 "$rc"
 echo "$out" | grep -q "bs-social-card" && PASS=$((PASS + 1)) && echo "  $(green PASS) list contains 'bs-social-card'" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) list missing 'bs-social-card'"; }
-echo "$out" | grep -q "bs-brainstorming" && PASS=$((PASS + 1)) && echo "  $(green PASS) list contains 'bs-brainstorming'" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) list missing 'bs-brainstorming'"; }
+echo "$out" | grep -q "brainstorming" && PASS=$((PASS + 1)) && echo "  $(green PASS) list contains 'brainstorming'" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) list missing 'brainstorming'"; }
 echo
 
 echo "T3: list --installed (empty manifest)"

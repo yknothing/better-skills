@@ -8,24 +8,24 @@
       "date": "2026-06",
       "status": "active",
       "skills": [
-        "bs-brainstorming",
+        "brainstorming",
         "bs-requirements-engineering",
         "bs-first-customer-finder",
         "bs-prose-craft",
         "bs-visual-design",
         "bs-social-card",
         "bs-article-illustrate",
-        "bs-pptx",
+        "pptx",
         "bs-dev-flow",
         "bs-skill-health",
         "bs-skill-bootstrap",
-        "bs-grill-me",
-        "bs-grilling",
-        "bs-writing-great-skills",
-        "bs-learn-skill",
-        "bs-emil-design-eng",
-        "bs-review-animations",
-        "bs-animation-vocabulary"
+        "grill-me",
+        "grilling",
+        "writing-great-skills",
+        "learn-skill",
+        "emil-design-eng",
+        "review-animations",
+        "animation-vocabulary"
       ]
     },
     "batch-2": {
@@ -167,91 +167,82 @@
       }
     },
     "external": {
-      "bs-brainstorming": {
+      "brainstorming": {
         "source": "superpowers",
         "path": "external/superpowers/brainstorming",
         "batch": "batch-1",
         "tier": "standard",
-        "status": "active",
-        "upstream_skill": "brainstorming"
+        "status": "active"
       },
-      "bs-pptx": {
+      "pptx": {
         "source": "anthropic-agent-skills",
         "path": "external/anthropic-agent-skills/pptx",
         "batch": "batch-1",
         "tier": "standard",
-        "status": "active",
-        "upstream_skill": "pptx"
+        "status": "active"
       },
-      "bs-grill-me": {
+      "grill-me": {
         "source": "mattpocock-skills",
         "path": "external/mattpocock-skills/grill-me",
         "batch": "batch-1",
         "tier": "standard",
         "invocation": "user-invoked",
         "status": "active",
-        "notes": "Thin wrapper; delegates to 'bs-grilling'. Both must be synced together.",
-        "upstream_skill": "grill-me"
+        "notes": "Thin wrapper; delegates to 'grilling'. Both must be synced together."
       },
-      "bs-grilling": {
+      "grilling": {
         "source": "mattpocock-skills",
         "path": "external/mattpocock-skills/grilling",
         "batch": "batch-1",
         "tier": "standard",
         "invocation": "model-invoked",
         "status": "active",
-        "notes": "Runtime for bs-grill-me / grill-with-docs. See docs/research/mattpocock-analysis.md.",
-        "upstream_skill": "grilling"
+        "notes": "Runtime for grill-me / grill-with-docs. See docs/research/mattpocock-analysis.md."
       },
-      "bs-writing-great-skills": {
+      "writing-great-skills": {
         "source": "mattpocock-skills",
         "path": "external/mattpocock-skills/writing-great-skills",
         "batch": "batch-1",
         "tier": "standard",
         "invocation": "user-invoked",
         "status": "active",
-        "notes": "Reference skill; GLOSSARY.md is disclosed reference.",
-        "upstream_skill": "writing-great-skills"
+        "notes": "Reference skill; GLOSSARY.md is disclosed reference."
       },
-      "bs-learn-skill": {
+      "learn-skill": {
         "source": "learn-anything-skill",
         "path": "external/learn-anything-skill/learn-skill",
         "batch": "batch-1",
         "tier": "deep",
         "invocation": "model-invoked",
         "status": "active",
-        "notes": "CE-style exhaustive sample (1397 lines). Root-level SKILL.md repo. See docs/research/learn-skill-analysis.md.",
-        "upstream_skill": "learn-skill"
+        "notes": "CE-style exhaustive sample (1397 lines). Root-level SKILL.md repo. See docs/research/learn-skill-analysis.md."
       },
-      "bs-emil-design-eng": {
+      "emil-design-eng": {
         "source": "emilkowalski-skills",
         "path": "external/emilkowalski-skills/emil-design-eng",
         "batch": "batch-1",
         "tier": "deep",
         "invocation": "model-invoked",
         "status": "active",
-        "notes": "Motion and UI craft reference (Emil Kowalski). Pairs with Build skill visual-design. See docs/research/emilkowalski-analysis.md.",
-        "upstream_skill": "emil-design-eng"
+        "notes": "Motion and UI craft reference (Emil Kowalski). Pairs with Build skill visual-design. See docs/research/emilkowalski-analysis.md."
       },
-      "bs-review-animations": {
+      "review-animations": {
         "source": "emilkowalski-skills",
         "path": "external/emilkowalski-skills/review-animations",
         "batch": "batch-1",
         "tier": "standard",
         "invocation": "user-invoked",
         "status": "active",
-        "notes": "Upstream sets disable-model-invocation: true. Strict motion diff review; user-invoked only.",
-        "upstream_skill": "review-animations"
+        "notes": "Upstream sets disable-model-invocation: true. Strict motion diff review; user-invoked only."
       },
-      "bs-animation-vocabulary": {
+      "animation-vocabulary": {
         "source": "emilkowalski-skills",
         "path": "external/emilkowalski-skills/animation-vocabulary",
         "batch": "batch-1",
         "tier": "lightweight",
         "invocation": "model-invoked",
         "status": "active",
-        "notes": "Reverse-lookup glossary for motion effect names. Narrow trigger: naming/describing effects, not implementing them.",
-        "upstream_skill": "animation-vocabulary"
+        "notes": "Reverse-lookup glossary for motion effect names. Narrow trigger: naming/describing effects, not implementing them."
       }
     }
   },
@@ -270,8 +261,8 @@
   "sources": {},
   "namespace": {
     "prefix": "bs-",
-    "policy": "All public Better-Skills IDs use the bs- prefix.",
-    "legacy_aliases": "Deprecated; remove after one migration release and a clean compatibility review."
+    "policy": "Self-developed Better-Skills IDs use the bs- prefix; curated external skills retain upstream IDs.",
+    "legacy_aliases": "Deprecated aliases apply only to renamed self-developed skills and should be removed after one migration release."
   },
   "aliases": {
     "requirements-engineering": "bs-requirements-engineering",
@@ -282,15 +273,6 @@
     "skill-health": "bs-skill-health",
     "skill-bootstrap": "bs-skill-bootstrap",
     "social-card": "bs-social-card",
-    "article-illustrate": "bs-article-illustrate",
-    "brainstorming": "bs-brainstorming",
-    "pptx": "bs-pptx",
-    "grill-me": "bs-grill-me",
-    "grilling": "bs-grilling",
-    "writing-great-skills": "bs-writing-great-skills",
-    "learn-skill": "bs-learn-skill",
-    "emil-design-eng": "bs-emil-design-eng",
-    "review-animations": "bs-review-animations",
-    "animation-vocabulary": "bs-animation-vocabulary"
+    "article-illustrate": "bs-article-illustrate"
   }
 }
