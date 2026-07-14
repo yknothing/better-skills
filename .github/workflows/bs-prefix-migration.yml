@@ -23,12 +23,28 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Apply namespace migration
+        id: migrate
+        shell: bash
         run: |
+          set +e
           cat .migration-js/part-* > /tmp/migrate-bs-prefix.js
-          node /tmp/migrate-bs-prefix.js
+          node --check /tmp/migrate-bs-prefix.js > /tmp/migration.log 2>&1
+          rc=$?
+          if [ "$rc" -eq 0 ]; then
+            node /tmp/migrate-bs-prefix.js >> /tmp/migration.log 2>&1
+            rc=$?
+          fi
+          cat /tmp/migration.log
+          exit "$rc"
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: bs-prefix-migration-diagnostics
+          path: /tmp/migration.log
 
       - name: Validate migrated repository
         run: |
