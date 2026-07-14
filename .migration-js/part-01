@@ -1,3 +1,5 @@
+  legacy_aliases: "Deprecated; remove after one migration release and a clean compatibility review.",
+};
 registry.aliases = aliases;
 for (const batch of Object.values(registry.batches || {})) {
   if (Array.isArray(batch.skills)) batch.skills = batch.skills.map((name) => aliases[name] || name);
@@ -45,3 +47,35 @@ for (const file of walk(abs("skills"))) {
   if (next !== current) fs.writeFileSync(file, next, "utf8");
 }
 
+write("lib/namespace.js", read(".migration-components/namespace.js"));
+write("lib/commands/update.js", read(".migration-components/update.js"));
+write("tools/rewrite-skill-namespace.js", read(".migration-components/rewrite-skill-namespace.js"));
+fs.chmodSync(abs("tools/rewrite-skill-namespace.js"), 0o755);
+
+replaceOrThrow("lib/resolver.js",
+`// Returns { name, kind: "self-developed" | "external", absSourceDir, meta }
+// Throws ENOTFOUND if name not registered.
+function resolveSource(name) {
+  if (!isValidName(name)) {
+    const e = new Error(
+      \`invalid skill name: \${JSON.stringify(name)} (must match /^[a-z][a-z0-9-]*$/)\`
+    );
+    e.code = "EUSAGE";
+    throw e;
+  }
+
+  const { root, skillsJson, sources } = loadRegistry();`,
+`function canonicalizeName(name, skillsJson) {
+  const registry = skillsJson || loadRegistry().skillsJson;
+  return registry.aliases?.[name] || name;
+}
+
+function legacyNamesFor(canonicalName, skillsJson) {
+  const registry = skillsJson || loadRegistry().skillsJson;
+  return Object.entries(registry.aliases || {})
+    .filter(([, canonical]) => canonical === canonicalName)
+    .map(([legacy]) => legacy);
+}
+
+// Returns canonical name plus the originally requested name.
+// Throws ENOTFOUND if neither the name nor its alias is registered.
