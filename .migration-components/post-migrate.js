@@ -51,8 +51,29 @@ if (fs.existsSync(reviewsRoot)) {
 
 const testFile = path.join(root, "tools", "test-cli.sh");
 let tests = fs.readFileSync(testFile, "utf8");
-const fragile = `grep -q '^name: bs-social-card$' "$ALIAS_DIR/bs-social-card/SKILL.md" && PASS=$((PASS + 1)) && echo "  $(green PASS) installed frontmatter is canonical" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) installed frontmatter not canonical"; }`;
-const robust = `if grep -q "^name: bs-social-card$" "$ALIAS_DIR/bs-social-card/SKILL.md"; then\n  PASS=$((PASS + 1))\n  echo "  $(green PASS) installed frontmatter is canonical"\nelse\n  FAIL=$((FAIL + 1))\n  echo "  $(red FAIL) installed frontmatter not canonical"\nfi`;
-if (!tests.includes(fragile)) throw new Error("legacy-alias assertion not found in tools/test-cli.sh");
-tests = tests.replace(fragile, robust);
+const marker = 'echo "T24: legacy alias installs canonical identity"';
+const markerIndex = tests.indexOf(marker);
+if (markerIndex < 0) throw new Error("T24 legacy-alias test marker not found in tools/test-cli.sh");
+
+const cleanTail = `echo "T24: legacy alias installs canonical identity"
+ALIAS_DIR="$SANDBOX/alias"
+mkdir -p "$ALIAS_DIR"
+run_cli add social-card --target "$ALIAS_DIR" >/dev/null 2>&1; rc=$?
+assert_exit "legacy alias add exit 0" 0 "$rc"
+assert_path_exists "alias created canonical directory" "$ALIAS_DIR/bs-social-card/SKILL.md"
+assert_path_missing "alias did not create legacy directory" "$ALIAS_DIR/social-card"
+if grep -q "^name: bs-social-card$" "$ALIAS_DIR/bs-social-card/SKILL.md"; then
+  PASS=$((PASS + 1))
+  echo "  $(green PASS) installed frontmatter is canonical"
+else
+  FAIL=$((FAIL + 1))
+  echo "  $(red FAIL) installed frontmatter not canonical"
+fi
+echo
+
+echo "==> Result: $(green "$PASS pass") / $(red "$FAIL fail")"
+[ "$FAIL" -eq 0 ] || exit 1
+`;
+
+tests = tests.slice(0, markerIndex) + cleanTail;
 fs.writeFileSync(testFile, tests, "utf8");
