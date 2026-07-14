@@ -6,8 +6,8 @@
 
 const bootstrap = `skills/${PREFIX}skill-bootstrap/SKILL.md`;
 replaceOrThrow(bootstrap,
-`9. **Check Reference-vs-Build before building**. Before Step 1, search \`external/sources.yaml\` for existing upstream skills in the same domain. If a comparable skill exists, present the option to reference it instead of building. Per \`CLAUDE.md\`: some skills should be curated, not reimplemented.`,
-`9. **Check Reference-vs-Build before building**. Before Step 1, search \`external/sources.yaml\` for existing upstream skills in the same domain. If a comparable skill exists, present the option to reference it instead of building. Per \`CLAUDE.md\`: some skills should be curated, not reimplemented.
+`9. **Check Reference-vs-Build before building**. Before Step 1, search \`external/sources.yaml\` for existing upstream skills in the same domain. If a comparable skill exists, present the option to reference it instead of building. Per CLAUDE.md: some skills should be curated, not reimplemented.`,
+`9. **Check Reference-vs-Build before building**. Before Step 1, search \`external/sources.yaml\` for existing upstream skills in the same domain. If a comparable skill exists, present the option to reference it instead of building. Per CLAUDE.md: some skills should be curated, not reimplemented.
 10. **Enforce the Better-Skills namespace.** Every canonical skill ID and self-developed directory MUST start with \`bs-\`. If the user proposes an unprefixed name, normalize it once, state the canonical ID, and use that ID throughout the registry, path, reviews, and evaluations.`);
 replaceOrThrow(bootstrap,
 `### Name Collision Check
