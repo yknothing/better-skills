@@ -4,9 +4,13 @@ A curated toolkit of Agent Skills, built by studying top skill repositories acro
 
 - **Status: Phase 2 shipped.** This repo currently ships 9 self-developed `SKILL.md` files plus 9 declared external references, a 59-pattern machine-readable library under `docs/patterns/`, a zero-dependency CLI (`bin/better-skills.js`) for installing skills, and a 4-gate review pipeline that is mechanized end-to-end: Gate 1 (`tools/validate.js`), Gate 2 (`tools/peer-review.js`), Gate 3 (`tools/pattern-alignment.js` + `tools/check-patterns.sh`), Gate 4 (`evaluation/harness/runner.js`). See [Roadmap](#roadmap) for what's deferred (LLM-judge / A/B tests / npm publish). Content claims that haven't been verified by the evaluation pipeline yet are explicitly marked **TBD**.
 
+## Skill namespace
+
+Better-Skills self-developed skills use the `bs-` prefix, such as `bs-visual-design` and `bs-first-customer-finder`. Curated external skills retain their upstream names, such as `brainstorming`, `pptx`, and `grill-me`. Legacy unprefixed names for self-developed skills remain deprecated CLI aliases for one migration release.
+
 ## What's actually in here today
 
-- **9 self-developed skills** under `skills/` (~2,800 lines total): `requirements-engineering`, `first-customer-finder`, `visual-design`, `dev-flow`, `prose-craft`, `article-illustrate`, `social-card`, `skill-bootstrap`, `skill-health`
+- **9 self-developed skills** under `skills/` (~2,800 lines total): `bs-requirements-engineering`, `bs-first-customer-finder`, `bs-visual-design`, `bs-dev-flow`, `bs-prose-craft`, `bs-article-illustrate`, `bs-social-card`, `bs-skill-bootstrap`, `bs-skill-health`
 - **9 external references** declared in `external/sources.yaml` (`brainstorming`, `pptx`, `grill-me`, `grilling`, `writing-great-skills`, `learn-skill`, `emil-design-eng`, `review-animations`, `animation-vocabulary`); `bash tools/sync.sh` clones the upstream repos and symlinks them under `external/`
 - **Pattern index** at `docs/patterns/README.md` — currently a single-file index of ~60 named patterns; per-pattern files are coming in Phase 1.C
 - **Research notes** at `docs/research/` — analysis of 12 top skill repositories, including [`mattpocock-analysis.md`](docs/research/mattpocock-analysis.md), [`learn-skill-analysis.md`](docs/research/learn-skill-analysis.md), and [`emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md). Other citations are missing today and will be added in Phase 3.
@@ -21,16 +25,16 @@ A curated toolkit of Agent Skills, built by studying top skill repositories acro
 | # | Skill | Strategy | Tier | Domain |
 |---|-------|----------|------|--------|
 | 1 | `brainstorming` | Reference | standard | General |
-| 2 | `requirements-engineering` | Build | deep | General |
-| 3 | `first-customer-finder` | Build | deep | General |
-| 4 | `prose-craft` | Build | standard | Content |
-| 5 | `visual-design` | Build | deep | Design |
-| 6 | `social-card` | Build | lightweight | Design |
-| 7 | `article-illustrate` | Build | standard | Content |
+| 2 | `bs-requirements-engineering` | Build | deep | General |
+| 3 | `bs-first-customer-finder` | Build | deep | General |
+| 4 | `bs-prose-craft` | Build | standard | Content |
+| 5 | `bs-visual-design` | Build | deep | Design |
+| 6 | `bs-social-card` | Build | lightweight | Design |
+| 7 | `bs-article-illustrate` | Build | standard | Content |
 | 8 | `pptx` | Reference | standard | Design |
-| 9 | `dev-flow` | Build | standard | Engineering |
-| 10 | `skill-health` | Build | standard | Meta |
-| 11 | `skill-bootstrap` | Build | standard | Meta |
+| 9 | `bs-dev-flow` | Build | standard | Engineering |
+| 10 | `bs-skill-health` | Build | standard | Meta |
+| 11 | `bs-skill-bootstrap` | Build | standard | Meta |
 | 12 | `grill-me` | Reference | standard | General |
 | 13 | `grilling` | Reference | standard | General |
 | 14 | `writing-great-skills` | Reference | standard | Meta |
@@ -39,7 +43,7 @@ A curated toolkit of Agent Skills, built by studying top skill repositories acro
 | 17 | `review-animations` | Reference | standard | Design |
 | 18 | `animation-vocabulary` | Reference | lightweight | Design |
 
-`Strategy: Build` means the skill is implemented in this repo (`skills/<name>/SKILL.md`). `Strategy: Reference` means we curate the upstream skill via `external/sources.yaml` and pull it on demand. `grill-me` is a user-invoked wrapper that delegates to the model-invoked `grilling`; both come from [mattpocock/skills](https://github.com/mattpocock/skills) and must be synced together. `writing-great-skills` is a reference skill (no steps, all in `GLOSSARY.md`) covering skill-writing vocabulary. `learn-skill` is a CE-style exhaustive sample from [koganei/learn-anything-skill](https://github.com/koganei/learn-anything-skill), kept as a deep-tier reference of the "exhaustive spec" school. Motion craft references (`emil-design-eng`, `review-animations`, `animation-vocabulary`) come from [emilkowalski/skills](https://github.com/emilkowalski/skills) and pair with Build skill `visual-design` — see [`docs/research/emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md).
+`Strategy: Build` means the skill is implemented in this repo (`skills/<name>/SKILL.md`). `Strategy: Reference` means we curate the upstream skill via `external/sources.yaml` and pull it on demand. `grill-me` is a user-invoked wrapper that delegates to the model-invoked `grilling`; both come from [mattpocock/skills](https://github.com/mattpocock/skills) and must be synced together. `writing-great-skills` is a reference skill (no steps, all in `GLOSSARY.md`) covering skill-writing vocabulary. `learn-skill` is a CE-style exhaustive sample from [koganei/learn-anything-skill](https://github.com/koganei/learn-anything-skill), kept as a deep-tier reference of the "exhaustive spec" school. Motion craft references (`emil-design-eng`, `review-animations`, `animation-vocabulary`) come from [emilkowalski/skills](https://github.com/emilkowalski/skills) and pair with Build skill `bs-visual-design` — see [`docs/research/emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md).
 
 See [`skills.json`](skills.json) for the authoritative registry.
 
@@ -49,17 +53,17 @@ A coverage matrix with empirical pass-rates against `evaluation/datasets/batch-1
 
 | Scenario | Primary Skill |
 |----------|--------------|
-| Software Development | `dev-flow` |
-| Requirements Analysis | `requirements-engineering` |
-| First-customer discovery | `first-customer-finder` |
-| Visual Design | `visual-design` |
+| Software Development | `bs-dev-flow` |
+| Requirements Analysis | `bs-requirements-engineering` |
+| First-customer discovery | `bs-first-customer-finder` |
+| Visual Design | `bs-visual-design` |
 | UI motion craft | `emil-design-eng` (Reference) |
 | Animation diff review | `review-animations` (Reference, user-invoked) |
 | Motion effect naming | `animation-vocabulary` (Reference) |
-| Social Media Cards | `social-card` |
-| Writing (general) | `prose-craft` |
+| Social Media Cards | `bs-social-card` |
+| Writing (general) | `bs-prose-craft` |
 | Brainstorming | `brainstorming` (Reference) |
-| Article Illustration | `article-illustrate` |
+| Article Illustration | `bs-article-illustrate` |
 | PPT Design | `pptx` (Reference) |
 | Plan Stress-Test (interview) | `grill-me` / `grilling` (Reference) |
 | Skill Writing Vocabulary | `writing-great-skills` (Reference) |
@@ -76,8 +80,8 @@ The CLI is shipped as the npm package [`@yknothing/better-skills`](https://www.n
 npx @yknothing/better-skills list
 
 # Install a skill into your Claude Code skills directory
-npx @yknothing/better-skills add first-customer-finder
-npx @yknothing/better-skills add visual-design                  # → ~/.claude/skills/visual-design
+npx @yknothing/better-skills add bs-first-customer-finder
+npx @yknothing/better-skills add bs-visual-design                  # → ~/.claude/skills/bs-visual-design
 npx @yknothing/better-skills add emil-design-eng                # motion craft (Reference)
 npx @yknothing/better-skills add grill-me --target cursor      # → ~/.cursor/skills/grill-me
 npx @yknothing/better-skills add learn-skill                   # CE-style deep learning skill
@@ -85,7 +89,7 @@ npx @yknothing/better-skills add learn-skill                   # CE-style deep l
 # Manage installed skills
 npx @yknothing/better-skills list --installed                  # show what's installed
 npx @yknothing/better-skills update grill-me                   # re-pull latest from source
-npx @yknothing/better-skills remove visual-design
+npx @yknothing/better-skills remove bs-visual-design
 
 # Targets: --target claude | codex | cursor | /abs/path
 ```
@@ -99,11 +103,11 @@ git clone https://github.com/yknothing/better-skills
 cd better-skills
 
 # Validate any skill against Gate 1
-bash tools/validate.sh skills/visual-design/
+bash tools/validate.sh skills/bs-visual-design/
 
 # Run the CLI from source
 node bin/better-skills.js list
-node bin/better-skills.js add visual-design
+node bin/better-skills.js add bs-visual-design
 
 # Or pull all external references at once (brainstorming, pptx, grill-me, grilling, writing-great-skills, learn-skill, emil-design-eng, review-animations, animation-vocabulary)
 bash tools/sync.sh

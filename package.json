@@ -1,6 +1,6 @@
 {
   "name": "@yknothing/better-skills",
-  "version": "0.1.0-dev",
+  "version": "0.2.0-dev",
   "description": "A curated toolkit of Agent Skills, built by studying top skill repositories across the industry. Install skills into Claude Code, Cursor, or Codex agent directories.",
   "bin": {
     "better-skills": "bin/better-skills.js"

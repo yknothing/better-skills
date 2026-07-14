@@ -36,12 +36,12 @@ Skip it for commands where the exact invocation varies by project and the agent 
 
 ## Used by
 
-- `dev-flow` — Exact commands throughout: `git add <specific-file-1> <specific-file-2>`, `git commit -m "<type>: <imperative summary>"`, `npx jest path/to/test.test.ts --no-coverage`, `npx tsc --noEmit`.
-- `social-card` — Exact Playwright MCP commands for screenshot: `mcp__playwright__browser_navigate({ url: "file:///tmp/social-card.html" })`, `mcp__playwright__browser_resize({ width: 1200, height: 630 })`.
+- `bs-dev-flow` — Exact commands throughout: `git add <specific-file-1> <specific-file-2>`, `git commit -m "<type>: <imperative summary>"`, `npx jest path/to/test.test.ts --no-coverage`, `npx tsc --noEmit`.
+- `bs-social-card` — Exact Playwright MCP commands for screenshot: `mcp__playwright__browser_navigate({ url: "file:///tmp/bs-social-card.html" })`, `mcp__playwright__browser_resize({ width: 1200, height: 630 })`.
 
 ## Examples
 
-From `skills/dev-flow/SKILL.md`:
+From `skills/bs-dev-flow/SKILL.md`:
 
 ```markdown
 **Automated checks (non-negotiable):**
@@ -54,10 +54,10 @@ npx tsc --noEmit    # or: mypy ., etc. (if typed)
 Fix any lint or type errors. Do not commit code that fails automated checks.
 ```
 
-From `skills/social-card/SKILL.md`:
+From `skills/bs-social-card/SKILL.md`:
 
 ```
-1. mcp__playwright__browser_navigate({ url: "file:///tmp/social-card.html" })
+1. mcp__playwright__browser_navigate({ url: "file:///tmp/bs-social-card.html" })
 2. mcp__playwright__browser_resize({ width: 1200, height: 630 })
 3. mcp__playwright__browser_wait_for({ time: 1 })
 4. mcp__playwright__browser_take_screenshot({ type: "png", fullPage: true, filename: "<path>" })

@@ -25,7 +25,7 @@ Without TDD, skill authors write the skill body first and then (maybe) test it. 
 
 ## When to use it
 
-- Every new skill creation. This is a required pattern in `skill-bootstrap` Step 5.
+- Every new skill creation. This is a required pattern in `bs-skill-bootstrap` Step 5.
 - When modifying an existing skill — write new test prompts for the change before modifying the body.
 - When auditing a skill for quality — the test prompts are the benchmark.
 
@@ -33,11 +33,11 @@ Skip it only for trivially short skills (under 30 lines) where the entire body i
 
 ## Used by
 
-- `skill-bootstrap` — Hard Rule 7: "TDD for skills: RED (write test prompts first, confirm they fail without the skill) → GREEN (write the skill, run validation, confirm prompts now succeed) → REFACTOR (tighten constraints, close loopholes, add edge case handling)." Step 5 invokes `references/tdd-for-skills.md` for the full RED-GREEN-REFACTOR procedure.
+- `bs-skill-bootstrap` — Hard Rule 7: "TDD for skills: RED (write test prompts first, confirm they fail without the skill) → GREEN (write the skill, run validation, confirm prompts now succeed) → REFACTOR (tighten constraints, close loopholes, add edge case handling)." Step 5 invokes `references/tdd-for-skills.md` for the full RED-GREEN-REFACTOR procedure.
 
 ## Examples
 
-From `skills/skill-bootstrap/references/tdd-for-skills.md`, the RED phase:
+From `skills/bs-skill-bootstrap/references/tdd-for-skills.md`, the RED phase:
 
 ```markdown
 ### RED Phase — Baseline Verification
@@ -59,7 +59,7 @@ From `skills/skill-bootstrap/references/tdd-for-skills.md`, the RED phase:
    Predict what a skill-less agent would miss.
 ```
 
-The full procedure (RED-GREEN-REFACTOR, control-prompt comparison, adversarial loophole audit) lives in `skills/skill-bootstrap/references/tdd-for-skills.md`.
+The full procedure (RED-GREEN-REFACTOR, control-prompt comparison, adversarial loophole audit) lives in `skills/bs-skill-bootstrap/references/tdd-for-skills.md`.
 
 ## Related patterns
 

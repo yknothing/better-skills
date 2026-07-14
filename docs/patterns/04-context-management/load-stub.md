@@ -34,7 +34,7 @@ Bare links are ambiguous to an LLM — required, supplementary, or historical? A
 
 ## Used by
 
-No active references yet — extracted from CE. The pattern is implicit in every skill that uses `references/` (e.g. `dev-flow` Phase 3b references `characterization-tests.md` with an explicit trigger condition), but no skill cites it in `skills.json` yet.
+No active references yet — extracted from CE. The pattern is implicit in every skill that uses `references/` (e.g. `bs-dev-flow` Phase 3b references `characterization-tests.md` with an explicit trigger condition), but no skill cites it in `skills.json` yet.
 
 ## Related patterns
 

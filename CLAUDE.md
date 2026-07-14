@@ -8,7 +8,7 @@ This repo's central logic: **STUDY → EXTRACT → DEVELOP → REVIEW → DEPLOY
 
 1. **STUDY**: Pick a top skill from the researched sources (docs/research/). Deconstruct its anatomy — what patterns does it use? What makes it work?
 2. **EXTRACT**: Identify reusable patterns. Document them in docs/patterns/ with source attribution.
-3. **DEVELOP**: Build a custom skill in skills/<name>/SKILL.md using extracted patterns. Follow the TDD-for-skills methodology defined by skill-bootstrap.
+3. **DEVELOP**: Build a custom skill in skills/<name>/SKILL.md using extracted patterns. Follow the TDD-for-skills methodology defined by bs-skill-bootstrap.
 4. **REVIEW**: Run the review pipeline. No skill enters without passing all 4 gates.
 5. **DEPLOY**: Register in skills.json. Tag a version. Sync external references.
 
@@ -29,9 +29,9 @@ These triggers are documented as design intent, not as data we currently collect
 
 | Tier | When to Use | Example Candidates |
 |------|-------------|-------------------|
-| **Deep** | High frequency + high failure cost | requirements-engineering, visual-design |
-| **Standard** | Normal frequency + moderate cost | dev-flow, prose-craft, article-illustrate, skill-health, skill-bootstrap |
-| **Lightweight** | High frequency + low failure cost | social-card |
+| **Deep** | High frequency + high failure cost | bs-requirements-engineering, bs-visual-design |
+| **Standard** | Normal frequency + moderate cost | bs-dev-flow, bs-prose-craft, bs-article-illustrate, bs-skill-health, bs-skill-bootstrap |
+| **Lightweight** | High frequency + low failure cost | bs-social-card |
 
 Tier is currently declared only in `skills.json`; SKILL.md frontmatter does not yet carry a `tier` field. Phase 1.B normalizes this by adding a structured tier field to each skill's frontmatter.
 

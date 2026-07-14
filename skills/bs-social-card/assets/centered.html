@@ -1,0 +1,20 @@
+<!-- Parent skill: skills/bs-social-card/SKILL.md -->
+<!-- Layout variant: Centered (default) — used when title only, or title + short subtitle -->
+<!-- Used by: Step 5 of SKILL.md -->
+<!-- Prerequisites: Steps 1-4 complete (title extracted, layout=centered chosen, text escaped, font-size selected) -->
+<!-- Placeholders: {{ACCENT_COLOR}} {{FONT_SIZE}} {{ESCAPED_TITLE}} {{ESCAPED_SUBTITLE}} -->
+<!-- Subtitle block ({{#SUBTITLE}}...{{/SUBTITLE}}) must be removed entirely if no subtitle is supplied -->
+<!-- Related: assets/logo-title.html, assets/avatar-quote.html, ../SKILL.md Step 5 -->
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1200px;height:630px;overflow:hidden;font-family:system-ui,-apple-system,sans-serif;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#FFFFFF;color:#1A1A1A;padding:80px 100px;position:relative}
+.accent-bar{position:absolute;top:0;left:0;right:0;height:8px;background:{{ACCENT_COLOR}}}
+h1{font-size:{{FONT_SIZE}}px;font-weight:800;text-align:center;max-width:900px;line-height:1.15;word-wrap:break-word}
+.subtitle{font-size:28px;color:#6B7280;position:absolute;bottom:60px;left:100px}
+</style></head>
+<body>
+<div class="accent-bar"></div>
+<h1>{{ESCAPED_TITLE}}</h1>
+{{#SUBTITLE}}<p class="subtitle">{{ESCAPED_SUBTITLE}}</p>{{/SUBTITLE}}
+</body></html>

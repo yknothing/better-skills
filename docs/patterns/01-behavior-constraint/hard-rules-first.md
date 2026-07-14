@@ -33,18 +33,18 @@ Skip it for trivially short skills (≤50 lines) where the workflow itself is th
 
 ## Used by
 
-- `requirements-engineering` — `## HARD RULES — READ FIRST` block sits at line ~7, before any pipeline description.
-- `prose-craft` — Hard Constraints (numbered list) appear before Soft Guidelines and the editing workflow.
-- `dev-flow` — `## HARD RULES — read before any process step` block, including "Tests first, always" and "No `git add .`", before the pipeline overview.
-- `skill-bootstrap` — Hard Rules block before the 8-step workflow.
-- `social-card` — `## HARD RULES` (4 numbered rules) before Step 1.
-- `article-illustrate` — Hard Rules block before Stage 1.
+- `bs-requirements-engineering` — `## HARD RULES — READ FIRST` block sits at line ~7, before any pipeline description.
+- `bs-prose-craft` — Hard Constraints (numbered list) appear before Soft Guidelines and the editing workflow.
+- `bs-dev-flow` — `## HARD RULES — read before any process step` block, including "Tests first, always" and "No `git add .`", before the pipeline overview.
+- `bs-skill-bootstrap` — Hard Rules block before the 8-step workflow.
+- `bs-social-card` — `## HARD RULES` (4 numbered rules) before Step 1.
+- `bs-article-illustrate` — Hard Rules block before Stage 1.
 
 ## Examples
 
 ```markdown
 ---
-name: dev-flow
+name: bs-dev-flow
 description: Use when ...
 ---
 

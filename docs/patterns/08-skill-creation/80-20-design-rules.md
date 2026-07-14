@@ -33,11 +33,11 @@ Skip it only for purely functional outputs (API responses, data formats, logs) w
 
 ## Used by
 
-- `visual-design` — `## Core Principle: 80/20 Design` at lines 11-18: "80% of every design must use proven, validated patterns. 20% must be distinctive — the reason someone would recognize this design in a screenshot. If the 20% is absent, you shipped a template. If the 80% is absent, you shipped a mess." The skill then specifies validated-pattern defaults for color (60-30-10), typography (sans-serif body + display heading), and layout (validated patterns list in Phase 4.2), each with a 20% distinctive modifier.
+- `bs-visual-design` — `## Core Principle: 80/20 Design` at lines 11-18: "80% of every design must use proven, validated patterns. 20% must be distinctive — the reason someone would recognize this design in a screenshot. If the 20% is absent, you shipped a template. If the 80% is absent, you shipped a mess." The skill then specifies validated-pattern defaults for color (60-30-10), typography (sans-serif body + display heading), and layout (validated patterns list in Phase 4.2), each with a 20% distinctive modifier.
 
 ## Examples
 
-From `skills/visual-design/SKILL.md`:
+From `skills/bs-visual-design/SKILL.md`:
 
 ```markdown
 ## Core Principle: 80/20 Design

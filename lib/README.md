@@ -71,9 +71,9 @@ Single file per target dir. Atomic write via temp + rename.
   "version": "0.1.0-dev",
   "updated_at": "2026-06-18T12:34:56Z",
   "installed": {
-    "social-card": {
+    "bs-social-card": {
       "source": "self-developed",
-      "from": "skills/social-card",
+      "from": "skills/bs-social-card",
       "installed_at": "2026-06-18T12:34:56Z",
       "method": "copy",
       "files": ["SKILL.md", "assets/centered.html"]
@@ -131,13 +131,13 @@ The CLI accepts `<name>` from argv and uses it to construct paths. To prevent pa
 
 1. `list` — output contains all 8 self-developed + 2 external skills
 2. `list --installed` — empty manifest case
-3. `add social-card --target /tmp/<sandbox>` — files appear, manifest is valid JSON, `installed.social-card.files` matches
-4. `add social-card --target /tmp/<sandbox>` again → exit 4
-5. `add social-card --target /tmp/<sandbox> --force` → exit 0, manifest timestamp updated
-6. `remove social-card --target /tmp/<sandbox>` → files gone, manifest entry gone
+3. `add bs-social-card --target /tmp/<sandbox>` — files appear, manifest is valid JSON, `installed.bs-social-card.files` matches
+4. `add bs-social-card --target /tmp/<sandbox>` again → exit 4
+5. `add bs-social-card --target /tmp/<sandbox> --force` → exit 0, manifest timestamp updated
+6. `remove bs-social-card --target /tmp/<sandbox>` → files gone, manifest entry gone
 7. `add ../../../etc/passwd` → exit 2 (usage error from name validation)
 8. `add nonexistent` → exit 3
-9. `add social-card --dry-run` → no files written, no manifest change
+9. `add bs-social-card --dry-run` → no files written, no manifest change
 
 ## Out of scope for v0.1 (future phases)
 

@@ -2,7 +2,7 @@
   "description": "Evaluation test prompts for all Batch 1 self-developed skills. Each skill has 3 prompts: happy path, edge case, adversarial.",
   "created": "2026-06-17",
   "skills": {
-    "requirements-engineering": {
+    "bs-requirements-engineering": {
       "tier": "deep",
       "evals": [
         {
@@ -28,7 +28,7 @@
         }
       ]
     },
-    "first-customer-finder": {
+    "bs-first-customer-finder": {
       "tier": "deep",
       "evals": [
         {
@@ -54,7 +54,7 @@
         }
       ]
     },
-    "visual-design": {
+    "bs-visual-design": {
       "tier": "deep",
       "evals": [
         {
@@ -80,7 +80,7 @@
         }
       ]
     },
-    "prose-craft": {
+    "bs-prose-craft": {
       "tier": "standard",
       "evals": [
         {
@@ -106,7 +106,7 @@
         }
       ]
     },
-    "dev-flow": {
+    "bs-dev-flow": {
       "tier": "standard",
       "evals": [
         {
@@ -132,7 +132,7 @@
         }
       ]
     },
-    "skill-health": {
+    "bs-skill-health": {
       "tier": "standard",
       "evals": [
         {
@@ -158,7 +158,7 @@
         }
       ]
     },
-    "skill-bootstrap": {
+    "bs-skill-bootstrap": {
       "tier": "standard",
       "evals": [
         {
@@ -184,7 +184,7 @@
         }
       ]
     },
-    "social-card": {
+    "bs-social-card": {
       "tier": "lightweight",
       "evals": [
         {
@@ -210,7 +210,7 @@
         }
       ]
     },
-    "article-illustrate": {
+    "bs-article-illustrate": {
       "tier": "standard",
       "evals": [
         {

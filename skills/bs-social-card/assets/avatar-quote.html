@@ -1,0 +1,24 @@
+<!-- Parent skill: skills/bs-social-card/SKILL.md -->
+<!-- Layout variant: Avatar + Quote — used for testimonials, author quotes, personal-brand cards -->
+<!-- Used by: Step 5 of SKILL.md -->
+<!-- Prerequisites: Steps 1-4 complete; the title is the quote body, the subtitle is the attribution (name + handle) -->
+<!-- Placeholders: {{ACCENT_COLOR}} {{FONT_SIZE}} {{ESCAPED_TITLE}} {{ESCAPED_SUBTITLE}} {{AVATAR_SRC}} -->
+<!-- Title is rendered as a pull-quote (with leading curly quote glyph). Subtitle holds the attribution: name + handle. -->
+<!-- Avatar block ({{#AVATAR}}...{{/AVATAR}}) must be removed entirely if no avatar is supplied; in that case the layout still works (no portrait, just the quote). -->
+<!-- Related: assets/centered.html, assets/logo-title.html, ../SKILL.md Step 5 -->
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1200px;height:630px;overflow:hidden;font-family:system-ui,-apple-system,sans-serif;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#FFFFFF;color:#1A1A1A;padding:80px 100px;position:relative}
+.accent-bar{position:absolute;top:0;left:0;right:0;height:8px;background:{{ACCENT_COLOR}}}
+.avatar{width:120px;height:120px;border-radius:9999px;object-fit:cover;margin-bottom:32px;border:4px solid #FFFFFF;box-shadow:0 4px 16px rgba(0,0,0,0.12)}
+.quote{font-size:{{FONT_SIZE}}px;font-weight:600;text-align:center;max-width:900px;line-height:1.25;word-wrap:break-word;font-style:italic;position:relative}
+.quote::before{content:"\201C";font-size:1.4em;line-height:0;position:relative;top:0.18em;margin-right:0.05em;color:{{ACCENT_COLOR}};font-style:normal}
+.attribution{font-size:24px;color:#6B7280;margin-top:32px;text-align:center;font-weight:500}
+</style></head>
+<body>
+<div class="accent-bar"></div>
+{{#AVATAR}}<img class="avatar" src="{{AVATAR_SRC}}" alt="avatar" />{{/AVATAR}}
+<p class="quote">{{ESCAPED_TITLE}}</p>
+{{#SUBTITLE}}<p class="attribution">{{ESCAPED_SUBTITLE}}</p>{{/SUBTITLE}}
+</body></html>

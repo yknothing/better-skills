@@ -35,12 +35,12 @@ Skip it for skills with no gates, or skills where all constraints are naturally 
 
 ## Used by
 
-- `requirements-engineering` — Every stage gate (8 total) is wrapped in `<HARD-GATE id="...">` XML blocks. The Refusal Protocol, Gap Override Protocol, and Disengagement Protocol are all rendered inside format significance gates.
-- `visual-design` — 7 `<HARD-GATE>` blocks enforce phase sequencing, anti-pattern detection, color checks, state completeness, motion intentionality, accessibility baseline, and QA gate.
+- `bs-requirements-engineering` — Every stage gate (8 total) is wrapped in `<HARD-GATE id="...">` XML blocks. The Refusal Protocol, Gap Override Protocol, and Disengagement Protocol are all rendered inside format significance gates.
+- `bs-visual-design` — 7 `<HARD-GATE>` blocks enforce phase sequencing, anti-pattern detection, color checks, state completeness, motion intentionality, accessibility baseline, and QA gate.
 
 ## Examples
 
-From `skills/requirements-engineering/SKILL.md`:
+From `skills/bs-requirements-engineering/SKILL.md`:
 
 ```markdown
 <HARD-GATE id="understand-confirmed">
@@ -48,7 +48,7 @@ DO NOT proceed to Stage 2 until the user has explicitly confirmed the Raw Intent
 </HARD-GATE>
 ```
 
-From `skills/visual-design/SKILL.md`:
+From `skills/bs-visual-design/SKILL.md`:
 
 ```markdown
 <HARD-GATE label="COLOR CHECK">
@@ -60,7 +60,7 @@ selection.
 
 The `<HARD-GATE>` wrapper elevates the instruction from "a thing to consider" to "a barrier you cannot pass." The `id` or `label` attribute gives each gate a name that can be referenced in error messages and self-review checklists.
 
-In `requirements-engineering`, the cumulative skip threshold explicitly counts gates: "If the user has skipped 3 or more stages or HARD-GATEs in a single session, do not silently accept further skips." The gates are countable, named entities — not prose paragraphs.
+In `bs-requirements-engineering`, the cumulative skip threshold explicitly counts gates: "If the user has skipped 3 or more stages or HARD-GATEs in a single session, do not silently accept further skips." The gates are countable, named entities — not prose paragraphs.
 
 ## Related patterns
 

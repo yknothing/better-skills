@@ -36,14 +36,14 @@ Skip it for lightweight, single-stakeholder skills where a self-review checklist
 
 ## Used by
 
-- `visual-design` — Phase 5 deploys a 5-role panel: CEO, Design Lead, Engineering, DX/User, Brand Guardian. Average < 50 returns to Phase 3; 50–74 returns to Phase 4; ≥ 75 proceeds to Phase 6; any 0 returns to Phase 2.
-- `skill-health` — Phase 4 deploys a 4-role panel: Skill Author, Skill User, Maintainer, QA/Reviewer. Average < 50 returns to Phase 2; 50–74 returns to Phase 3; ≥ 75 proceeds to Phase 5; any 0 returns to Phase 1.
-- `article-illustrate` — Stage 4 includes a 4-role review: Editor, Designer, Reader, Developer, each noting one concrete observation.
-- `article-illustrate` — Stage 4 includes a 4-role review: Editor, Designer, Reader, Developer, each noting one concrete observation.
+- `bs-visual-design` — Phase 5 deploys a 5-role panel: CEO, Design Lead, Engineering, DX/User, Brand Guardian. Average < 50 returns to Phase 3; 50–74 returns to Phase 4; ≥ 75 proceeds to Phase 6; any 0 returns to Phase 2.
+- `bs-skill-health` — Phase 4 deploys a 4-role panel: Skill Author, Skill User, Maintainer, QA/Reviewer. Average < 50 returns to Phase 2; 50–74 returns to Phase 3; ≥ 75 proceeds to Phase 5; any 0 returns to Phase 1.
+- `bs-article-illustrate` — Stage 4 includes a 4-role review: Editor, Designer, Reader, Developer, each noting one concrete observation.
+- `bs-article-illustrate` — Stage 4 includes a 4-role review: Editor, Designer, Reader, Developer, each noting one concrete observation.
 
 ## Examples
 
-From `skills/visual-design/references/phase-5-review.md`:
+From `skills/bs-visual-design/references/phase-5-review.md`:
 
 ```markdown
 ## Multi-Perspective Review Panel
