@@ -1,0 +1,56 @@
+    if [ "$DRY_RUN" = false ]; then
+      node "$(dirname "$0")/rewrite-skill-namespace.js" "$SKILL_SRC" "$canonical"
+      rm -rf "$SKILL_DST"
+      ln -sf "$SKILL_SRC" "$SKILL_DST"
+      echo "  $canonical -> $SKILL_SRC"`);
+
+const bootstrap = `skills/${PREFIX}skill-bootstrap/SKILL.md`;
+replaceOrThrow(bootstrap,
+`9. **Check Reference-vs-Build before building**. Before Step 1, search \`external/sources.yaml\` for existing upstream skills in the same domain. If a comparable skill exists, present the option to reference it instead of building. Per \`CLAUDE.md\`: some skills should be curated, not reimplemented.`,
+`9. **Check Reference-vs-Build before building**. Before Step 1, search \`external/sources.yaml\` for existing upstream skills in the same domain. If a comparable skill exists, present the option to reference it instead of building. Per \`CLAUDE.md\`: some skills should be curated, not reimplemented.
+10. **Enforce the Better-Skills namespace.** Every canonical skill ID and self-developed directory MUST start with \`bs-\`. If the user proposes an unprefixed name, normalize it once, state the canonical ID, and use that ID throughout the registry, path, reviews, and evaluations.`);
+replaceOrThrow(bootstrap,
+`### Name Collision Check
+
+Before writing the SKILL.md file, check for name collisions:`,
+`### Name Collision Check
+
+Normalize the proposed name to the \`bs-\` namespace before any collision check. Never create a second unprefixed identity for the same skill.
+
+Before writing the SKILL.md file, check for name collisions:`);
+
+const pkg = JSON.parse(read("package.json"));
+pkg.version = "0.2.0-dev";
+write("package.json", JSON.stringify(pkg, null, 2));
+replaceOrThrow("lib/manifest.js", `const SCHEMA_VERSION = "0.1.0-dev";`, `const SCHEMA_VERSION = "0.2.0-dev";`);
+
+const readmeMarker = "## What's actually in here today";
+replaceOrThrow("README.md", readmeMarker,
+`## Skill namespace
+
+All public Better-Skills IDs use the \`bs-\` prefix, including curated external skills. For example: \`bs-visual-design\`, \`bs-first-customer-finder\`, and \`bs-brainstorming\`. Upstream repositories keep their original source names; the CLI maps and rewrites them during installation. Legacy unprefixed CLI names remain deprecated aliases for one migration release and are never shown as canonical registry entries.
+
+${readmeMarker}`);
+
+let tests = read("tools/test-cli.sh");
+tests = tests.replace('"version":"0.1.0-dev"', '"version":"0.2.0-dev"');
+const testMarker = 'echo "==> Result: $(green "$PASS pass") / $(red "$FAIL fail")"';
+const aliasTest = `echo "T24: legacy alias installs canonical identity"
+ALIAS_DIR="$SANDBOX/alias"
+mkdir -p "$ALIAS_DIR"
+run_cli add social-card --target "$ALIAS_DIR" >/dev/null 2>&1; rc=$?
+assert_exit "legacy alias add exit 0" 0 "$rc"
+assert_path_exists "alias created canonical directory" "$ALIAS_DIR/bs-social-card/SKILL.md"
+assert_path_missing "alias did not create legacy directory" "$ALIAS_DIR/social-card"
+grep -q '^name: bs-social-card$' "$ALIAS_DIR/bs-social-card/SKILL.md" && PASS=$((PASS + 1)) && echo "  $(green PASS) installed frontmatter is canonical" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) installed frontmatter not canonical"; }
+echo
+
+${testMarker}`;
+if (!tests.includes(testMarker)) throw new Error("test result marker not found");
+write("tools/test-cli.sh", tests.replace(testMarker, aliasTest));
+
+for (const rel of ["tools/migrate-bs-prefix.js", ".github/workflows/bs-prefix-migration.yml"]) {
+  const p = abs(rel);
+  if (fs.existsSync(p)) fs.rmSync(p, { force: true });
+}
+
