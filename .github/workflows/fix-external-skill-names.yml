@@ -1,0 +1,60 @@
+name: Fix external skill names
+
+on:
+  push:
+    branches:
+      - agent/bs-prefix-namespace
+
+permissions:
+  contents: write
+
+jobs:
+  fix-and-validate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: agent/bs-prefix-namespace
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Apply external-name boundary fix
+        run: node .tmp-fix-external-names.js
+
+      - name: Validate repository
+        run: |
+          set -euo pipefail
+          for d in skills/bs-*; do
+            node tools/validate.js "$d"
+          done
+          node tools/pattern-alignment.js
+          node tools/peer-review.js check --all
+          node evaluation/harness/runner.js
+          bash tools/check-patterns.sh
+          bash tools/test-cli.sh
+          node - <<'NODE'
+          const r = require('./skills.json');
+          const self = Object.keys(r.skills['self-developed'] || {});
+          const ext = Object.keys(r.skills.external || {});
+          if (self.some(n => !n.startsWith('bs-'))) throw new Error('self-developed skill missing bs- prefix');
+          if (ext.some(n => n.startsWith('bs-'))) throw new Error('external skill must retain upstream name');
+          for (const n of ext) {
+            const p = r.skills.external[n].path || '';
+            if (!p.endsWith('/' + n)) throw new Error(`external path mismatch: ${n} -> ${p}`);
+          }
+          NODE
+          git diff --check
+
+      - name: Commit validated fix
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && exit 0
+          git commit -m "fix: preserve upstream names for external skills"
+          git push origin HEAD:agent/bs-prefix-namespace
