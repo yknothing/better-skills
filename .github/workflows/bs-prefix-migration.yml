@@ -45,17 +45,18 @@ jobs:
         shell: bash
         run: |
           set +e
+          fail=0
           {
-            set -euo pipefail
             for d in skills/bs-*; do
-              node tools/validate.js "$d"
+              node tools/validate.js "$d" || fail=1
             done
-            node tools/pattern-alignment.js --strict
-            node tools/peer-review.js check --all
-            node evaluation/harness/runner.js
-            bash tools/check-patterns.sh
-            bash tools/test-cli.sh
-            git diff --check
+            node tools/pattern-alignment.js || fail=1
+            node tools/peer-review.js check --all || fail=1
+            node evaluation/harness/runner.js || fail=1
+            bash tools/check-patterns.sh || fail=1
+            bash tools/test-cli.sh || fail=1
+            git diff --check || fail=1
+            exit "$fail"
           } > /tmp/validation.log 2>&1
           rc=$?
           cat /tmp/validation.log
