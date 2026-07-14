@@ -40,24 +40,34 @@ jobs:
           cat /tmp/migration.log
           exit "$rc"
 
+      - name: Validate migrated repository
+        id: validate
+        shell: bash
+        run: |
+          set +e
+          {
+            set -euo pipefail
+            for d in skills/bs-*; do
+              node tools/validate.js "$d"
+            done
+            node tools/pattern-alignment.js --strict
+            node tools/peer-review.js check --all
+            node evaluation/harness/runner.js
+            bash tools/check-patterns.sh
+            bash tools/test-cli.sh
+            git diff --check
+          } > /tmp/validation.log 2>&1
+          rc=$?
+          cat /tmp/validation.log
+          exit "$rc"
+
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: bs-prefix-migration-diagnostics
-          path: /tmp/migration.log
-
-      - name: Validate migrated repository
-        run: |
-          set -euo pipefail
-          for d in skills/bs-*; do
-            node tools/validate.js "$d"
-          done
-          node tools/pattern-alignment.js --strict
-          node tools/peer-review.js check --all
-          node evaluation/harness/runner.js
-          bash tools/check-patterns.sh
-          bash tools/test-cli.sh
-          git diff --check
+          path: |
+            /tmp/migration.log
+            /tmp/validation.log
 
       - name: Commit migration
         run: |
