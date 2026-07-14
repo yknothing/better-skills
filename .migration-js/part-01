@@ -1,0 +1,47 @@
+registry.aliases = aliases;
+for (const batch of Object.values(registry.batches || {})) {
+  if (Array.isArray(batch.skills)) batch.skills = batch.skills.map((name) => aliases[name] || name);
+}
+const newSelf = {};
+for (const [oldName, meta] of Object.entries(registry.skills["self-developed"])) {
+  const canonical = aliases[oldName] || oldName;
+  const next = { ...meta, path: meta.path.replace(`skills/${oldName}/`, `skills/${canonical}/`) };
+  newSelf[canonical] = next;
+}
+registry.skills["self-developed"] = newSelf;
+const newExternal = {};
+for (const [oldName, meta] of Object.entries(registry.skills.external)) {
+  const canonical = aliases[oldName] || oldName;
+  const next = { ...meta, upstream_skill: oldName };
+  if (typeof next.notes === "string") next.notes = replaceNames(next.notes, externalSkills);
+  newExternal[canonical] = next;
+}
+registry.skills.external = newExternal;
+write("skills.json", JSON.stringify(registry, null, 2));
+
+const evals = JSON.parse(read("evaluation/datasets/batch-1-test-prompts.json"));
+evals.skills = Object.fromEntries(Object.entries(evals.skills || {}).map(([name, value]) => [aliases[name] || name, value]));
+write("evaluation/datasets/batch-1-test-prompts.json", JSON.stringify(evals, null, 2));
+
+for (const root of ["skills", "docs/reviews", "docs/patterns", "evaluation", "tools", "lib"]) {
+  for (const file of walk(abs(root))) {
+    if (!isTextFile(file)) continue;
+    const rel = path.relative(ROOT, file);
+    if (rel === "evaluation/datasets/batch-1-test-prompts.json") continue;
+    const current = fs.readFileSync(file, "utf8");
+    const next = replaceNames(current, selfSkills);
+    if (next !== current) fs.writeFileSync(file, next, "utf8");
+  }
+}
+for (const rel of ["README.md", "CLAUDE.md"]) write(rel, replaceNames(read(rel), selfSkills));
+
+for (const rel of ["README.md", "CLAUDE.md", "lib/README.md", "lib/commands/help.js", "tools/test-cli.sh"]) {
+  write(rel, replaceExternalRefs(read(rel)));
+}
+for (const file of walk(abs("skills"))) {
+  if (!isTextFile(file)) continue;
+  const current = fs.readFileSync(file, "utf8");
+  const next = replaceExternalRefs(current);
+  if (next !== current) fs.writeFileSync(file, next, "utf8");
+}
+
