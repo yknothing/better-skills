@@ -54,6 +54,7 @@ Record all reviews in `docs/reviews/<skill-name>/YYYY-MM-DD-<role>-review.md`. T
 | `external/sources.yaml` | Declared external skill sources |
 | `skills.json` | Canonical registry (the single source of truth) |
 | `docs/research/` | Analysis of 10 top skill repos. External URL citations are TBD until Phase 3 |
+| `docs/insights/` | Domain-proposition verdicts. Expert-roundtable format: parallel independent viewpoints + a red team + moderator adjudication. Subject is a claim about a domain, not a repo |
 | `docs/patterns/` | Pattern index (~60 patterns, currently consolidated in `README.md`; per-pattern files in Phase 1.C) |
 | `docs/reviews/` | Skill review records |
 | `evaluation/` | Test datasets + evaluation harness (harness not wired until Phase 2.B) |

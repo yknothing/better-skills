@@ -14,6 +14,7 @@ Better-Skills self-developed skills use the `bs-` prefix, such as `bs-visual-des
 - **9 external references** declared in `external/sources.yaml` (`brainstorming`, `pptx`, `grill-me`, `grilling`, `writing-great-skills`, `learn-skill`, `emil-design-eng`, `review-animations`, `animation-vocabulary`); `bash tools/sync.sh` clones the upstream repos and symlinks them under `external/`
 - **Pattern index** at `docs/patterns/README.md` — currently a single-file index of ~60 named patterns; per-pattern files are coming in Phase 1.C
 - **Research notes** at `docs/research/` — analysis of 12 top skill repositories, including [`mattpocock-analysis.md`](docs/research/mattpocock-analysis.md), [`learn-skill-analysis.md`](docs/research/learn-skill-analysis.md), and [`emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md). Other citations are missing today and will be added in Phase 3.
+- **Domain insights** at `docs/insights/` — verdicts on domain propositions, produced by a parallel expert-roundtable format (independent viewpoints + a red team + a moderator's cross-adjudication). Unlike `docs/research/`, the subject is a claim about a domain, not a skill repository. First entry: [`ppt-attention-ledger.md`](docs/insights/ppt-attention-ledger.md).
 - **Tooling**: `tools/validate.sh` (Gate 1) and `tools/sync.sh` (external sync). `evaluation/harness/runner.js` exists but is not wired up yet — see Roadmap.
 
 ## Core methodology
@@ -131,6 +132,7 @@ better-skills/
 ├── skills.json            # Canonical registry
 ├── docs/
 │   ├── research/          # Analysis of 12 top skill repos (citations TBD)
+│   ├── insights/          # Domain-proposition verdicts (expert-roundtable format)
 │   ├── patterns/          # Pattern index (per-pattern files in Phase 1.C)
 │   └── reviews/           # Skill review records (Gates 1–3 today; Gate 4 TBD)
 ├── evaluation/            # Evaluation harness + datasets (runner not yet wired)
