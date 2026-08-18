@@ -84,7 +84,9 @@ Grounded in Pearl's ladder of causation (association / intervention / counterfac
 
 **Counterfactual requirement.** Any claim at T3 or above states the counterfactual on the same page: "without X, the control or synthetic control result would have been …". If the counterfactual cannot be written, the grade drops to T2 automatically.
 
-**Quasi-causal verb blacklist.** These smuggle causation without accepting the burden of proof: *drove, delivered, unlocked, enabled, powered, led to growth in*. The bundled checker flags them.
+**Quasi-causal verb blacklist.** These smuggle causation without accepting the burden of proof: *drove, delivered, unlocked, enabled, powered, generated, led to, thanks to, as a result of, accounts for*. The bundled checker flags them.
+
+**The blacklist is deliberately incomplete, and a clean run proves nothing.** English asserts causation in more ways than any word list holds — "following the rollout, retention recovered" makes the claim with no causal verb at all, and bare juxtaposition of two charts makes it with no words. So the checker's verdict means *no known offender was found*, not *the wording is licensed*. Matching wording to evidence is a judgement the human reviewer makes; the list only removes the easy cases from their queue.
 
 ## Load-bearing assumptions
 
@@ -133,6 +135,8 @@ Sequence verification by smallest safety margin first, cheapest test first among
 Four honest limits.
 
 1. **The real conflict is attention budget, not rigour versus persuasion.** A dependency graph consumes working memory. Layering is the only way out: the map page carries the graph, the body carries the narrative, the appendix carries the backing. Mixing all three into the body means rigour destroys comprehension.
-2. **Under asymmetric review, rebuttals get weaponised.** When a reviewer can veto at no cost to themselves, a failure-condition list becomes ready-made ammunition. This is structural and cannot be written away. Workable compromise: keep switching points and rebuttals in an indexed appendix, raise them verbally with the response attached — preserving the refutational benefit without handing over a bare list.
+2. **Under asymmetric review, rebuttals get weaponised.** When a reviewer can veto at no cost to themselves, a failure-condition list becomes ready-made ammunition. This is structural and cannot be written away.
+
+   The available compromise is narrow, and **Hard Rules 2 and 5 override it wherever they conflict**. What may move to an indexed appendix is the *long tail* of the exhaustive rebuttal list — the completeness material. What may not move, under any circumstances, is the weakest claim, the adverse evidence, or the single strongest rebuttal: Rule 2 puts those in the main body, because a reviewer who finds them unprompted prices them as concealment, which costs more than the ammunition did. And raising something verbally never discharges the obligation — Rule 5 means the spoken version must point at a numbered appendix entry the reviewer can turn to. Verbal delivery is a routing device, never the evidence itself.
 3. **Low-involvement audiences read qualifiers as weakness.** For reviewers who will not engage with argument detail, compress to the root claim plus the single strongest exhibit and keep the architecture in the backup material. Its purpose shifts from persuading to surviving spot checks.
 4. **Every rule above is automatable and therefore gameable.** A warrant can be written as a tautology; a switching point can be filled in without any sensitivity analysis; the assumption table can be populated with soft assumptions. **Automated checks falsify form, they never certify quality.** Their real value is freeing human adversarial attention from format policing so it can go after warrants. Without that human pass, this degrades into a compliance ritual.

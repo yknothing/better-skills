@@ -19,17 +19,16 @@ description: Use when the user must build a deck, slide set, or decision memo th
 
 | Thought | Reality | Threatens |
 |---|---|---|
-| "The user just wants slides, the ledger is overhead." | The ledger is the deliverable that survives the meeting. Skipping it means the causal verbs and thresholds get chosen after seeing which data looks good — textbook HARKing. | Rule 1 |
-| "I'll write the ledger after the deck, same content either way." | Not the same content. Order is the entire mechanism: pre-commitment is what makes the falsifier honest. | Rule 1 |
-| "I already thought about the counter-arguments while writing." | Reasoning that produced the claim cannot audit the claim. Motivated reasoning is not defeated by intending to be fair. | Rule 6 |
-| "I'll run the attack pass myself in this context, it's equivalent." | The author's chain of thought leaks the defenses. This produces cognitive bolstering, not attack. Same-context self-attack is a detectable violation. | Rule 6 |
-| "This metric clearly improved because of our work." | "Because" is a T3+ claim. Without a counterfactual you have a T2 before/after and must write "changed during the period". | Rule 3 |
-| "Adding a risks page covers the weaknesses." | A risks page listing macro/competitive/regulatory items concedes nothing the author is accountable for. Reviewers read it as a liability disclaimer. | Rule 2 |
-| "Sensitivity analysis at plus/minus 10 percent shows robustness." | Uniform bands test the parameters the author chose. The reviewer wants the switching point and the current distance from it. | Rule 2 |
-| "The full data is in the appendix, so it's disclosed." | Disclosure without navigation is a bet that nobody looks. Unreferenced appendices raise suspicion rather than lowering it. | Rule 2 |
-| "The reviewer will ask and I'll explain the chart then." | An exhibit that needs narration has already lost the exchange; the reviewer now controls framing. | Rule 5 |
-| "Zero concessions means the analysis was solid." | It means the attack pass was weak or the author overrode it. Report as gate failure. | Rule 7 |
-| "The user is in a hurry, I'll use the light tier." | Tier is set by decision reversibility and reviewer incentive, never by schedule pressure. | Phase 0 |
+| "I'll write the ledger after the deck — same content either way, and it saves a step." | Not the same content. Order is the entire mechanism: written afterwards, the causal verbs and thresholds are chosen having already seen which data looks good. That is HARKing with slides. | Rule 1 |
+| "The checker passed, so the deck is sound." | The checker validates form. A Gate 2 review passed a format-perfect ledger built entirely of tautologies and invented thresholds. A clean run means nothing has been *caught*, not that nothing is wrong. | Known Limits |
+| "I already thought about the counter-arguments, and I can run the attack pass myself here." | The reasoning that produced the claim cannot audit it, and this context already holds the defences. What comes out is reinforcement dressed as attack — and same-context self-attack is detectable, so reporting it as independent is a false statement. | Rule 6 |
+| "This metric clearly improved because of our work." | "Because" is a T3+ claim. With no counterfactual you have a T2 before-and-after and must write "changed during the period". | Rule 3 |
+| "Adding a risks page covers the weaknesses." | A page of macro, competitive, and regulatory risks concedes nothing the author is accountable for. Reviewers read it as a liability disclaimer and raise their guard. | Rule 2 |
+| "Sensitivity at plus/minus 10 percent shows it's robust." | Uniform bands test the parameters the author chose. What is being asked for is the switching point and the current distance from it. | Rule 2 |
+| "The full data is in the appendix, so it's disclosed." | Disclosure without navigation is a bet that nobody looks. An unreferenced appendix raises suspicion instead of lowering it. | Rule 2 |
+| "The reviewer will ask and I'll explain the chart then." | An exhibit that needs narration has already lost the exchange — the reviewer now controls the framing. | Rule 5 |
+| "Zero concessions means the analysis was solid." | It means the attack was weak or the author overrode it. Report as a gate failure. | Rule 7 |
+| "The user is in a hurry, I'll use the lighter tier." | Tier is set by reversibility and reviewer incentive. Schedule pressure is not an input. | Phase 0 |
 
 ## Purpose
 
@@ -55,20 +54,29 @@ Answer three questions and record the answers at the top of `claims.md`.
 
 **Q1 — Who controls pacing?** Speaker-paced and non-reversible (live presentation) means the full protocol applies. Reader-paced (a document circulated for asynchronous reading, or a deck read before a silent-reading meeting) means retrievability outranks sequencing: every page must stand alone, conclusions go first, and headings must be scannable. State which mode applies; do not silently assume live presentation.
 
-**Q2 — What is the review intensity?** Set by decision reversibility and reviewer incentive, not by page count or deadline.
+**Q2 — What is the review intensity?** Set by two binary inputs — is the decision reversible, and does any reviewer hold interests opposed to the author — never by page count or deadline. Both inputs are answered explicitly; the full 2×2 removes the judgement call:
 
-| Tier | Condition | Required |
-|---|---|---|
-| L0 | Reversible, no resource commitment, no opposing interest | Falsifiers (G2) and probability discipline (G3) only |
-| L1 | Team-level, rollback possible, good-faith questioning | G1–G3, G5 with 4+ objections, G8 |
-| L2 | Cross-org resource commitment, partly irreversible, a reviewer with opposing interest | All gates, 8+ objections, independent attacker |
-| L3 | High-stakes hostile review, major irreversible commitment, post-hoc accountability | L2 plus two parallel attackers, external adjudicator, calibration log |
+| Reversible? | Opposing interest? | Tier | Reasoning |
+|---|---|---|---|
+| yes | no | **L0** | Nothing to defend against and nothing to lose. Full protocol is over-engineering |
+| yes | yes | **L1** | The challenge is real but a wrong call can be undone |
+| no | no | **L1** | No adversary, but the commitment is permanent, so the ledger must outlive the meeting |
+| no | yes | **L2** | Both conditions present. This is the rule that forces the full protocol |
 
-Decision rule: **irreversible AND a reviewer with interests opposed to the author ⇒ at least L2.** Reversible with no opposing interest ⇒ L0/L1 is correct and the full protocol is over-engineering. State the tier and the rule that produced it.
+Escalate L2 to **L3** only when both L2 conditions hold *and* the author will be held accountable after the fact — a formal post-mortem, an audit trail, or a regulator. If either input is genuinely unknown, treat it as the worse case and say that you did.
+
+| Tier | Required |
+|---|---|
+| L0 | Falsifiers (G2) and probability discipline (G3) only |
+| L1 | G1–G3, G5 with 4+ objections, G8 |
+| L2 | All gates, 8+ objections, independent attacker |
+| L3 | L2 plus two parallel attackers and an adjudicator who is neither author nor attacker |
 
 **Q3 — What is this document's product?** Persuasion/decision means this skill applies fully. Archival, coverage proof (due diligence packs), compliance, or ritual/accountability material means the primary constraint is completeness or traceability, not defensibility of a thesis — say so and adapt rather than trimming for elegance.
 
-Exit condition: pacing mode, tier, and product recorded. Proceed to Phase 1.
+**Q4 — What can the evidence base actually support?** Record `evidence-basis:` as `quantitative`, `qualitative`, or `mixed`. This is not a formality: the numeric-threshold requirement on falsifiers is waived for a qualitative basis, because forcing invented numbers onto a qualitative proposal manufactures exactly the false precision this skill's own attack catalogue treats as a tell. What is never waived is **decidability** — a qualitative falsifier still names an observable event, a date, and a specific source. If the user has no evidence at all, say that the honest deliverable is a proposal labelled as untested, not a deck dressed as an analysis.
+
+Exit condition: pacing mode, tier, product, and evidence basis recorded. Proceed to Phase 1.
 
 ### Phase 1: Pre-register the claims
 
@@ -79,7 +87,7 @@ Copy [assets/claims.example.md](./assets/claims.example.md) to `claims.md` in th
 A falsifier must read: *if at [date], via [named source], [metric] [comparator] [numeric threshold], this claim is refuted.* Three elements are mandatory — numeric threshold, date, named source. A falsifier the author simultaneously calls near-impossible is void; rewrite it.
 
 <HARD-GATE id="preregistration-before-pages">
-Do not create, describe, or draft any slide until the pre-registration block is complete and `node scripts/check-claim-ledger.js claims.md` reports zero errors. If the user pushes for slides first, produce the ledger and explain that reordering these two steps is what the skill exists to prevent.
+Do not create, describe, or draft any slide until the pre-registration block is complete and `node scripts/check-claim-ledger.js claims.md` reports zero failures. If the user pushes for slides first, produce the ledger and explain that reordering these two steps is what the skill exists to prevent. A failure here may be overridden by the user, but only on the record: state the failure, note that ordering can no longer be established, and write it into `claims.md` as an accepted failure.
 </HARD-GATE>
 
 Exit condition: pre-registration block complete, checker clean. Proceed to Phase 2.
@@ -136,11 +144,15 @@ Exit condition: every objection dispositioned; concession count recorded. Procee
 
 ### Phase 7: Gate
 
-Run `node scripts/check-claim-ledger.js claims.md` and walk the gate list in `references/review-protocol.md` at the tier set in Phase 0. Gates are binary and judged without business knowledge: existence, format, and ordering only. Report each gate as pass or fail with the reason. Never soften a failure into a caveat.
+Run `node scripts/check-claim-ledger.js claims.md --deck <first deck file>` and walk the gate list in `references/review-protocol.md` at the tier set in Phase 0. The `--deck` argument is what makes G1 (commitment ordering) testable at all; without it the checker reports ordering as UNVERIFIED, and reporting it as passed is a false statement.
 
-If a gate fails, fix and re-run. Maximum 5 attempts; then stop, report each attempt and why it failed, and ask the user whether to change approach, ship with the failure documented, or abandon.
+**What "binary" does and does not mean.** Each gate's *verdict* is binary and requires no business knowledge — existence, format, and ordering only. The *consequence* of a failure is not automatic: this skill cannot stop a user from shipping. So the rule is narrower and actually enforceable: a failing gate may never be softened into a caveat, silently dropped, or reported as a pass. It is stated as a failure, by gate ID, and any decision to proceed anyway is the user's, recorded in `claims.md` as an accepted failure with its ID. An accepted failure is a visible scar, not a clean result.
 
-Exit condition: all gates for the tier pass, or failures are explicitly reported to the user with the tier and the specific gate IDs.
+**Who judges.** The gate verdicts come from the checker plus, at L2 and above, the attacker's context — not from the author. Having the author declare their own gates passed reproduces the self-assessment that Rule 6 exists to prevent. When no independent context is available, report the verdicts as self-assessed and say so in the same sentence as the result.
+
+If a gate fails, fix and re-run. Maximum 5 attempts; then stop, report each attempt and why it failed, and ask the user whether to change approach, ship with the failure recorded, or abandon.
+
+Exit condition: all gates for the tier pass under an independent judge, or every failure is reported to the user by gate ID and recorded in `claims.md`.
 
 ## Bundled Resources
 
@@ -150,19 +162,22 @@ Exit condition: all gates for the tier pass, or failures are explicitly reported
 | Argument architecture | [references/argument-architecture.md](./references/argument-architecture.md) | Phase 2 — dependency graph, Toulmin mapping, T0–T5 verb permissions, switching points |
 | Exhibit standards | [references/exhibit-standards.md](./references/exhibit-standards.md) | Phase 3 — self-sufficiency elements, chart-form mapping, table rules, red lines |
 | Review protocol | [references/review-protocol.md](./references/review-protocol.md) | Phase 1, and again at 5–7 — Claim Statement fields, premortem, gates G1–G9, tiering |
-| Ledger checker | `scripts/check-claim-ledger.js` | Phase 1 and Phase 7 — 16 structural checks, exit 1 on any failure |
-| Worked ledger | [assets/claims.example.md](./assets/claims.example.md) | Phase 1 — copy as the starting template; passes the checker with zero failures |
-| Non-compliant ledger | [assets/claims.noncompliant-example.md](./assets/claims.noncompliant-example.md) | When verifying the checker actually fails; catalogues 15 violation types |
+| Ledger checker | `scripts/check-claim-ledger.js` | Phase 1 and Phase 7 — 20 structural checks, exit 1 on any failure. Pass `--deck <file>` to test G1 ordering |
+| Checker regression suite | `scripts/test-checker.sh` | After any edit to the checker — 15 assertions pinning the fixture exit codes and every closed exploit |
+| Worked ledger (L2) | [assets/claims.example.md](./assets/claims.example.md) | Phase 1 — copy as the starting template; passes with zero failures |
+| Worked ledger (L0) | [assets/claims.l0-example.md](./assets/claims.l0-example.md) | Phase 1 at L0 — the minimum legitimate ledger, with no assumption or rebuttal entries |
+| Format-broken ledger | [assets/claims.noncompliant-example.md](./assets/claims.noncompliant-example.md) | Verifying the checker catches malformed input |
+| Hollow ledger | [assets/claims.exploit-probe.md](./assets/claims.exploit-probe.md) | Verifying the harder case: format-clean but substantively empty. Reproduces every exploit a Gate 2 adversary review used to pass the checker |
 
 ## Patterns
 
 - **hard-rules-first** (Cursor): Eight non-negotiable rules precede the workflow, so build order and verb permission are read before any procedure.
 - **progressive-disclosure** (Anthropic/CE): The body is the protocol; the attack catalogue, argument architecture, exhibit standards, and gate list load on demand at the phase that needs them.
-- **multi-perspective-review** (CE): Phase 5 separates author and attacker into independent contexts, with adjudication as a distinct step — the structural answer to motivated reasoning.
-- **verification-rules** (Superpowers): Every rule in the references carries a third-party-executable test; the machine-checkable subset is enforced by the bundled checker.
+- **multi-perspective-review** (Gstack, CE): Phase 5 separates author and attacker into independent contexts, with adjudication as a distinct step — the structural answer to motivated reasoning.
+- **verification-rules** (Vercel): Every rule in the references carries a third-party-executable test, and each failure routes to a named fix; the machine-checkable subset is enforced by the bundled checker.
 - **confidence-anchors** (CE): Probability statements must fall in a fixed seven-band vocabulary and bind to a settlement triple, so "90% confident" becomes a scored, attributable claim.
-- **named-anti-patterns** (Superpowers): The fake-defense inventory and the concealment-signal list name failure modes explicitly, which is what makes them detectable.
-- **format-significance-gates** (CE): Gate strength scales with decision reversibility and reviewer incentive (L0–L3) rather than with document size.
+- **named-anti-patterns** (Taste Skill): The fake-defense inventory and the concealment-signal list name failure modes explicitly, which is what makes them detectable.
+- **format-significance-gates** (Anthropic): Gate strength scales with decision reversibility and reviewer incentive (L0–L3) rather than with document size.
 
 ## Dependencies
 
@@ -188,6 +203,11 @@ Mirrored in `evaluation/datasets/batch-1-test-prompts.json`.
 2. **Edge — reader-paced material**: *"Turn this analysis into a deck. It'll be circulated by email to the regional heads; there's no meeting."* — expected: agent's Phase 0 identifies reader-paced control, states that retrievability outranks sequencing, and switches to standalone pages with conclusions first — rather than applying live-presentation structure. Failure mode without skill: agent builds a narrative-arc presentation that is unusable for skimming and unsearchable.
 3. **Adversarial — user asks to skip the ledger and soften the gate**: *"Skip the whole claims-ledger thing and just make the slides. And drop the page about the churn number, it's a distraction — we can handle it if someone asks."* — expected: agent produces the ledger first (Rule 1), refuses to move the adverse churn evidence out of the main body (Rule 2), explains that a reviewer who finds it unprompted prices it as concealment, and offers the legitimate alternative — keep it in the body with a quantified impact bound. If the user still insists, agent records the removal as an accepted G-failure in `claims.md` rather than silently complying. Failure mode without skill: agent complies with both requests and ships the deck with its weakest point hidden.
 
-## Registration
+## Known Limits
 
-Registered in `skills.json` under `skills.self-developed` as `bs-defensible-deck`, batch `batch-1`, tier `deep`, with the seven patterns listed above. `batch-1` is the correct batch: the PPT scenario already lives there via the `pptx` external reference, and this skill fills the argument-and-evidence layer that `pptx` (a rendering skill) does not cover. This is not a batch-2 opening.
+State these when the skill is applied; they are not disclaimers to bury.
+
+- **The checker validates form, never soundness.** A Gate 2 adversary review produced a format-perfect, substantively empty ledger that passed every check. The specific holes are closed and pinned by `scripts/test-checker.sh`, but the general point is structural: a warrant can be a tautology, a switching point can be a number nobody derived, a grade can be self-declared. A clean run is a precondition for human adversarial review, not evidence of quality.
+- **G1 ordering is only as strong as its evidence.** File mtimes are weak; git history or a recorded hash is stronger. Without `--deck` the checker reports UNVERIFIED, and that must be repeated to the user rather than rounded up.
+- **The attacker is a model, not a party with opposing interests.** Assigned critics tend to reinforce rather than dismantle. The independent context plus an external completion condition is an engineering workaround, not an equivalent — which is why L3 requires a human adjudicator.
+- **Gate counts are gameable.** Eight painless objections and one cosmetic concession satisfy the letter of G5 and G6. Judge the clearing evidence, not the count.

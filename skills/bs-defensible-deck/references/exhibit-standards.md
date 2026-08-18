@@ -6,6 +6,7 @@
 > **Parent skill**: [../SKILL.md](../SKILL.md) — this is Phase 3 (Build the exhibits)
 > **Prerequisites**: Phase 2 complete — the C/E/A/W/R graph exists, so each exhibit has a claim to serve
 > **Scope**: charts and tables as evidence. Not visual craft — see `bs-visual-design` for that.
+> **Precedence where the two overlap**: both this file and `bs-visual-design` carry rules on palette semantics and chart encoding. In an adversarial context **this file wins**, because its rules exist to close attack surface rather than to look considered — a categorical palette on ordered data is an attackable encoding error here, not a style preference. Outside adversarial contexts, defer to `bs-visual-design`.
 
 ## The thesis
 
