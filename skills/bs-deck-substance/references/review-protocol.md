@@ -1,9 +1,9 @@
 <!-- Parent skill: skills/bs-deck-substance/SKILL.md -->
-<!-- Open this file when: Phase 1 (Pre-register) is reached; return to it at Phase 5, 6, and 7 -->
+<!-- Open this file when: Phase 1 (Sharpen / pre-register) is reached; return to it at Phase 5 (Harden) -->
 
 # Review Protocol
 
-> **Parent skill**: [../SKILL.md](../SKILL.md) — covers Phase 1 (pre-registration), Phase 5 (attack), Phase 6 (adjudication), Phase 7 (gates)
+> **Parent skill**: [../SKILL.md](../SKILL.md) — covers Phase 1 (pre-registration) and Phase 5 (attack and gates)
 > **Produces**: the pre-registration block of `claims.md`, the premortem file, the attack log, and the gate verdict
 
 ## Why self-criticism fails, and what actually fixes it
@@ -14,7 +14,7 @@ Three mechanisms sustain the failure:
 
 - **Incentive.** The author is measured on the deck being approved, not on it being correct. Any real concession directly reduces their payoff, so the rational move is to produce low-cost symbols that resemble criticism — a "risks and challenges" page, a sentence about sample size. The most striking observation here is Scheel, Schijen and Lakens (*AMPPS*, 2021): **96% of a random sample of standard psychology articles reported support for their first hypothesis, versus 44% of Registered Reports**, where peer review and the publication decision happen before results are known.
 
-  Note what that observation does and does not license, because this file defines the verb-permission gate and must obey it. Two corpora differ; the corpora were not randomly assigned, and they differ in other ways too (topic mix, how many are close replications, who chooses the format). By this skill's own ladder that is **T2 evidence — a comparison across groups with no identification strategy** — so the permitted wording is that changing the moment of commitment is *the most plausible explanation the authors advance* for the gap, not that it *caused* it. A Gate 2 adversary review caught an earlier draft of this paragraph asserting sole causal attribution, which was a Rule 3 violation inside the file that defines Rule 3. It is left documented here rather than quietly fixed, because it is the cleanest available demonstration that the check works on its author.
+  Note what that observation does and does not license, because this file defines the verb-permission gate and must obey it. Two corpora differ; the corpora were not randomly assigned, and they differ in other ways too (topic mix, how many are close replications, who chooses the format). By this skill's own ladder that is **T2 evidence — a comparison across groups with no identification strategy** — so the permitted wording is that changing the moment of commitment is *the most plausible explanation the authors advance* for the gap, not that it *caused* it. A Gate 2 adversary review caught an earlier draft of this paragraph asserting sole causal attribution, which was a violation of the verb-permission table inside the file that defines that table. It is left documented here rather than quietly fixed, because it is the cleanest available demonstration that the check works on its author.
 - **Cognition.** Motivated reasoning and the argumentative theory of reasoning both point the same way: reasoning defaults to justification rather than testing. When an author searches for counter-evidence, the search target is already contaminated by the conclusion.
 - **Social.** Nemeth and colleagues compared *assigned* devil's advocates against *authentic* dissent and found that assignment mainly produces cognitive bolstering of the original position, underperforming genuine minority views. This directly bounds what "the author plays critic" can achieve.
 

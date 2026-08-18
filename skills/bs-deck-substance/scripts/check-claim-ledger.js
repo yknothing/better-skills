@@ -570,8 +570,9 @@ function checkBannedHedges(content) {
 
 /**
  * Reference closure. Evidence cited by an assumption or a rebuttal counts as
- * referenced: requiring citation from a claim alone punished Hard Rule 2, since
- * adverse evidence is usually cited from the rebuttal it supports.
+ * referenced: requiring citation from a claim alone punished the Phase 4
+ * body-placement of adverse evidence, since that evidence is usually cited
+ * from the rebuttal it supports rather than from a claim.
  */
 function checkReferenceClosure(claims, evidence, assumptions, rebuttals) {
   const problems = [];
@@ -636,7 +637,7 @@ function checkAssumptions(assumptions) {
 function checkRebuttals(rebuttals) {
   const problems = [];
   for (const [id, r] of rebuttals) problems.push(...missingOrPlaceholder(r, REQUIRED_REBUTTAL_FIELDS, id));
-  verdict("No naked rebuttals — every rebuttal has a response (Rule 8)", problems);
+  verdict("No naked rebuttals — every rebuttal has a response (G5)", problems);
 }
 
 /** Tier-aware cardinality: an empty section must not satisfy the analysis it
