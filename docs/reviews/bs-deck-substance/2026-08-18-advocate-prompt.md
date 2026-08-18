@@ -1,46 +1,52 @@
-# Gate 2 — Peer Review Prompt: Adversary
+# Gate 2 — Peer Review Prompt: Advocate
 
-You are the **adversary reviewer** for the `bs-defensible-deck` skill. Your job is to break it: find ways the skill produces wrong output, fails on edge cases, contradicts itself, has bypassable safety gates, or makes the agent worse off than no skill at all. Be ruthless.
+You are the **advocate reviewer** for the `bs-deck-substance` skill. Your job is to argue for what's GOOD: identify the strongest aspects, score the design across multiple dimensions, and decide whether this skill is production-ready.
 
 ## How to use this prompt
 
 1. Read the SKILL.md content below in full.
 2. Produce a markdown review and save it to:
-   `docs/reviews/bs-defensible-deck/2026-08-18-adversary-review.md`
+   `docs/reviews/bs-deck-substance/2026-08-18-advocate-review.md`
 3. Use the **required structure** below — the validator (`tools/peer-review.js check`) will reject reviews missing required sections.
 
 ## Required structure
 
 ```markdown
-# Adversary Review: bs-defensible-deck
+# Advocate Review: bs-deck-substance
 
 **Date**: 2026-08-18
-**Reviewer Role**: Adversary
-**Skill**: bs-defensible-deck
+**Reviewer Role**: Advocate
+**Skill**: bs-deck-substance
 **HUMAN_VERIFIED**: false
 
-## Summary
+## Executive Summary
 
-(2-4 sentences: how many issues, of what severity, and the worst-case impact.)
+(2-4 sentences naming the strongest design choices and whether you'd ship this.)
 
-## Findings
+## Dimension Scores
 
-### F1: <short title>  [CRITICAL]
+| Dimension | Score | Key Strength | Key Concern |
+|-----------|------:|--------------|-------------|
+| Clarity of trigger description | _/10 | | |
+| Hard rules / safety gates | _/10 | | |
+| Workflow correctness | _/10 | | |
+| Pattern application | _/10 | | |
+| Test prompt coverage | _/10 | | |
+| Bundled resources | _/10 | | |
+| Maintainability | _/10 | | |
+| Production readiness | _/10 | | |
 
-**Location**: <section / line range in SKILL.md>
-**Exploit scenario**: <how a user could trigger the failure>
-**Root cause**: <what in the skill design enables it>
-**Suggested fix**: <concrete change>
+## Strongest Aspect
 
-### F2: <short title>  [HIGH]
+(One paragraph naming the single best design move and why it matters.)
 
-(...repeat the structure for each finding...)
+## One Improvement
 
-(Use severity tags: CRITICAL / HIGH / MEDIUM / LOW. At least one finding must be present, even if severity is LOW. If you genuinely find none, say so explicitly and tag it LOW.)
+(One concrete suggestion that would meaningfully raise quality.)
 
 ## Verdict
 
-**Verdict**: <one of: REQUIRES_CHANGES / NEEDS_IMPROVEMENT / APPROVED>
+**Verdict**: <one of: PASS / production-ready / NEEDS_POLISH / numeric score like 76/80>
 
 (One paragraph rationale.)
 ```
@@ -49,7 +55,7 @@ You are the **adversary reviewer** for the `bs-defensible-deck` skill. Your job 
 
 ```markdown
 ---
-name: bs-defensible-deck
+name: bs-deck-substance
 description: Use when the user must build a deck, slide set, or decision memo that will face hostile scrutiny — investment committees, boards, due diligence, audits, peer review, or any reviewer with an incentive to reject it. Covers argument architecture, exhibit (chart and table) evidence quality, and a pre-review self-attack protocol. Not for making slides look good.
 # tier: deep
 ---
@@ -58,7 +64,7 @@ description: Use when the user must build a deck, slide set, or decision memo th
 
 1. **Ledger before slides.** Write `claims.md` (the Claim Ledger) and get it past the structural check BEFORE creating any page. A deck built first and documented later is rationalization, not argument. If the user asks for slides immediately, produce the ledger first and say why.
 2. **Self-exposure beats defense.** A deck's strength equals the degree to which it surfaces its own weakest point unprompted. Anything a reviewer has to dig for is priced as concealment. The weakest claim must be named, quantified, and placed in the main body — never only in an appendix.
-3. **Verb permission.** Causal language is licensed by evidence grade (T0–T5 in `references/argument-architecture.md`). Never write "drove", "led to", "caused", or "delivered" for evidence below its threshold. Downgrade the verb, not the evidence.
+3. **Verb permission.** Causal language is licensed by evidence grade (T0–T5 in `references/architecture.md`). Never write "drove", "led to", "caused", or "delivered" for evidence below its threshold. Downgrade the verb, not the evidence.
 4. **Every claim carries its warrant.** For each claim, state the general rule that licenses the jump from evidence to conclusion. An unstated warrant is the single highest-yield target for a hostile reviewer.
 5. **Exhibits are self-sufficient.** A chart or table whose validity depends on the presenter's spoken words is not evidence. n, denominator, window, definition, baseline, uncertainty, and source must be on the exhibit.
 6. **The attacker must be independent.** The self-attack pass runs in a separate context that receives only the rendered deliverables — never the author's reasoning, drafts, or scratch files. Self-questioning inside the authoring context does not satisfy this rule and must not be reported as if it did.
@@ -136,7 +142,7 @@ Exit condition: pre-registration block complete, checker clean. Proceed to Phase
 
 ### Phase 2: Build the argument graph
 
-> **Required reading**: [references/argument-architecture.md](./references/argument-architecture.md) — dependency-graph construction, Toulmin mapping, the C/E/A/W/R numbering scheme, the T0–T5 causal ladder with its verb permissions, and switching-point analysis.
+> **Required reading**: [references/architecture.md](./references/architecture.md) — dependency-graph construction, Toulmin mapping, the C/E/A/W/R numbering scheme, the T0–T5 causal ladder with its verb permissions, and switching-point analysis.
 
 Extend `claims.md` into a dependency graph: claims (C), evidence (E), assumptions (A), warrants (W), rebuttals (R), each with a unique ID and explicit references. Every claim needs a warrant and at least one evidence reference. Every claim carries a causal grade and only the verbs that grade licenses.
 
@@ -148,7 +154,7 @@ Exit condition: graph closed (no dangling claims, no orphan evidence, no undefin
 
 ### Phase 3: Build the exhibits
 
-> **Required reading**: [references/exhibit-standards.md](./references/exhibit-standards.md) — the self-sufficiency element list, the claim-type-to-chart-form mapping, table construction rules, the manipulation red lines with their tests, and the distribution-first principle.
+> **Required reading**: [references/exhibits.md](./references/exhibits.md) — the self-sufficiency element list, the claim-type-to-chart-form mapping, table construction rules, the manipulation red lines with their tests, and the distribution-first principle.
 
 For each evidence item that becomes a chart or table: pick the form the claim type requires (form is a logical choice, not an aesthetic one), attach every self-sufficiency element, and prefer distributions to averages. Where an exhibit's parameters are free — axis start, window, base period, smoothing, grouping — declare them; an undeclared free parameter that would flip the conclusion is treated as manipulation.
 
@@ -197,8 +203,8 @@ Exit condition: all gates for the tier pass, or failures are explicitly reported
 | Resource | Path | When to open |
 |---|---|---|
 | Attack catalogue | [references/attack-catalog.md](./references/attack-catalog.md) | Phase 5 — the attacker's checklist; also usable in reverse as a pre-emptive audit |
-| Argument architecture | [references/argument-architecture.md](./references/argument-architecture.md) | Phase 2 — dependency graph, Toulmin mapping, T0–T5 verb permissions, switching points |
-| Exhibit standards | [references/exhibit-standards.md](./references/exhibit-standards.md) | Phase 3 — self-sufficiency elements, chart-form mapping, table rules, red lines |
+| Argument architecture | [references/architecture.md](./references/architecture.md) | Phase 2 — dependency graph, Toulmin mapping, T0–T5 verb permissions, switching points |
+| Exhibit standards | [references/exhibits.md](./references/exhibits.md) | Phase 3 — self-sufficiency elements, chart-form mapping, table rules, red lines |
 | Review protocol | [references/review-protocol.md](./references/review-protocol.md) | Phase 1, and again at 5–7 — Claim Statement fields, premortem, gates G1–G9, tiering |
 | Ledger checker | `scripts/check-claim-ledger.js` | Phase 1 and Phase 7 — 16 structural checks, exit 1 on any failure |
 | Worked ledger | [assets/claims.example.md](./assets/claims.example.md) | Phase 1 — copy as the starting template; passes the checker with zero failures |
@@ -240,6 +246,6 @@ Mirrored in `evaluation/datasets/batch-1-test-prompts.json`.
 
 ## Registration
 
-Registered in `skills.json` under `skills.self-developed` as `bs-defensible-deck`, batch `batch-1`, tier `deep`, with the seven patterns listed above. `batch-1` is the correct batch: the PPT scenario already lives there via the `pptx` external reference, and this skill fills the argument-and-evidence layer that `pptx` (a rendering skill) does not cover. This is not a batch-2 opening.
+Registered in `skills.json` under `skills.self-developed` as `bs-deck-substance`, batch `batch-1`, tier `deep`, with the seven patterns listed above. `batch-1` is the correct batch: the PPT scenario already lives there via the `pptx` external reference, and this skill fills the argument-and-evidence layer that `pptx` (a rendering skill) does not cover. This is not a batch-2 opening.
 
 ```

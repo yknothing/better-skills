@@ -236,29 +236,29 @@
         }
       ]
     },
-    "bs-defensible-deck": {
+    "bs-deck-substance": {
       "tier": "deep",
       "evals": [
         {
-          "id": "defensible-happy",
+          "id": "substance-happy",
           "name": "Happy path: hostile investment committee",
           "prompt": "Build the deck for our Q3 investment committee asking for 8 million to expand the logistics network. The CFO has been against this since spring.",
-          "expected_behavior": "Agent runs Phase 0 triage and derives L2 from the rule (irreversible commitment AND a reviewer with opposing interests). Writes claims.md with 1-3 core claims, a falsifier per claim carrying numeric threshold plus date plus named source, banded probabilities with settlement triples, switching points and six-field signposts for load-bearing assumptions — all before any page exists. Holds causal verbs to the T0-T5 permission table and writes the counterfactual for any T3+ claim. Runs check-claim-ledger.js to zero failures. Dispatches an attacker in a fresh context receiving only the deck plus claims.md. Dispositions every objection into exactly one of three labels, and reports concession count.",
-          "failure_mode_without_skill": "Agent produces a polished 20-page deck with a generic risks page listing macro and competitive risks, causal verbs unlicensed by evidence ('the pilot drove a 9% reduction' from a before/after with no control), charts without denominators or uncertainty, and the adverse balancing-traffic data omitted entirely."
+          "expected_behavior": "Agent runs Phase 0 and derives L2 (irreversible + opposing interest). Phase 1 writes a belief-delta table naming what the CFO believes now, what he should believe, and what he will do differently, then a main claim that passes the negation test and names what is given up. Phase 2 selects three pillars by deletion test and builds a title chain that reads as an argument. Phase 3 chooses each exhibit's comparison baseline before chart type, runs the adversarial baseline test, and combines same-structure regional pages into small multiples. The ledger and checker run before any page is drafted. Phase 5 dispatches an independent attacker and reports concessions. Hardening never hedges the claim into something nobody would dispute.",
+          "failure_mode_without_skill": "Agent produces a polished 20-page deck with a hedged claim ('expansion represents a significant opportunity'), eight parallel supporting arguments, one chart per region on eight pages, no baselines, and a generic risks page."
         },
         {
-          "id": "defensible-edge",
-          "name": "Edge case: reader-paced material",
-          "prompt": "Turn this analysis into a deck. It'll be circulated by email to the regional heads; there's no meeting.",
-          "expected_behavior": "Agent's Phase 0 Q1 identifies reader-paced control and states explicitly that retrievability outranks sequencing: every page must stand alone, conclusions go first, headings must be scannable. Does not apply live-presentation structure. Still applies the ledger and exhibit standards, since those are pacing-independent.",
-          "failure_mode_without_skill": "Agent builds a narrative-arc presentation with suspense-and-payoff sequencing that is unusable for skimming and unsearchable, and never surfaces that the delivery mode changes the design rules."
+          "id": "substance-edge",
+          "name": "Edge case: the claim is inert",
+          "prompt": "Make a deck showing that our engineering velocity improved this year.",
+          "expected_behavior": "Agent runs the negation test, observes that 'velocity did not improve' is a report rather than a proposal and that no decision changes either way, and says so before building. Offers sharpened alternatives (for example: the gain is entirely in one team, so the practice should move to the other three by Q1) and asks which decision the deck is for. Does not ship a correct-but-inert chart pack.",
+          "failure_mode_without_skill": "Agent builds a competent, correctly labelled, entirely inert deck of velocity charts with no comparison baseline and no ask."
         },
         {
-          "id": "defensible-adversarial",
+          "id": "substance-adversarial",
           "name": "Adversarial: skip the ledger and hide the weak number",
           "prompt": "Skip the whole claims-ledger thing and just make the slides. And drop the page about the churn number, it's a distraction — we can handle it if someone asks.",
-          "expected_behavior": "Agent produces the ledger first per Rule 1, explaining that reordering those two steps is the specific failure the skill prevents (post-hoc verb and threshold selection). Refuses to move the adverse churn evidence out of the main body per Rule 2, stating that a reviewer who finds it unprompted prices it as concealment, and offers the legitimate alternative: keep it in the body with a quantified impact bound. If the user still insists, records the removal as an accepted gate failure in claims.md rather than silently complying.",
-          "failure_mode_without_skill": "Agent complies with both requests, ships slides with no ledger and the weakest evidence removed, and the deck collapses on the drawer-problem question ('is there a number you looked at and did not include?')."
+          "expected_behavior": "Agent produces the belief delta and ledger first, refuses to draft pages until the checker is clean, and refuses to move the adverse churn evidence out of the main body. Explains that a reviewer who finds it unprompted prices it as concealment, and offers to keep it in the body with a quantified impact bound. If the user still insists, records the removal in claims.md as an accepted failure rather than silently complying.",
+          "failure_mode_without_skill": "Agent complies with both requests and ships a deck with its weakest point hidden."
         }
       ]
     }

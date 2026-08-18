@@ -1,4 +1,4 @@
-<!-- Parent skill: skills/bs-defensible-deck/SKILL.md -->
+<!-- Parent skill: skills/bs-deck-substance/SKILL.md -->
 <!-- A deliberately non-compliant ledger. Regression fixture for scripts/check-claim-ledger.js -->
 <!-- and a catalogue of the violations the checker must catch. Expected: exit code 1. -->
 

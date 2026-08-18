@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Regression suite for check-claim-ledger.js.
 #
-# "The gate actually fails" is a load-bearing claim of bs-defensible-deck, so it
+# "The gate actually fails" is a load-bearing claim of bs-deck-substance, so it
 # needs an assertion rather than a promise. A Gate 2 adversary review produced a
 # hollow ledger that scored 16/16; these tests pin the fixes so no future edit
 # can quietly reopen those holes.
@@ -70,11 +70,17 @@ assert_reports "$PROBE" "E1 missing source" "empty evidence entry is caught"
 assert_reports "$PROBE" 'C2 uses "proves"' "a wrapped continuation line is parsed, not silently dropped"
 
 echo
-echo "T3: commitment ordering is never claimed without evidence"
+echo "T3: the objective-serving checks are enforced, not just the constraint ones"
+assert_reports "$PROBE" "belief-delta missing who" "a missing belief delta is caught"
+assert_reports "$PROBE" "E1 missing baseline" "an exhibit with no declared comparison baseline is caught"
+assert_reports "$PROBE" "C1 missing negation-test" "a claim with no sharpness trail is caught"
+
+echo
+echo "T4: commitment ordering is never claimed without evidence"
 assert_reports "$ASSETS/claims.example.md" "UNVERIFIED" "G1 ordering reports UNVERIFIED without --deck"
 
 echo
-echo "T4: bold field names do not produce false failures"
+echo "T5: bold field names do not produce false failures"
 PROBE_OUT="$(node "$CHECKER" "$PROBE" 2>&1)"
 if printf '%s' "$PROBE_OUT" | grep -qF "C1 missing claim"; then
   echo "  FAIL  bold field name '- **claim**:' must still parse"

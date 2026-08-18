@@ -1,4 +1,4 @@
-<!-- Parent skill: skills/bs-defensible-deck/SKILL.md -->
+<!-- Parent skill: skills/bs-deck-substance/SKILL.md -->
 <!-- Open this file when: Phase 1 (Pre-register) is reached; return to it at Phase 5, 6, and 7 -->
 
 # Review Protocol

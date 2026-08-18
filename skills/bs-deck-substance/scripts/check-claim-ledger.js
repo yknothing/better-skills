@@ -1,6 +1,15 @@
 #!/usr/bin/env node
 // Structural checker for a Claim Ledger (claims.md) — the machine-enforceable
-// subset of the bs-defensible-deck gates.
+// subset of the bs-deck-substance requirements.
+//
+// It checks two different things, and the distinction matters. Some checks serve
+// the OBJECTIVE (does a belief delta exist, does every exhibit declare a
+// comparison baseline, is there a sharpness trail) and some serve the
+// CONSTRAINT (falsifiers, verb permission, honesty fields). Neither kind can
+// measure excellence: whether a claim is actually sharp, whether the pillars
+// actually carry weight, and whether an exhibit actually reveals anything are
+// human judgements. What the script can do is refuse to let those steps be
+// skipped silently.
 //
 // Slides cannot be mechanically checked; a structured ledger can. This script
 // exists so the gates in references/review-protocol.md are enforced by a
@@ -42,7 +51,7 @@ const CLAIM_COUNT_MIN = 1;
 const CLAIM_COUNT_MAX = 3;
 
 /** Causal evidence ladder; array index is the grade's strength.
- *  Defined in references/argument-architecture.md. */
+ *  Defined in references/architecture.md. */
 const GRADES = ["T0", "T1", "T2", "T3", "T4", "T5"];
 
 /** Minimum grade licensing each causal verb family.
@@ -141,6 +150,7 @@ const ENTRY_ID_RE = /^[CEAR]\d+$/;
 
 const SECTION_HEADINGS = {
   triage: "triage",
+  belief: "belief delta",
   prereg: "pre-registration",
   claims: "claims",
   evidence: "evidence",
@@ -149,16 +159,36 @@ const SECTION_HEADINGS = {
 };
 
 const REQUIRED_TRIAGE_FIELDS = ["pacing", "tier", "product"];
+/** The belief delta is the objective's entry point: who moves, from what to
+ *  what, on what evidence, and what they then do differently. An empty
+ *  will-do column means there is nothing to build yet. */
+const REQUIRED_BELIEF_FIELDS = ["who", "believes-now", "should-believe", "evidence", "will-do"];
+/** Non-identity heuristic. If the target belief is the current belief in a
+ *  firmer tone, no shift is being proposed. Content-word overlap above this
+ *  share is flagged; it is a heuristic, so it warns rather than fails. */
+const BELIEF_OVERLAP_WARN_RATIO = 0.75;
+/** A will-do entry must name an action, not an attitude. */
+const ATTITUDE_ONLY_RE = /^\s*(pay (more )?attention|be aware|consider|think about|keep in mind|monitor|focus (more )?on)\b/i;
 const REQUIRED_PREREG_FIELDS = [
   "registered-at", "data-freeze", "decision-request",
   "strongest-counter", "would-change-mind",
 ];
 const REQUIRED_CLAIM_FIELDS = [
   "claim", "grade", "warrant", "evidence", "falsifier", "probability", "settlement",
+  // Sharpness trail. `negation-test` records what the negated claim reads like
+  // (if the negation is absurd rather than arguable, the claim is fluff);
+  // `cost` records what is being given up, because a recommendation with no
+  // loser needs no meeting. Both are cheap to fake — they force the step to be
+  // visible, they do not verify it was performed.
+  "negation-test", "cost",
 ];
 /** Evidence entries had no required fields at all, so an empty `### E1` closed
  *  a claim's reference requirement while carrying nothing. */
-const REQUIRED_EVIDENCE_FIELDS = ["description", "source", "definition"];
+/** `baseline` is first among these by design: every quantitative assertion is
+ *  "X differs from Y by D", so with no Y there is no D and the exhibit is a
+ *  numeric display. Choosing it is the first design decision, ahead of chart
+ *  type. See references/exhibits.md Part 1. */
+const REQUIRED_EVIDENCE_FIELDS = ["description", "baseline", "source", "definition"];
 const REQUIRED_ASSUMPTION_FIELDS = ["assumption", "current", "switching-point", "signpost"];
 const REQUIRED_REBUTTAL_FIELDS = ["rebuttal", "response"];
 
@@ -325,6 +355,39 @@ function checkEntryIds(malformedIds) {
   verdict("Entry IDs well-formed (C/E/A/R + digits, uppercase)",
     malformedIds.length ? [`malformed: ${malformedIds.join(", ")} — lowercase or unknown-prefix entries are skipped by every other check`] : [],
     "no malformed entry headings");
+}
+
+/**
+ * Check 3: the belief delta exists and proposes an actual shift.
+ * This is the objective's entry point, so it is checked before anything that
+ * serves the constraint.
+ */
+function checkBeliefDelta(sections) {
+  const f = sectionFields(sections, SECTION_HEADINGS.belief);
+  const problems = missingOrPlaceholder(f, REQUIRED_BELIEF_FIELDS, "belief-delta");
+
+  if (f["will-do"] && !isPlaceholder(f["will-do"]) && ATTITUDE_ONLY_RE.test(f["will-do"]))
+    problems.push(`will-do names an attitude, not an action ("${f["will-do"].slice(0, 40)}...") — it must contain a verb and an object such as approve, cancel, or move X's budget`);
+
+  verdict("Belief delta present with an actionable will-do", problems);
+
+  // Non-identity is a matter of substance, so the textual overlap test can only
+  // flag a suspicion, never establish one.
+  const now = f["believes-now"];
+  const should = f["should-believe"];
+  if (now && should && !isPlaceholder(now) && !isPlaceholder(should)) {
+    const sWords = contentWords(should);
+    if (sWords.length >= WARRANT_MIN_CONTENT_WORDS) {
+      const nWords = new Set(contentWords(now));
+      const overlap = sWords.filter((w) => nWords.has(w)).length / sWords.length;
+      if (overlap > BELIEF_OVERLAP_WARN_RATIO) {
+        warn("Belief delta proposes a real shift, not a firmer restatement",
+          `should-believe overlaps believes-now by ${Math.round(overlap * 100)}% — check that this is a shift rather than the same belief in a stronger tone`);
+        return;
+      }
+    }
+  }
+  pass("Belief delta proposes a real shift, not a firmer restatement");
 }
 
 function checkTriage(sections) {
@@ -635,6 +698,7 @@ function runChecks(content, opts = {}) {
 
   checkSections(sections);
   checkEntryIds(malformedIds);
+  checkBeliefDelta(sections);
   checkTriage(sections);
   checkPreregistrationFields(sections);
   checkCommitmentOrdering(opts.ledgerPath, opts.deckPath);
@@ -675,7 +739,8 @@ function formatHuman(res, filePath) {
   if (res.warned) parts.push(`${res.warned} warned`);
   parts.push(`${res.failed} failed`);
   lines.push(`=== Results: ${parts.join(", ")} ===`);
-  lines.push("Form only. A clean run is a precondition for human adversarial review, not a substitute for it.");
+  lines.push("Form only. It cannot tell whether the claim is sharp, whether the pillars carry");
+  lines.push("weight, or whether an exhibit reveals anything. A clean run means nothing was caught.");
   return lines.join("\n");
 }
 
@@ -691,11 +756,17 @@ function main(argv) {
     else if (arg === "--help" || arg === "-h") {
       console.log("Usage: node check-claim-ledger.js <claims.md> [--deck <file>] [--json]");
       console.log("");
-      console.log("Structural checker for a Claim Ledger. 20 checks: sections, entry IDs,");
-      console.log("triage, pre-registration fields, commitment ordering, claim fields,");
-      console.log("evidence fields, grades, verb permission, counterfactuals, falsifiers,");
-      console.log("probability band/range agreement, settlement triples, banned hedges,");
-      console.log("reference closure, assumptions, rebuttals, tier cardinality, warrants.");
+      console.log("Structural checker for a Claim Ledger. 22 checks.");
+      console.log("");
+      console.log("Serving the objective: belief delta present with an actionable will-do,");
+      console.log("a real shift rather than a restatement, a sharpness trail per claim,");
+      console.log("and a declared comparison baseline per exhibit.");
+      console.log("");
+      console.log("Serving the constraint: sections, entry IDs, triage, pre-registration,");
+      console.log("commitment ordering, claim and evidence fields, grades, verb permission,");
+      console.log("counterfactuals, falsifiers, probability band/range agreement, settlement");
+      console.log("triples, banned hedges, reference closure, assumptions, rebuttals, tier");
+      console.log("cardinality, warrants.");
       console.log("");
       console.log("  --deck <file>  Compare mtimes to test G1 commitment ordering.");
       console.log("                 Without it, ordering is reported UNVERIFIED, never passed.");

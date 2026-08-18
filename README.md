@@ -10,11 +10,11 @@ Better-Skills self-developed skills use the `bs-` prefix, such as `bs-visual-des
 
 ## What's actually in here today
 
-- **10 self-developed skills** under `skills/`: `bs-requirements-engineering`, `bs-first-customer-finder`, `bs-visual-design`, `bs-dev-flow`, `bs-prose-craft`, `bs-article-illustrate`, `bs-social-card`, `bs-skill-bootstrap`, `bs-skill-health`, `bs-defensible-deck`
+- **10 self-developed skills** under `skills/`: `bs-requirements-engineering`, `bs-first-customer-finder`, `bs-visual-design`, `bs-dev-flow`, `bs-prose-craft`, `bs-article-illustrate`, `bs-social-card`, `bs-skill-bootstrap`, `bs-skill-health`, `bs-deck-substance`
 - **9 external references** declared in `external/sources.yaml` (`brainstorming`, `pptx`, `grill-me`, `grilling`, `writing-great-skills`, `learn-skill`, `emil-design-eng`, `review-animations`, `animation-vocabulary`); `bash tools/sync.sh` clones the upstream repos and symlinks them under `external/`
 - **Pattern index** at `docs/patterns/README.md` — currently a single-file index of ~60 named patterns; per-pattern files are coming in Phase 1.C
 - **Research notes** at `docs/research/` — analysis of 12 top skill repositories, including [`mattpocock-analysis.md`](docs/research/mattpocock-analysis.md), [`learn-skill-analysis.md`](docs/research/learn-skill-analysis.md), and [`emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md). Other citations are missing today and will be added in Phase 3.
-- **Domain insights** at `docs/insights/` — verdicts on domain propositions, produced by a parallel expert-roundtable format (independent viewpoints + a red team + a moderator's cross-adjudication). Unlike `docs/research/`, the subject is a claim about a domain, not a skill repository. Entries: [`ppt-attention-ledger.md`](docs/insights/ppt-attention-ledger.md) (attention as a bid, not a managed resource) and [`deck-adversarial-review.md`](docs/insights/deck-adversarial-review.md) (defensibility as the share of attack surface surrendered voluntarily; the design record for `bs-defensible-deck`).
+- **Domain insights** at `docs/insights/` — verdicts on domain propositions, produced by a parallel expert-roundtable format (independent viewpoints + a red team + a moderator's cross-adjudication). Unlike `docs/research/`, the subject is a claim about a domain, not a skill repository. Entries: [`ppt-attention-ledger.md`](docs/insights/ppt-attention-ledger.md) (attention as a bid, not a managed resource) and [`deck-substance.md`](docs/insights/deck-substance.md) (substance as the objective and defensibility as its constraint; the design record for `bs-deck-substance`).
 - **Tooling**: `tools/validate.sh` (Gate 1) and `tools/sync.sh` (external sync). `evaluation/harness/runner.js` exists but is not wired up yet — see Roadmap.
 
 ## Core methodology
@@ -43,7 +43,7 @@ Better-Skills self-developed skills use the `bs-` prefix, such as `bs-visual-des
 | 16 | `emil-design-eng` | Reference | deep | Design |
 | 17 | `review-animations` | Reference | standard | Design |
 | 18 | `animation-vocabulary` | Reference | lightweight | Design |
-| 19 | `bs-defensible-deck` | Build | deep | Design |
+| 19 | `bs-deck-substance` | Build | deep | Design |
 
 `Strategy: Build` means the skill is implemented in this repo (`skills/<name>/SKILL.md`). `Strategy: Reference` means we curate the upstream skill via `external/sources.yaml` and pull it on demand. `grill-me` is a user-invoked wrapper that delegates to the model-invoked `grilling`; both come from [mattpocock/skills](https://github.com/mattpocock/skills) and must be synced together. `writing-great-skills` is a reference skill (no steps, all in `GLOSSARY.md`) covering skill-writing vocabulary. `learn-skill` is a CE-style exhaustive sample from [koganei/learn-anything-skill](https://github.com/koganei/learn-anything-skill), kept as a deep-tier reference of the "exhaustive spec" school. Motion craft references (`emil-design-eng`, `review-animations`, `animation-vocabulary`) come from [emilkowalski/skills](https://github.com/emilkowalski/skills) and pair with Build skill `bs-visual-design` — see [`docs/research/emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md).
 
@@ -67,7 +67,7 @@ A coverage matrix with empirical pass-rates against `evaluation/datasets/batch-1
 | Brainstorming | `brainstorming` (Reference) |
 | Article Illustration | `bs-article-illustrate` |
 | PPT Design (rendering) | `pptx` (Reference) |
-| Deck under adversarial review | `bs-defensible-deck` |
+| Deck substance (architecture + exhibits) | `bs-deck-substance` |
 | Plan Stress-Test (interview) | `grill-me` / `grilling` (Reference) |
 | Skill Writing Vocabulary | `writing-great-skills` (Reference) |
 | Structured Learning Path | `learn-skill` (Reference) |

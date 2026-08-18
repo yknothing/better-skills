@@ -1,8 +1,17 @@
-<!-- Parent skill: skills/bs-defensible-deck/SKILL.md -->
+<!-- Parent skill: skills/bs-deck-substance/SKILL.md -->
 <!-- Regression fixture: a legitimate L0 ledger. Reversible decision, no opposing interest,
      so the tier table exempts it from assumption and rebuttal entries. -->
 <!-- Expected: exit code 0. A tier-blind checker wrongly failed this. -->
 
+
+## Belief Delta
+
+- who: The three team leads who own the current rota
+- believes-now: The existing rota works and changing it costs more churn than it saves
+- should-believe: First-response time is the binding constraint on customer satisfaction this quarter, and the pilot rota moves it without adding load
+- evidence: The first-response distribution across the pilot fortnight versus the preceding one (E1)
+- will-do: Adopt the pilot rota for one sprint and review at the retro
+- surprise-check: Not run; no target reader was available before drafting, so the information content of the shift is unverified
 
 ## Triage
 
@@ -29,12 +38,15 @@
 - falsifier: If at 2026-10-01, via the support warehouse table fct_ticket_events, the trailing 30-day median first-response time is at or above 4.0 hours, this claim is refuted.
 - probability: likely, 55-80 percent
 - settlement: 2026-10-01 | support warehouse fct_ticket_events | trailing 30-day median below 3.0 hours
+- negation-test: Negated it reads "first-response time did not change during the pilot", which is what the leads currently expect, so the claim is arguable
+- cost: One sprint of rota churn, and the two leads who prefer the current arrangement absorb the scheduling work
 
 ## Evidence
 
 ### E1
 
 - description: Distribution of first-response times per ticket, pilot fortnight versus the preceding fortnight.
+- baseline: The preceding fortnight, same team, same intake mix (own history). Chosen over a peer baseline because no comparable team runs the same queue
 - source: support warehouse / fct_ticket_events | as of 2026-08-15
 - n: 1,204 tickets
 - window: 2026-07-14 to 2026-08-11

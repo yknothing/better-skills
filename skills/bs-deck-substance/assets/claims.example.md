@@ -1,9 +1,18 @@
-<!-- Parent skill: skills/bs-defensible-deck/SKILL.md -->
+<!-- Parent skill: skills/bs-deck-substance/SKILL.md -->
 <!-- A worked Claim Ledger that passes scripts/check-claim-ledger.js with zero failures. -->
 <!-- Copy this file to claims.md in the working directory and replace the content. -->
 <!-- Format contract: `## Section` -> `### ID` -> `- field: value`. One field per line. -->
 
 # Claim Ledger: Regional node expansion, Q3 investment committee
+
+## Belief Delta
+
+- who: The CFO, who has held an opposing position since the FY25 network review, plus the two committee members who defer to him
+- believes-now: Unit economics degrade above roughly forty nodes, therefore any further expansion destroys margin
+- should-believe: The degradation he fears begins beyond twenty-one nodes, not at the current frontier, so the next nine sites are still accretive
+- evidence: The difference-in-differences estimate on three pilot regions (E1), plus the balancing-traffic series on page 9 which locates the crossover
+- will-do: Approve 8.0M USD for nine sites with a hard cap at twenty-one total, and accept the A1 diesel signpost as the halt condition
+- surprise-check: Pre-read by three committee members; two said they had assumed degradation started immediately, so the shift is real for them
 
 ## Triage
 
@@ -35,6 +44,8 @@
 - falsifier: If at 2027-06-30, via the finance warehouse table fct_parcel_cost, the rolling four-week mean of cost per parcel in pilot regions is at or above 3.05 USD, this claim is refuted.
 - probability: likely, 55-80 percent
 - settlement: 2027-06-30 | finance warehouse fct_parcel_cost | rolling four-week mean below 2.87 USD
+- negation-test: Negated it reads "expanding to twelve nodes did not reduce cost per parcel" — a position finance has actively argued, so the claim is arguable rather than fluff
+- cost: The cap at twenty-one nodes abandons six sites in the original twenty-seven-node plan, and the regional ops team loses the headcount attached to them
 - verb-check: "contributed" requires T3; identification is difference-in-differences with a synthetic control, so the wording is licensed
 
 ### C2
@@ -48,6 +59,8 @@
 - falsifier: If at 2027-03-31, via the operations warehouse table fct_node_scans, the trailing ninety-day mean falls below 1,800 parcels per day, this claim is refuted.
 - probability: very likely, 80-95 percent
 - settlement: 2027-03-31 | operations warehouse fct_node_scans | trailing ninety-day mean at or above 1,800
+- negation-test: Negated it reads "throughput per node did not rise", which is directly checkable against scan data and would be argued if the definition were disputed
+- cost: Grading this T2 forfeits the causal claim the rollout team wanted to make about node density driving throughput
 - verb-check: "increased" requires T2; this is a measured before-and-after with no control, so no causal wording is used
 
 ## Evidence
@@ -55,6 +68,7 @@
 ### E1
 
 - description: Cost per parcel by region and month, pilot versus non-pilot, with the difference-in-differences estimate and its interval.
+- baseline: Synthetic control from six non-pilot regions weighted on pre-period trend (counterfactual — highest attribution cleanliness). Adversarial baseline test: substituting the least favourable legitimate baseline, unadjusted own history, narrows the effect to 4-6 percent but does not flip its sign
 - source: finance warehouse / fct_parcel_cost | as of 2026-08-15
 - n: 412,000 parcels across nine regions
 - window: 2024-07 to 2026-06, full available series; no truncation
@@ -66,6 +80,7 @@
 ### E2
 
 - description: Average line-haul kilometres per parcel, pilot versus non-pilot regions.
+- baseline: Non-pilot regions over the identical window (peer). Rejected alternatives: own history alone, which is confounded by the 2025 fuel spike
 - source: operations warehouse / fct_linehaul_legs | as of 2026-08-15
 - n: 1.2M legs
 - window: 2024-07 to 2026-06
@@ -76,6 +91,7 @@
 ### E3
 
 - description: Daily parcels per node, distribution by node, not the mean.
+- baseline: The preceding fortnight for the same nodes, plus the p10 node as an internal stratification floor
 - source: operations warehouse / fct_node_scans | as of 2026-08-15
 - n: 12 nodes, 640 node-days
 - window: 2025-07 to 2026-06
