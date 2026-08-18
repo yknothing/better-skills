@@ -19,6 +19,7 @@
         "bs-dev-flow",
         "bs-skill-health",
         "bs-skill-bootstrap",
+        "bs-defensible-deck",
         "grill-me",
         "grilling",
         "writing-great-skills",
@@ -164,6 +165,22 @@
           "multi-perspective-review"
         ],
         "status": "active"
+      },
+      "bs-defensible-deck": {
+        "path": "skills/bs-defensible-deck/SKILL.md",
+        "batch": "batch-1",
+        "tier": "deep",
+        "patterns": [
+          "hard-rules-first",
+          "progressive-disclosure",
+          "multi-perspective-review",
+          "verification-rules",
+          "confidence-anchors",
+          "named-anti-patterns",
+          "format-significance-gates"
+        ],
+        "status": "active",
+        "notes": "Argument-and-evidence layer for decks facing adversarial review. Pairs with external 'pptx' (rendering) and 'bs-visual-design' (visual craft). See docs/insights/deck-adversarial-review.md."
       }
     },
     "external": {
