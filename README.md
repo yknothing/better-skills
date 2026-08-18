@@ -2,7 +2,7 @@
 
 A curated toolkit of Agent Skills, built by studying top skill repositories across the industry.
 
-- **Status: Phase 2 shipped.** This repo currently ships 9 self-developed `SKILL.md` files plus 9 declared external references, a 59-pattern machine-readable library under `docs/patterns/`, a zero-dependency CLI (`bin/better-skills.js`) for installing skills, and a 4-gate review pipeline that is mechanized end-to-end: Gate 1 (`tools/validate.js`), Gate 2 (`tools/peer-review.js`), Gate 3 (`tools/pattern-alignment.js` + `tools/check-patterns.sh`), Gate 4 (`evaluation/harness/runner.js`). See [Roadmap](#roadmap) for what's deferred (LLM-judge / A/B tests / npm publish). Content claims that haven't been verified by the evaluation pipeline yet are explicitly marked **TBD**.
+- **Status: Phase 2 shipped.** This repo currently ships 10 self-developed `SKILL.md` files plus 9 declared external references, a 59-pattern machine-readable library under `docs/patterns/`, a zero-dependency CLI (`bin/better-skills.js`) for installing skills, and a 4-gate review pipeline that is mechanized end-to-end: Gate 1 (`tools/validate.js`), Gate 2 (`tools/peer-review.js`), Gate 3 (`tools/pattern-alignment.js` + `tools/check-patterns.sh`), Gate 4 (`evaluation/harness/runner.js`). See [Roadmap](#roadmap) for what's deferred (LLM-judge / A/B tests / npm publish). Content claims that haven't been verified by the evaluation pipeline yet are explicitly marked **TBD**.
 
 ## Skill namespace
 
@@ -10,11 +10,11 @@ Better-Skills self-developed skills use the `bs-` prefix, such as `bs-visual-des
 
 ## What's actually in here today
 
-- **9 self-developed skills** under `skills/` (~2,800 lines total): `bs-requirements-engineering`, `bs-first-customer-finder`, `bs-visual-design`, `bs-dev-flow`, `bs-prose-craft`, `bs-article-illustrate`, `bs-social-card`, `bs-skill-bootstrap`, `bs-skill-health`
+- **10 self-developed skills** under `skills/`: `bs-requirements-engineering`, `bs-first-customer-finder`, `bs-visual-design`, `bs-dev-flow`, `bs-prose-craft`, `bs-article-illustrate`, `bs-social-card`, `bs-skill-bootstrap`, `bs-skill-health`, `bs-defensible-deck`
 - **9 external references** declared in `external/sources.yaml` (`brainstorming`, `pptx`, `grill-me`, `grilling`, `writing-great-skills`, `learn-skill`, `emil-design-eng`, `review-animations`, `animation-vocabulary`); `bash tools/sync.sh` clones the upstream repos and symlinks them under `external/`
 - **Pattern index** at `docs/patterns/README.md` — currently a single-file index of ~60 named patterns; per-pattern files are coming in Phase 1.C
 - **Research notes** at `docs/research/` — analysis of 12 top skill repositories, including [`mattpocock-analysis.md`](docs/research/mattpocock-analysis.md), [`learn-skill-analysis.md`](docs/research/learn-skill-analysis.md), and [`emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md). Other citations are missing today and will be added in Phase 3.
-- **Domain insights** at `docs/insights/` — verdicts on domain propositions, produced by a parallel expert-roundtable format (independent viewpoints + a red team + a moderator's cross-adjudication). Unlike `docs/research/`, the subject is a claim about a domain, not a skill repository. First entry: [`ppt-attention-ledger.md`](docs/insights/ppt-attention-ledger.md).
+- **Domain insights** at `docs/insights/` — verdicts on domain propositions, produced by a parallel expert-roundtable format (independent viewpoints + a red team + a moderator's cross-adjudication). Unlike `docs/research/`, the subject is a claim about a domain, not a skill repository. Entries: [`ppt-attention-ledger.md`](docs/insights/ppt-attention-ledger.md) (attention as a bid, not a managed resource) and [`deck-adversarial-review.md`](docs/insights/deck-adversarial-review.md) (defensibility as the share of attack surface surrendered voluntarily; the design record for `bs-defensible-deck`).
 - **Tooling**: `tools/validate.sh` (Gate 1) and `tools/sync.sh` (external sync). `evaluation/harness/runner.js` exists but is not wired up yet — see Roadmap.
 
 ## Core methodology
@@ -43,6 +43,7 @@ Better-Skills self-developed skills use the `bs-` prefix, such as `bs-visual-des
 | 16 | `emil-design-eng` | Reference | deep | Design |
 | 17 | `review-animations` | Reference | standard | Design |
 | 18 | `animation-vocabulary` | Reference | lightweight | Design |
+| 19 | `bs-defensible-deck` | Build | deep | Design |
 
 `Strategy: Build` means the skill is implemented in this repo (`skills/<name>/SKILL.md`). `Strategy: Reference` means we curate the upstream skill via `external/sources.yaml` and pull it on demand. `grill-me` is a user-invoked wrapper that delegates to the model-invoked `grilling`; both come from [mattpocock/skills](https://github.com/mattpocock/skills) and must be synced together. `writing-great-skills` is a reference skill (no steps, all in `GLOSSARY.md`) covering skill-writing vocabulary. `learn-skill` is a CE-style exhaustive sample from [koganei/learn-anything-skill](https://github.com/koganei/learn-anything-skill), kept as a deep-tier reference of the "exhaustive spec" school. Motion craft references (`emil-design-eng`, `review-animations`, `animation-vocabulary`) come from [emilkowalski/skills](https://github.com/emilkowalski/skills) and pair with Build skill `bs-visual-design` — see [`docs/research/emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md).
 
@@ -65,7 +66,8 @@ A coverage matrix with empirical pass-rates against `evaluation/datasets/batch-1
 | Writing (general) | `bs-prose-craft` |
 | Brainstorming | `brainstorming` (Reference) |
 | Article Illustration | `bs-article-illustrate` |
-| PPT Design | `pptx` (Reference) |
+| PPT Design (rendering) | `pptx` (Reference) |
+| Deck under adversarial review | `bs-defensible-deck` |
 | Plan Stress-Test (interview) | `grill-me` / `grilling` (Reference) |
 | Skill Writing Vocabulary | `writing-great-skills` (Reference) |
 | Structured Learning Path | `learn-skill` (Reference) |
@@ -77,7 +79,7 @@ The CLI is shipped as the npm package [`@yknothing/better-skills`](https://www.n
 > **Requires**: Node.js 18+, `git` (for cloning external skills), network access on first external-skill install.
 
 ```bash
-# List all skills in the registry (9 self-developed + 9 external references)
+# List all skills in the registry (10 self-developed + 9 external references)
 npx @yknothing/better-skills list
 
 # Install a skill into your Claude Code skills directory
@@ -160,7 +162,7 @@ This repo is honest about its phase. Progress against the published plan:
 
 - **Reference over rebuild** — If a skill is already excellent upstream, curate and sync; don't reimplement.
 - **Depth tiers** — `deep` (high-stakes, exhaustive precision), `standard` (principles + hard gates), `lightweight` (do one thing well).
-- **Batch iteration** — Batch 1 now contains 18 skills. Batch 2 / 3 remain frozen until every Batch 1 skill passes all 4 review gates.
+- **Batch iteration** — Batch 1 now contains 19 skills. Batch 2 / 3 remain frozen until every Batch 1 skill passes all 4 review gates.
 - **Evidence over claims** — Quality numbers in this README must be backed by the evaluation pipeline. Anything not yet measured is marked TBD.
 
 ## License
