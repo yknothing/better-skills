@@ -9,16 +9,17 @@
       "status": "active",
       "skills": [
         "brainstorming",
-        "bs-requirements-engineering",
-        "bs-first-customer-finder",
-        "bs-prose-craft",
-        "bs-visual-design",
+        "bs-prdefine",
+        "bs-insight-product",
+        "bs-prospect-customer",
+        "bs-prose-master",
+        "bs-ui-master",
         "bs-social-card",
-        "bs-article-illustrate",
+        "bs-visual-article",
         "pptx",
-        "bs-dev-flow",
-        "bs-skill-health",
-        "bs-skill-bootstrap",
+        "bs-sw-master",
+        "bs-skill-auditor",
+        "bs-skill-forge",
         "bs-ppt-architecture",
         "grill-me",
         "grilling",
@@ -44,8 +45,8 @@
   },
   "skills": {
     "self-developed": {
-      "bs-requirements-engineering": {
-        "path": "skills/bs-requirements-engineering/SKILL.md",
+      "bs-prdefine": {
+        "path": "skills/bs-prdefine/SKILL.md",
         "batch": "batch-1",
         "tier": "deep",
         "patterns": [
@@ -60,8 +61,21 @@
         ],
         "status": "active"
       },
-      "bs-first-customer-finder": {
-        "path": "skills/bs-first-customer-finder/SKILL.md",
+      "bs-insight-product": {
+        "path": "skills/bs-insight-product/SKILL.md",
+        "batch": "batch-1",
+        "tier": "deep",
+        "patterns": [
+          "hard-rules-first",
+          "progressive-disclosure",
+          "one-question-at-a-time",
+          "scoping-synthesis",
+          "multi-perspective-review"
+        ],
+        "status": "active"
+      },
+      "bs-prospect-customer": {
+        "path": "skills/bs-prospect-customer/SKILL.md",
         "batch": "batch-1",
         "tier": "deep",
         "patterns": [
@@ -74,8 +88,8 @@
         ],
         "status": "active"
       },
-      "bs-visual-design": {
-        "path": "skills/bs-visual-design/SKILL.md",
+      "bs-ui-master": {
+        "path": "skills/bs-ui-master/SKILL.md",
         "batch": "batch-1",
         "tier": "deep",
         "patterns": [
@@ -89,8 +103,8 @@
         ],
         "status": "active"
       },
-      "bs-prose-craft": {
-        "path": "skills/bs-prose-craft/SKILL.md",
+      "bs-prose-master": {
+        "path": "skills/bs-prose-master/SKILL.md",
         "batch": "batch-1",
         "tier": "standard",
         "patterns": [
@@ -102,8 +116,8 @@
         ],
         "status": "active"
       },
-      "bs-dev-flow": {
-        "path": "skills/bs-dev-flow/SKILL.md",
+      "bs-sw-master": {
+        "path": "skills/bs-sw-master/SKILL.md",
         "batch": "batch-1",
         "tier": "standard",
         "patterns": [
@@ -115,8 +129,8 @@
         ],
         "status": "active"
       },
-      "bs-skill-health": {
-        "path": "skills/bs-skill-health/SKILL.md",
+      "bs-skill-auditor": {
+        "path": "skills/bs-skill-auditor/SKILL.md",
         "batch": "batch-1",
         "tier": "standard",
         "patterns": [
@@ -129,8 +143,8 @@
         ],
         "status": "active"
       },
-      "bs-skill-bootstrap": {
-        "path": "skills/bs-skill-bootstrap/SKILL.md",
+      "bs-skill-forge": {
+        "path": "skills/bs-skill-forge/SKILL.md",
         "batch": "batch-1",
         "tier": "standard",
         "patterns": [
@@ -154,8 +168,8 @@
         ],
         "status": "active"
       },
-      "bs-article-illustrate": {
-        "path": "skills/bs-article-illustrate/SKILL.md",
+      "bs-visual-article": {
+        "path": "skills/bs-visual-article/SKILL.md",
         "batch": "batch-1",
         "tier": "standard",
         "patterns": [
@@ -179,7 +193,7 @@
           "format-significance-gates"
         ],
         "status": "active",
-        "notes": "PPT argument architecture and exhibits: sharp claim, load-bearing structure, charts that reveal. Pairs with external 'pptx' (rendering) and 'bs-visual-design' (visual craft). See docs/insights/ppt-architecture.md."
+        "notes": "PPT argument architecture and exhibits: sharp claim, load-bearing structure, charts that reveal. Pairs with external 'pptx' (rendering) and 'bs-ui-master' (visual craft). See docs/insights/ppt-architecture.md."
       }
     },
     "external": {
@@ -240,7 +254,7 @@
         "tier": "deep",
         "invocation": "model-invoked",
         "status": "active",
-        "notes": "Motion and UI craft reference (Emil Kowalski). Pairs with Build skill visual-design. See docs/research/emilkowalski-analysis.md."
+        "notes": "Motion and UI craft reference (Emil Kowalski). Pairs with Build skill bs-ui-master. See docs/research/emilkowalski-analysis.md."
       },
       "review-animations": {
         "source": "emilkowalski-skills",
@@ -278,17 +292,37 @@
   "namespace": {
     "prefix": "bs-",
     "policy": "Self-developed Better-Skills IDs use the bs- prefix; curated external skills retain upstream IDs.",
-    "legacy_aliases": "Deprecated aliases apply only to renamed self-developed skills and should be removed after one migration release."
+    "legacy_aliases": "Deprecated aliases apply only to renamed self-developed skills. Every historical ID maps directly to the current canonical ID; alias chains are forbidden."
   },
   "aliases": {
-    "requirements-engineering": "bs-requirements-engineering",
-    "first-customer-finder": "bs-first-customer-finder",
-    "visual-design": "bs-visual-design",
-    "prose-craft": "bs-prose-craft",
-    "dev-flow": "bs-dev-flow",
-    "skill-health": "bs-skill-health",
-    "skill-bootstrap": "bs-skill-bootstrap",
+    "requirements-engineering": "bs-prdefine",
+    "bs-requirements-engineering": "bs-prdefine",
+    "bs-define-requirements": "bs-prdefine",
+    "product-discovery": "bs-insight-product",
+    "bs-product-discovery": "bs-insight-product",
+    "bs-shape-product-direction": "bs-insight-product",
+    "first-customer-finder": "bs-prospect-customer",
+    "bs-first-customer-finder": "bs-prospect-customer",
+    "bs-find-early-customer-prospects": "bs-prospect-customer",
+    "prose-craft": "bs-prose-master",
+    "bs-prose-craft": "bs-prose-master",
+    "bs-improve-writing": "bs-prose-master",
+    "visual-design": "bs-ui-master",
+    "bs-visual-design": "bs-ui-master",
+    "bs-design-product-interface": "bs-ui-master",
     "social-card": "bs-social-card",
-    "article-illustrate": "bs-article-illustrate"
+    "bs-create-social-share-card": "bs-social-card",
+    "article-illustrate": "bs-visual-article",
+    "bs-article-illustrate": "bs-visual-article",
+    "bs-illustrate-article": "bs-visual-article",
+    "dev-flow": "bs-sw-master",
+    "bs-dev-flow": "bs-sw-master",
+    "bs-implement-code-change": "bs-sw-master",
+    "skill-health": "bs-skill-auditor",
+    "bs-skill-health": "bs-skill-auditor",
+    "bs-audit-agent-skills": "bs-skill-auditor",
+    "skill-bootstrap": "bs-skill-forge",
+    "bs-skill-bootstrap": "bs-skill-forge",
+    "bs-create-agent-skill": "bs-skill-forge"
   }
 }

@@ -29,17 +29,17 @@ A finding without a fix route leaves the agent to improvise a repair — and imp
 
 - Automated quality checks where failures have known, repeatable fixes.
 - CI/CD-style skill validation pipelines.
-- Meta-skills that audit other skills (like bs-skill-health).
+- Meta-skills that audit other skills (like bs-skill-auditor).
 
 Skip it for checks where the fix is genuinely non-deterministic and requires human judgment.
 
 ## Used by
 
-- `bs-skill-health` — Phase 3 (VERIFICATION) implements four categories of verification rules: Frontmatter Verification (5 rules), Reference Integrity (4 rules), Pattern Correctness (3 rules), and skills.json Integrity (4 rules). Each rule has a Check column and a Fix Route column, with standardized `[PASS]/[FAIL]/[WARN]` output.
+- `bs-skill-auditor` — Phase 3 (VERIFICATION) implements four categories of verification rules: Frontmatter Verification (5 rules), Reference Integrity (4 rules), Pattern Correctness (3 rules), and skills.json Integrity (4 rules). Each rule has a Check column and a Fix Route column, with standardized `[PASS]/[FAIL]/[WARN]` output.
 
 ## Examples
 
-From `skills/bs-skill-health/references/phase-3-verification.md`:
+From `skills/bs-skill-auditor/references/phase-3-verification.md`:
 
 ```markdown
 ### Frontmatter Verification

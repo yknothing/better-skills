@@ -36,14 +36,14 @@ Skip it for single-shot, low-stakes skills where the output is immediately visib
 
 ## Used by
 
-- `bs-requirements-engineering` — 10-item checklist at Stage 7 (Quality Check), blocking before Stage 8 Handoff. Items: Placeholder Scan, Consistency Check, Scope Verification, Ambiguity Audit, Constraint Completeness, Gap Detection, Anti-Pattern Check, Dependency Validation, Testability Check, Handoff Readiness.
-- `bs-prose-craft` — 5-item checklist at Step 5 (Self-Review): Voice preserved, No introduced facts, Structure improved, All filler cut, Reads aloud clean.
-- `bs-skill-health` — 9-dimension health framework with structured pass/fail checks per dimension (frontmatter, reference integrity, pattern correctness, skills.json integrity).
-- `bs-article-illustrate` — 8-item checklist at Stage 4 (Quality Check): Style Match, ViewBox, No Raster Fallbacks, Scalable, Accessible, Inline Styles, Color Coherence, Semantic Elements.
+- `bs-prdefine` — 10-item checklist at Stage 7 (Quality Check), blocking before Stage 8 Handoff. Items: Placeholder Scan, Consistency Check, Scope Verification, Ambiguity Audit, Constraint Completeness, Gap Detection, Anti-Pattern Check, Dependency Validation, Testability Check, Handoff Readiness.
+- `bs-prose-master` — 5-item checklist at Step 5 (Self-Review): Voice preserved, No introduced facts, Structure improved, All filler cut, Reads aloud clean.
+- `bs-skill-auditor` — 9-dimension health framework with structured pass/fail checks per dimension (frontmatter, reference integrity, pattern correctness, skills.json integrity).
+- `bs-visual-article` — 8-item checklist at Stage 4 (Quality Check): Style Match, ViewBox, No Raster Fallbacks, Scalable, Accessible, Inline Styles, Color Coherence, Semantic Elements.
 
 ## Examples
 
-From `skills/bs-requirements-engineering/SKILL.md`, Stage 7:
+From `skills/bs-prdefine/SKILL.md`, Stage 7:
 
 ```markdown
 ## Stage 7: QUALITY CHECK

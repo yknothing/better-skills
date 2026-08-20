@@ -8,7 +8,24 @@ set -uo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 CLI="$REPO_ROOT/bin/better-skills.js"
 SANDBOX="$(mktemp -d -t better-skills-test-XXXXXX)"
-trap 'rm -rf "$SANDBOX"' EXIT
+SKILLS_JSON_BAK=""
+SOURCES_BAK=""
+T22_SOURCE_DIR="$REPO_ROOT/skills/bs-ui-master"
+T22_SOURCE_BAK=""
+
+cleanup() {
+  if [ -n "$SKILLS_JSON_BAK" ] && [ -f "$SKILLS_JSON_BAK" ]; then
+    mv "$SKILLS_JSON_BAK" "$REPO_ROOT/skills.json"
+  fi
+  if [ -n "$SOURCES_BAK" ] && [ -f "$SOURCES_BAK" ]; then
+    mv "$SOURCES_BAK" "$REPO_ROOT/external/sources.yaml"
+  fi
+  if [ -n "$T22_SOURCE_BAK" ] && [ -d "$T22_SOURCE_BAK" ] && [ ! -e "$T22_SOURCE_DIR" ]; then
+    mv "$T22_SOURCE_BAK" "$T22_SOURCE_DIR"
+  fi
+  rm -rf "$SANDBOX"
+}
+trap cleanup EXIT
 
 PASS=0
 FAIL=0
@@ -79,6 +96,158 @@ out=$(run_cli list 2>&1); rc=$?
 assert_exit "list exit 0" 0 "$rc"
 echo "$out" | grep -q "bs-social-card" && PASS=$((PASS + 1)) && echo "  $(green PASS) list contains 'bs-social-card'" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) list missing 'bs-social-card'"; }
 echo "$out" | grep -q "brainstorming" && PASS=$((PASS + 1)) && echo "  $(green PASS) list contains 'brainstorming'" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) list missing 'brainstorming'"; }
+node -e "
+const fs = require('fs');
+const path = require('path');
+const resolver = require('./lib/resolver');
+const registry = JSON.parse(fs.readFileSync(process.argv[1], 'utf8'));
+const expectedCanonical = [
+  'bs-prdefine',
+  'bs-insight-product',
+  'bs-prospect-customer',
+  'bs-prose-master',
+  'bs-ui-master',
+  'bs-social-card',
+  'bs-visual-article',
+  'bs-sw-master',
+  'bs-skill-auditor',
+  'bs-skill-forge',
+  'bs-ppt-architecture'
+].sort();
+const expectedH1 = {
+  'bs-prdefine': 'PRDefine',
+  'bs-insight-product': 'Insight Product',
+  'bs-prospect-customer': 'Prospect Customer',
+  'bs-prose-master': 'Prose Master',
+  'bs-ui-master': 'UI Master',
+  'bs-social-card': 'Social Card',
+  'bs-visual-article': 'Visual Article',
+  'bs-sw-master': 'SW Master',
+  'bs-skill-auditor': 'Skill Auditor',
+  'bs-skill-forge': 'Skill Forge',
+  'bs-ppt-architecture': 'PPT Architecture'
+};
+const requiredDescriptionLanguage = {
+  'bs-prdefine': ['Product Requirements (PR)', 'not merely a PRD'],
+  'bs-insight-product': ['product-direction decision', 'does not certify product-market fit'],
+  'bs-prospect-customer': ['evidence-backed first-customer prospecting', 'not lead scraping'],
+  'bs-ui-master': ['production-grade UI design', 'not a complete UX practice'],
+  'bs-sw-master': ['Software (SW)', 'does not imply deployment'],
+  'bs-skill-auditor': ['read-only', 'does not directly repair']
+};
+const expectedAliases = {
+  'requirements-engineering': 'bs-prdefine',
+  'bs-requirements-engineering': 'bs-prdefine',
+  'bs-define-requirements': 'bs-prdefine',
+  'product-discovery': 'bs-insight-product',
+  'bs-product-discovery': 'bs-insight-product',
+  'bs-shape-product-direction': 'bs-insight-product',
+  'first-customer-finder': 'bs-prospect-customer',
+  'bs-first-customer-finder': 'bs-prospect-customer',
+  'bs-find-early-customer-prospects': 'bs-prospect-customer',
+  'prose-craft': 'bs-prose-master',
+  'bs-prose-craft': 'bs-prose-master',
+  'bs-improve-writing': 'bs-prose-master',
+  'visual-design': 'bs-ui-master',
+  'bs-visual-design': 'bs-ui-master',
+  'bs-design-product-interface': 'bs-ui-master',
+  'social-card': 'bs-social-card',
+  'bs-create-social-share-card': 'bs-social-card',
+  'article-illustrate': 'bs-visual-article',
+  'bs-article-illustrate': 'bs-visual-article',
+  'bs-illustrate-article': 'bs-visual-article',
+  'dev-flow': 'bs-sw-master',
+  'bs-dev-flow': 'bs-sw-master',
+  'bs-implement-code-change': 'bs-sw-master',
+  'skill-health': 'bs-skill-auditor',
+  'bs-skill-health': 'bs-skill-auditor',
+  'bs-audit-agent-skills': 'bs-skill-auditor',
+  'skill-bootstrap': 'bs-skill-forge',
+  'bs-skill-bootstrap': 'bs-skill-forge',
+  'bs-create-agent-skill': 'bs-skill-forge'
+};
+const self = registry.skills && registry.skills['self-developed'];
+const batchOne = registry.batches && registry.batches['batch-1'] && registry.batches['batch-1'].skills;
+if (!self || !Array.isArray(batchOne)) throw new Error('missing self-developed registry or batch-1 list');
+if (JSON.stringify(Object.keys(self).sort()) !== JSON.stringify(expectedCanonical)) {
+  throw new Error('self-developed canonical set changed');
+}
+for (const [canonicalName, meta] of Object.entries(self)) {
+  if (!/^bs-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(canonicalName)) {
+    throw new Error('self-developed canonical must use bs- prefix: ' + canonicalName);
+  }
+  const expectedPath = 'skills/' + canonicalName + '/SKILL.md';
+  if (meta.path !== expectedPath) throw new Error('canonical path mismatch: ' + canonicalName);
+  if (!batchOne.includes(canonicalName)) throw new Error('canonical missing from batch-1: ' + canonicalName);
+  const skillSource = fs.readFileSync(path.join(process.argv[2], meta.path), 'utf8');
+  if (!new RegExp('^name: ' + canonicalName + '$', 'm').test(skillSource)) {
+    throw new Error('frontmatter name mismatch: ' + canonicalName);
+  }
+  const skillBody = skillSource.replace(/^---\\s*\\n[\\s\\S]*?\\n---\\s*\\n/, '');
+  const h1 = skillBody.match(/^# (.+)$/m)?.[1];
+  if (h1 !== expectedH1[canonicalName]) throw new Error('display name mismatch: ' + canonicalName);
+  for (const phrase of requiredDescriptionLanguage[canonicalName] || []) {
+    if (!skillSource.includes(phrase)) {
+      throw new Error('description lost boundary language for ' + canonicalName + ': ' + phrase);
+    }
+  }
+}
+if (JSON.stringify(registry.aliases) !== JSON.stringify(expectedAliases)) {
+  throw new Error('historical alias map changed or is not ordered as documented');
+}
+for (const [legacyName, canonicalName] of Object.entries(expectedAliases)) {
+  if (!self[canonicalName]) throw new Error('missing canonical registry entry: ' + canonicalName);
+  if (self[legacyName]) throw new Error('historical identity is still canonical: ' + legacyName);
+  if (resolver.canonicalizeName(legacyName, registry) !== canonicalName) {
+    throw new Error('resolver missed historical identity: ' + legacyName);
+  }
+  const resolved = resolver.resolveSource(legacyName);
+  if (resolved.name !== canonicalName || !resolved.aliasUsed || resolved.kind !== 'self-developed') {
+    throw new Error('resolver source mismatch: ' + legacyName);
+  }
+}
+for (const [aliasName, canonicalName] of Object.entries(registry.aliases || {})) {
+  if (self[aliasName]) throw new Error('alias is also canonical: ' + aliasName);
+  if (!self[canonicalName]) throw new Error('alias target is missing: ' + aliasName + ' -> ' + canonicalName);
+  if (registry.aliases[canonicalName]) throw new Error('alias chain is forbidden: ' + aliasName + ' -> ' + canonicalName);
+}
+const expectedExternal = [
+  'brainstorming', 'pptx', 'grill-me', 'grilling', 'writing-great-skills',
+  'learn-skill', 'emil-design-eng', 'review-animations', 'animation-vocabulary'
+].sort();
+const expectedExternalLocation = {
+  'brainstorming': ['superpowers', 'external/superpowers/brainstorming'],
+  'pptx': ['anthropic-agent-skills', 'external/anthropic-agent-skills/pptx'],
+  'grill-me': ['mattpocock-skills', 'external/mattpocock-skills/grill-me'],
+  'grilling': ['mattpocock-skills', 'external/mattpocock-skills/grilling'],
+  'writing-great-skills': ['mattpocock-skills', 'external/mattpocock-skills/writing-great-skills'],
+  'learn-skill': ['learn-anything-skill', 'external/learn-anything-skill/learn-skill'],
+  'emil-design-eng': ['emilkowalski-skills', 'external/emilkowalski-skills/emil-design-eng'],
+  'review-animations': ['emilkowalski-skills', 'external/emilkowalski-skills/review-animations'],
+  'animation-vocabulary': ['emilkowalski-skills', 'external/emilkowalski-skills/animation-vocabulary']
+};
+const actualExternal = Object.keys(registry.skills.external || {}).sort();
+if (JSON.stringify(actualExternal) !== JSON.stringify(expectedExternal)) {
+  throw new Error('external skill IDs changed');
+}
+for (const externalName of expectedExternal) {
+  const [expectedSource, expectedPath] = expectedExternalLocation[externalName];
+  const meta = registry.skills.external[externalName];
+  if (meta.source !== expectedSource || meta.path !== expectedPath) {
+    throw new Error('external source/path changed: ' + externalName);
+  }
+  const resolved = resolver.resolveSource(externalName);
+  if (resolved.name !== externalName || resolved.aliasUsed || resolved.kind !== 'external') {
+    throw new Error('external resolver identity changed: ' + externalName);
+  }
+}
+const expectedBatchOne = [...Object.keys(self), ...expectedExternal].sort();
+const actualBatchOne = [...batchOne].sort();
+if (JSON.stringify(actualBatchOne) !== JSON.stringify(expectedBatchOne)) {
+  throw new Error('batch-1 contains stale, missing, or duplicate skill IDs');
+}
+" "$REPO_ROOT/skills.json" "$REPO_ROOT"; rc=$?
+assert_exit "canonical rename registry contract" 0 "$rc"
 echo
 
 echo "T3: list --installed (empty manifest)"
@@ -174,16 +343,16 @@ rm -rf "$SANDBOX/bs-social-card"
 echo
 
 echo "T15: add + update flow"
-run_cli add bs-visual-design --target "$SANDBOX" >/dev/null 2>&1; rc=$?
-assert_exit "add bs-visual-design exit 0" 0 "$rc"
+run_cli add bs-ui-master --target "$SANDBOX" >/dev/null 2>&1; rc=$?
+assert_exit "add bs-ui-master exit 0" 0 "$rc"
 sleep 1
-run_cli update bs-visual-design --target "$SANDBOX" >/dev/null 2>&1; rc=$?
+run_cli update bs-ui-master --target "$SANDBOX" >/dev/null 2>&1; rc=$?
 assert_exit "update exit 0" 0 "$rc"
-assert_path_exists "bs-visual-design still present after update" "$SANDBOX/bs-visual-design/SKILL.md"
+assert_path_exists "bs-ui-master still present after update" "$SANDBOX/bs-ui-master/SKILL.md"
 echo
 
 echo "T16: validate against self-developed skill"
-run_cli validate bs-visual-design >/dev/null 2>&1; rc=$?
+run_cli validate bs-ui-master >/dev/null 2>&1; rc=$?
 assert_exit "validate exit 0" 0 "$rc"
 echo
 
@@ -233,6 +402,7 @@ cp "$REPO_ROOT/skills.json" "$SKILLS_JSON_BAK"
 echo 'not-valid-json' > "$REPO_ROOT/skills.json"
 run_cli list >/dev/null 2>&1; rc=$?
 mv "$SKILLS_JSON_BAK" "$REPO_ROOT/skills.json"
+SKILLS_JSON_BAK=""
 assert_exit "corrupt skills.json exit 5" 5 "$rc"
 echo
 
@@ -242,19 +412,22 @@ cp "$REPO_ROOT/external/sources.yaml" "$SOURCES_BAK"
 printf "sources:\n\tfoo: bar\n" > "$REPO_ROOT/external/sources.yaml"
 run_cli list >/dev/null 2>&1; rc=$?
 mv "$SOURCES_BAK" "$REPO_ROOT/external/sources.yaml"
+SOURCES_BAK=""
 assert_exit "corrupt sources.yaml exit 5" 5 "$rc"
 echo
 
 echo "T22: update with missing source preserves files (no half-erase)"
 T22_DIR="$SANDBOX/t22"
 mkdir -p "$T22_DIR"
-run_cli add bs-visual-design --target "$T22_DIR" >/dev/null 2>&1
+run_cli add bs-ui-master --target "$T22_DIR" >/dev/null 2>&1
 # Move source aside so the update will fail
-mv "$REPO_ROOT/skills/bs-visual-design" "$REPO_ROOT/skills/bs-visual-design.bak.$$"
-run_cli update bs-visual-design --target "$T22_DIR" >/dev/null 2>&1; rc=$?
-mv "$REPO_ROOT/skills/bs-visual-design.bak.$$" "$REPO_ROOT/skills/bs-visual-design"
+T22_SOURCE_BAK="${T22_SOURCE_DIR}.bak.$$"
+mv "$T22_SOURCE_DIR" "$T22_SOURCE_BAK"
+run_cli update bs-ui-master --target "$T22_DIR" >/dev/null 2>&1; rc=$?
+mv "$T22_SOURCE_BAK" "$T22_SOURCE_DIR"
+T22_SOURCE_BAK=""
 assert_exit "update with missing source exit 5" 5 "$rc"
-assert_path_exists "tracked file preserved on failed update" "$T22_DIR/bs-visual-design/SKILL.md"
+assert_path_exists "tracked file preserved on failed update" "$T22_DIR/bs-ui-master/SKILL.md"
 echo
 
 echo "T23: --target / yields friendly EINTEGRITY (not raw ENOENT)"
@@ -265,9 +438,10 @@ echo
 echo "T24: legacy alias installs canonical identity"
 ALIAS_DIR="$SANDBOX/alias"
 mkdir -p "$ALIAS_DIR"
-run_cli add social-card --target "$ALIAS_DIR" >/dev/null 2>&1; rc=$?
+out=$(run_cli add social-card --target "$ALIAS_DIR" 2>&1); rc=$?
 assert_exit "legacy alias add exit 0" 0 "$rc"
-assert_path_exists "alias created canonical directory" "$ALIAS_DIR/bs-social-card/SKILL.md"
+echo "$out" | grep -q "'social-card' is deprecated; using canonical skill ID 'bs-social-card'" && PASS=$((PASS + 1)) && echo "  $(green PASS) unprefixed alias warns with current canonical" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) unprefixed alias warning missing or stale"; }
+assert_path_exists "unprefixed alias created canonical directory" "$ALIAS_DIR/bs-social-card/SKILL.md"
 assert_path_missing "alias did not create legacy directory" "$ALIAS_DIR/social-card"
 if grep -q "^name: bs-social-card$" "$ALIAS_DIR/bs-social-card/SKILL.md"; then
   PASS=$((PASS + 1))
@@ -276,6 +450,120 @@ else
   FAIL=$((FAIL + 1))
   echo "  $(red FAIL) installed frontmatter not canonical"
 fi
+echo
+
+echo "T25: previous canonical alias installs current identity"
+CURRENT_ALIAS_DIR="$SANDBOX/current-alias"
+mkdir -p "$CURRENT_ALIAS_DIR"
+out=$(run_cli add bs-create-social-share-card --target "$CURRENT_ALIAS_DIR" 2>&1); rc=$?
+assert_exit "previous canonical alias add exit 0" 0 "$rc"
+echo "$out" | grep -q "'bs-create-social-share-card' is deprecated; using canonical skill ID 'bs-social-card'" && PASS=$((PASS + 1)) && echo "  $(green PASS) previous canonical warns with current canonical" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) previous canonical warning missing or stale"; }
+assert_path_exists "previous canonical alias created current directory" "$CURRENT_ALIAS_DIR/bs-social-card/SKILL.md"
+assert_path_missing "previous canonical alias did not create old directory" "$CURRENT_ALIAS_DIR/bs-create-social-share-card"
+echo
+
+echo "T26: legacy installs migrate without duplicate identities"
+MIGRATION_DIR="$SANDBOX/migration"
+mkdir -p "$MIGRATION_DIR"
+node -e "
+const fs = require('fs');
+const path = require('path');
+const source = process.argv[1];
+const target = process.argv[2];
+function filesUnder(root, dir = root, out = []) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const absolute = path.join(dir, entry.name);
+    if (entry.isDirectory()) filesUnder(root, absolute, out);
+    else out.push(path.relative(root, absolute).split(path.sep).join('/'));
+  }
+  return out;
+}
+const files = filesUnder(source);
+const installed = {};
+for (const legacyName of ['requirements-engineering', 'bs-requirements-engineering', 'bs-define-requirements']) {
+  fs.cpSync(source, path.join(target, legacyName), { recursive: true });
+  installed[legacyName] = {
+    source: 'self-developed',
+    from: 'skills/' + legacyName,
+    installed_at: '2026-01-01T00:00:00.000Z',
+    method: 'copy',
+    files
+  };
+}
+fs.writeFileSync(path.join(target, '.better-skills.json'), JSON.stringify({ version: '0.2.0-dev', installed }, null, 2) + '\n');
+" "$REPO_ROOT/skills/bs-prdefine" "$MIGRATION_DIR"; rc=$?
+assert_exit "legacy fixture setup exit 0" 0 "$rc"
+run_cli add bs-prdefine --target "$MIGRATION_DIR" >/dev/null 2>&1; rc=$?
+assert_exit "canonical add refuses duplicate legacy install" 4 "$rc"
+run_cli update bs-requirements-engineering --target "$MIGRATION_DIR" --dry-run >/dev/null 2>&1; rc=$?
+assert_exit "legacy migration dry-run exit 0" 0 "$rc"
+assert_path_missing "migration dry-run did not create canonical directory" "$MIGRATION_DIR/bs-prdefine"
+assert_path_exists "migration dry-run kept unprefixed legacy directory" "$MIGRATION_DIR/requirements-engineering/SKILL.md"
+assert_path_exists "migration dry-run kept prefixed legacy directory" "$MIGRATION_DIR/bs-requirements-engineering/SKILL.md"
+assert_path_exists "migration dry-run kept previous canonical directory" "$MIGRATION_DIR/bs-define-requirements/SKILL.md"
+run_cli update bs-define-requirements --target "$MIGRATION_DIR" >/dev/null 2>&1; rc=$?
+assert_exit "alias-initiated update migrates legacy installs" 0 "$rc"
+assert_path_exists "migration created canonical directory" "$MIGRATION_DIR/bs-prdefine/SKILL.md"
+assert_path_missing "migration removed unprefixed legacy directory" "$MIGRATION_DIR/requirements-engineering"
+assert_path_missing "migration removed prefixed legacy directory" "$MIGRATION_DIR/bs-requirements-engineering"
+assert_path_missing "migration removed previous canonical directory" "$MIGRATION_DIR/bs-define-requirements"
+node -e "
+const m = JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));
+const names = Object.keys(m.installed).sort();
+if (JSON.stringify(names) !== JSON.stringify(['bs-prdefine'])) {
+  console.error('unexpected installed identities: ' + names.join(', '));
+  process.exit(1);
+}
+" "$MIGRATION_DIR/.better-skills.json"; rc=$?
+assert_exit "migration manifest has one canonical identity" 0 "$rc"
+echo
+
+echo "T27: update-all collapses canonical and every historical identity"
+UPDATE_ALL_DIR="$SANDBOX/update-all"
+mkdir -p "$UPDATE_ALL_DIR"
+node -e "
+const fs = require('fs');
+const path = require('path');
+const source = process.argv[1];
+const target = process.argv[2];
+function filesUnder(root, dir = root, out = []) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const absolute = path.join(dir, entry.name);
+    if (entry.isDirectory()) filesUnder(root, absolute, out);
+    else out.push(path.relative(root, absolute).split(path.sep).join('/'));
+  }
+  return out;
+}
+const files = filesUnder(source);
+const installed = {};
+for (const identity of ['requirements-engineering', 'bs-requirements-engineering', 'bs-define-requirements', 'bs-prdefine']) {
+  fs.cpSync(source, path.join(target, identity), { recursive: true });
+  installed[identity] = {
+    source: 'self-developed',
+    from: 'skills/' + identity,
+    installed_at: '2026-01-01T00:00:00.000Z',
+    method: 'copy',
+    files
+  };
+}
+fs.writeFileSync(path.join(target, '.better-skills.json'), JSON.stringify({ version: '0.2.0-dev', installed }, null, 2) + '\n');
+" "$REPO_ROOT/skills/bs-prdefine" "$UPDATE_ALL_DIR"; rc=$?
+assert_exit "update-all coexistence fixture setup exit 0" 0 "$rc"
+run_cli update --target "$UPDATE_ALL_DIR" >/dev/null 2>&1; rc=$?
+assert_exit "update-all converges coexistence exit 0" 0 "$rc"
+assert_path_exists "update-all kept canonical directory" "$UPDATE_ALL_DIR/bs-prdefine/SKILL.md"
+assert_path_missing "update-all removed unprefixed legacy directory" "$UPDATE_ALL_DIR/requirements-engineering"
+assert_path_missing "update-all removed prefixed legacy directory" "$UPDATE_ALL_DIR/bs-requirements-engineering"
+assert_path_missing "update-all removed previous canonical directory" "$UPDATE_ALL_DIR/bs-define-requirements"
+node -e "
+const m = JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));
+const names = Object.keys(m.installed).sort();
+if (JSON.stringify(names) !== JSON.stringify(['bs-prdefine'])) {
+  console.error('unexpected installed identities after update-all: ' + names.join(', '));
+  process.exit(1);
+}
+" "$UPDATE_ALL_DIR/.better-skills.json"; rc=$?
+assert_exit "update-all manifest has one canonical identity" 0 "$rc"
 echo
 
 echo "==> Result: $(green "$PASS pass") / $(red "$FAIL fail")"

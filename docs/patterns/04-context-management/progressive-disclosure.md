@@ -36,18 +36,19 @@ Skip it for single-shot skills under 60 lines where the overhead of `references/
 
 ## Used by
 
-- `bs-visual-design` — 7-phase pipeline, each phase in its own `references/` file. SKILL.md explicitly states: "Progressive disclosure is mandatory. Load `references/` files only when their phase trigger fires. Never load ahead."
-- `bs-dev-flow` — 8-phase pipeline with each phase in `references/`. Phase 3b (Characterization) demonstrates conditional loading based on execution posture.
-- `bs-requirements-engineering` — 8-stage pipeline, stages 1–6 each in `references/`. Stage 7 checklist is inline (blocking, must always be visible).
-- `bs-prose-craft` — 5-step editing workflow with inline instructions. The skill is compact enough that `references/` overhead exceeds savings, but the pattern is declared for consistency.
-- `bs-skill-health` — 6-phase pipeline with each phase in `references/`. Phase 3 verification rules are inline (frequently referenced).
-- `bs-skill-bootstrap` — 5-step pipeline with inline instructions (skill is short enough that `references/` overhead exceeds savings).
+- `bs-ui-master` — 7-phase pipeline, each phase in its own `references/` file. SKILL.md explicitly states: "Progressive disclosure is mandatory. Load `references/` files only when their phase trigger fires. Never load ahead."
+- `bs-sw-master` — 8-phase pipeline with each phase in `references/`. Phase 3b (Characterization) demonstrates conditional loading based on execution posture.
+- `bs-prdefine` — 8-stage pipeline, stages 1–6 each in `references/`. Stage 7 checklist is inline (blocking, must always be visible).
+- `bs-prose-master` — 5-step editing workflow with inline instructions. The skill is compact enough that `references/` overhead exceeds savings, but the pattern is declared for consistency.
+- `bs-skill-auditor` — 6-phase pipeline with each phase in `references/`. Phase 3 verification rules are inline (frequently referenced).
+- `bs-skill-forge` — 5-step pipeline with inline instructions (skill is short enough that `references/` overhead exceeds savings).
 - `bs-social-card` — Workflow steps are inline; only the layout library is in `references/layouts.md`.
-- `bs-article-illustrate` — 5-stage pipeline with each stage in `references/`. SKILL.md states: "Progressive disclosure is mandatory. Load `references/` files only when their stage trigger fires."
+- `bs-visual-article` — 5-stage pipeline with each stage in `references/`. SKILL.md states: "Progressive disclosure is mandatory. Load `references/` files only when their stage trigger fires."
+- `bs-insight-product` — Keeps routing and gates inline, then loads evidence, lens, and artifact contracts only in Steps 2, 3, and 9.
 
 ## Examples
 
-From `skills/bs-visual-design/SKILL.md`:
+From `skills/bs-ui-master/SKILL.md`:
 
 ```markdown
 ## Pipeline
@@ -70,7 +71,7 @@ Phase N+1 begins.
 
 The Hard Rules reinforce: "Progressive disclosure is mandatory. Load `references/` files only when their phase trigger fires. Never load ahead."
 
-From `skills/bs-dev-flow/SKILL.md`, demonstrating conditional progressive disclosure:
+From `skills/bs-sw-master/SKILL.md`, demonstrating conditional progressive disclosure:
 
 ```markdown
 ## Phase 3b: RED (Characterization) — legacy code without tests

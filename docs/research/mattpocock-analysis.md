@@ -144,8 +144,8 @@ codebase instead.
 | 维度 | better-skills 现状 | mattpocock 补足 |
 |------|-------------------|----------------|
 | 模式库 | `docs/patterns/` ~60 条描述性模式 | 一套**形式化词汇表**，让模式之间可对话 |
-| 需求澄清 | `requirements-engineering`（文档化、长流程） | `grill-me`/`grilling`（即时对话、单次决策树） |
-| 元技能 | `skill-bootstrap`、`skill-health`（TDD-for-skills 流程） | `writing-great-skills`（写作时的判断词汇） |
+| 需求澄清 | `bs-prdefine`（文档化、长流程） | `grill-me`/`grilling`（即时对话、单次决策树） |
+| 元技能 | `bs-skill-forge`、`bs-skill-auditor`（TDD-for-skills 流程） | `writing-great-skills`（写作时的判断词汇） |
 | Invocation 维度 | 未显式建模 | user/model-invoked 二分 + context/cognitive load 权衡 |
 
 ### 不引用的部分
@@ -177,7 +177,7 @@ codebase instead.
 
 按 CLAUDE.md 的策略，引用型技能在积累足够项目摩擦后可升级为自研。候选升级点：
 
-1. `grilling` 若与 `requirements-engineering` 在使用中频繁冲突或重叠，可能值得合并出自研版。
+1. `grilling` 若与 `bs-prdefine` 在使用中频繁冲突或重叠，可能值得合并出自研版。
 2. `writing-great-skills` 的词汇表若被本仓库 `docs/patterns/` 大量引用，可考虑提取为自研元 skill。
 
 目前两个候选都**没有使用数据支撑**，仅作为观察点记录。按 CLAUDE.md 的 Upgrade triggers，需要 ≥20 条具体改进点或 ≥5 条适用 pattern 才能触发，现在远未达到。

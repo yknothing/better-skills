@@ -19,12 +19,12 @@ README 明确：**skill 是领域专长的副产品，不是通用流程框架**
 
 | 层 | better-skills | emilkowalski/skills |
 |----|---------------|---------------------|
-| 全 UI 设计 pipeline | `visual-design` (Build) | — |
+| 全 UI 设计 pipeline | `bs-ui-master` (Build) | — |
 | 动效实现与 craft 深度 | handoff | `emil-design-eng` (Reference) |
 | 动效 diff 严格审查 | handoff | `review-animations` (Reference, user-invoked) |
 | 动效术语反向查表 | — | `animation-vocabulary` (Reference) |
 
-`visual-design` 吸收**方法论**（频率分级、Before/After/Why 审查格式、Reference handoff），**不摘录**上游 skill 正文中的曲线数值、代码片段与 glossary 条目。
+`bs-ui-master` 吸收**方法论**（频率分级、Before/After/Why 审查格式、Reference handoff），**不摘录**上游 skill 正文中的曲线数值、代码片段与 glossary 条目。
 
 ---
 
@@ -48,7 +48,7 @@ review-animations     →  审查 motion diff（Block / Approve）
 
 ---
 
-## 三、可提取的模式（已用于 visual-design，非复制正文）
+## 三、可提取的模式（已用于 bs-ui-master，非复制正文）
 
 1. **频率优先于美观** — 用户一天看到几次，比“动画酷不酷”更重要；高频路径默认无动效或极轻反馈。
 2. **Build / Review / Vocabulary 拆分** — 实现、审查、命名三件事不混在一个 skill 里。
@@ -83,4 +83,4 @@ npx @yknothing/better-skills add animation-vocabulary
 
 ## 五、Upgrade → Build 触发器（设计意图）
 
-当 `visual-design` + `references/motion.md` 累计 ≥5 条上游有而本仓库未 enforce 的 motion 规则，且使用数据证明 Reference 在 motion 场景 consistently 优于 Build-only 时，再评估是否将 `emil-design-eng` 能力内化。在此之前保持 Reference。
+当 `bs-ui-master` + `references/motion.md` 累计 ≥5 条上游有而本仓库未 enforce 的 motion 规则，且使用数据证明 Reference 在 motion 场景 consistently 优于 Build-only 时，再评估是否将 `emil-design-eng` 能力内化。在此之前保持 Reference。

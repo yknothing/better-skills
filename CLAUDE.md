@@ -8,7 +8,7 @@ This repo's central logic: **STUDY → EXTRACT → DEVELOP → REVIEW → DEPLOY
 
 1. **STUDY**: Pick a top skill from the researched sources (docs/research/). Deconstruct its anatomy — what patterns does it use? What makes it work?
 2. **EXTRACT**: Identify reusable patterns. Document them in docs/patterns/ with source attribution.
-3. **DEVELOP**: Build a custom skill in skills/<name>/SKILL.md using extracted patterns. Follow the TDD-for-skills methodology defined by bs-skill-bootstrap.
+3. **DEVELOP**: Build a custom skill in skills/<name>/SKILL.md using extracted patterns. Follow the TDD-for-skills methodology defined by bs-skill-forge.
 4. **REVIEW**: Run the review pipeline. No skill enters without passing all 4 gates.
 5. **DEPLOY**: Register in skills.json. Tag a version. Sync external references.
 
@@ -29,8 +29,8 @@ These triggers are documented as design intent, not as data we currently collect
 
 | Tier | When to Use | Example Candidates |
 |------|-------------|-------------------|
-| **Deep** | High frequency + high failure cost | bs-requirements-engineering, bs-visual-design |
-| **Standard** | Normal frequency + moderate cost | bs-dev-flow, bs-prose-craft, bs-article-illustrate, bs-skill-health, bs-skill-bootstrap |
+| **Deep** | High frequency + high failure cost | bs-prdefine, bs-ui-master |
+| **Standard** | Normal frequency + moderate cost | bs-sw-master, bs-prose-master, bs-visual-article, bs-skill-auditor, bs-skill-forge |
 | **Lightweight** | High frequency + low failure cost | bs-social-card |
 
 Tier is currently declared only in `skills.json`; SKILL.md frontmatter does not yet carry a `tier` field. Phase 1.B normalizes this by adding a structured tier field to each skill's frontmatter.
@@ -50,7 +50,7 @@ Record all reviews in `docs/reviews/<skill-name>/YYYY-MM-DD-<role>-review.md`. T
 
 | Directory | Purpose |
 |-----------|---------|
-| `skills/` | Self-developed skills (8 today) |
+| `skills/` | Self-developed skills (11 today) |
 | `external/sources.yaml` | Declared external skill sources |
 | `skills.json` | Canonical registry (the single source of truth) |
 | `docs/research/` | Analysis of 10 top skill repos. External URL citations are TBD until Phase 3 |
@@ -82,7 +82,7 @@ Skills are organized in batches for incremental delivery. **Batch 2/3 are intent
 
 | Batch | Theme | Status |
 |-------|-------|--------|
-| Batch 1 | Foundation — Core capabilities + meta-skills | active (14 skills) |
+| Batch 1 | Foundation — Core capabilities + meta-skills | active (20 skills) |
 | Batch 2 | Deepen & Expand — Audio, product design, debugging | frozen until Batch 1 closes Gate 4 |
 | Batch 3 | Creative Suite — Video, data viz, brand, landing pages | frozen until Batch 2 starts |
 

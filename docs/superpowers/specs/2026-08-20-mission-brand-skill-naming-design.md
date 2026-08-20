@@ -31,6 +31,10 @@ The canonical ID carries identity and expectation. The description carries compl
 
 `PR` is expanded as Product Requirements on first use. `SW` is expanded as Software on first use. `UI Master` explicitly excludes the unsupported parts of a complete UX practice.
 
+## Concurrent Upstream Addition
+
+After this ten-Skill mapping was approved, `origin/main` added `bs-ppt-architecture`. Its existing canonical already satisfies the `bs-` plus two-core-word contract, so it remains unchanged and receives the display name `PPT Architecture`. It has no migration aliases. The integrated repository therefore contains eleven self-developed canonical IDs, while this migration still owns exactly the ten alias families documented below.
+
 ## Compatibility Architecture
 
 The resolver canonicalizes aliases in one lookup. Therefore every historical identity must map directly to the final canonical ID; alias chains are forbidden.
@@ -71,9 +75,9 @@ The internal `pre-dev-flow-*` recovery artifact prefix is not a Skill identity a
 
 The implementation is accepted only when:
 
-1. The ten final directories exist and each frontmatter `name` exactly matches its directory.
+1. The ten renamed directories and the concurrently added `bs-ppt-architecture` directory exist, and each frontmatter `name` exactly matches its directory.
 2. All descriptions are valid portable YAML, are within the repository length limit, and encode the disambiguation above.
-3. The ten canonical IDs and twenty-nine direct aliases resolve to an existing `SKILL.md`.
+3. The eleven self-developed canonical IDs and twenty-nine direct aliases resolve to an existing `SKILL.md`.
 4. No obsolete directory remains; historical names appear only in explicit compatibility aliases, migration tests, or this migration record.
 5. CLI tests cover direct aliases, duplicate prevention, dry-run, alias-initiated update, coexisting historical identities, and update-all convergence.
 6. All four repository gates pass, with no hard failures.

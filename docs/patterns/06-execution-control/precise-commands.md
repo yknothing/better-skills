@@ -36,12 +36,12 @@ Skip it for commands where the exact invocation varies by project and the agent 
 
 ## Used by
 
-- `bs-dev-flow` — Exact commands throughout: `git add <specific-file-1> <specific-file-2>`, `git commit -m "<type>: <imperative summary>"`, `npx jest path/to/test.test.ts --no-coverage`, `npx tsc --noEmit`.
+- `bs-sw-master` — Exact commands throughout: `git add <specific-file-1> <specific-file-2>`, `git commit -m "<type>: <imperative summary>"`, `npx jest path/to/test.test.ts --no-coverage`, `npx tsc --noEmit`.
 - `bs-social-card` — Exact Playwright MCP commands for screenshot: `mcp__playwright__browser_navigate({ url: "file:///tmp/bs-social-card.html" })`, `mcp__playwright__browser_resize({ width: 1200, height: 630 })`.
 
 ## Examples
 
-From `skills/bs-dev-flow/SKILL.md`:
+From `skills/bs-sw-master/SKILL.md`:
 
 ```markdown
 **Automated checks (non-negotiable):**

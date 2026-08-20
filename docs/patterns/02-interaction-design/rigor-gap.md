@@ -35,11 +35,11 @@ Skip it for skills where the input is already structured (e.g., "implement this 
 
 ## Used by
 
-- `bs-requirements-engineering` — Stage 2 (DETECT GAPS) runs all seven gap detectors against the Raw Intent Summary. The Gap Inventory artifact records each gap with type, triggering phrase, and rationale. Gap Override Protocol handles false positives.
+- `bs-prdefine` — Stage 2 (DETECT GAPS) runs all seven gap detectors against the Raw Intent Summary. The Gap Inventory artifact records each gap with type, triggering phrase, and rationale. Gap Override Protocol handles false positives.
 
 ## Examples
 
-From `skills/bs-requirements-engineering/SKILL.md`:
+From `skills/bs-prdefine/SKILL.md`:
 
 ```markdown
 ## Stage 2: DETECT GAPS — Rigor Gap Scan

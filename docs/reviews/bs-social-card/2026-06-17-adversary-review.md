@@ -1,15 +1,15 @@
 # Adversary Review: bs-social-card
 
-**Date**: 2026-06-17  
-**Reviewer Role**: Adversary  
-**Skill**: bs-social-card  
+**Date**: 2026-06-17
+**Reviewer Role**: Adversary
+**Skill**: bs-social-card
 **HUMAN_VERIFIED**: false
 
 ## Summary
 
 This compatibility header normalizes review metadata after the repository-wide `bs-` namespace migration. The substantive review below is preserved unchanged.
 
-**Migration finding**: namespace metadata normalized [LOW]  
+**Migration finding**: namespace metadata normalized [LOW]
 **Schema migration status**: PASS
 
 ## Original Review
@@ -66,8 +66,8 @@ A user says "Make a social card for our product launch — our brand uses a dark
 
 **Suggested Fix:** Rewrite Hard Rule 3:
 ```
-3. CONTRAST: All body text must achieve ≥7:1 contrast ratio against its immediate background (WCAG AAA). 
-   If using a background image or gradient, add a semi-transparent overlay to ensure text contrast. 
+3. CONTRAST: All body text must achieve ≥7:1 contrast ratio against its immediate background (WCAG AAA).
+   If using a background image or gradient, add a semi-transparent overlay to ensure text contrast.
    Brand accent colors are for decoration only, never body text.
 ```
 And in the template, replace `background:#FFFFFF` with `background: var(--card-bg, #FFFFFF)` to allow substitution.
@@ -133,7 +133,7 @@ Step 3: Choose Font Size
    | > 80 units        | 36px      |
 
 3. For mixed-script titles, add a "check rendered width" substep:
-   After screenshot, measure the actual h1 bounding box. If wider than 1000px, 
+   After screenshot, measure the actual h1 bounding box. If wider than 1000px,
    reduce font-size one tier and re-screenshot.
 ```
 
@@ -176,7 +176,7 @@ A user says "Title: '🚀 We Launched! 🎉 Here's What's New in v2.0'" — 43 c
 
 **Suggested Fix:** Add an emoji width estimation rule:
 ```
-Emoji in titles: Count each emoji as 1.0 width unit (equivalent to ~1 CJK char). 
+Emoji in titles: Count each emoji as 1.0 width unit (equivalent to ~1 CJK char).
 For titles with >3 emoji, consider reducing font-size by one tier preemptively.
 ```
 And in Step 6, add: "If emoji are present, verify they render fully (no tofu/blank glyphs) on the screenshot."
@@ -199,13 +199,13 @@ A company's brand is #FF6B35 (vibrant orange) on a dark charcoal background. The
 
 **Suggested Fix:** Replace the hardcoded color rule with a contrast calculation step:
 ```
-3. CONTRAST: Compute the contrast ratio between the proposed text color and background color 
+3. CONTRAST: Compute the contrast ratio between the proposed text color and background color
    using the WCAG formula (https://www.w3.org/TR/WCAG21/#contrast-minimum).
    - Ratio >= 7:1 (WCAG AAA): Approved as-is.
    - Ratio >= 4.5:1 and < 7:1 (WCAG AA): Approved with a note that large text (>=24px) passes AAA.
    - Ratio < 4.5:1: Reject. Ask the user for lighter/darker alternatives.
-   
-   If the user specifies brand colors, use them. If no colors are specified, default to 
+
+   If the user specifies brand colors, use them. If no colors are specified, default to
    #1A1A1A on #FFFFFF (21:1 contrast).
 ```
 
@@ -224,7 +224,7 @@ A user says "I need both a light and dark version — our site auto-switches bas
 **Suggested Fix:** Add a step after Step 1:
 ```
 If the user's site supports dark mode, ask: "Generate both light and dark variants?"
-If yes, produce two HTML files (social-card-light.html, social-card-dark.html) 
+If yes, produce two HTML files (social-card-light.html, social-card-dark.html)
 and screenshot both.
 ```
 
@@ -270,13 +270,13 @@ Screenshot methods, attempted in order:
      });
    });
    </script>
-   Then use mcp__playwright__browser_navigate to trigger the download, or instruct the user 
+   Then use mcp__playwright__browser_navigate to trigger the download, or instruct the user
    to open the HTML file in a browser.
 
 3. Puppeteer CLI fallback:
    npx puppeteer screenshot /tmp/bs-social-card.html bs-social-card.png --viewport 1200x630
 
-4. If none available: Tell the user how to open the HTML file manually and screenshot 
+4. If none available: Tell the user how to open the HTML file manually and screenshot
    (Cmd+Shift+4 on macOS, Win+Shift+S on Windows, selecting the 1200x630 region).
 ```
 
@@ -292,7 +292,7 @@ The skill says to write to `/tmp/bs-social-card.html` on macOS/Linux or `%TEMP%/
 
 **Suggested Fix:** After writing the HTML file, resolve the absolute path and construct the correct `file://` URL:
 ```
-After writing the HTML, run: `realpath /tmp/bs-social-card.html` (or equivalent) 
+After writing the HTML, run: `realpath /tmp/bs-social-card.html` (or equivalent)
 to get the absolute path. Construct the file URL as `file://<absolute-path>`.
 On Windows, forward slashes work: file:///C:/Users/.../Temp/bs-social-card.html
 ```
@@ -469,13 +469,13 @@ Modern social cards often have rounded corners (matching the platform's own card
 
 **Suggested Fix:** If rounded corners are requested, add a note:
 ```
-Note: browser_take_screenshot captures rectangular viewports. For transparent rounded corners, 
-post-process with ImageMagick: 
+Note: browser_take_screenshot captures rectangular viewports. For transparent rounded corners,
+post-process with ImageMagick:
 `convert bs-social-card.png -alpha set -virtual-pixel transparent \
   -channel A -blur 0x2 -level 50%,100% +channel \
   \( +clone -alpha extract -draw "roundrectangle 0,0 1199,629 24,24" \) \
   -compose copyopacity -composite social-card-rounded.png`
-Or use a CSS `border-radius` on the body + capture with transparent background (requires 
+Or use a CSS `border-radius` on the body + capture with transparent background (requires
 browser_navigate with a page that has transparent viewport — not always supported).
 ```
 

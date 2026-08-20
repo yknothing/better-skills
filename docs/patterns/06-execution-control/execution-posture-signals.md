@@ -36,11 +36,11 @@ Skip it for single-phase skills or skills where the output itself makes the phas
 
 ## Used by
 
-- `bs-dev-flow` — Execution Posture Signals table maps each signal string to its pipeline phase: "Writing failing test for [criterion]" → Phase 3: RED, "Tests pass. Running full suite." → GREEN confirmed, "Committing: [type]: [summary]" → Phase 7.
+- `bs-sw-master` — Execution Posture Signals table maps each signal string to its pipeline phase: "Writing failing test for [criterion]" → Phase 3: RED, "Tests pass. Running full suite." → GREEN confirmed, "Committing: [type]: [summary]" → Phase 7.
 
 ## Examples
 
-From `skills/bs-dev-flow/SKILL.md`:
+From `skills/bs-sw-master/SKILL.md`:
 
 ```markdown
 ## Execution Posture Signals

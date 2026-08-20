@@ -1,15 +1,15 @@
 # Advocate Review: bs-social-card
 
-**Date**: 2026-06-17  
-**Reviewer Role**: Advocate  
-**Skill**: bs-social-card  
+**Date**: 2026-06-17
+**Reviewer Role**: Advocate
+**Skill**: bs-social-card
 **HUMAN_VERIFIED**: false
 
 ## Executive Summary
 
 This compatibility header normalizes review metadata after the repository-wide `bs-` namespace migration. The substantive review below is preserved unchanged.
 
-**Schema completeness**: 10/10  
+**Schema completeness**: 10/10
 **Schema migration status**: PASS
 
 ## Original Review
@@ -54,7 +54,7 @@ This compatibility header normalizes review metadata after the repository-wide `
 
 **What could be better**:
 - A single sentence about what to do if the user wants a dark-themed card ("Invert the color values in the template") would cover a frequent variant without material bloat.
-- The skill could benefit from one escape-hatch sentence: "For cards requiring logos, background images, or multi-column layouts, redirect to bs-visual-design."
+- The skill could benefit from one escape-hatch sentence: "For cards requiring logos, background images, or multi-column layouts, redirect to bs-ui-master."
 
 **Verdict**: Exceptional density. Among the lightest skills in the registry while maintaining a complete workflow. The 1-point deduction is for missing the dark-theme hint, which is the single most common variant request.
 
@@ -76,7 +76,7 @@ This compatibility header normalizes review metadata after the repository-wide `
 
 **Recommendation**: Add an optional logo slot without expanding the core workflow. Something like: "Logo URL (optional): If the user provides a logo or wants a brand mark, note the URL. Place it at bottom-right in the template." This would cover a significant percentage of real-world use cases without adding more than 2-3 lines.
 
-**Verdict**: Sufficient for the 80% case (text-only social cards), but the logo/avatar gap is real. Redirecting to bs-visual-design for image-heavy cards is reasonable, but a simple logo slot is common enough to warrant inclusion.
+**Verdict**: Sufficient for the 80% case (text-only social cards), but the logo/avatar gap is real. Redirecting to bs-ui-master for image-heavy cards is reasonable, but a simple logo slot is common enough to warrant inclusion.
 
 ---
 
@@ -240,7 +240,7 @@ The rules are specific enough to be enforceable (exact color codes, exact dimens
 
 **Yes, with one caveat.** The skill is production-ready for text-only social cards — which is its stated scope. The workflow is complete, the error handling is bounded, the quality gates are enforceable, and the Hard Rules prevent the most common failure modes.
 
-The caveat: users requesting logo/avatar/image-inclusive cards should be redirected to bs-visual-design. The skill's description already hints at this ("Do NOT use for: ... use bs-visual-design for those"), but the skill body could benefit from an explicit escape-hatch sentence.
+The caveat: users requesting logo/avatar/image-inclusive cards should be redirected to bs-ui-master. The skill's description already hints at this ("Do NOT use for: ... use bs-ui-master for those"), but the skill body could benefit from an explicit escape-hatch sentence.
 
 For a lightweight-tier skill, the depth-to-weight ratio is excellent. It does one thing (text-only social card generation) and does it well, with no feature creep.
 

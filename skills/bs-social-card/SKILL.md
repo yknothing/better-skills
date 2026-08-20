@@ -1,8 +1,10 @@
 ---
 name: bs-social-card
 # tier: lightweight
-description: Use when the user asks to generate a social media card image, OG image, Twitter card, link preview, or social share graphic. Do NOT use for full-page screenshots, multi-slide carousels, animated GIFs, video thumbnails, or print-ready graphics — use bs-visual-design for those.
+description: Use when the user asks to produce and validate a single 1200x630 social media card, Open Graph image, Twitter card, link preview, or social share graphic. Do not use for full-page screenshots, multi-slide carousels, animated GIFs, video thumbnails, print-ready graphics, or a general-purpose visual identity system.
 ---
+
+# Social Card
 
 You are generating a social media card image. Follow the rules below in order. Do not skip steps.
 
@@ -121,4 +123,4 @@ Three prompts that exercise this skill end-to-end, mirrored in `evaluation/datas
 After verification passes:
 - Return the screenshot file path and a 1-line summary (variant chosen + font-size used).
 - If the user wants variants (e.g., dark mode of the same content), iterate by re-running from Step 2.
-- If the user wants animation or multi-frame output, hand off to `bs-visual-design` — this skill ends at a single 1200×630 PNG.
+- If the user wants animation or multi-frame output, hand off to `bs-ui-master` — this skill ends at a single 1200×630 PNG.

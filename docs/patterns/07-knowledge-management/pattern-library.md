@@ -24,7 +24,7 @@ This is a meta-pattern: the `docs/patterns/` directory in this repository is a l
 
 ## Why it works
 
-Patterns encode "what worked" across multiple solutions. Without a library, each skill author rediscovers the same patterns through trial and error — or worse, ships skills without any patterns at all. A library makes pattern selection a first-class step in skill creation (see `bs-skill-bootstrap` Step 3), ensuring every skill benefits from accumulated experience. The library also enables automated validation: tools can check that every pattern referenced in `skills.json` resolves to a real file.
+Patterns encode "what worked" across multiple solutions. Without a library, each skill author rediscovers the same patterns through trial and error — or worse, ships skills without any patterns at all. A library makes pattern selection a first-class step in skill creation (see `bs-skill-forge` Step 3), ensuring every skill benefits from accumulated experience. The library also enables automated validation: tools can check that every pattern referenced in `skills.json` resolves to a real file.
 
 ## When to use it
 
@@ -36,11 +36,11 @@ Skip it for single-skill projects where the overhead of a library exceeds the be
 
 ## Used by
 
-- `bs-skill-bootstrap` — Step 3 requires selecting 3-5 patterns from `docs/patterns/README.md` with explicit rationale and source attribution. The skill itself lists "Pattern library integration" as a required pattern.
+- `bs-skill-forge` — Step 3 requires selecting 3-5 patterns from `docs/patterns/README.md` with explicit rationale and source attribution. The skill itself lists "Pattern library integration" as a required pattern.
 
 ## Examples
 
-From `skills/bs-skill-bootstrap/SKILL.md`, Step 3:
+From `skills/bs-skill-forge/SKILL.md`, Step 3:
 
 ```markdown
 ### Step 3: Select Patterns from the Library

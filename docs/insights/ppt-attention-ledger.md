@@ -237,7 +237,7 @@ Batch 1 的 PPT 场景目前只有外部 Reference `pptx`（Anthropic Agent Skil
 | Tier | standard（中频、中等失败成本） |
 | 关键设计 | **入口不是"帮我做 PPT"，而是判据 1–3 的分诊**。判据 1 判为 reader-paced 时，skill 必须拒绝执行并改推文档路径——这是它最重要的行为，也是最容易被实现者省略的 |
 | Hard gate 候选 | C2（载体解耦）、C3（AI 摘要门禁）、B1（通道并发禁令）。三条都可自动化核查 |
-| 与既有 skill 的关系 | 与 `bs-visual-design` 在账本 A 上有重叠，需划清边界；`pptx` 作为下游渲染执行器 |
+| 与既有 skill 的关系 | 与 `bs-ui-master` 在账本 A 上有重叠，需划清边界；`pptx` 作为下游渲染执行器 |
 | 前置依赖 | Batch 1 全部通过 Gate 4；本文档的规则集需先在 `evaluation/datasets/` 落成测试用例 |
 
 ### 可提取的通用模式

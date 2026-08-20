@@ -33,18 +33,19 @@ Skip it for trivially short skills (≤50 lines) where the workflow itself is th
 
 ## Used by
 
-- `bs-requirements-engineering` — `## HARD RULES — READ FIRST` block sits at line ~7, before any pipeline description.
-- `bs-prose-craft` — Hard Constraints (numbered list) appear before Soft Guidelines and the editing workflow.
-- `bs-dev-flow` — `## HARD RULES — read before any process step` block, including "Tests first, always" and "No `git add .`", before the pipeline overview.
-- `bs-skill-bootstrap` — Hard Rules block before the 8-step workflow.
+- `bs-prdefine` — `## HARD RULES — READ FIRST` block sits at line ~7, before any pipeline description.
+- `bs-prose-master` — Hard Constraints (numbered list) appear before Soft Guidelines and the editing workflow.
+- `bs-sw-master` — `## HARD RULES — read before any process step` block, including "Tests first, always" and "No `git add .`", before the pipeline overview.
+- `bs-skill-forge` — Hard Rules block before the 8-step workflow.
 - `bs-social-card` — `## HARD RULES` (4 numbered rules) before Step 1.
-- `bs-article-illustrate` — Hard Rules block before Stage 1.
+- `bs-visual-article` — Hard Rules block before Stage 1.
+- `bs-insight-product` — Evidence, independence, demand-signal, and implementation-authority constraints precede the nine-step discovery workflow.
 
 ## Examples
 
 ```markdown
 ---
-name: bs-dev-flow
+name: bs-sw-master
 description: Use when ...
 ---
 

@@ -36,12 +36,13 @@ Skip it for skills where the information need is a single, simple question (e.g.
 
 ## Used by
 
-- `bs-requirements-engineering` — Hard Rule #1: "ONE QUESTION AT A TIME. Never ask multiple questions in a single message." The Clarify stage (Stage 3) enforces this with a Question Quality Checklist per question.
-- `bs-prose-craft` — "One Question at a Time" section defines priority order for clarification (audience → goal → tone → length → constraints), and Step 2 of the Workflow enforces asking only one before proceeding.
+- `bs-prdefine` — Hard Rule #1: "ONE QUESTION AT A TIME. Never ask multiple questions in a single message." The Clarify stage (Stage 3) enforces this with a Question Quality Checklist per question.
+- `bs-prose-master` — "One Question at a Time" section defines priority order for clarification (audience → goal → tone → length → constraints), and Step 2 of the Workflow enforces asking only one before proceeding.
+- `bs-insight-product` — Step 5 asks the highest-impact unresolved question, tracks its `Q/U/D` link, and defines a zero-question route without inferred answers.
 
 ## Examples
 
-From `skills/bs-requirements-engineering/SKILL.md`:
+From `skills/bs-prdefine/SKILL.md`:
 
 ```markdown
 1. **ONE QUESTION AT A TIME.** Never ask multiple questions in a single message.
@@ -57,7 +58,7 @@ From `skills/bs-requirements-engineering/SKILL.md`:
 
 The rule is self-referential: it defines what a "single question" IS (one interrogative sentence, one unknown) and what it IS NOT (compound, embedded sub-questions, front-loaded decision bundles). The detection heuristic ("if you find yourself writing 'and' or a comma between two things you need to know, you are asking two questions") gives the agent a self-check mechanism.
 
-From `skills/bs-prose-craft/SKILL.md`:
+From `skills/bs-prose-master/SKILL.md`:
 
 ```markdown
 ## One Question at a Time

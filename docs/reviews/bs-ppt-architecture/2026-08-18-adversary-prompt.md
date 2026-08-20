@@ -91,7 +91,7 @@ Distinct from making slides *effective* (audience attention, narrative flow) and
 
 This skill does NOT:
 - Generate the `.pptx` / `.key` / PDF file. Hand the finished structure to the `pptx` reference skill or the user's tool of choice for rendering.
-- Handle visual craft — layout, palette, type, motion. Use `bs-visual-design` for that.
+- Handle visual craft — layout, palette, type, motion. Use `bs-ui-master` for that.
 - Optimise for attention, narrative arc, or persuasion of a friendly audience. Those trade off against this skill's goals; see `references/review-protocol.md` for where the conflict is real.
 - Fabricate, source, or clean data. It sets the standard exhibits must meet and refuses to write claims the supplied evidence cannot license.
 - Apply to reader-paced material without adjustment. See Phase 0.

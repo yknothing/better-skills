@@ -35,11 +35,11 @@ Skip it for skills where the output domain is not visual or where AI biases are 
 
 ## Used by
 
-- `bs-visual-design` — `## HARD-GATE: Anti-Pattern Detection` lists 7 named anti-patterns: THE LILA BAN (purple-to-blue gradients), NO INTER FONT, NO 3-COLUMN CARD LAYOUTS, NO GENERIC NAMES, NO LOREM IPSUM, NO DUAL-TONE GRADIENT HERO, NO EMOJI AS FUNCTIONAL ICONS. Each includes a detection signal and a fix. Phase 9.2 re-scans for all 7 during Visual QA.
+- `bs-ui-master` — `## HARD-GATE: Anti-Pattern Detection` lists 7 named anti-patterns: THE LILA BAN (purple-to-blue gradients), NO INTER FONT, NO 3-COLUMN CARD LAYOUTS, NO GENERIC NAMES, NO LOREM IPSUM, NO DUAL-TONE GRADIENT HERO, NO EMOJI AS FUNCTIONAL ICONS. Each includes a detection signal and a fix. Phase 9.2 re-scans for all 7 during Visual QA.
 
 ## Examples
 
-From `skills/bs-visual-design/SKILL.md`:
+From `skills/bs-ui-master/SKILL.md`:
 
 ```markdown
 ## HARD-GATE: Anti-Pattern Detection

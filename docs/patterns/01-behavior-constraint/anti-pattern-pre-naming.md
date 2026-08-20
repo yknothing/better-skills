@@ -40,15 +40,15 @@ Skip it for skills where the action space is too narrow for shortcuts to be mean
 
 ## Used by
 
-- `bs-requirements-engineering` — names "ASSUMPTION SMUGGLING", "RIGOR EVASION", "DEFERRAL DRIFT", "QUESTION DUMPING", "SILENCE-AS-CONSENT FALLACY".
-- `bs-prose-craft` — "Red Flags — Editing Rationalizations" table maps each editing rationalization ("this sounds more professional", "the author clearly meant X") to the Hard Constraint it threatens.
-- `bs-skill-health` — "Red Flags — Audit Rationalizations" table names the auditor's own shortcuts ("looks fine at a glance", "trusted repo, skip the secret scan") before they occur.
+- `bs-prdefine` — names "ASSUMPTION SMUGGLING", "RIGOR EVASION", "DEFERRAL DRIFT", "QUESTION DUMPING", "SILENCE-AS-CONSENT FALLACY".
+- `bs-prose-master` — "Red Flags — Editing Rationalizations" table maps each editing rationalization ("this sounds more professional", "the author clearly meant X") to the Hard Constraint it threatens.
+- `bs-skill-auditor` — "Red Flags — Audit Rationalizations" table names the auditor's own shortcuts ("looks fine at a glance", "trusted repo, skip the secret scan") before they occur.
 
-Other skills apply this pattern via the closely related [`named-anti-patterns`](../08-skill-creation/named-anti-patterns.md) (which is the bs-visual-design specialization of the same idea — naming AI aesthetic biases).
+Other skills apply this pattern via the closely related [`named-anti-patterns`](../08-skill-creation/named-anti-patterns.md) (which is the bs-ui-master specialization of the same idea — naming AI aesthetic biases).
 
 ## Examples
 
-From `skills/bs-requirements-engineering/SKILL.md`:
+From `skills/bs-prdefine/SKILL.md`:
 
 ```markdown
 ## HARD RULES — READ FIRST

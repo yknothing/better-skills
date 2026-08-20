@@ -35,12 +35,12 @@ Skip it for binary pass/fail checks where a checklist is more appropriate.
 
 ## Used by
 
-- `bs-visual-design` — Phase 5 Multi-Perspective Review Panel: each role (CEO, Design Lead, Engineering, DX/User, Brand Guardian) assigns a 0/25/50/75/100 confidence score. Intermediate scores are explicitly forbidden: "Never use intermediate scores (e.g., '72', '68'). The anchors exist to prevent false precision."
-- `bs-skill-health` — Phase 4 Multi-Perspective Review Panel: each role (Skill Author, Skill User, Maintainer, QA/Reviewer) assigns a confidence score on the same 5-anchor scale with the same routing thresholds.
+- `bs-ui-master` — Phase 5 Multi-Perspective Review Panel: each role (CEO, Design Lead, Engineering, DX/User, Brand Guardian) assigns a 0/25/50/75/100 confidence score. Intermediate scores are explicitly forbidden: "Never use intermediate scores (e.g., '72', '68'). The anchors exist to prevent false precision."
+- `bs-skill-auditor` — Phase 4 Multi-Perspective Review Panel: each role (Skill Author, Skill User, Maintainer, QA/Reviewer) assigns a confidence score on the same 5-anchor scale with the same routing thresholds.
 
 ## Examples
 
-From `skills/bs-visual-design/references/phase-5-review.md`:
+From `skills/bs-ui-master/references/phase-5-review.md`:
 
 ```markdown
 ### Confidence Scale
@@ -59,7 +59,7 @@ Never use intermediate scores (e.g., "72", "68"). The anchors exist
 to prevent false precision.
 ```
 
-The same scale appears in `bs-skill-health/references/phase-4-review.md` with domain-adapted meanings (e.g., "Audit is fundamentally wrong. Re-audit." for 0).
+The same scale appears in `bs-skill-auditor/references/phase-4-review.md` with domain-adapted meanings (e.g., "Audit is fundamentally wrong. Re-audit." for 0).
 
 ## Related patterns
 

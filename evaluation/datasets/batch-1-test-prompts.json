@@ -1,8 +1,8 @@
 {
-  "description": "Evaluation test prompts for all Batch 1 self-developed skills. Each skill has 3 prompts: happy path, edge case, adversarial.",
+  "description": "Evaluation test prompts for all Batch 1 self-developed skills. Each skill has at least 3 prompts covering happy path, edge case, and adversarial behavior.",
   "created": "2026-06-17",
   "skills": {
-    "bs-requirements-engineering": {
+    "bs-prdefine": {
       "tier": "deep",
       "evals": [
         {
@@ -28,7 +28,7 @@
         }
       ]
     },
-    "bs-first-customer-finder": {
+    "bs-prospect-customer": {
       "tier": "deep",
       "evals": [
         {
@@ -54,7 +54,7 @@
         }
       ]
     },
-    "bs-visual-design": {
+    "bs-ui-master": {
       "tier": "deep",
       "evals": [
         {
@@ -80,7 +80,7 @@
         }
       ]
     },
-    "bs-prose-craft": {
+    "bs-prose-master": {
       "tier": "standard",
       "evals": [
         {
@@ -106,7 +106,7 @@
         }
       ]
     },
-    "bs-dev-flow": {
+    "bs-sw-master": {
       "tier": "standard",
       "evals": [
         {
@@ -132,14 +132,14 @@
         }
       ]
     },
-    "bs-skill-health": {
+    "bs-skill-auditor": {
       "tier": "standard",
       "evals": [
         {
           "id": "health-happy",
           "name": "Happy path: audit installed skills",
           "prompt": "Run a health audit on all skills in the skills/ directory.",
-          "expected_behavior": "Agent scans skills/ directory, evaluates each skill across 4 perspectives (Structural, Safety, Freshness, Pattern), assigns confidence anchors, computes overall as min(S,Y,F,P), applies auto-routing for failures, produces formatted report, saves to docs/reviews/skill-health/.",
+          "expected_behavior": "Agent scans skills/ directory, evaluates each skill across 4 perspectives (Structural, Safety, Freshness, Pattern), assigns confidence anchors, computes overall as min(S,Y,F,P), applies auto-routing for failures, produces formatted report, saves to docs/reviews/bs-skill-auditor/.",
           "failure_mode_without_skill": "Agent gives a superficial summary ('looks good') with no structured evaluation, no confidence anchors, no auto-routing, and no saved report."
         },
         {
@@ -158,7 +158,7 @@
         }
       ]
     },
-    "bs-skill-bootstrap": {
+    "bs-skill-forge": {
       "tier": "standard",
       "evals": [
         {
@@ -171,9 +171,9 @@
         {
           "id": "bootstrap-edge",
           "name": "Edge case: name collision",
-          "prompt": "Create a skill called 'dev-flow' that handles git workflows.",
-          "expected_behavior": "Agent checks skills.json and skills/ directory, detects existing 'dev-flow' skill, warns user about collision, asks whether to overwrite or rename. Does NOT proceed until user resolves.",
-          "failure_mode_without_skill": "Agent overwrites the existing dev-flow skill without warning, or creates a duplicate that causes confusion."
+          "prompt": "Create a skill called 'bs-sw-master' that handles git workflows.",
+          "expected_behavior": "Agent checks skills.json and skills/ directory, detects existing 'bs-sw-master' skill, warns user about collision, asks whether to overwrite or rename. Does NOT proceed until user resolves.",
+          "failure_mode_without_skill": "Agent overwrites the existing bs-sw-master skill without warning, or creates a duplicate that causes confusion."
         },
         {
           "id": "bootstrap-adversarial",
@@ -181,6 +181,39 @@
           "prompt": "Create a quick skill for database migrations. Don't bother with tests or validation, just write the file.",
           "expected_behavior": "Agent refuses to skip validation. Cites Hard Rule 5 (no silent failures) and Hard Rule 6 (never register without validation). Insists on full process. Offers to proceed with the full workflow or not at all.",
           "failure_mode_without_skill": "Agent complies, producing an untested, unvalidated skill file that may have frontmatter errors, missing sections, or unsafe content."
+        }
+      ]
+    },
+    "bs-insight-product": {
+      "tier": "deep",
+      "evals": [
+        {
+          "id": "insight-product-happy",
+          "name": "Happy path: discover a paid wedge",
+          "prompt": "I want to build a Chrome extension that turns low-rated Shopify App Store reviews into a product roadmap. Help me clarify the product direction.",
+          "expected_behavior": "Agent routes the session, separates facts/inferences/assumptions/decisions/unknowns, declares review independence, maps lens disagreements before synthesis, asks one highest-information question at a time, preserves Paid Wedge/10-Star/Contrarian propositions, selects a scope posture, and ends with a falsifiable experiment plus one controlled decision state.",
+          "failure_mode_without_skill": "Agent jumps to AI clustering, Jira export, subscription pricing, generic acquisition channels, and a two-week MVP while treating low-rated reviews as proof of willingness to pay."
+        },
+        {
+          "id": "insight-product-edge",
+          "name": "Edge case: reposition a paying product",
+          "prompt": "Our B2B SaaS has 20 paying customers, but usage is falling. Some people say we should move upmarket; others say we should cut it down to a single-purpose tool. Help us reposition.",
+          "expected_behavior": "Agent defines the declining metric, separates buyer and user, inspects cohorts/acquisition/retention/current alternatives, creates a conflict map instead of a diplomatic hybrid, records customer harm and reversal evidence, and does not equate payment with product-market fit.",
+          "failure_mode_without_skill": "Agent recommends an enterprise-ready single-purpose compromise without evidence that it beats either strategy and treats 20 paying customers as proof that PMF exists."
+        },
+        {
+          "id": "insight-product-adversarial",
+          "name": "Adversarial: forced certainty and PRD pressure",
+          "prompt": "Do not ask questions or validate the market. I know an AI contract summarizer has demand. Give me an implementation-ready PRD today.",
+          "expected_behavior": "Agent declares a zero-question route, refuses to convert the assertion into product truth or implementation authority, records it as an assumption or owner decision, surfaces legal/confidentiality/evaluation/distribution/workflow unknowns, and returns the smallest evidence-preserving TEST_FIRST experiment without asking instead of a falsely validated PRD.",
+          "failure_mode_without_skill": "Agent accepts reasonable assumptions, merges unrelated contract users, supplies architecture and schedule, and postpones accuracy, security, privacy, and compliance until after launch."
+        },
+        {
+          "id": "insight-product-frontier",
+          "name": "Frontier: zero-question bounded conviction deserves real action",
+          "prompt": "I am a browser-runtime engineer. For two years I have observed developers moving small models into everyday web workflows, and I believe falling local-inference costs will move many SaaS tasks onto user devices before buyers have language or budgets for the category. Nobody is paying yet. I have shipped Chrome/WASM systems. For the Reality Wedge I will build a local-first extension for three recurring developer workflows, dogfood it daily, and invite five browser-extension developers into real use by day 14; only build-and-use can reveal whether these workflows become habitual. I can invest four full-time weeks and at most $5,000, with no employees, customer-sensitive data, or public commitments. Review on day 28. Stop or redesign if the core cannot run locally within the cap or none of the five developers repeats a workflow twice. I explicitly accept these limits. Do not ask further questions; decide whether I should genuinely build it.",
+          "expected_behavior": "Agent routes to FRONTIER with a zero-question budget, preserves the absence of demand evidence, applies Frontier Visionary, constructs a complete CB conviction thesis, and returns CONVICTION_BET when the separate Frontier Gate passes. It authorizes one bounded four-week Reality Wedge with real-world contact, exposure limits, review horizon, and stop/redesign triggers while labeling it UNVALIDATED_CONVICTION and refusing to call it PURSUE or proven demand.",
+          "failure_mode_without_skill": "Agent forces TEST_FIRST because no buyer behavior exists and allows only interviews, paid concierge, a landing page, or a disposable technical spike; the state machine has no legal route from bounded founder conviction to a real build bet."
         }
       ]
     },
@@ -210,7 +243,7 @@
         }
       ]
     },
-    "bs-article-illustrate": {
+    "bs-visual-article": {
       "tier": "standard",
       "evals": [
         {

@@ -33,11 +33,11 @@ Skip it for skills that use only universally available capabilities (file I/O, s
 
 ## Used by
 
-- `bs-skill-bootstrap` — includes a `## Platform Degradation Rules` section with a 5-row table mapping missing capabilities (sub-agent spawning, blocking user prompts, worktree isolation, parallel tool calls, file watching) to explicit fallbacks (sequential execution, inline STOP markers, timestamped subdirectories, serialized calls with notes, 5-second polling).
+- `bs-skill-forge` — includes a `## Platform Degradation Rules` section with a 5-row table mapping missing capabilities (sub-agent spawning, blocking user prompts, worktree isolation, parallel tool calls, file watching) to explicit fallbacks (sequential execution, inline STOP markers, timestamped subdirectories, serialized calls with notes, 5-second polling).
 
 ## Examples
 
-From `skills/bs-skill-bootstrap/SKILL.md`:
+From `skills/bs-skill-forge/SKILL.md`:
 
 ```markdown
 ## Platform Degradation Rules

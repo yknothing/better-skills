@@ -5,7 +5,7 @@
 
 > **Parent skill**: [../SKILL.md](../SKILL.md) — Phase 3
 > **Read in order**: Part 1 is the objective — what makes a chart or table excellent. Part 2 is the floor — the honesty requirements. Formally: `max(insight density) subject to (complete annotation, no manipulation)`. The floor is the `subject to`, never the `max`.
-> **Scope**: charts and tables as evidence and as instruments of discovery. Not visual craft — see `bs-visual-design`. Where the two overlap on encoding and palette semantics, **this file wins inside a decision deck**, because its rules govern what a reader can conclude rather than how the page feels.
+> **Scope**: charts and tables as evidence and as instruments of discovery. Not visual craft — see `bs-ui-master`. Where the two overlap on encoding and palette semantics, **this file wins inside a decision deck**, because its rules govern what a reader can conclude rather than how the page feels.
 
 ---
 

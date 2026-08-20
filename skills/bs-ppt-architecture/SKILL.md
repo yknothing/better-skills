@@ -4,6 +4,8 @@ description: Use when the user needs a PPT, slide set, or decision memo whose va
 # tier: deep
 ---
 
+# PPT Architecture
+
 ## Hard Rules
 
 1. **The objective is a sharp architecture, not an unobjectionable one.** Write it as `max(substance) subject to (honest)`. A deck written so nobody can disagree has a known degenerate optimum — the tautology. "We should monitor the market and adapt our strategy" cannot be acted on and is worthless. If a choice trades away sharpness so that nobody would dispute the claim, that is a bad trade and must be named as one.
@@ -38,7 +40,7 @@ Sharpness, weight-bearing, and progression run **before** anything is drafted. H
 
 This skill does NOT:
 - Render the file. Hand the finished structure to the `pptx` reference skill or the user's tool.
-- Handle visual craft — layout, palette, type, motion. Use `bs-visual-design`. Where `references/exhibits.md` and `bs-visual-design` overlap on encoding, this skill wins inside a decision deck, because its rules are about what the reader can conclude, not about taste.
+- Handle visual craft — layout, palette, type, motion. Use `bs-ui-master`. Where `references/exhibits.md` and `bs-ui-master` overlap on encoding, this skill wins inside a decision deck, because its rules are about what the reader can conclude, not about taste.
 - Optimise for audience attention or narrative pleasure as ends in themselves. Those are covered by the attention analysis in `docs/insights/ppt-attention-ledger.md`, and they trade off against substance in ways that document maps.
 - Fabricate, source, or clean data. It sets the standard exhibits must meet and refuses to write claims the evidence cannot license.
 - Apply unchanged to reader-paced material, compliance filings, or archival packs. See Phase 0.

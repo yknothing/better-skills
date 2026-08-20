@@ -99,11 +99,11 @@ bs-skill-forge
 - Verify: all implementation files
 
 - [ ] Run `npm run prepublishOnly`.
-- [ ] Run `node tools/peer-review.js check --all --json` and require ten passing self-developed Skills.
+- [ ] Run `node tools/peer-review.js check --all --json` and require all eleven self-developed Skills to pass after integrating the concurrent `bs-ppt-architecture` addition.
 - [ ] Run `node tools/pattern-alignment.js --json` and require zero hard failures.
-- [ ] Run `node evaluation/harness/runner.js --json` and require ten passing Skill suites.
-- [ ] Parse every `SKILL.md` frontmatter with a standard YAML parser; require matching names and descriptions no longer than 1024 characters.
-- [ ] Load every canonical and alias identity through the runtime resolver; require 39 of 39 successful loads.
+- [ ] Run `node evaluation/harness/runner.js --json` and require all eleven Skill suites to pass.
+- [ ] Parse all eleven `SKILL.md` frontmatters with a standard YAML parser; require matching names and descriptions no longer than 1024 characters.
+- [ ] Load every canonical and alias identity through the runtime resolver; require 40 of 40 successful loads after the concurrent addition.
 - [ ] Compare external IDs, sources, and paths against `HEAD`; require 9 of 9 unchanged.
 
 ## Task 6: Obtain Dedicated Independent Review

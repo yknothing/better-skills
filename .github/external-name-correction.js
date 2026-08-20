@@ -36,7 +36,7 @@ for (const name of externalNames) {
   delete registry.aliases[name];
 }
 registry.namespace.policy = "All self-developed Better-Skills IDs use the bs- prefix. External references preserve upstream names.";
-registry.namespace.legacy_aliases = "Deprecated for self-developed skills; remove after one migration release and a clean compatibility review.";
+registry.namespace.legacy_aliases = "Deprecated aliases apply only to renamed self-developed skills. Every historical ID maps directly to the current canonical ID; alias chains are forbidden.";
 registry.batches["batch-1"].skills = registry.batches["batch-1"].skills.map((name) => {
   const upstream = name.startsWith("bs-") ? name.slice(3) : name;
   return externalNames.includes(upstream) ? upstream : name;
@@ -57,9 +57,9 @@ const files = [
   "README.md",
   "lib/commands/help.js",
   "tools/test-cli.sh",
-  "skills/bs-skill-bootstrap/SKILL.md",
-  "skills/bs-visual-design/SKILL.md",
-  "skills/bs-visual-design/references/motion.md",
+  "skills/bs-skill-forge/SKILL.md",
+  "skills/bs-ui-master/SKILL.md",
+  "skills/bs-ui-master/references/motion.md",
 ];
 for (const file of files) {
   write(file, restoreExternalNames(read(file)));
@@ -67,8 +67,8 @@ for (const file of files) {
 
 let readme = read("README.md");
 readme = readme.replace(
-  "All public Better-Skills IDs use the `bs-` prefix, including curated external skills. For example: `bs-visual-design`, `bs-first-customer-finder`, and `brainstorming`. Upstream repositories keep their original source names; the CLI maps and rewrites them during installation. Legacy unprefixed CLI names remain deprecated aliases for one migration release and are never shown as canonical registry entries.",
-  "All self-developed Better-Skills IDs use the `bs-` prefix, such as `bs-visual-design` and `bs-first-customer-finder`. Curated external skills preserve their upstream names, such as `brainstorming`, `pptx`, and `grill-me`; the registry records their source repository separately. Legacy unprefixed names for self-developed skills remain deprecated CLI aliases for one migration release."
+  "All public Better-Skills IDs use the `bs-` prefix, including curated external skills. For example: `bs-ui-master`, `bs-prospect-customer`, and `brainstorming`. Upstream repositories keep their original source names; the CLI maps and rewrites them during installation. Historical self-developed names — both prior `bs-*` IDs and older unprefixed aliases — remain deprecated CLI aliases for one migration release and are never shown as canonical registry entries.",
+  "All self-developed Better-Skills IDs use the `bs-` prefix, such as `bs-ui-master` and `bs-prospect-customer`. Curated external skills preserve their upstream names, such as `brainstorming`, `pptx`, and `grill-me`; the registry records their source repository separately. Historical self-developed names — both prior `bs-*` IDs and older unprefixed aliases — remain deprecated CLI aliases for one migration release."
 );
 write("README.md", readme);
 

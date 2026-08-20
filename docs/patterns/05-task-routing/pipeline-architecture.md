@@ -36,11 +36,11 @@ Skip it for single-step skills or skills where the order of operations is genuin
 
 ## Used by
 
-- `bs-dev-flow` — Pipeline Overview section with ASCII diagram: UNDERSTAND → SETUP → [RED → GREEN → REFACTOR → REVIEW-DIFF → COMMIT] loop → FINALIZE. Each phase has a HARD-GATE.
+- `bs-sw-master` — Pipeline Overview section with ASCII diagram: UNDERSTAND → SETUP → [RED → GREEN → REFACTOR → REVIEW-DIFF → COMMIT] loop → FINALIZE. Each phase has a HARD-GATE.
 
 ## Examples
 
-From `skills/bs-dev-flow/SKILL.md`:
+From `skills/bs-sw-master/SKILL.md`:
 
 ```markdown
 ## Pipeline Overview
