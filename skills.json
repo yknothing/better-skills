@@ -173,14 +173,13 @@
         "patterns": [
           "hard-rules-first",
           "progressive-disclosure",
-          "multi-perspective-review",
           "verification-rules",
           "confidence-anchors",
           "named-anti-patterns",
           "format-significance-gates"
         ],
         "status": "active",
-        "notes": "PPT argument architecture and exhibits: sharp claim, load-bearing structure, charts that reveal. Objective is excellence; adversarial-review hardening is its constraint. Pairs with external 'pptx' (rendering) and 'bs-visual-design' (visual craft). See docs/insights/ppt-architecture.md."
+        "notes": "PPT argument architecture and exhibits: sharp claim, load-bearing structure, charts that reveal. Pairs with external 'pptx' (rendering) and 'bs-visual-design' (visual craft). See docs/insights/ppt-architecture.md."
       }
     },
     "external": {

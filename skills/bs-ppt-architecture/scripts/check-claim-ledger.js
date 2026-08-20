@@ -12,17 +12,17 @@
 // skipped silently.
 //
 // Slides cannot be mechanically checked; a structured ledger can. This script
-// exists so the gates in references/review-protocol.md are enforced by a
-// program rather than by the author's good intentions.
+// exists so the architecture and honesty rules that are machine-checkable
+// are enforced by a program rather than by the author's good intentions.
 //
 // SCOPE, STATED PLAINLY: this checks FORM ONLY — presence, format, internal
 // consistency, ordering, and reference closure. It cannot judge whether an
 // argument is sound, whether a switching point came from real sensitivity
-// analysis, or whether a warrant is true. A Gate 2 adversary review of this
+// analysis, or whether a warrant is true. A Gate 2 review of this
 // script produced a ledger that passed every check while being substantively
 // worthless; the checks below close the specific holes that review found, but
 // the general point stands and cannot be engineered away. Passing this checker
-// is a precondition for human adversarial review, never a substitute for it.
+// means nothing was caught, not that the architecture is excellent.
 //
 // Usage:
 //   node scripts/check-claim-ledger.js <claims.md>
@@ -133,8 +133,8 @@ const PACING_MODES = ["speaker-paced", "reader-paced"];
 
 /** Evidence basis. `qualitative` relaxes the numeric-threshold requirement on
  *  falsifiers — a qualitative proposal that must invent numbers to pass a gate
- *  produces exactly the false precision this skill's attack catalogue names as
- *  a tell. It does NOT relax decidability: the falsifying event must still be
+ *  produces exactly the false precision this skill names as a failure.
+ *  It does NOT relax decidability: the falsifying event must still be
  *  observable, dated, and attributable to a named source. */
 const EVIDENCE_BASES = ["quantitative", "qualitative", "mixed"];
 const QUALITATIVE_BASES = new Set(["qualitative"]);
@@ -772,9 +772,8 @@ function main(argv) {
       console.log("  --deck <file>  Compare mtimes to test G1 commitment ordering.");
       console.log("                 Without it, ordering is reported UNVERIFIED, never passed.");
       console.log("");
-      console.log("Checks FORM ONLY. A clean run is a precondition for human adversarial");
-      console.log("review, never a substitute for it. See the header comment for what a");
-      console.log("Gate 2 adversary review demonstrated about its limits.");
+      console.log("Checks FORM ONLY. A clean run means nothing was caught, not that");
+      console.log("the architecture is excellent. See the header comment for limits.");
       console.log("");
       console.log("Exit codes: 0=all pass, 1=at least one fail, 2=usage, 5=file not found");
       return 0;

@@ -4,7 +4,7 @@
 # Exhibits
 
 > **Parent skill**: [../SKILL.md](../SKILL.md) — Phase 3
-> **Read in order**: Part 1 is the objective — what makes a chart or table excellent. Part 2 is the floor — the honesty requirements that keep it defensible. Formally: `max(insight density) subject to (complete annotation, no manipulation)`. The floor is the `subject to`, never the `max`.
+> **Read in order**: Part 1 is the objective — what makes a chart or table excellent. Part 2 is the floor — the honesty requirements. Formally: `max(insight density) subject to (complete annotation, no manipulation)`. The floor is the `subject to`, never the `max`.
 > **Scope**: charts and tables as evidence and as instruments of discovery. Not visual craft — see `bs-visual-design`. Where the two overlap on encoding and palette semantics, **this file wins inside a decision deck**, because its rules govern what a reader can conclude rather than how the page feels.
 
 ---
@@ -50,7 +50,7 @@ Every managerial assertion can be written as *X differs from Y by D on dimension
 
 1. **Write the assertion template**: `X differs from ___ by ___ on ___`. Cannot fill the second slot, do not start the chart.
 2. **List at least three candidate baselines**, each with a line naming its most likely objection.
-3. **Adversarial baseline test.** Substitute the least favourable baseline that is still legitimate. If the conclusion flips, either **show both baselines together** or downgrade the conclusion to "under basis A". This is the move that converts a post-hoc defence into a design constraint.
+3. **Least-favourable baseline test.** Substitute the least favourable baseline that is still legitimate. If the conclusion flips, either **show both baselines together** or downgrade the conclusion to "under basis A". This is the move that converts a post-hoc defence into a design constraint.
 4. **Prioritise by attribution cleanliness** (counterfactual > residual or stratified > peer > target > own history > competitor), letting **decision relevance override** where it genuinely applies — a decision-maker approving budget may need the target baseline more than the control group.
 5. **Encode D itself**: a difference chart with the baseline at zero, an index with the base period at 100, or juxtaposition on a common scale. **Any chart requiring the reader to subtract is unfinished.**
 
@@ -137,15 +137,15 @@ Plus one scale rule: for line charts, choose an aspect ratio that puts the criti
 
 # Part 2 — The floor
 
-Under adversarial review, the reviewer's questions reduce to three: *is that how the data was produced*, *could there be another explanation*, *does it hold under a different definition or window*. These attack measurement, causality, and robustness. Defend against them in advance.
+A reader trying to use the exhibit as evidence asks three questions: *is that how the data was produced*, *could there be another explanation*, *does it hold under a different definition or window*. These are measurement, causality, and robustness. Answer them on the exhibit.
 
 One consequence contradicts a rule most designers hold: **the data-ink ratio does not apply to evidence elements.** n, denominators, exclusion notes, and uncertainty are *evidence ink*. Tufte's own analysis of the Challenger O-ring charts in *Visual Explanations* makes the point from the other side — the fatal flaw was showing only the flights that had problems and omitting those that did not, so a missing denominator prevented the temperature relationship from being established at all.
 
 ## Self-sufficiency elements
 
-Each missing element is an open attack surface.
+Each missing element leaves the exhibit unable to carry the claim.
 
-| Element | Form on the exhibit | Attack if absent |
+| Element | Form on the exhibit | Fails if absent |
 |---|---|---|
 | n and denominator | `n=` per group; every proportion paired with its absolute value | "That percentage came from three samples" / denominator swap |
 | Window plus reason | Full window on the axis; a subtitle stating why it starts and ends there | Cherry-picking; a start point that happens to be the trough |
@@ -163,7 +163,7 @@ Each missing element is an open attack surface.
 
 Based on Cleveland and McGill's perceptual ordering and Wilkinson's grammar of graphics. Mackinlay's expressiveness criterion states the stake: a graphic expressing facts not present in the data is not ugly, it is false.
 
-| Claim to support | Correct form | Typical misuse | Attack invited |
+| Claim to support | Correct form | Typical misuse | Fails as |
 |---|---|---|---|
 | Ranking | Sorted dot plot, or zero-based bars on a common scale | Pie, radar, 3D columns | "The ordering is an artefact of angle and area" |
 | Time trend | Evenly spaced time axis, line, full window | Per-period bars, broken axis, two points joined | "Window trimmed" / "two points are not a trend" |
@@ -213,7 +213,7 @@ Most of these come from Ehrenberg, *Rudiments of Numeracy* (1977). They compleme
 
 ## Distribution first
 
-Anscombe's quartet (1973) and the Datasaurus (Matejka and Fitzmaurice, 2017) show identical means, variances, and correlations are compatible with radically different shapes. The decisive argument is narrower: **adversarial questions almost always land in the tail** — who is losing money, who is missing SLA, p99 latency, the worst cohort. The mean is the statistic that erases the tail, so leading with it hides the most attackable part, and when the reviewer finds it themselves the loss is whole-deck credibility. Means also presuppose symmetry and mislead on right-skewed quantities.
+Anscombe's quartet (1973) and the Datasaurus (Matejka and Fitzmaurice, 2017) show identical means, variances, and correlations are compatible with radically different shapes. The decisive argument is narrower: **the decision-relevant questions almost always land in the tail** — who is losing money, who is missing SLA, p99 latency, the worst cohort. The mean is the statistic that erases the tail, so leading with it hides the part that changes the decision. Means also presuppose symmetry and mislead on right-skewed quantities.
 
 **Exceptions**, where the aggregate is the object of decision: the quantity's meaning *is* the total (revenue, cost, budget, inventory); census data answering only "what is the total"; very small n (under about five — list every raw value instead); individual data that is private or re-identifiable (quantiles and a histogram, not raw points).
 
@@ -234,12 +234,12 @@ E2, E3, E4, E6, and E8 are directly automatable or checkable with no domain know
 
 ## The cost, and how to pay it
 
-The cost is real: production time rises several-fold; more elements genuinely reduce instant readability; this is over-armouring for exploratory analysis; and **over-justification reads as defensive** — an exhibit crowded with footnotes can suggest a nervous author. Use the full floor only where real adversarial pressure exists: investment committees, audit, regulators, boards, peer review. Not for daily updates.
+The cost is real: production time rises several-fold; more elements genuinely reduce instant readability; this is over-annotation for exploratory analysis; and **over-justification reads as nervous** — an exhibit crowded with footnotes can bury the finding. Use the full floor where the decision is irreversible or the material will outlive the meeting. Not for daily updates.
 
 **The resolution is carrier separation, not compromise on one carrier.** Tufte argues in *The Cognitive Style of PowerPoint* for technical reports in place of slides; Doumont states in *Trees, Maps, and Theorems* that slides are not documents.
 
-- **Live frame**: one exhibit, one assertion, plus the **irreducible self-sufficiency set** — assertion title, n, window, one-line definition, zero baseline, uncertainty. These six survive any compression because they map to the highest-frequency attacks.
+- **Live frame**: one exhibit, one assertion, plus the **irreducible self-sufficiency set** — assertion title, n, window, one-line definition, zero baseline, uncertainty. These six survive any compression because they are what a reader needs to use the exhibit as evidence.
 - **Companion document**: full elements, exclusion accounting, sensitivity insets, disaggregation tables, layered footnotes. **Every live frame carries its companion page number** — the move that converts "I will explain verbally" into a checkable citation.
 - **Data pack**: source tables, queries, extraction timestamps, for third-party recomputation.
 
-Adversarial information density and live readability do not actually conflict. What conflicts is forcing both into one carrier.
+Honesty density and live readability do not actually conflict. What conflicts is forcing both into one carrier.

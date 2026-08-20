@@ -18,8 +18,8 @@
 
 - pacing: speaker-paced
 - tier: L2
-- product: persuasion — requesting an irreversible capital commitment, and the CFO holds an opposing position, so the L2 rule applies
-- triage-rule: irreversible AND a reviewer with opposing interests, therefore at least L2
+- product: persuasion — requesting an irreversible capital commitment, so the L2 rule applies
+- triage-rule: irreversible and locks capital, therefore at least L2
 
 ## Pre-registration
 
@@ -68,7 +68,7 @@
 ### E1
 
 - description: Cost per parcel by region and month, pilot versus non-pilot, with the difference-in-differences estimate and its interval.
-- baseline: Synthetic control from six non-pilot regions weighted on pre-period trend (counterfactual — highest attribution cleanliness). Adversarial baseline test: substituting the least favourable legitimate baseline, unadjusted own history, narrows the effect to 4-6 percent but does not flip its sign
+- baseline: Synthetic control from six non-pilot regions weighted on pre-period trend (counterfactual — highest attribution cleanliness). Least-favourable baseline test: substituting unadjusted own history narrows the effect to 4-6 percent but does not flip its sign
 - source: finance warehouse / fct_parcel_cost | as of 2026-08-15
 - n: 412,000 parcels across nine regions
 - window: 2024-07 to 2026-06, full available series; no truncation

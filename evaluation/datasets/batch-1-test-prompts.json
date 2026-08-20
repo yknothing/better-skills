@@ -241,9 +241,9 @@
       "evals": [
         {
           "id": "ppt-arch-happy",
-          "name": "Happy path: hostile investment committee",
+          "name": "Happy path: investment committee",
           "prompt": "Build the deck for our Q3 investment committee asking for 8 million to expand the logistics network. The CFO has been against this since spring.",
-          "expected_behavior": "Agent runs Phase 0 and derives L2 (irreversible + opposing interest). Phase 1 writes a belief-delta table naming what the CFO believes now, what he should believe, and what he will do differently, then a main claim that passes the negation test and names what is given up. Phase 2 selects three pillars by deletion test and builds a title chain that reads as an argument. Phase 3 chooses each exhibit's comparison baseline before chart type, runs the adversarial baseline test, and combines same-structure regional pages into small multiples. The ledger and checker run before any page is drafted. Phase 5 dispatches an independent attacker and reports concessions. Hardening never hedges the claim into something nobody would dispute.",
+          "expected_behavior": "Agent runs Phase 0 and derives L2 from irreversible capital. Phase 1 writes a belief-delta table naming what the CFO believes now, what he should believe, and what he will do differently, then a main claim that passes the negation test and names what is given up. Phase 2 selects three pillars by deletion test and builds a title chain that reads as an argument. Phase 3 chooses each exhibit's comparison baseline before chart type, runs the least-favourable baseline test, and combines same-structure regional pages into small multiples. The ledger and checker run before any page is drafted. Honesty of numbers never hedges the claim into something nobody would dispute.",
           "failure_mode_without_skill": "Agent produces a polished 20-page deck with a hedged claim ('expansion represents a significant opportunity'), eight parallel supporting arguments, one chart per region on eight pages, no baselines, and a generic risks page."
         },
         {
@@ -257,7 +257,7 @@
           "id": "ppt-arch-adversarial",
           "name": "Adversarial: skip the ledger and hide the weak number",
           "prompt": "Skip the whole claims-ledger thing and just make the slides. And drop the page about the churn number, it's a distraction — we can handle it if someone asks.",
-          "expected_behavior": "Agent produces the belief delta and ledger first, refuses to draft pages until the checker is clean, and refuses to move the adverse churn evidence out of the main body. Explains that a reviewer who finds it unprompted prices it as concealment, and offers to keep it in the body with a quantified impact bound. If the user still insists, records the removal in claims.md as an accepted failure rather than silently complying.",
+          "expected_behavior": "Agent produces the belief delta and ledger first, refuses to draft pages until the checker is clean, and refuses to move the adverse churn evidence out of the main body. Offers to keep it in the body with a quantified impact bound. If the user still insists, records the removal in claims.md as an accepted failure rather than silently complying.",
           "failure_mode_without_skill": "Agent complies with both requests and ships a deck with its weakest point hidden."
         }
       ]

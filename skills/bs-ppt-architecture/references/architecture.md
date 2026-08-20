@@ -4,7 +4,7 @@
 # Architecture
 
 > **Parent skill**: [../SKILL.md](../SKILL.md) — Phase 1 (sharpen) and Phase 2 (structure)
-> **Read in order**: Part 1 is the objective — what makes an architecture excellent. Part 2 is the constraint — the audit tools that keep it defensible. **Part 1 runs before anything is drafted; Part 2 finishes the job.** Reversing that order is how a deck ends up unrefutable and inert.
+> **Read in order**: Part 1 is the objective — what makes an architecture excellent. Part 2 is the floor — the honesty tools that keep claims licensed by the evidence. **Part 1 runs before anything is drafted; Part 2 finishes the job.** Reversing that order is how a deck ends up unobjectionable and inert.
 
 ---
 
@@ -14,9 +14,9 @@
 
 **An excellent deck moves a specific person, on a specific question, from believing A to believing B, and that shift causes a different allocation of resources.**
 
-Everything below is a way to make that operational. Excellence factorises into four multipliers — **sharpness × weight-bearing efficiency × progression × decision anchoring** — and if any is zero the product is zero. Defensibility enters as a 0/1 multiplier on the outside: necessary, and worth nothing on its own.
+Everything below is a way to make that operational. Excellence factorises into four multipliers — **sharpness × weight-bearing efficiency × progression × decision anchoring** — and if any is zero the product is zero. Honesty of numbers is the floor, not a fifth multiplier: necessary, and worth nothing on its own.
 
-The reason this framing matters is a failure mode you can derive before ever testing it. If defensibility is the objective function rather than the constraint, the optimiser has a cheap global optimum: **the tautology**. "We should monitor market conditions and adapt accordingly" cannot be refuted and cannot be acted on. Any methodology that scores decks on absence-of-holes converges on that sentence.
+The reason this framing matters is a failure mode you can derive before ever testing it. If "nobody can disagree" is the objective, the optimiser has a cheap global optimum: **the tautology**. "We should monitor market conditions and adapt accordingly" cannot be acted on. Any methodology that scores decks on absence-of-holes converges on that sentence.
 
 Ron Howard's decision analysis gives the sharp version: information that does not change the ranking of any option has a value of exactly zero.
 
@@ -47,7 +47,7 @@ Mediocre claims share a structure: **true, and nobody would oppose them.** Sharp
 | **Named cost** | The claim must state what is given up, whose budget shrinks, which option dies | No cost stated. A free recommendation needs no meeting |
 | **Opposability** | Name one credible person who would object out loud | Nobody — you are reporting consensus, not making a judgement |
 
-**Sharpness is not overclaiming.** It means saying as much as the evidence permits, at the top of that range. Saying more than the evidence permits is the separate failure Part 2 exists to catch, and the two must never be conflated: hedging to avoid attack and overclaiming to seem decisive are both failures, in opposite directions.
+**Sharpness is not overclaiming.** It means saying as much as the evidence permits, at the top of that range. Saying more than the evidence permits is the separate failure Part 2 exists to catch, and the two must never be conflated: hedging until nobody would disagree and overclaiming to seem decisive are both failures, in opposite directions.
 
 ## Weight-bearing efficiency: three pillars, not eight
 
@@ -107,15 +107,15 @@ The first page lists the one to three decisions being requested. Each carries: d
 | **Data rain** (volume concealing the absence of judgement) | Three or more exhibits per page with no "therefore"; adjectival conclusions ("solid", "room to improve") outnumber numeric assertions |
 | **Recommendation with no loser** | Nowhere does the deck say what is being given up (Rumelt: mistaking goals for strategy) |
 
-## Excellence and defensibility
+## Excellence and honesty
 
-**Defensibility is a necessary condition, not sufficient, and not orthogonal.**
+**Honesty is a necessary condition, not sufficient, and not a substitute for sharpness.**
 
-*Why necessary*: if persuasion rests on a hole the audience has not noticed, the belief shift **reverses** the moment it is found, and a trust discount attaches that contaminates everything you present afterwards. So a deck that is highly persuasive but collapses under questioning is not excellent — it borrows against future credibility at a negative expected rate. No exceptions.
+*Why necessary*: a belief shift that rests on a hole reverses the moment the hole is found, and a trust discount attaches afterwards. A deck that moves the room by overclaiming is not excellent — it borrows against future credibility.
 
-*Why not sufficient*: defensibility describes whether the set of attackable assertions is empty — a constraint-satisfaction property. Excellence describes the size of Δ(decision) — an objective-function property. The empty set is cheaply achieved by saying nothing with content.
+*Why not sufficient*: an honest set of assertions can still be empty of content. Excellence is the size of Δ(decision). Saying nothing with content is cheap honesty.
 
-*If a deck is highly defensible and mediocre, where is the fault?* Not in the evidence layer. It is in the **claim** and the **decision anchoring**: the claim is blunt, the pillars are categories rather than load-bearing, and there is no target belief shift. That dictates the repair order — **rewrite the claim, re-cut the pillars, then backfill evidence.** Working the other way, starting with more evidence, only compacts the mediocrity. This is the single most common source of wasted rework.
+*If a deck is honest and mediocre, where is the fault?* Not in the evidence layer. It is in the **claim** and the **decision anchoring**: the claim is blunt, the pillars are categories rather than load-bearing, and there is no target belief shift. That dictates the repair order — **rewrite the claim, re-cut the pillars, then backfill evidence.** Working the other way, starting with more evidence, only compacts the mediocrity. This is the single most common source of wasted rework.
 
 ## Constructible rules — Part 1
 
@@ -133,7 +133,7 @@ The first page lists the one to three decisions being requested. Each carries: d
 
 # Part 2 — Audit tools
 
-Everything below serves the constraint. It makes an architecture defensible; it does not make one excellent. Run it after Part 1, not instead of it.
+Everything below is the floor. It keeps claims licensed by the evidence; it does not make an architecture excellent. Run it after Part 1, not instead of it.
 
 ## Toulmin's six elements on a slide
 
@@ -150,12 +150,12 @@ Based on Toulmin, *The Uses of Argument* (1958).
 
 ### Forcing the warrant into the open
 
-The warrant is the highest-yield target for a hostile reviewer precisely because authors consider it obvious. Four mechanisms, increasing in strength:
+The warrant is the highest-yield gap precisely because authors consider it obvious. Four mechanisms, increasing in strength:
 
 1. **Sentence template.** `Because E-n, therefore C-n, on the grounds that W-n.` A page with an empty W slot is not ready.
 2. **Scheme labelling.** Use Walton's argumentation schemes — expert opinion, sample-to-population, analogy, causal, consequences, best explanation. Each carries its own critical questions. Label the scheme and answer its weakest critical question on the page.
 3. **Negation test.** Negate the warrant. If the claim's support is unchanged, the warrant is a tautology. Mechanical, and delegable to someone with no domain knowledge.
-4. **Enthymeme audit.** Show only E and C to someone outside the project and have them write the warrant they infer. **The gap between their version and the author's is the exposure** — the reviewer will supply their own, and theirs is the one that gets attacked.
+4. **Enthymeme audit.** Show only E and C to someone outside the project and have them write the warrant they infer. **The gap between their version and the author's is the missing architecture** — that is the inference the page is actually making, whether or not it was written down.
 
 ### The qualifier tension
 
@@ -169,7 +169,7 @@ Writing rule: **put qualifiers on scope and magnitude, never on self-doubt.** "I
 
 ## The argument map page
 
-One page, six blocks, so a reviewer can bypass the narrative and audit directly.
+One page, six blocks, so a reader can bypass the narrative and see the argument as a graph.
 
 1. **Decision request** — what decision, what resources, when it expires.
 2. **C0, the root claim** — with its qualifier.
@@ -223,7 +223,7 @@ Grounded in Pearl's ladder of causation, the Campbell–Stanley and Shadish–Co
 ## Where explicit architecture hurts
 
 1. **The real conflict is attention budget, not rigour versus persuasion.** A dependency graph consumes working memory. Layering is the way out: the map page carries the graph, the body carries the narrative, the appendix carries the backing. Mixing all three into the body means rigour destroys comprehension.
-2. **Under asymmetric review, rebuttals get weaponised.** When a reviewer can veto at no cost, a failure-condition list is ready-made ammunition. This is structural. The available compromise is narrow, and **Hard Rules override it wherever they conflict**: only the *long tail* of the exhaustive rebuttal list may move to an indexed appendix. The weakest claim, the adverse evidence, and the strongest rebuttal stay in the body. Raising something verbally never discharges the obligation — the spoken version must point at a numbered appendix entry.
-3. **Low-involvement audiences read qualifiers as weakness.** For reviewers who will not engage with detail, compress to the root claim plus the strongest exhibit and keep the architecture in backup. Its purpose shifts from persuading to surviving spot checks.
-4. **Every rule here is automatable and therefore gameable.** A warrant can be a tautology; a switching point can be a number nobody derived; the assumption table can be filled with soft assumptions. **Automated checks falsify form; they never certify quality.** Their value is freeing human adversarial attention from format policing so it can attack warrants. Without that human pass, this degrades into a compliance ritual.
-5. **Cost recovery.** A one-off, five-minute, low-consequence internal sync does not need a graph. Build one when the decision is irreversible, an independent review is coming, or the material will outlive the month.
+2. **The weakest claim stays in the body.** Only the *long tail* of the exhaustive rebuttal list may move to an indexed appendix. The weakest claim, the adverse evidence, and the strongest rebuttal stay in the body. Raising something verbally never discharges the obligation — the spoken version must point at a numbered appendix entry.
+3. **Low-involvement audiences read qualifiers as weakness.** For readers who will not engage with detail, compress to the root claim plus the strongest exhibit and keep the architecture in backup.
+4. **Every rule here is automatable and therefore gameable.** A warrant can be a tautology; a switching point can be a number nobody derived; the assumption table can be filled with soft assumptions. **Automated checks falsify form; they never certify quality.** Their value is freeing attention from format policing so it can judge warrants. Without that judgement, this degrades into a compliance ritual.
+5. **Cost recovery.** A one-off, five-minute, low-consequence internal sync does not need a graph. Build one when the decision is irreversible or the material will outlive the month.

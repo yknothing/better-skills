@@ -2,7 +2,7 @@
 # Regression suite for check-claim-ledger.js.
 #
 # "The gate actually fails" is a load-bearing claim of bs-ppt-architecture, so it
-# needs an assertion rather than a promise. A Gate 2 adversary review produced a
+# needs an assertion rather than a promise. A Gate 2 review of this checker produced a
 # hollow ledger that scored 16/16; these tests pin the fixes so no future edit
 # can quietly reopen those holes.
 #
