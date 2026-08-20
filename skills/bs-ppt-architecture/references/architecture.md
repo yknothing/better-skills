@@ -1,4 +1,4 @@
-<!-- Parent skill: skills/bs-deck-substance/SKILL.md -->
+<!-- Parent skill: skills/bs-ppt-architecture/SKILL.md -->
 <!-- Open this file when: Phase 1 (Sharpen the claim) is reached; return to it for Phase 2 -->
 
 # Architecture

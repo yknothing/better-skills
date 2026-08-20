@@ -19,7 +19,7 @@
         "bs-dev-flow",
         "bs-skill-health",
         "bs-skill-bootstrap",
-        "bs-deck-substance",
+        "bs-ppt-architecture",
         "grill-me",
         "grilling",
         "writing-great-skills",
@@ -166,8 +166,8 @@
         ],
         "status": "active"
       },
-      "bs-deck-substance": {
-        "path": "skills/bs-deck-substance/SKILL.md",
+      "bs-ppt-architecture": {
+        "path": "skills/bs-ppt-architecture/SKILL.md",
         "batch": "batch-1",
         "tier": "deep",
         "patterns": [
@@ -180,7 +180,7 @@
           "format-significance-gates"
         ],
         "status": "active",
-        "notes": "Substance layer for decks: sharp claim, load-bearing structure, exhibits that reveal. Objective is excellence; adversarial-review hardening is its constraint. Pairs with external 'pptx' (rendering) and 'bs-visual-design' (visual craft). See docs/insights/deck-substance.md."
+        "notes": "PPT argument architecture and exhibits: sharp claim, load-bearing structure, charts that reveal. Objective is excellence; adversarial-review hardening is its constraint. Pairs with external 'pptx' (rendering) and 'bs-visual-design' (visual craft). See docs/insights/ppt-architecture.md."
       }
     },
     "external": {

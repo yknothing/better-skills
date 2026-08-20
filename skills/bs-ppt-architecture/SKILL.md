@@ -1,6 +1,6 @@
 ---
-name: bs-deck-substance
-description: Use when the user needs a deck, slide set, or decision memo whose value must come from substance rather than polish — a sharp claim, a load-bearing structure, and charts and tables that reveal something. Covers argument architecture, exhibit design, and an adversarial-review hardening pass. Not for visual styling.
+name: bs-ppt-architecture
+description: Use when the user needs a PPT, slide set, or decision memo whose value must come from argument architecture and exhibits — a sharp claim, a load-bearing structure, and charts and tables that reveal something. Covers argument architecture, exhibit design, and an adversarial-review hardening pass. Not for visual styling or file rendering.
 # tier: deep
 ---
 
@@ -32,7 +32,7 @@ description: Use when the user needs a deck, slide set, or decision memo whose v
 
 ## Purpose
 
-Produce decks whose value is in their substance: a claim sharp enough to change a decision, a structure where three pillars carry the weight, and exhibits that make a pattern visible. The failure this prevents is the competent-but-inert deck — logically sound, properly sourced, and forgotten by Friday, because the claim was hedged into something nobody would dispute and the charts each restated a caption.
+Produce a PPT whose value is in its architecture: a claim sharp enough to change a decision, a structure where three pillars carry the weight, and exhibits that make a pattern visible. The failure this prevents is the competent-but-inert deck — logically sound, properly sourced, and forgotten by Friday, because the claim was hedged into something nobody would dispute and the charts each restated a caption.
 
 Hardening against adversarial review is built in, and it is deliberately positioned as a constraint rather than the objective. That ordering is load-bearing: the checks for sharpness, weight-bearing, and progression run **before** anything is drafted, while the defensibility gates run **last**. Reversing them produces a deck that is optimised to be unrefutable, which is a different and much worse artefact.
 

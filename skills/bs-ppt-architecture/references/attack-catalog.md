@@ -1,4 +1,4 @@
-<!-- Parent skill: skills/bs-deck-substance/SKILL.md -->
+<!-- Parent skill: skills/bs-ppt-architecture/SKILL.md -->
 <!-- Open this file when: Phase 5 (Independent attack) is reached, or when auditing a deck someone else built -->
 
 # Attack Catalogue

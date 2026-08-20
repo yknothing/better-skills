@@ -1,7 +1,7 @@
-# Gate 2 Response and Concession Record: bs-deck-substance
+# Gate 2 Response and Concession Record: bs-ppt-architecture
 
 **Date**: 2026-08-18
-**Skill**: bs-deck-substance
+**Skill**: bs-ppt-architecture
 **Responding to**: [`2026-08-18-adversary-review.md`](./2026-08-18-adversary-review.md) (14 findings, verdict REQUIRES_CHANGES) and [`2026-08-18-advocate-review.md`](./2026-08-18-advocate-review.md) (PASS 65/80, one blocking-quality fix)
 **HUMAN_VERIFIED**: false
 
@@ -72,7 +72,7 @@ The right formulation is `max(substance) subject to (defensible, honest)`. Defen
 
 What changed as a result:
 
-- The skill is now `bs-deck-substance`, and this review directory was renamed with it. `defensible` named a defensive property; the actual tension is **substance versus polish**.
+- The skill is now `bs-ppt-architecture` (via an intermediate `bs-deck-substance`). `defensible` named a defensive property; `substance` named a quality property; both were attributes. The work product is PPT argument architecture.
 - Two further experts were commissioned specifically on the objective side, and their standards became the front half of both architecture and exhibits references. Each reference file is now split **Part 1 (excellence) / Part 2 (the floor)**, and the workflow runs sharpness before drafting and gates before shipping.
 - The checker gained three objective-serving checks — belief delta with an actionable outcome, a declared comparison baseline per exhibit, a sharpness trail per claim — bringing it to 22, and `test-checker.sh` to 18 assertions.
 - One rule was added that this review could not have produced: **an objection may not be cleared by hedging the claim into something nobody would dispute.** That trade — buying constraint satisfaction with objective value — is now a named Rule 1 violation. It is exactly the move a hardening-focused methodology encourages.

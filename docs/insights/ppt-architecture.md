@@ -1,9 +1,9 @@
-# 卓越的 deck —— 专家圆桌裁决与 `bs-deck-substance` 的设计依据
+# PPT 论证架构 —— 专家圆桌裁决与 `bs-ppt-architecture` 的设计依据
 
 > 议题：如何设计一套 PPT 方法论，使论证架构与配图配表达到卓越，并能扛住高强度对抗性评审
 > 形式：两轮共 6 位独立专家并行论证 + 主持人交叉裁决。第一轮 4 位偏审计视角，第二轮 2 位补正向标准
 > 日期：2026-08-18
-> 落地物：[`skills/bs-deck-substance/`](../../skills/bs-deck-substance/)
+> 落地物：[`skills/bs-ppt-architecture/`](../../skills/bs-ppt-architecture/)
 > 前置：[`ppt-attention-ledger.md`](./ppt-attention-ledger.md) —— 与本文存在真实的目标冲突，见「与注意力三账本的真实冲突」一节
 
 ---
@@ -40,9 +40,13 @@
 | 图表 | 自证要素清单（防攻击） | **比较基准先行**（compared to what）+ 不可压缩性，自证要素降为底线 |
 | reference 结构 | 全篇审计标准 | 每个文件反转为 **Part 1 卓越 / Part 2 底线** |
 | 校验器 | 20 项，全部服务约束 | 22 项，其中信念差、比较基准、锐度留痕**服务目标函数** |
-| 命名 | `bs-defensible-deck`（防守属性） | `bs-deck-substance`（实质 vs 外观） |
+| 命名 | `bs-defensible-deck`（防守属性） | `bs-ppt-architecture`（工作物：PPT 的架构） |
 
-最后一行值得说明：`defensible`（可辩护）描述的是"扛得住"，而用户要的是"重点不是做漂亮，而是架构和图表"——这个张力的准确命名是 **substance vs polish**，抗审只是实质的一个副产品。
+命名本身走过三次，三次都说明同一条规则：**用工作物命名，不用评价属性命名。**
+
+1. `bs-defensible-deck`：`defensible` 描述「扛得住」，是约束的属性。
+2. `bs-deck-substance`：`substance` 描述「有内容」，是目标的属性。和上一版同类，只是把防守词换成了质量词。`deck` 还把用户的领域词 PPT 换成了咨询英语。
+3. `bs-ppt-architecture`：领域是 PPT，工作物是架构（论证结构 + 配图配表）。仓库自研 skill 一律 `bs-` 前缀、全词不缩写，所以不是 `ppt-arch`。抗审仍然只是实质的一个副产品，不进入名字。
 
 还有一条被纠正的具体规则：门禁失败时**不允许**通过把主张对冲成无人反对的说法来销号。那正是用约束换目标，现在它被显式写成 Rule 1 的违规项。
 
@@ -192,7 +196,7 @@
 
 **解法是同一条定律：载体解耦。** 上一轮从"信息守恒"推出它，本轮从"完备性 vs 可读性"推出它。两条独立的推理链落到同一个结论，这是本项目目前置信度最高的设计原则：**当一个交付物被要求同时满足互相冲突的目标函数时，正确解法是分裂载体，不是折中。**
 
-因此 `bs-deck-substance` 的 Phase 0 第一个问题就是控速权归属——它决定这份材料归哪本账管。判为 reader-paced 时，skill 必须拒绝按现场演讲的规则施工。这是它最重要的行为，也是最容易被实现者省略的一条。
+因此 `bs-ppt-architecture` 的 Phase 0 第一个问题就是控速权归属——它决定这份材料归哪本账管。判为 reader-paced 时，skill 必须拒绝按现场演讲的规则施工。这是它最重要的行为，也是最容易被实现者省略的一条。
 
 ---
 
@@ -217,7 +221,7 @@ Tier 定为 `deep`：失败成本高（不可逆决策 + 存在利益相反的�
 
 skill 写完后按仓库的 Gate 2 走了一轮同行评审：两个**独立上下文**的 agent，一个正方一个红队，红队只拿到交付物、拿不到我的推理过程——这正是 skill 自己 Phase 5 HARD-GATE 规定的做法。结果值得完整记录，因为它是这套方法有效性的唯一直接证据。注意：这一轮评审的对象是目标函数尚未纠正的第一版（当时名为 `bs-defensible-deck`）；发现全部落在约束机械上，目标侧能力当时基本缺席。
 
-**18 项发现，17 项接受并改，1 项部分接受，0 项拒绝。** 完整处置见 [`docs/reviews/bs-deck-substance/2026-08-18-gate2-response.md`](../reviews/bs-deck-substance/2026-08-18-gate2-response.md)。
+**18 项发现，17 项接受并改，1 项部分接受，0 项拒绝。** 完整处置见 [`docs/reviews/bs-ppt-architecture/2026-08-18-gate2-response.md`](../reviews/bs-ppt-architecture/2026-08-18-gate2-response.md)。
 
 三项最有价值的发现：
 

@@ -1,4 +1,4 @@
-<!-- Parent skill: skills/bs-deck-substance/SKILL.md -->
+<!-- Parent skill: skills/bs-ppt-architecture/SKILL.md -->
 <!-- A worked Claim Ledger that passes scripts/check-claim-ledger.js with zero failures. -->
 <!-- Copy this file to claims.md in the working directory and replace the content. -->
 <!-- Format contract: `## Section` -> `### ID` -> `- field: value`. One field per line. -->

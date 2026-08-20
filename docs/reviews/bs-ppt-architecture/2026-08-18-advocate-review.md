@@ -1,8 +1,8 @@
-# Advocate Review: bs-deck-substance
+# Advocate Review: bs-ppt-architecture
 
 **Date**: 2026-08-18
 **Reviewer Role**: Advocate
-**Skill**: bs-deck-substance
+**Skill**: bs-ppt-architecture
 **HUMAN_VERIFIED**: false
 
 ## Executive Summary
@@ -145,13 +145,13 @@ Separately, and inherently rather than as a bug: the checker cannot see ordering
 
 ## Compliance with repository conventions
 
-Gate 1 passes cleanly: `bash tools/validate.sh skills/bs-deck-substance/` reports **16 passed, 0 failed**, including pattern-reference resolution (7/7), gate-syntax conformance (2 well-formed tags), bundled-resource existence (7/7), and frontmatter schema conformance. Against the conventions visible in sibling skills:
+Gate 1 passes cleanly: `bash tools/validate.sh skills/bs-ppt-architecture/` reports **16 passed, 0 failed**, including pattern-reference resolution (7/7), gate-syntax conformance (2 well-formed tags), bundled-resource existence (7/7), and frontmatter schema conformance. Against the conventions visible in sibling skills:
 
 - **Frontmatter shape and tier**: matches `bs-visual-design` and `bs-requirements-engineering` exactly, including the `# tier: deep` comment form. `CLAUDE.md` notes a structured tier field arrives in Phase 1.B; the comment is the current house convention and the skill follows it rather than inventing something.
 - **Hard-gate syntax**: uses `<HARD-GATE id="preregistration-before-pages">`. `bs-visual-design` uses `label="..."` and bare tags. The validator accepts all three, and `id` is arguably the better choice, but the repo now has three spellings of one construct.
 - **Progressive disclosure**: 3,213 words in the body against a 5,000 cap, with each of the four references gated behind a "Required reading" line at the phase that needs it, and correct `<!-- Parent skill: ... -->` / `<!-- Open this file when: ... -->` breadcrumbs matching `bs-visual-design/references/motion.md`. This is the cleanest progressive-disclosure implementation in the repo.
 - **Test prompts**: three, happy/edge/adversarial, mirrored in the eval dataset with `expected_behavior` and `failure_mode_without_skill` populated — schema-conformant with the other entries.
-- **Pattern attribution**: the weakest compliance area. Three of seven source attributions disagree with `docs/patterns/README.md` (detailed in the scores table). `validate.sh` only checks that pattern *names* resolve, so this passes Gate 1 while being wrong, and Gate 3 (Pattern Alignment) will need to catch it. `bs-first-customer-finder` gets these right, so the convention is established and followed elsewhere. Separately, the index's "used by" column does not list `bs-deck-substance` — that is index staleness affecting new skills generally, not this skill's defect.
+- **Pattern attribution**: the weakest compliance area. Three of seven source attributions disagree with `docs/patterns/README.md` (detailed in the scores table). `validate.sh` only checks that pattern *names* resolve, so this passes Gate 1 while being wrong, and Gate 3 (Pattern Alignment) will need to catch it. `bs-first-customer-finder` gets these right, so the convention is established and followed elsewhere. Separately, the index's "used by" column does not list `bs-ppt-architecture` — that is index staleness affecting new skills generally, not this skill's defect.
 - **`## Registration` section**: no other SKILL.md has one. Divergence, and unnecessary — see Ballast.
 - **Refusal handling**: `bs-requirements-engineering` has a named three-step Refusal Protocol plus a cumulative-skip escalation threshold. This skill's equivalent is distributed across Rule 1, Rule 2, and the Phase 1 gate text, with the de-escalation ladder appearing only in the test-prompt expectations. The behaviour is right; the packaging is less discoverable than the established house pattern.
 

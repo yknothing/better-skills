@@ -1,52 +1,46 @@
-# Gate 2 — Peer Review Prompt: Advocate
+# Gate 2 — Peer Review Prompt: Adversary
 
-You are the **advocate reviewer** for the `bs-deck-substance` skill. Your job is to argue for what's GOOD: identify the strongest aspects, score the design across multiple dimensions, and decide whether this skill is production-ready.
+You are the **adversary reviewer** for the `bs-ppt-architecture` skill. Your job is to break it: find ways the skill produces wrong output, fails on edge cases, contradicts itself, has bypassable safety gates, or makes the agent worse off than no skill at all. Be ruthless.
 
 ## How to use this prompt
 
 1. Read the SKILL.md content below in full.
 2. Produce a markdown review and save it to:
-   `docs/reviews/bs-deck-substance/2026-08-18-advocate-review.md`
+   `docs/reviews/bs-ppt-architecture/2026-08-18-adversary-review.md`
 3. Use the **required structure** below — the validator (`tools/peer-review.js check`) will reject reviews missing required sections.
 
 ## Required structure
 
 ```markdown
-# Advocate Review: bs-deck-substance
+# Adversary Review: bs-ppt-architecture
 
 **Date**: 2026-08-18
-**Reviewer Role**: Advocate
-**Skill**: bs-deck-substance
+**Reviewer Role**: Adversary
+**Skill**: bs-ppt-architecture
 **HUMAN_VERIFIED**: false
 
-## Executive Summary
+## Summary
 
-(2-4 sentences naming the strongest design choices and whether you'd ship this.)
+(2-4 sentences: how many issues, of what severity, and the worst-case impact.)
 
-## Dimension Scores
+## Findings
 
-| Dimension | Score | Key Strength | Key Concern |
-|-----------|------:|--------------|-------------|
-| Clarity of trigger description | _/10 | | |
-| Hard rules / safety gates | _/10 | | |
-| Workflow correctness | _/10 | | |
-| Pattern application | _/10 | | |
-| Test prompt coverage | _/10 | | |
-| Bundled resources | _/10 | | |
-| Maintainability | _/10 | | |
-| Production readiness | _/10 | | |
+### F1: <short title>  [CRITICAL]
 
-## Strongest Aspect
+**Location**: <section / line range in SKILL.md>
+**Exploit scenario**: <how a user could trigger the failure>
+**Root cause**: <what in the skill design enables it>
+**Suggested fix**: <concrete change>
 
-(One paragraph naming the single best design move and why it matters.)
+### F2: <short title>  [HIGH]
 
-## One Improvement
+(...repeat the structure for each finding...)
 
-(One concrete suggestion that would meaningfully raise quality.)
+(Use severity tags: CRITICAL / HIGH / MEDIUM / LOW. At least one finding must be present, even if severity is LOW. If you genuinely find none, say so explicitly and tag it LOW.)
 
 ## Verdict
 
-**Verdict**: <one of: PASS / production-ready / NEEDS_POLISH / numeric score like 76/80>
+**Verdict**: <one of: REQUIRES_CHANGES / NEEDS_IMPROVEMENT / APPROVED>
 
 (One paragraph rationale.)
 ```
@@ -55,7 +49,7 @@ You are the **advocate reviewer** for the `bs-deck-substance` skill. Your job is
 
 ```markdown
 ---
-name: bs-deck-substance
+name: bs-ppt-architecture
 description: Use when the user must build a deck, slide set, or decision memo that will face hostile scrutiny — investment committees, boards, due diligence, audits, peer review, or any reviewer with an incentive to reject it. Covers argument architecture, exhibit (chart and table) evidence quality, and a pre-review self-attack protocol. Not for making slides look good.
 # tier: deep
 ---
@@ -246,6 +240,6 @@ Mirrored in `evaluation/datasets/batch-1-test-prompts.json`.
 
 ## Registration
 
-Registered in `skills.json` under `skills.self-developed` as `bs-deck-substance`, batch `batch-1`, tier `deep`, with the seven patterns listed above. `batch-1` is the correct batch: the PPT scenario already lives there via the `pptx` external reference, and this skill fills the argument-and-evidence layer that `pptx` (a rendering skill) does not cover. This is not a batch-2 opening.
+Registered in `skills.json` under `skills.self-developed` as `bs-ppt-architecture`, batch `batch-1`, tier `deep`, with the seven patterns listed above. `batch-1` is the correct batch: the PPT scenario already lives there via the `pptx` external reference, and this skill fills the argument-and-evidence layer that `pptx` (a rendering skill) does not cover. This is not a batch-2 opening.
 
 ```

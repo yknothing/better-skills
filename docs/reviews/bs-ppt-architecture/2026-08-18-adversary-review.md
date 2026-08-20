@@ -1,8 +1,8 @@
-# Adversary Review: bs-deck-substance
+# Adversary Review: bs-ppt-architecture
 
 **Date**: 2026-08-18
 **Reviewer Role**: Adversary
-**Skill**: bs-deck-substance
+**Skill**: bs-ppt-architecture
 **HUMAN_VERIFIED**: false
 
 ## Summary
