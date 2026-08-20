@@ -18,6 +18,7 @@
         "bs-visual-article",
         "pptx",
         "bs-sw-master",
+        "bs-reflect-loop",
         "bs-skill-auditor",
         "bs-skill-forge",
         "bs-ppt-architecture",
@@ -128,6 +129,21 @@
           "precise-commands"
         ],
         "status": "active"
+      },
+      "bs-reflect-loop": {
+        "path": "skills/bs-reflect-loop/SKILL.md",
+        "batch": "batch-1",
+        "tier": "deep",
+        "patterns": [
+          "knowledge-distillation-pipeline",
+          "progressive-disclosure",
+          "confidence-anchors",
+          "one-question-at-a-time",
+          "scoping-synthesis",
+          "self-review-checklist"
+        ],
+        "status": "active",
+        "notes": "Evidence-bounded reflection and context-aware deposition for software lifecycle and office work."
       },
       "bs-skill-auditor": {
         "path": "skills/bs-skill-auditor/SKILL.md",

@@ -95,6 +95,7 @@ echo "T2: list (registry)"
 out=$(run_cli list 2>&1); rc=$?
 assert_exit "list exit 0" 0 "$rc"
 echo "$out" | grep -q "bs-social-card" && PASS=$((PASS + 1)) && echo "  $(green PASS) list contains 'bs-social-card'" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) list missing 'bs-social-card'"; }
+echo "$out" | grep -q "bs-reflect-loop" && PASS=$((PASS + 1)) && echo "  $(green PASS) list contains 'bs-reflect-loop'" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) list missing 'bs-reflect-loop'"; }
 echo "$out" | grep -q "brainstorming" && PASS=$((PASS + 1)) && echo "  $(green PASS) list contains 'brainstorming'" || { FAIL=$((FAIL + 1)); echo "  $(red FAIL) list missing 'brainstorming'"; }
 node -e "
 const fs = require('fs');
@@ -110,6 +111,7 @@ const expectedCanonical = [
   'bs-social-card',
   'bs-visual-article',
   'bs-sw-master',
+  'bs-reflect-loop',
   'bs-skill-auditor',
   'bs-skill-forge',
   'bs-ppt-architecture'
@@ -123,6 +125,7 @@ const expectedH1 = {
   'bs-social-card': 'Social Card',
   'bs-visual-article': 'Visual Article',
   'bs-sw-master': 'SW Master',
+  'bs-reflect-loop': 'Reflect Loop',
   'bs-skill-auditor': 'Skill Auditor',
   'bs-skill-forge': 'Skill Forge',
   'bs-ppt-architecture': 'PPT Architecture'
@@ -133,6 +136,7 @@ const requiredDescriptionLanguage = {
   'bs-prospect-customer': ['evidence-backed first-customer prospecting', 'not lead scraping'],
   'bs-ui-master': ['production-grade UI design', 'not a complete UX practice'],
   'bs-sw-master': ['Software (SW)', 'does not imply deployment'],
+  'bs-reflect-loop': ['explicitly wants to extract lessons', 'executable or governance surfaces'],
   'bs-skill-auditor': ['read-only', 'does not directly repair']
 };
 const expectedAliases = {
