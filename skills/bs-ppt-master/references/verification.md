@@ -4,6 +4,22 @@
 
 These five checks verify a presentation artifact. They are separate from Better-Skills repository Gate 1–4. Run every layer required by the delivery contract and report each independently as `PASS`, `BLOCKED`, or `UNVERIFIED`.
 
+## Freeze the Delivery Contract
+
+Before production, record:
+
+```markdown
+Artifact class: [native/hybrid/raster/design-only]
+Target software/version/environment: [exact]
+Required V-layers: [V1/V2/V3/V4/V5]
+Required behaviors: [editing, notes, links, animation, media, save/reopen, etc.]
+External hard requirements: [contract/compliance/brand/venue]
+Approver and authority: [who may change this contract]
+Frozen at: [timestamp]
+```
+
+The required set cannot shrink silently. Any change records the approver, authority, time, exact requirement removed, consequence, and accepted loss. Workflow convenience does not authorize changing an external contract, compliance obligation, or third-party requirement.
+
 ## Evidence Rule
 
 A layer passes only when the named final artifact was checked by an appropriate method after the last relevant change. Plans, capability discovery, source inspection, checker output, and another format's rendering cannot substitute for the missing layer.
@@ -19,6 +35,7 @@ Verify against authoritative sources:
 - uncertainty, exclusions, disagreement, and evidence gaps;
 - title/body agreement and cross-slide consistency;
 - asset and data provenance without fabricated sources.
+- every used asset and external data transfer has a closed Rights & Data Ledger state.
 
 Use the claim ledger when applicable. A structurally valid ledger does not prove the claims true; compare the rendered deck and source material.
 
@@ -52,7 +69,7 @@ Verify:
 - target distance and aspect ratio are respected;
 - Detail Ledger contradictions and callbacks are closed.
 
-**PASS evidence:** rendered slide set, contact sheet, issue log, and post-fix re-render.
+**PASS evidence:** rendered slide set, contact sheet, issue log, post-fix re-render, and the independent-review receipt required by Detail Master.
 **Repair owner:** Production, Art Direction, or Detail Master.
 
 ## V4 — Native File and Package Integrity
@@ -67,6 +84,8 @@ Verify:
 - rasterized or flattened elements are enumerated;
 - no broken external temporary paths, missing assets, secrets, or credential material are packaged;
 - saving and reopening does not silently corrupt the file.
+- the Preservation Report closes every protected surface for `REVISE`, `FILL`, and applicable `ENHANCE` work;
+- promised-object totals close with `unclassified = 0`, and the overall native/hybrid/raster label follows the executor roll-up rules.
 
 ZIP/package integrity is useful but does not prove target-app fidelity or editability. A renderer output does not prove the underlying objects are native.
 
@@ -81,7 +100,7 @@ Verify the behaviors promised by the contract: rendering, fonts, editing, notes,
 
 PowerPoint, Keynote, WPS, Google Slides, LibreOffice, and browser presentations are distinct targets. Testing one does not pass another. LibreOffice rendering and package checks cannot be reported as PowerPoint verification.
 
-If the target is unavailable, report `UNVERIFIED`. If the target demonstrates a contract-breaking failure, report `BLOCKED` unless the user explicitly accepts the named limitation and all remaining requirements pass.
+If the target is unavailable, report `UNVERIFIED`. If target verification is frozen as a contract, compliance, or third-party hard requirement, an unavailable or failing target makes the delivery `BLOCKED`; schedule pressure cannot remove it. If the authorized approver genuinely changes a non-external requirement, record the exact contract change and report the target as, for example, `Microsoft PowerPoint — UNVERIFIED`. The restricted handoff must not use `PowerPoint-ready`, `compatible`, or `verified` language.
 
 **PASS evidence:** target name/version/environment, exact file, behaviors exercised, screenshots/logs when available, and reviewer identity.
 **Repair owner:** Production or Executor Selection.
@@ -107,8 +126,9 @@ Include:
 Artifact: [path/hash if useful]
 Executor/version: [identity]
 Output class: native | hybrid | raster
-Native editable objects verified: [scope + evidence]
-Hybrid/raster elements: [scope + accepted loss]
+Promised-object closure: [promised / native / hybrid_or_raster / unsupported / unclassified=0]
+Native editable objects verified: [slide/object IDs + evidence]
+Hybrid/raster elements: [slide/object IDs + accepted loss]
 Unsupported features: [scope]
 Target environments verified: [software/version/behavior]
 Unverified claims: [explicit]
@@ -118,8 +138,8 @@ Rights/privacy constraints: [sources and data boundary]
 ## Terminal Decision
 
 - `DELIVERED`: all required V-layers are `PASS`.
-- `DELIVERED_WITH_ACCEPTED_LIMITATIONS`: each limitation is explicit and accepted; every remaining required V-layer is `PASS`.
+- `DELIVERED_WITH_ACCEPTED_LIMITATIONS`: an authorized, recorded contract change names each accepted limitation; every unchanged required V-layer is `PASS`. Any target left `UNVERIFIED` remains visibly `UNVERIFIED` in the target field and capability language.
 - `BLOCKED`: a required V-layer, right, fact, preservation promise, or capability cannot be satisfied.
 - `DESIGN_ONLY`: the agreed artifact is direction/specification rather than a final PPTX.
 
-Never use `DELIVERED` when V5 is required but `UNVERIFIED`, or when V3 has no rendered final artifact. A successful Better-Skills Gate 1–4 run verifies the Skill package, not a deck produced by the Skill.
+Never use `DELIVERED` when V5 is required but `UNVERIFIED`, when V3 lacks an independent-review receipt bound to the final render, or when V4 has a required preservation surface or promised object left `UNVERIFIED`, `LOST`, or unclassified. A successful Better-Skills Gate 1–4 run verifies the Skill package, not a deck produced by the Skill.

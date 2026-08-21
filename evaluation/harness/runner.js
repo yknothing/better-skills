@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-// Gate 4: Baseline Test runner — minimum-viable, deterministic, zero deps.
+// Gate 4: Evaluation Contract runner — minimum-viable, deterministic, zero deps.
 //
-// What this does (Round 1 scope):
+// Evidence scope: EVAL_SCHEMA_ONLY. What this does:
 //   1. Loads evaluation/datasets/batch-1-test-prompts.json
 //   2. For each skill, runs `node tools/validate.js --json` (Gate 1)
 //   3. Validates that test prompts have id/name/prompt/expected_behavior
 //   4. Outputs a pass/fail summary, optionally as JSON
 //
-// What this DOES NOT do (deferred to Round 2/3 if requested):
+// What this DOES NOT do (and therefore never marks behavior as verified):
 //   - Spawn agents (no codex / no claude programmatic invocation here)
 //   - Compute SHS scores or 5-dimension breakdowns
 //   - Generate LLM-judge prompts (--with-llm-judge is documented as deferred)
@@ -214,7 +214,12 @@ function gradeSkill(skillName, skillData) {
     tier: skillData.tier || "unknown",
     eval_count: evals.length,
     passed,
+    contract_passed: passed,
     avg_score: avgScore,
+    structural_score: avgScore,
+    evidence_scope: "EVAL_SCHEMA_ONLY",
+    behavioral_verdict: "NOT_RUN",
+    behaviorally_verified: false,
     grades,
   };
 }
@@ -234,7 +239,9 @@ function formatHuman(report) {
   }
 
   const lines = [];
-  lines.push(color(COLORS.bold, "=== Gate 4: Baseline Test ==="));
+  lines.push(color(COLORS.bold, "=== Gate 4: Evaluation Contract Check ==="));
+  lines.push("Evidence scope: EVAL_SCHEMA_ONLY");
+  lines.push("Behavior:       NOT_RUN (no agent, artifact, LLM judge, or A/B execution)");
   lines.push(`Dataset:        ${path.relative(REPO_ROOT, DATASET_PATH)}`);
   lines.push(`Skills tested:  ${report.skills.length}`);
   lines.push("");
@@ -243,7 +250,7 @@ function formatHuman(report) {
     const status = s.passed
       ? color(COLORS.green, "PASS")
       : color(COLORS.red, "FAIL");
-    lines.push(`${status}  ${color(COLORS.bold, s.skill)}  (tier=${s.tier}, evals=${s.eval_count}, score=${s.avg_score})`);
+    lines.push(`${status}  ${color(COLORS.bold, s.skill)}  (tier=${s.tier}, evals=${s.eval_count}, structural_score=${s.structural_score})`);
     for (const g of s.grades) {
       const gstatus = g.passed ? color(COLORS.green, "  ✓") : color(COLORS.red, "  ✗");
       lines.push(`${gstatus} ${g.grader.padEnd(28)} score=${String(g.score).padStart(3)}  ${color(COLORS.dim, g.detail)}`);
@@ -254,8 +261,8 @@ function formatHuman(report) {
   const passCount = report.skills.filter(s => s.passed).length;
   const failCount = report.skills.length - passCount;
   const summary = failCount === 0
-    ? color(COLORS.green, `=== Result: ${passCount}/${report.skills.length} skills passed ===`)
-    : color(COLORS.red, `=== Result: ${passCount}/${report.skills.length} skills passed, ${failCount} failed ===`);
+    ? color(COLORS.green, `=== Result: ${passCount}/${report.skills.length} evaluation contracts passed; behavior NOT_RUN ===`)
+    : color(COLORS.red, `=== Result: ${passCount}/${report.skills.length} evaluation contracts passed, ${failCount} failed; behavior NOT_RUN ===`);
   lines.push(summary);
 
   return lines.join("\n");
@@ -297,8 +304,9 @@ function parseArgs(argv) {
 function printHelp() {
   console.log("Usage: node evaluation/harness/runner.js [--skill <name>] [--json]");
   console.log("");
-  console.log("Gate 4: Baseline Test for Agent Skills (Round 1 scope).");
+  console.log("Gate 4: Evaluation Contract Check for Agent Skills.");
   console.log("Runs Gate 1 validation + test-prompt structure checks for each skill.");
+  console.log("Evidence scope is EVAL_SCHEMA_ONLY; behavior is always NOT_RUN.");
   console.log("");
   console.log("Options:");
   console.log("  --skill <name>     Run on one skill only (default: all skills in dataset)");
@@ -368,6 +376,9 @@ function main(argv) {
   const report = {
     dataset: path.relative(REPO_ROOT, DATASET_PATH),
     timestamp: "deterministic-run", // placeholder; no runtime timestamps for reproducibility
+    evidence_scope: "EVAL_SCHEMA_ONLY",
+    behavioral_verdict: "NOT_RUN",
+    behaviorally_verified: false,
     skills: skillReports,
     summary: {
       total: skillReports.length,

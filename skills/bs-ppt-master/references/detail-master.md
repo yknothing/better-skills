@@ -88,9 +88,25 @@ Do not spend the review budget nudging pixels while a denominator, callback, or 
 
 ## Independence
 
-The final D4 review should be performed by a reviewer who did not produce the deck. If sub-agents are unavailable, open a fresh review context with only the brief, execution lock, Detail Ledger, final artifacts, and verification contract. The creator's memory of intent is not evidence that the audience can see it.
+The final D4 review must be performed by a reviewer who did not produce the deck. If sub-agents are unavailable, open a fresh isolated review context with only the brief, execution lock, Detail Ledger, final artifacts, and verification contract. The creator's memory of intent is not evidence that the audience can see it.
 
 The reviewer must inspect evidence and artifacts; it cannot pass the deck by restating the checklist. A checker result validates only its own rules.
+
+Attach an independent-review receipt:
+
+```markdown
+Reviewer/context ID: [identity]
+Reviewed at: [timestamp]
+Review input manifest: [brief, execution lock, Detail Ledger, artifact paths]
+Final artifact hash: [hash]
+Render/contact-sheet identity: [paths/hashes]
+Findings: [IDs]
+Disposition evidence: [fixed/accepted/blocked + rerun]
+```
+
+<HARD-GATE id="independent-detail-receipt">
+V3 cannot be `PASS` without an independent-review receipt bound to the final artifact and its final render/contact sheet. If no independent reviewer or fresh isolated context is available, V3 is `UNVERIFIED`; the producer's own D4 review cannot upgrade it.
+</HARD-GATE>
 
 ## Repair Loop
 
@@ -114,6 +130,6 @@ Deliver a concise report containing:
 - intentional exceptions and their purpose;
 - surfaces not inspectable or target behaviors not tested;
 - remaining limitations and their consequence;
-- independent reviewer identity/context.
+- independent-review receipt bound to the final artifact.
 
 The Detail Report is evidence of work performed, not a claim that every possible detail is perfect.

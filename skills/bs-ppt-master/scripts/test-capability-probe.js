@@ -63,8 +63,12 @@ try {
     assert.strictEqual(report.schema_version, 1);
     assert.strictEqual(report.probe_scope, "discovery-only");
     assert.strictEqual(report.candidates.skills[0].state, "DETECTED");
+    assert.strictEqual(report.candidates.skills[0].identity_state, "UNVERIFIED");
+    assert.strictEqual(report.candidates.skills[0].label, "pptx-named Skill candidate");
     assert.strictEqual(report.candidates.binaries[0].state, "DETECTED");
+    assert.strictEqual(report.candidates.binaries[0].identity_state, "UNVERIFIED");
     assert.strictEqual(report.candidates.applications[0].state, "DETECTED");
+    assert.strictEqual(report.candidates.applications[0].identity_state, "UNVERIFIED");
     assert.ok(Object.values(report.feature_support).every((state) => state === "UNVERIFIED"));
     assert.strictEqual(report.v5, "UNVERIFIED");
     assert.strictEqual(fs.existsSync(sentinel), false, "probe executed a discovered binary");
@@ -101,6 +105,32 @@ try {
     ]));
     assert.ok(report.candidates.skills[0].evidence.some((item) => item.includes("pptx/SKILL.md")));
     assert.strictEqual(report.feature_support.native_editable_objects, "UNVERIFIED");
+  });
+
+  test("same-name, malformed, mismatched, and symlink Skills never qualify identity", () => {
+    const malformedRoot = path.join(fixture, "malformed-skills");
+    const mismatchRoot = path.join(fixture, "mismatched-skills");
+    const symlinkRoot = path.join(fixture, "symlink-skills");
+    fs.mkdirSync(path.join(malformedRoot, "pptx"), { recursive: true });
+    fs.mkdirSync(path.join(mismatchRoot, "pptx"), { recursive: true });
+    fs.mkdirSync(path.join(symlinkRoot, "pptx"), { recursive: true });
+    fs.writeFileSync(path.join(malformedRoot, "pptx", "SKILL.md"), "not frontmatter\n");
+    fs.writeFileSync(path.join(mismatchRoot, "pptx", "SKILL.md"), "---\nname: not-pptx\ndescription: Use when testing.\n---\n");
+    fs.symlinkSync(path.join(skillRoot, "pptx", "SKILL.md"), path.join(symlinkRoot, "pptx", "SKILL.md"));
+
+    const report = parseJson(run([
+      "--json", "--isolated",
+      "--skill-root", malformedRoot,
+      "--skill-root", mismatchRoot,
+      "--skill-root", symlinkRoot,
+    ]));
+    const item = report.candidates.skills[0];
+    assert.strictEqual(item.state, "DETECTED");
+    assert.strictEqual(item.identity_state, "UNVERIFIED");
+    assert.ok(item.identity_evidence.some((entry) => entry.declared_name === null));
+    assert.ok(item.identity_evidence.some((entry) => entry.declared_name === "not-pptx" && !entry.name_matches));
+    assert.ok(item.identity_evidence.some((entry) => entry.path_type === "symlink"));
+    assert.ok(item.identity_evidence.every((entry) => entry.qualified_source === "UNVERIFIED"));
   });
 
   test("unknown arguments exit 2", () => {

@@ -19,7 +19,7 @@ Visual thesis: [how form makes the argument legible and memorable]
 Type-color system: [hierarchy, contrast, semantic color, multilingual behavior]
 Composition and whitespace: [grid, density, focal strategy, page rhythm]
 Image and exhibit grammar: [photography/illustration/charts/tables/diagrams/callouts]
-Representative slide: [specific treatment of one real slide]
+Representative slide artifact: [rendered prototype or auditable layout artifact for the same real high-information slide]
 Fit: [why this audience, occasion, and content suit it]
 Advantage: [what it makes unusually strong]
 Risk: [where it may fail or become mannered]
@@ -27,6 +27,21 @@ Executor implications: [native objects, raster risk, fonts, media, target constr
 ```
 
 Directions are materially different only when they create different perceptual and narrative systems. Changing colors, fonts, corner radii, or background decoration while retaining the same hierarchy, composition, imagery, and rhythm is one direction in three costumes.
+
+Before asking the user to choose, apply all three directions to the same real, high-information slide and present comparable artifacts side by side. Prefer rendered prototypes. If no executor is available, provide auditable layout artifacts with explicit geometry, hierarchy, content placement, and exhibit treatment; natural-language mood descriptions alone are insufficient.
+
+Create a pairwise difference matrix:
+
+```markdown
+| Pair | Narrative mode | Hierarchy | Composition | Type/color semantics | Imagery/exhibit grammar | Rhythm | Distinct enough? |
+|---|---|---|---|---|---|---|---|
+```
+
+Every pair must differ materially in narrative mode plus at least two of hierarchy, composition, imagery/exhibit grammar, and rhythm after direction names and colors are hidden. If a pair fails, merge or redesign it before presentation.
+
+<HARD-GATE id="directions-are-comparable-artifacts">
+Do not ask for direction selection from three text descriptions or cosmetic variants. The same real slide, pairwise matrix, and comparable prototype/layout evidence must demonstrate that all three are genuinely distinct within the user's authority.
+</HARD-GATE>
 
 Do not optimize all directions toward a safe midpoint. At least one should express a strong but task-relevant point of view. Every direction still obeys content truth, accessibility, preservation, rights, and target constraints.
 
@@ -87,4 +102,4 @@ The set must prove hierarchy, visual identity, sparse/dense range, exhibit gramm
 
 ## Approval Record
 
-Record the directions shown, the choice, requested changes, governing principle, accepted risks, capability implications, and approval source. If the user asks the agent to choose, document the rationale and make the selection reversible until calibration passes.
+Record the direction artifacts shown, pairwise matrix, independent or blinded distinction check when available, the choice, requested changes, governing principle, accepted risks, capability implications, and approval source. If the user asks the agent to choose, document the rationale and make the selection reversible until calibration passes.

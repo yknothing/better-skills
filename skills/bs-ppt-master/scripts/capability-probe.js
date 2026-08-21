@@ -80,12 +80,37 @@ function existingPath(candidatePath, expectedType) {
   }
 }
 
-function candidate(id, label, evidence) {
+function pathType(candidatePath) {
+  try {
+    const stat = fs.lstatSync(candidatePath);
+    if (stat.isSymbolicLink()) return "symlink";
+    if (stat.isFile()) return "file";
+    if (stat.isDirectory()) return "directory";
+    return "other";
+  } catch {
+    return "missing";
+  }
+}
+
+function declaredSkillName(skillPath) {
+  try {
+    const source = fs.readFileSync(skillPath, "utf8");
+    const block = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
+    if (!block) return null;
+    return block[1].match(/^name:\s*([^\r\n#]+)$/m)?.[1].trim() || null;
+  } catch {
+    return null;
+  }
+}
+
+function candidate(id, label, evidence, identityEvidence) {
   return {
     id,
     label,
     state: evidence.length > 0 ? "DETECTED" : "NOT_FOUND",
+    identity_state: "UNVERIFIED",
     evidence,
+    identity_evidence: identityEvidence,
   };
 }
 
@@ -134,9 +159,39 @@ function buildReport(options) {
     schema_version: 1,
     probe_scope: "discovery-only",
     candidates: {
-      skills: [candidate("pptx", "External pptx Skill", pptxEvidence)],
-      binaries: [candidate("soffice", "LibreOffice command-line candidate", sofficeEvidence)],
-      applications: [candidate("microsoft-powerpoint", "Microsoft PowerPoint application", powerpointEvidence)],
+      skills: [candidate(
+        "pptx",
+        "pptx-named Skill candidate",
+        pptxEvidence,
+        pptxEvidence.map((item) => ({
+          path: item,
+          path_type: pathType(item),
+          declared_name: declaredSkillName(item),
+          name_matches: declaredSkillName(item) === "pptx",
+          qualified_source: "UNVERIFIED",
+        })),
+      )],
+      binaries: [candidate(
+        "soffice",
+        "soffice-named executable candidate",
+        sofficeEvidence,
+        sofficeEvidence.map((item) => ({
+          path: item,
+          path_type: pathType(item),
+          executable: true,
+          qualified_identity: "UNVERIFIED",
+        })),
+      )],
+      applications: [candidate(
+        "microsoft-powerpoint",
+        "Microsoft PowerPoint-named application candidate",
+        powerpointEvidence,
+        powerpointEvidence.map((item) => ({
+          path: item,
+          path_type: pathType(item),
+          qualified_identity: "UNVERIFIED",
+        })),
+      )],
     },
     feature_support: featureSupport,
     v5: "UNVERIFIED",

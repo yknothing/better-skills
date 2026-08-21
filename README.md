@@ -2,7 +2,7 @@
 
 A curated toolkit of Agent Skills, built by studying top skill repositories across the industry.
 
-- **Status: Phase 2 shipped.** This repo currently ships 12 self-developed `SKILL.md` files plus 9 declared external references, a 59-pattern machine-readable library under `docs/patterns/`, a zero-dependency CLI (`bin/better-skills.js`) for installing skills, and a 4-gate review pipeline that is mechanized end-to-end: Gate 1 (`tools/validate.js`), Gate 2 (`tools/peer-review.js`), Gate 3 (`tools/pattern-alignment.js` + `tools/check-patterns.sh`), Gate 4 (`evaluation/harness/runner.js`). See [Roadmap](#roadmap) for what's deferred (LLM-judge / A/B tests / npm publish). Content claims that haven't been verified by the evaluation pipeline yet are explicitly marked **TBD**.
+- **Status: Phase 2 shipped.** This repo currently ships 12 self-developed `SKILL.md` files plus 9 declared external references, a 59-pattern machine-readable library under `docs/patterns/`, a zero-dependency CLI (`bin/better-skills.js`) for installing skills, and mechanized repository checks: Gate 1 (`tools/validate.js`), Gate 2 (`tools/peer-review.js`), Gate 3 (`tools/pattern-alignment.js` + `tools/check-patterns.sh`), and Gate 4 evaluation-contract checks (`evaluation/harness/runner.js`). Gate 4 is explicitly `EVAL_SCHEMA_ONLY`; it does not verify behavior or artifacts. See [Roadmap](#roadmap) for what's deferred (agent execution / LLM judge / A/B tests / npm publish). Content claims that lack execution evidence are explicitly marked **TBD**.
 
 ## Skill namespace
 

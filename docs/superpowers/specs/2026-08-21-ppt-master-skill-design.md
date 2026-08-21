@@ -100,6 +100,8 @@ bs-ppt-architecture -> bs-ppt-master
 
 如果模式无法判断，应先检查实际文件，再问一个会影响判断的关键问题。不得把 `REVISE`、`FILL` 和 `ENHANCE` 混成笼统的“编辑”流程。
 
+对 `REVISE`、`FILL` 和会修改既有文件的 `ENHANCE`，正式变更前必须在可丢弃的工作副本上完成 preservation smoke；交付时提供 Preservation Report，绑定 original/final hash，并逐项记录 slide identity、hidden state、dimensions/theme、master/layout/placeholder、notes/links/actions、media/animation、fonts/accessibility/document properties 的 `PRESERVED / CHANGED_WITH_AUTHORITY / UNVERIFIED / LOST`。required surface 只要存在 `UNVERIFIED` 或 `LOST`，就不能将保护契约判为通过。
+
 ## 核心架构
 
 ```text
@@ -205,6 +207,8 @@ skills/bs-ppt-master/
 
 只换颜色或字体不算新方向。用户可以选择一个方向，也可以明确要求融合；如果融合会造成冲突，必须先确定统领原则。
 
+方向选择前，三套方向必须作用于同一张真实的高信息页面，交付可并排比较的 rendered prototype；执行器不可用时，至少提供包含几何、层级、内容位置和 exhibit 处理的可审计 layout artifact。另需提供 pairwise difference matrix，证明隐藏方向名称和颜色后，叙事模式以及层级、构图、图像/exhibit grammar、节奏等核心维度仍然可区分。三段自然语言 mood 描述不能通过这一门。
+
 这是第二道交互确认门。选定方向会转化为 execution lock，防止后续页面各自漂移。
 
 ### Phase 4：校准方法
@@ -284,6 +288,8 @@ Detail Master 是贯穿全程的内部角色，不是最后做一次表面润色
 - 修复只有在文件重新渲染并通过检查后才算完成。
 - 环境支持 sub-agent 时，最终 Detail Master 检查应由独立 reviewer 完成；否则必须使用与生产过程隔离的新检查上下文，不能让创作者直接给自己判定通过。
 
+独立检查必须产生 receipt：reviewer/context ID、review input manifest、final artifact hash、render/contact-sheet identity、review time、findings disposition。缺少与最终 artifact 绑定的 receipt 时，V3 必须保持 `UNVERIFIED`，创作者自己的 D4 检查不能将它提升为通过。
+
 最终交付包含一份精简的 Detail Report，列出已经验证的关键细节、修复的问题、有意保留的例外和剩余限制。
 
 ## 执行器契约
@@ -316,6 +322,8 @@ Detail Master 是贯穿全程的内部角色，不是最后做一次表面润色
 
 已引用的外部 `pptx` Skill 在完成安装并具备所需能力时，是默认的可编辑 PPTX 基础执行器。独立安装的 `ppt-master`、Dashi、Baoyu 风格 HTML 或其他系统都可以通过适配器接入，但不能成为隐藏的硬依赖。
 
+`SUPPORTED` 只允许用于绑定 executor identity/version、具体 lifecycle/object/target scope、条件和限制的可追溯契约；未版本化 README 或 marketing copy 只能是 `DETECTED_WITH_CLAIMS`。整体输出只有在所有承诺可编辑对象都分类且在最终 target 验证为 native 时才可标 `native`；任一非装饰对象扁平化或未验证时整体为 `hybrid`，任何 whole-slide screenshot 都必须列出 slide ID，`unclassified > 0` 阻断 V4。
+
 ### 降级契约
 
 如果没有执行器满足原生优先的硬要求，Skill 必须明确说明能力缺口，并提供边界清楚的选择：
@@ -331,6 +339,8 @@ Detail Master 是贯穿全程的内部角色，不是最后做一次表面润色
 ## 成品验证契约
 
 下面五层检查属于 PPT 成品内部验证，和 Better-Skills 的四道仓库发布 Gate 不是一回事。
+
+生产前冻结 Delivery Contract：artifact class、target software/version/environment、required V-layers、required behaviors、外部 contract/compliance constraints，以及谁有权限修改这些要求。required set 不得静默缩小；任何变更都要记录 approver、authority、时间、精确损失和后果。流程方便不能覆盖外部合同、合规或第三方硬要求。
 
 ### V1：内容与证据
 
@@ -432,6 +442,8 @@ Microsoft PowerPoint 是默认真实性基准。Keynote、WPS、Google Slides、
 
 Quick mode 绝不能放弃事实准确、能力实情、素材权利、文件完整性或截图降级的明确同意。
 
+Quick 必须输出 Quick Decision Record，逐项记录 compressed/skipped step、authority、增加的风险、补偿检查和恢复后果。Lifecycle、recovery、preservation、最低 brief、canonical model、Rights & Data Ledger、capability truth、冻结合同要求的 V1–V5 和 V3 的独立终审不能省略；三方向、校准和 D1–D3 只能在明确前提下压缩，不能把检查本身删除。
+
 ## 失败处理与恢复
 
 每类失败都必须回到明确的责任阶段：
@@ -453,6 +465,7 @@ Quick mode 绝不能放弃事实准确、能力实情、素材权利、文件完
 - 本地预览服务默认只绑定 loopback，使用结束后关闭。
 - 不得把 secret、credential、隐藏批注或本机临时路径写入 PPTX 包。
 - 记录第三方图片、图标、字体、数据和模板的来源与使用权。
+- 使用 Rights & Data Ledger 分开记录 provenance 与 permission：asset/data ID、owner、license/authority evidence、允许的 use/adaptation/distribution、attribution、confidentiality、named service、transmitted fields、retention 和 `VERIFIED / USER_ATTESTED / UNKNOWN / PROHIBITED` 状态；`UNKNOWN/PROHIBITED` 阻断生产或外传。
 - 不复制三个参考项目的代码或资产。通过适配器调用独立安装的工具时，保留适用的许可声明。
 - `REVISE`、`FILL` 和 `ENHANCE` 期间必须保证源文件可恢复。
 

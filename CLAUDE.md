@@ -42,7 +42,7 @@ Every skill — self-developed or newly referenced — must pass:
 1. **Self-Review**: Run `bash tools/validate.sh <skill-path>`. Checks frontmatter shape, name/description, body size, basic safety scans. Phase 2.A extends this to pattern-reference integrity, gate-syntax conformance, and bundled-resource existence.
 2. **Peer Review**: Launch 2 sub-agents — one advocates for the skill, one tries to break it. Both return structured findings into `docs/reviews/<skill>/<date>-{advocate,adversary}-review.md`.
 3. **Pattern Alignment**: Does the skill correctly use patterns declared in `skills.json`? Does each declared pattern resolve to a documented entry under `docs/patterns/`? Phase 2.C automates this with a 100-line script once Phase 1.C lands.
-4. **Baseline Test**: Run the skill on a real task from `evaluation/datasets/batch-1-test-prompts.json`. Does it outperform the no-skill baseline? Phase 2.B wires up `evaluation/harness/runner.js` to make this executable.
+4. **Evaluation Contract**: `evaluation/harness/runner.js` validates Gate 1 plus test-prompt schema and happy/edge/adversarial coverage. Its evidence scope is `EVAL_SCHEMA_ONLY`; it does not run an agent, open artifacts, judge behavior, or compare a no-skill baseline. Actual forward or A/B results require separately recorded execution evidence.
 
 Record all reviews in `docs/reviews/<skill-name>/YYYY-MM-DD-<role>-review.md`. The current review records are AI-generated initial drafts dated 2026-06-17; later iterations should add `HUMAN_VERIFIED` markers and re-run dates.
 
@@ -57,7 +57,7 @@ Record all reviews in `docs/reviews/<skill-name>/YYYY-MM-DD-<role>-review.md`. T
 | `docs/insights/` | Domain-proposition verdicts. Expert-roundtable format: parallel independent viewpoints + a red team + moderator adjudication. Subject is a claim about a domain, not a repo |
 | `docs/patterns/` | Pattern index (~60 patterns, currently consolidated in `README.md`; per-pattern files in Phase 1.C) |
 | `docs/reviews/` | Skill review records |
-| `evaluation/` | Test datasets + evaluation harness (harness not wired until Phase 2.B) |
+| `evaluation/` | Test datasets + deterministic schema-only evaluation-contract harness |
 | `tools/` | `validate.sh` (Gate 1) and `sync.sh` (external sync) |
 
 ## Quality Process
@@ -65,14 +65,14 @@ Record all reviews in `docs/reviews/<skill-name>/YYYY-MM-DD-<role>-review.md`. T
 Default workflow before shipping any skill:
 
 1. **Run Gate 1**: `bash tools/validate.sh skills/<name>/` — must pass with 0 failures
-2. **Run 3 test prompts**: from `evaluation/datasets/batch-1-test-prompts.json`, document outputs in the PR
+2. **Run at least 3 test prompts in fresh contexts**: from `evaluation/datasets/batch-1-test-prompts.json`, document actual outputs, artifacts, evidence scope, and reviewer verdict; the schema-only runner is not a substitute
 3. **Get reviewer sign-off**: at minimum 1 human + 1 adversary sub-agent
 
 **Default grading is deterministic.** Structural checks, keyword presence, numeric assertions — cheap, reproducible, suitable for CI.
 
-**LLM-as-judge is opt-in for qualitative dimensions only** (voice, clarity, "soul" tests, anything where deterministic rules can't substitute). Triggered via the `--with-llm-judge` flag once Phase 2.B ships. Judge prompt template lives in `evaluation/rubrics/judge-prompt-template.md`.
+**LLM-as-judge is deferred.** It is intended only for qualitative dimensions (voice, clarity, "soul" tests, anything where deterministic rules cannot substitute). The documented `--with-llm-judge` flag currently returns a deferred error; it does not execute a judge. The future prompt template lives in `evaluation/rubrics/judge-prompt-template.md`.
 
-**A/B baseline tests are opt-in for high-stakes skills.** Required for any skill claiming "outperforms baseline" in the README's Scenario Coverage matrix. Triggered via `--ab-test` once Phase 2.B ships.
+**A/B baseline tests are deferred.** They remain required before any skill claims to outperform a baseline. The documented `--ab-test` flag currently returns a deferred error and produces no comparison evidence.
 
 This stratification lets the cheap default cover 90% of CI runs while preserving real qualitative grading for the cases that need it.
 

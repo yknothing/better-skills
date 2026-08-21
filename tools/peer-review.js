@@ -21,6 +21,8 @@
 
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
+const { spawnSync } = require("child_process");
 const { COLORS, color } = require("../lib/term");
 
 const REPO_ROOT = path.resolve(__dirname, "..");
@@ -87,11 +89,58 @@ function readSkillBody(skillName) {
   return content;
 }
 
+function sha256(content) {
+  return crypto.createHash("sha256").update(content).digest("hex");
+}
+
+function currentRevision() {
+  const result = spawnSync("git", ["rev-parse", "HEAD"], {
+    cwd: REPO_ROOT,
+    encoding: "utf8",
+  });
+  return result.status === 0 ? result.stdout.trim() : "UNAVAILABLE";
+}
+
+function listFilesRecursive(root, out = []) {
+  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+    const absolute = path.join(root, entry.name);
+    if (entry.isDirectory()) listFilesRecursive(absolute, out);
+    else if (entry.isFile()) out.push(absolute);
+  }
+  return out;
+}
+
+function reviewScope(skillName, skillContent) {
+  const token = skillName.replace(/^bs-/, "");
+  const files = listFilesRecursive(path.join(SKILLS_DIR, skillName));
+  files.push(SKILLS_JSON, path.join(REPO_ROOT, "evaluation", "datasets", "batch-1-test-prompts.json"));
+
+  const superpowersRoot = path.join(REPO_ROOT, "docs", "superpowers");
+  if (fs.existsSync(superpowersRoot)) {
+    for (const file of listFilesRecursive(superpowersRoot)) {
+      if (path.basename(file).includes(token)) files.push(file);
+    }
+  }
+
+  const manifest = [...new Set(files)]
+    .filter((file) => fs.existsSync(file))
+    .sort()
+    .map((file) => `- \`${path.relative(REPO_ROOT, file)}\` — \`${sha256(fs.readFileSync(file))}\``)
+    .join("\n");
+
+  return {
+    revision: currentRevision(),
+    skillHash: sha256(skillContent),
+    manifest,
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Prompt templates
 // ---------------------------------------------------------------------------
 
 function buildAdvocatePrompt(skillName, skillContent) {
+  const scope = reviewScope(skillName, skillContent);
   return `# Gate 2 — Peer Review Prompt: Advocate
 
 You are the **advocate reviewer** for the \`${skillName}\` skill. Your job is to argue for what's GOOD: identify the strongest aspects, score the design across multiple dimensions, and decide whether this skill is production-ready.
@@ -103,6 +152,16 @@ You are the **advocate reviewer** for the \`${skillName}\` skill. Your job is to
    \`docs/reviews/${skillName}/${todayISO()}-advocate-review.md\`
 3. Use the **required structure** below — the validator (\`tools/peer-review.js check\`) will reject reviews missing required sections.
 
+## Deep composite review scope
+
+Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
+
+**Scope Contract Version**: 1
+**Reviewed Revision to record**: ${scope.revision}
+**Reviewed Skill SHA-256 to record**: ${scope.skillHash}
+
+${scope.manifest}
+
 ## Required structure
 
 \`\`\`markdown
@@ -112,10 +171,17 @@ You are the **advocate reviewer** for the \`${skillName}\` skill. Your job is to
 **Reviewer Role**: Advocate
 **Skill**: ${skillName}
 **HUMAN_VERIFIED**: false
+**Scope Contract Version**: 1
+**Reviewed Revision**: ${scope.revision}
+**Reviewed Skill SHA-256**: ${scope.skillHash}
 
 ## Executive Summary
 
 (2-4 sentences naming the strongest design choices and whether you'd ship this.)
+
+## Evidence Reviewed
+
+(List the complete Skill tree, skills.json, evaluation dataset, applicable design/plan files, and commands actually rerun.)
 
 ## Dimension Scores
 
@@ -154,6 +220,7 @@ ${skillContent}
 }
 
 function buildAdversaryPrompt(skillName, skillContent) {
+  const scope = reviewScope(skillName, skillContent);
   return `# Gate 2 — Peer Review Prompt: Adversary
 
 You are the **adversary reviewer** for the \`${skillName}\` skill. Your job is to break it: find ways the skill produces wrong output, fails on edge cases, contradicts itself, has bypassable safety gates, or makes the agent worse off than no skill at all. Be ruthless.
@@ -165,6 +232,16 @@ You are the **adversary reviewer** for the \`${skillName}\` skill. Your job is t
    \`docs/reviews/${skillName}/${todayISO()}-adversary-review.md\`
 3. Use the **required structure** below — the validator (\`tools/peer-review.js check\`) will reject reviews missing required sections.
 
+## Deep composite review scope
+
+Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
+
+**Scope Contract Version**: 1
+**Reviewed Revision to record**: ${scope.revision}
+**Reviewed Skill SHA-256 to record**: ${scope.skillHash}
+
+${scope.manifest}
+
 ## Required structure
 
 \`\`\`markdown
@@ -174,10 +251,17 @@ You are the **adversary reviewer** for the \`${skillName}\` skill. Your job is t
 **Reviewer Role**: Adversary
 **Skill**: ${skillName}
 **HUMAN_VERIFIED**: false
+**Scope Contract Version**: 1
+**Reviewed Revision**: ${scope.revision}
+**Reviewed Skill SHA-256**: ${scope.skillHash}
 
 ## Summary
 
 (2-4 sentences: how many issues, of what severity, and the worst-case impact.)
+
+## Evidence Reviewed
+
+(List the complete Skill tree, skills.json, evaluation dataset, applicable design/plan files, and commands actually rerun.)
 
 ## Findings
 
@@ -382,6 +466,56 @@ function checkOneReview(skillName, entry) {
     label: "HUMAN_VERIFIED marker present",
     detail: hasMarker ? "" : "expected 'HUMAN_VERIFIED: true|false' (CLAUDE.md mandate)",
   });
+
+  const promptPath = path.join(
+    REVIEWS_DIR,
+    skillName,
+    `${entry.date}-${entry.role}-prompt.md`,
+  );
+  const scopedPrompt = fs.existsSync(promptPath)
+    && /\*\*Scope Contract Version\*\*:\s*1/.test(fs.readFileSync(promptPath, "utf8"));
+
+  // Scope Contract v1 is opt-in per generated prompt, so historical reviews
+  // remain valid while new deep composite reviews cannot silently inspect only
+  // the embedded SKILL.md.
+  if (scopedPrompt) {
+    const scopeVersion = content.match(/\*\*Scope Contract Version\*\*:\s*(\d+)/);
+    issues.push({
+      passed: !!scopeVersion && scopeVersion[1] === "1",
+      label: "Scope Contract Version matches prompt",
+      detail: scopeVersion ? `declared=${scopeVersion[1]}` : "missing Scope Contract Version",
+    });
+
+    const revision = content.match(/\*\*Reviewed Revision\*\*:\s*([0-9a-f]{7,40}|UNAVAILABLE)/i);
+    issues.push({
+      passed: !!revision,
+      label: "Reviewed Revision recorded",
+      detail: revision ? `revision=${revision[1]}` : "missing Reviewed Revision",
+    });
+
+    const expectedSkillHash = sha256(readSkillBody(skillName));
+    const declaredHash = content.match(/\*\*Reviewed Skill SHA-256\*\*:\s*([0-9a-f]{64})/i);
+    issues.push({
+      passed: !!declaredHash && declaredHash[1].toLowerCase() === expectedSkillHash,
+      label: "Reviewed Skill SHA-256 matches current SKILL.md",
+      detail: declaredHash ? `declared=${declaredHash[1]}` : "missing Reviewed Skill SHA-256",
+    });
+
+    const hasEvidenceSection = /^##\s+Evidence Reviewed\b/im.test(content);
+    const requiredScope = [
+      `skills/${skillName}/`,
+      "skills.json",
+      "evaluation/datasets/batch-1-test-prompts.json",
+    ];
+    const missingScope = requiredScope.filter((needle) => !content.includes(needle));
+    issues.push({
+      passed: hasEvidenceSection && missingScope.length === 0,
+      label: "Composite evidence scope declared",
+      detail: hasEvidenceSection
+        ? (missingScope.length === 0 ? "" : `missing: ${missingScope.join(", ")}`)
+        : "missing '## Evidence Reviewed' section",
+    });
+  }
 
   return issues;
 }

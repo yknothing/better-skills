@@ -56,6 +56,8 @@ The untouched list is the default, even when the user does not enumerate it. A t
 
 After editing, compare the original and result across both lists. A visually equivalent result is not preservation if behavior, notes, links, or editability were lost.
 
+Before mutating a protected deck, run a task-specific preservation smoke on a disposable working copy with the selected executor. If the smoke cannot prove a required surface survives, that surface remains `UNVERIFIED`; documentation claims or visual similarity cannot authorize mutation of the real working candidate.
+
 ## FILL
 
 **Use when:** content must be placed into an existing template or controlled deck system.
@@ -111,6 +113,35 @@ At handoff report:
 - any surfaces that could not be compared;
 - how to recover the original.
 
+## Preservation Report
+
+For `REVISE`, `FILL`, and any `ENHANCE` that edits an existing file, attach a before/after report to the exact original and final artifacts:
+
+```markdown
+Original: [path + cryptographic hash]
+Working copy: [path + creation method]
+Final: [path + cryptographic hash]
+Comparison tool/method: [identity/version]
+
+| Protected surface | Before identity/count | After identity/count | State | Authority/evidence |
+|---|---|---|---|---|
+| slide IDs/order/hidden state | | | PRESERVED | |
+| dimensions/theme | | | PRESERVED | |
+| masters/layouts/placeholders | | | PRESERVED | |
+| notes/links/actions | | | PRESERVED | |
+| media/animation/embedded objects | | | PRESERVED | |
+| fonts/accessibility/document properties | | | PRESERVED | |
+```
+
+Allowed states are:
+
+- `PRESERVED` — before/after evidence matches the protection contract;
+- `CHANGED_WITH_AUTHORITY` — the exact change and current authority are recorded;
+- `UNVERIFIED` — the surface could not be compared with adequate evidence;
+- `LOST` — a protected surface was removed, corrupted, or made unusable.
+
+Every protected surface must appear; absence is `UNVERIFIED`, not preservation. A required surface in `UNVERIFIED` or `LOST` blocks mutation or delivery unless the person authorized to change the delivery contract explicitly accepts that exact loss. A contract, compliance, or third-party hard requirement cannot be waived merely for workflow convenience.
+
 ## Stop Conditions
 
 Stop before production when:
@@ -119,5 +150,6 @@ Stop before production when:
 - requested scope conflicts with a protected surface;
 - source truth is contradictory and the difference affects meaning;
 - the required executor cannot preserve the contract;
+- preservation smoke or before/after evidence leaves a required surface `UNVERIFIED` or `LOST`;
 - a meaning change, destructive migration, or raster downgrade lacks authority;
 - the only available path would expose restricted material or violate asset rights.

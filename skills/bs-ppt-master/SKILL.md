@@ -18,14 +18,30 @@ Use this Skill as the single orchestration entry for PPT work. The bundled Archi
 2. **Brief and evidence before pages.** Establish audience, occasion, pacing, belief/action delta, authoritative sources, brand constraints, target environment, deadline, and final format. Never invent facts, citations, customer evidence, financial results, or asset rights.
 3. **Content and form co-evolve.** Do not freeze a generic outline and decorate it later. Claims, sequence, exhibits, hierarchy, visual emphasis, and page rhythm must inform one another.
 4. **One canonical content model.** Maintain one source of truth for slide roles, titles, claims, evidence, assets, notes intent, and detail rules. HTML, PptxGenJS, OOXML, SVG, or other executor inputs are projections, not competing narratives.
-5. **Explore directions only within authority.** For `CREATE` or an explicitly authorized visual-system change, present three materially different directions. Do not force three directions when `FILL`, tightly scoped `REVISE`, or fixed brand rules leave no design freedom.
+5. **Explore directions only within authority.** For `CREATE` or an explicitly authorized visual-system change, present three materially different, comparable prototype/layout artifacts using the same real slide. Do not force three directions when `FILL`, tightly scoped `REVISE`, or fixed brand rules leave no design freedom.
 6. **Calibrate before scaling.** Prove the method on representative sparse, argument, and dense/high-risk pages before producing the full deck. A direction that only works on a cover is not a system.
-7. **Executor claims require evidence.** `DETECTED` means only that a candidate exists. `SUPPORTED` needs a traceable capability declaration. `VERIFIED` needs evidence from the current artifact. Never infer native charts, animation, media, master preservation, or target-software compatibility from a tool name.
-8. **Detail Master intervenes four times.** Run specification, calibration, whole-deck, and delivery reviews. Check accuracy, callbacks, terminology, grid, type, color, imagery, exhibits, rhythm, editability, and intentional exceptions—not cosmetic pixel movement without consequence.
+7. **Executor claims require evidence.** `DETECTED` means only that a candidate exists. `SUPPORTED` needs a version-bound, claim-specific capability contract. `VERIFIED` needs evidence from the current artifact. Never infer native charts, animation, media, master preservation, or target-software compatibility from a tool name or unversioned README.
+8. **Detail Master intervenes four times.** Run specification, calibration, whole-deck, and delivery reviews. Check accuracy, callbacks, terminology, grid, type, color, imagery, exhibits, rhythm, editability, and intentional exceptions—not cosmetic pixel movement without consequence. Independent final review is required for V3 `PASS`.
 9. **Render, repair, re-render.** Generation and structural checks do not establish visual quality. Inspect every rendered page and the deck-level contact sheet; after a fix, repeat every affected check.
 10. **Unopened target software means `UNVERIFIED`.** Package integrity or LibreOffice rendering cannot prove PowerPoint, Keynote, WPS, Google Slides, or browser behavior. State the exact target tested, or state that it was not tested.
 
 `QUICK` is allowed only when the user explicitly chooses it. Before using it, name the steps being compressed and the added risk. It never waives factual accuracy, preservation, capability truth, asset rights, file integrity, explicit rasterization consent, or required delivery checks.
+
+### Quick Decision Record
+
+| Surface | Quick disposition |
+|---|---|
+| Lifecycle, recovery, preservation smoke/report | `REQUIRED` |
+| Minimum brief, canonical model, evidence and meaning boundaries | `REQUIRED` |
+| Rights & Data Ledger, capability manifest, downgrade consent | `REQUIRED` |
+| V1–V5 required by the frozen delivery contract | `REQUIRED` |
+| Independent final Detail review for V3 `PASS` | `REQUIRED` |
+| Three-direction exploration | `COMPRESSIBLE` only with explicit reduced-choice risk and a comparable artifact for each retained direction |
+| Calibration set | `COMPRESSIBLE` only to the smallest set that still proves sparse/dense and highest executor risk |
+| D1–D3 Detail interventions | `COMPRESSIBLE` by combining passes, never by deleting their checks |
+| A method not applicable to the deck purpose | `SKIPPABLE_WITH_RECEIPT` naming why and what evidence replaces it |
+
+For every compressed or skipped step record `step / disposition / reason / authority / added risk / compensating check / recovery consequence`. Quick without this record is not Quick mode; it is an undocumented process failure.
 
 ## Boundaries
 
@@ -78,7 +94,7 @@ Reuse known context; ask only questions whose answers change the deck, one at a 
 - target software, screen/room, aspect ratio, deadline, and final formats;
 - success criteria for both the presentation and the file.
 
-Create the first Detail Ledger entries for canonical names, terms, figures, dates, units, sources, brand invariants, callbacks, and target constraints.
+Create the first Detail Ledger entries for canonical names, terms, figures, dates, units, sources, brand invariants, callbacks, and target constraints. Freeze the Delivery Contract in [Verification](./references/verification.md), and begin the Rights & Data Ledger in [Executor Contract](./references/executor-contract.md).
 
 **Exit:** the brief is sufficient to make architecture and execution choices without guessing.
 
@@ -104,7 +120,7 @@ Do not draft new claim-led pages until the brief, belief/action delta, evidence 
 
 ### Phase 3 — Choose and lock art direction
 
-Read [Art Direction](./references/art-direction.md) when design freedom exists. Derive three complete directions from the same canonical content model. A direction changes narrative mode, composition, type-color logic, imagery/exhibit grammar, and rhythm—not merely a palette or font.
+Read [Art Direction](./references/art-direction.md) when design freedom exists. Derive three complete directions from the same canonical content model and apply them to the same real, high-information slide as comparable rendered prototypes or auditable layout artifacts. A direction changes narrative mode, composition, type-color logic, imagery/exhibit grammar, and rhythm—not merely a palette or font.
 
 Present fit, advantage, risk, representative-slide treatment, and executor implications for each. After the user chooses or authorizes a hybrid, resolve conflicts into one governing principle and write an execution lock covering hierarchy, visual grammar, page rhythm, capability boundary, and intentional exceptions.
 
@@ -140,7 +156,7 @@ Read [Verification](./references/verification.md). Run V1–V5 as separate evide
 - **V4 Native file and package integrity**
 - **V5 Target-environment delivery**
 
-Each layer is `PASS`, `BLOCKED`, or `UNVERIFIED`. A failed check routes back to its owning phase. Use a limited sequence of materially different fixes; do not hide failure by weakening the claim. Re-render and recheck every affected surface. Final Detail Master review should be performed by an independent reviewer or a fresh isolated context.
+Each layer is `PASS`, `BLOCKED`, or `UNVERIFIED`. A failed check routes back to its owning phase. Use a limited sequence of materially different fixes; do not hide failure by weakening the claim. Re-render and recheck every affected surface. Final Detail Master review must be performed by an independent reviewer or a fresh isolated context and bound to the final artifact through a review receipt.
 
 Allowed terminal states:
 
@@ -167,6 +183,10 @@ Do not report `DELIVERED` unless every required V-layer passed on the final arti
 ### Delivered
 - [PPTX, previews/contact sheet, source or other agreed artifacts]
 
+### Frozen delivery contract
+- Required V-layers and target: [set]
+- Authorized changes, if any: [approver/authority/time/exact loss]
+
 ### V1–V5
 - V1 Content and evidence: PASS | BLOCKED | UNVERIFIED — [evidence]
 - V2 Narrative and decision: PASS | BLOCKED | UNVERIFIED — [evidence]
@@ -175,6 +195,7 @@ Do not report `DELIVERED` unless every required V-layer passed on the final arti
 - V5 Target environment: PASS | BLOCKED | UNVERIFIED — [evidence]
 
 ### Capability truth
+- Promised-object closure: [promised / native / hybrid_or_raster / unsupported / unclassified=0]
 - Native editable: [verified objects]
 - Hybrid or rasterized: [elements and accepted trade-offs]
 - Unsupported or unverified: [claims not made]
@@ -185,6 +206,8 @@ Do not report `DELIVERED` unless every required V-layer passed on the final arti
 - Intentional exceptions: [exception -> narrative purpose]
 
 ### Rights, privacy, and remaining risks
+- Rights & Data Ledger: [closed items and USER_ATTESTED items]
+- Preservation Report: [original/final identities and surface states]
 - [sources, licenses, data boundary, recovery path, residual limitations]
 ```
 
@@ -235,8 +258,10 @@ Before handoff, verify:
 - visual direction is traceable to the brief and execution lock;
 - the canonical model, produced deck, and reports agree;
 - all four Detail Master interventions were completed or explicitly blocked;
+- independent-review receipt matches the final artifact and render/contact sheet before V3 `PASS`;
 - every promised native capability has current-artifact evidence;
+- promised-object closure has `unclassified=0` and output-class roll-up is honest;
 - every modified page and the contact sheet were rechecked after the last fix;
 - V1–V5 evidence names the real target, tool, file, and check performed;
-- third-party rights, restricted-data handling, and recovery path are recorded;
+- Rights & Data Ledger, Preservation Report, restricted-data handling, and recovery path are closed;
 - the terminal state follows from the evidence rather than from schedule pressure.
