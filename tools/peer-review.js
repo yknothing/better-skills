@@ -43,6 +43,7 @@ const SEVERITY_RE = /\b(CRITICAL|HIGH|MEDIUM|LOW)\b/;
 // denominator of /10, /80, or /100. The denominator restriction avoids
 // false-matching M/D date strings like "6/17" or "12/25".
 const VERDICT_RE = /(REQUIRES_CHANGES|NEEDS_IMPROVEMENT|APPROVED|PASS|production-ready|\b\d{1,3}\s*\/\s*(?:10|80|100)\b)/i;
+const SCOPE_CONTRACT_VERSION = 1;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -113,7 +114,14 @@ function listFilesRecursive(root, out = []) {
 function reviewScope(skillName, skillContent) {
   const token = skillName.replace(/^bs-/, "");
   const files = listFilesRecursive(path.join(SKILLS_DIR, skillName));
-  files.push(SKILLS_JSON, path.join(REPO_ROOT, "evaluation", "datasets", "batch-1-test-prompts.json"));
+  files.push(
+    SKILLS_JSON,
+    path.join(REPO_ROOT, "evaluation", "datasets", "batch-1-test-prompts.json"),
+    path.join(REPO_ROOT, "evaluation", "harness", "runner.js"),
+    path.join(REPO_ROOT, "evaluation", "harness", "test-runner-scope.js"),
+    path.join(REPO_ROOT, "tools", "peer-review.js"),
+    path.join(REPO_ROOT, "tools", "test-peer-review-scope.js"),
+  );
 
   const superpowersRoot = path.join(REPO_ROOT, "docs", "superpowers");
   if (fs.existsSync(superpowersRoot)) {
@@ -122,17 +130,143 @@ function reviewScope(skillName, skillContent) {
     }
   }
 
-  const manifest = [...new Set(files)]
+  const entries = [...new Set(files)]
     .filter((file) => fs.existsSync(file))
     .sort()
-    .map((file) => `- \`${path.relative(REPO_ROOT, file)}\` — \`${sha256(fs.readFileSync(file))}\``)
+    .map((file) => ({
+      path: path.relative(REPO_ROOT, file),
+      hash: sha256(fs.readFileSync(file)),
+    }));
+  const manifest = entries
+    .map((entry) => `- \`${entry.path}\` — \`${entry.hash}\``)
     .join("\n");
 
   return {
     revision: currentRevision(),
     skillHash: sha256(skillContent),
+    manifestHash: sha256(manifest),
     manifest,
+    entries,
   };
+}
+
+function parseScopePrompt(promptContent) {
+  const version = promptContent.match(/\*\*Scope Contract Version\*\*:\s*(\d+)/);
+  const revision = promptContent.match(/\*\*Reviewed Revision to record\*\*:\s*([0-9a-f]{7,40}|UNAVAILABLE)/i);
+  const skillHash = promptContent.match(/\*\*Reviewed Skill SHA-256 to record\*\*:\s*([0-9a-f]{64})/i);
+  const manifestHash = promptContent.match(/\*\*Reviewed Manifest SHA-256 to record\*\*:\s*([0-9a-f]{64})/i);
+  const entries = [];
+  const entryRe = /^- `([^`]+)` — `([0-9a-f]{64})`$/gim;
+  let match;
+  while ((match = entryRe.exec(promptContent)) !== null) {
+    entries.push({ path: match[1], hash: match[2].toLowerCase() });
+  }
+  return {
+    version: version ? version[1] : null,
+    revision: revision ? revision[1] : null,
+    skillHash: skillHash ? skillHash[1].toLowerCase() : null,
+    manifestHash: manifestHash ? manifestHash[1].toLowerCase() : null,
+    entries,
+  };
+}
+
+function validateScopeContractContent(reviewContent, promptContent, skillName = null) {
+  const issues = [];
+  const expected = parseScopePrompt(promptContent);
+  const declaredVersion = reviewContent.match(/\*\*Scope Contract Version\*\*:\s*(\d+)/);
+  issues.push({
+    passed: expected.version === String(SCOPE_CONTRACT_VERSION)
+      && !!declaredVersion
+      && declaredVersion[1] === expected.version,
+    label: "Scope Contract Version matches prompt",
+    detail: declaredVersion
+      ? `declared=${declaredVersion[1]}, expected=${expected.version || "missing"}`
+      : "missing Scope Contract Version",
+  });
+
+  const declaredRevision = reviewContent.match(/\*\*Reviewed Revision\*\*:\s*([0-9a-f]{7,40}|UNAVAILABLE)/i);
+  issues.push({
+    passed: !!declaredRevision
+      && !!expected.revision
+      && declaredRevision[1].toLowerCase() === expected.revision.toLowerCase(),
+    label: "Reviewed Revision matches prompt",
+    detail: declaredRevision
+      ? `declared=${declaredRevision[1]}, expected=${expected.revision || "missing"}`
+      : "missing Reviewed Revision",
+  });
+
+  const declaredSkillHash = reviewContent.match(/\*\*Reviewed Skill SHA-256\*\*:\s*([0-9a-f]{64})/i);
+  issues.push({
+    passed: !!declaredSkillHash
+      && !!expected.skillHash
+      && declaredSkillHash[1].toLowerCase() === expected.skillHash,
+    label: "Reviewed Skill SHA-256 matches prompt",
+    detail: declaredSkillHash
+      ? `declared=${declaredSkillHash[1]}, expected=${expected.skillHash || "missing"}`
+      : "missing Reviewed Skill SHA-256",
+  });
+
+  const declaredManifestHash = reviewContent.match(/\*\*Reviewed Manifest SHA-256\*\*:\s*([0-9a-f]{64})/i);
+  issues.push({
+    passed: !!declaredManifestHash
+      && !!expected.manifestHash
+      && declaredManifestHash[1].toLowerCase() === expected.manifestHash,
+    label: "Reviewed Manifest SHA-256 matches prompt",
+    detail: declaredManifestHash
+      ? `declared=${declaredManifestHash[1]}, expected=${expected.manifestHash || "missing"}`
+      : "missing Reviewed Manifest SHA-256",
+  });
+
+  const expectedManifest = expected.entries
+    .map((entry) => `- \`${entry.path}\` — \`${entry.hash}\``)
+    .join("\n");
+  const promptManifestValid = expected.entries.length > 0
+    && !!expected.manifestHash
+    && sha256(expectedManifest) === expected.manifestHash;
+  const staleEntries = expected.entries.filter((entry) => {
+    const absolute = path.resolve(REPO_ROOT, entry.path);
+    if (!absolute.startsWith(REPO_ROOT + path.sep) || !fs.existsSync(absolute)) return true;
+    return sha256(fs.readFileSync(absolute)) !== entry.hash;
+  });
+  let requiredScopeMatches = true;
+  let missingRequired = [];
+  let unexpectedEntries = [];
+  if (skillName) {
+    const requiredEntries = reviewScope(skillName, readSkillBody(skillName)).entries;
+    const expectedByPath = new Map(expected.entries.map((entry) => [entry.path, entry.hash]));
+    const requiredByPath = new Map(requiredEntries.map((entry) => [entry.path, entry.hash]));
+    missingRequired = requiredEntries
+      .filter((entry) => expectedByPath.get(entry.path) !== entry.hash)
+      .map((entry) => entry.path);
+    unexpectedEntries = expected.entries
+      .filter((entry) => requiredByPath.get(entry.path) !== entry.hash)
+      .map((entry) => entry.path);
+    requiredScopeMatches = missingRequired.length === 0 && unexpectedEntries.length === 0;
+  }
+  issues.push({
+    passed: promptManifestValid && staleEntries.length === 0 && requiredScopeMatches,
+    label: "Prompt manifest matches required scope and current files",
+    detail: !promptManifestValid
+      ? "manifest receipt does not match prompt entries"
+      : (staleEntries.length > 0
+        ? `stale or missing: ${staleEntries.map((entry) => entry.path).join(", ")}`
+        : (!requiredScopeMatches
+          ? `missing required: ${missingRequired.join(", ") || "none"}; unexpected: ${unexpectedEntries.join(", ") || "none"}`
+          : `${expected.entries.length} required files verified`)),
+  });
+
+  const evidenceSection = reviewContent.match(/^##\s+Evidence Reviewed\b([^\n]*)\r?\n([\s\S]*?)(?=^##\s+|(?![\s\S]))/im);
+  const evidenceBody = evidenceSection ? evidenceSection[2] : "";
+  const receiptAcknowledged = !!expected.manifestHash && evidenceBody.includes(expected.manifestHash);
+  issues.push({
+    passed: !!evidenceSection && receiptAcknowledged,
+    label: "Evidence Reviewed acknowledges full manifest receipt",
+    detail: !evidenceSection
+      ? "missing '## Evidence Reviewed' section"
+      : (receiptAcknowledged ? "" : `missing manifest receipt ${expected.manifestHash || "from prompt"}`),
+  });
+
+  return issues;
 }
 
 // ---------------------------------------------------------------------------
@@ -159,6 +293,7 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 **Scope Contract Version**: 1
 **Reviewed Revision to record**: ${scope.revision}
 **Reviewed Skill SHA-256 to record**: ${scope.skillHash}
+**Reviewed Manifest SHA-256 to record**: ${scope.manifestHash}
 
 ${scope.manifest}
 
@@ -174,6 +309,7 @@ ${scope.manifest}
 **Scope Contract Version**: 1
 **Reviewed Revision**: ${scope.revision}
 **Reviewed Skill SHA-256**: ${scope.skillHash}
+**Reviewed Manifest SHA-256**: ${scope.manifestHash}
 
 ## Executive Summary
 
@@ -181,7 +317,7 @@ ${scope.manifest}
 
 ## Evidence Reviewed
 
-(List the complete Skill tree, skills.json, evaluation dataset, applicable design/plan files, and commands actually rerun.)
+(Acknowledge full manifest receipt \`${scope.manifestHash}\`, then list the files and commands actually examined or rerun.)
 
 ## Dimension Scores
 
@@ -239,6 +375,7 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 **Scope Contract Version**: 1
 **Reviewed Revision to record**: ${scope.revision}
 **Reviewed Skill SHA-256 to record**: ${scope.skillHash}
+**Reviewed Manifest SHA-256 to record**: ${scope.manifestHash}
 
 ${scope.manifest}
 
@@ -254,6 +391,7 @@ ${scope.manifest}
 **Scope Contract Version**: 1
 **Reviewed Revision**: ${scope.revision}
 **Reviewed Skill SHA-256**: ${scope.skillHash}
+**Reviewed Manifest SHA-256**: ${scope.manifestHash}
 
 ## Summary
 
@@ -261,7 +399,7 @@ ${scope.manifest}
 
 ## Evidence Reviewed
 
-(List the complete Skill tree, skills.json, evaluation dataset, applicable design/plan files, and commands actually rerun.)
+(Acknowledge full manifest receipt \`${scope.manifestHash}\`, then list the files and commands actually examined or rerun.)
 
 ## Findings
 
@@ -479,42 +617,8 @@ function checkOneReview(skillName, entry) {
   // remain valid while new deep composite reviews cannot silently inspect only
   // the embedded SKILL.md.
   if (scopedPrompt) {
-    const scopeVersion = content.match(/\*\*Scope Contract Version\*\*:\s*(\d+)/);
-    issues.push({
-      passed: !!scopeVersion && scopeVersion[1] === "1",
-      label: "Scope Contract Version matches prompt",
-      detail: scopeVersion ? `declared=${scopeVersion[1]}` : "missing Scope Contract Version",
-    });
-
-    const revision = content.match(/\*\*Reviewed Revision\*\*:\s*([0-9a-f]{7,40}|UNAVAILABLE)/i);
-    issues.push({
-      passed: !!revision,
-      label: "Reviewed Revision recorded",
-      detail: revision ? `revision=${revision[1]}` : "missing Reviewed Revision",
-    });
-
-    const expectedSkillHash = sha256(readSkillBody(skillName));
-    const declaredHash = content.match(/\*\*Reviewed Skill SHA-256\*\*:\s*([0-9a-f]{64})/i);
-    issues.push({
-      passed: !!declaredHash && declaredHash[1].toLowerCase() === expectedSkillHash,
-      label: "Reviewed Skill SHA-256 matches current SKILL.md",
-      detail: declaredHash ? `declared=${declaredHash[1]}` : "missing Reviewed Skill SHA-256",
-    });
-
-    const hasEvidenceSection = /^##\s+Evidence Reviewed\b/im.test(content);
-    const requiredScope = [
-      `skills/${skillName}/`,
-      "skills.json",
-      "evaluation/datasets/batch-1-test-prompts.json",
-    ];
-    const missingScope = requiredScope.filter((needle) => !content.includes(needle));
-    issues.push({
-      passed: hasEvidenceSection && missingScope.length === 0,
-      label: "Composite evidence scope declared",
-      detail: hasEvidenceSection
-        ? (missingScope.length === 0 ? "" : `missing: ${missingScope.join(", ")}`)
-        : "missing '## Evidence Reviewed' section",
-    });
+    const promptContent = fs.readFileSync(promptPath, "utf8");
+    issues.push(...validateScopeContractContent(content, promptContent, skillName));
   }
 
   return issues;
@@ -717,4 +821,6 @@ module.exports = {
   checkSkillReviews,
   checkOneReview,
   listReviewFiles,
+  parseScopePrompt,
+  validateScopeContractContent,
 };
