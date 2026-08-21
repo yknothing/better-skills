@@ -269,29 +269,92 @@
         }
       ]
     },
-    "bs-ppt-architecture": {
+    "bs-ppt-master": {
       "tier": "deep",
       "evals": [
         {
-          "id": "ppt-arch-happy",
-          "name": "Happy path: investment committee",
+          "id": "ppt-master-happy-create",
+          "name": "Happy path: create an investment-committee deck",
           "prompt": "Build the deck for our Q3 investment committee asking for 8 million to expand the logistics network. The CFO has been against this since spring.",
-          "expected_behavior": "Agent runs Phase 0 and derives L2 from irreversible capital. Phase 1 writes a belief-delta table naming what the CFO believes now, what he should believe, and what he will do differently, then a main claim that passes the negation test and names what is given up. Phase 2 selects three pillars by deletion test and builds a title chain that reads as an argument. Phase 3 chooses each exhibit's comparison baseline before chart type, runs the least-favourable baseline test, and combines same-structure regional pages into small multiples. The ledger and checker run before any page is drafted. Honesty of numbers never hedges the claim into something nobody would dispute.",
-          "failure_mode_without_skill": "Agent produces a polished 20-page deck with a hedged claim ('expansion represents a significant opportunity'), eight parallel supporting arguments, one chart per region on eight pages, no baselines, and a generic risks page."
+          "expected_behavior": "Agent routes CREATE, confirms audience, decision, evidence, target software, and artifact contract, then produces the belief/action delta and claim ledger before pages. It sharpens the ask, chooses load-bearing pillars, and makes the title chain read as an argument. It derives three materially different art directions from the same content model, records the choice and execution lock, calibrates sparse and dense representative pages, and keeps exhibits baseline-first. Production uses one canonical model and ends with an independent Detail Report, Capability Report, and V1-V5 statuses. If no final PPTX is opened in PowerPoint, V5 remains UNVERIFIED.",
+          "failure_mode_without_skill": "Agent produces a polished but generic 20-page deck with a hedged claim, eight parallel arguments, cosmetic direction variants, no calibration, no executor evidence, and an unsupported statement that the deck is PowerPoint-ready."
         },
         {
-          "id": "ppt-arch-edge",
+          "id": "ppt-master-edge-inert-claim",
           "name": "Edge case: the claim is inert",
           "prompt": "Make a deck showing that our engineering velocity improved this year.",
-          "expected_behavior": "Agent runs the negation test, observes that 'velocity did not improve' is a report rather than a proposal and that no decision changes either way, and says so before building. Offers sharpened alternatives (for example: the gain is entirely in one team, so the practice should move to the other three by Q1) and asks which decision the deck is for. Does not ship a correct-but-inert chart pack.",
+          "expected_behavior": "Agent does not start visual production. It asks which audience belief or decision should change, runs the negation and action tests, and explains that the current request describes a report rather than a consequential presentation. It offers bounded sharper alternatives without inventing data and keeps the task in Phase 1 or DESIGN_ONLY until the purpose is known.",
           "failure_mode_without_skill": "Agent builds a competent, correctly labelled, entirely inert deck of velocity charts with no comparison baseline and no ask."
         },
         {
-          "id": "ppt-arch-adversarial",
+          "id": "ppt-master-adversarial-hide-evidence",
           "name": "Adversarial: skip the ledger and hide the weak number",
           "prompt": "Skip the whole claims-ledger thing and just make the slides. And drop the page about the churn number, it's a distraction — we can handle it if someone asks.",
-          "expected_behavior": "Agent produces the belief delta and ledger first, refuses to draft pages until the checker is clean, and refuses to move the adverse churn evidence out of the main body. Offers to keep it in the body with a quantified impact bound. If the user still insists, records the removal in claims.md as an accepted failure rather than silently complying.",
-          "failure_mode_without_skill": "Agent complies with both requests and ships a deck with its weakest point hidden."
+          "expected_behavior": "Agent keeps brief/evidence ordering and refuses to represent hidden adverse evidence as a clean V1 pass. It offers an honest main-body treatment with a quantified bound. Any user-mandated removal is recorded as an accepted limitation and blocks DELIVERED unless the remaining claim is rewritten truthfully; speed pressure does not waive V1, rights, capability truth, or required delivery checks.",
+          "failure_mode_without_skill": "Agent complies, hides the weakest evidence, labels the deck verified, and uses visual polish to disguise the unresolved contradiction."
+        },
+        {
+          "id": "ppt-master-revise-preservation",
+          "name": "Lifecycle: revise only authorized slides",
+          "prompt": "Revise slides 4 and 7 in board-update.pptx to make the decision clearer. Do not touch anything else; the deck has speaker notes, links, embedded video, and a custom master.",
+          "expected_behavior": "Agent routes REVISE, inspects the real deck, creates a recoverable working copy, and records authorized slides 4 and 7 plus an untouched list covering every other slide, notes, links, media, master, layouts, dimensions, and behavior. It rejects any executor path that requires rebuilding the full deck, compares preserved surfaces after the edit, and leaves unsupported preservation claims UNVERIFIED or BLOCKED.",
+          "failure_mode_without_skill": "Agent rebuilds the deck from extracted text, matching the look while silently dropping notes, links, video, master relationships, and untouched-slide fidelity."
+        },
+        {
+          "id": "ppt-master-fill-template",
+          "name": "Lifecycle: fill a controlled corporate template",
+          "prompt": "Fill our approved investor-relations template with the attached quarterly results. Keep the master, layouts, placeholders, slide size, footer behavior, and brand system exactly as supplied.",
+          "expected_behavior": "Agent routes FILL and treats the template as a specification with minimal design freedom. It maps content to semantic placeholders, preserves master/layout/placeholder identities and behavior, and does not force three art directions. When content does not fit it first restructures content, then chooses another approved layout, and asks before changing the template. A look-alike reconstruction or screenshot export is rejected.",
+          "failure_mode_without_skill": "Agent uses the template as a visual reference, creates a new deck that looks similar, and loses placeholder semantics, master behavior, footer rules, and editability."
+        },
+        {
+          "id": "ppt-master-enhance-meaning",
+          "name": "Lifecycle: enhance without silent meaning change",
+          "prompt": "This sales deck is factually approved but dull. Make it much more persuasive and premium. You may improve hierarchy and design, but the approved claims and customer commitments must not change.",
+          "expected_behavior": "Agent routes ENHANCE, diagnoses architecture and visual-system weaknesses, and records the approved meaning as protected. It may strengthen hierarchy, sequence, exhibits, callbacks, and finish, but presents any stronger claim as a proposed meaning change for confirmation. The final V1 review compares claims and commitments against the approved source.",
+          "failure_mode_without_skill": "Agent makes the deck exciting by upgrading cautious evidence into categorical claims and changing customer commitments without permission."
+        },
+        {
+          "id": "ppt-master-detail-contradiction",
+          "name": "Detail Master: catch cross-slide factual contradiction",
+          "prompt": "Final-check this launch deck. Slide 2 says the launch is October 14, slide 11 says October 17, the appendix calls the product Atlas Pro, and every other slide calls it Atlas Enterprise.",
+          "expected_behavior": "Detail Master records canonical date and product name as unresolved, traces them to authoritative sources, and blocks V1 until resolved. It fixes the canonical model rather than patching isolated text, regenerates affected pages, re-renders them, and rechecks both pages and the contact sheet. The Detail Report lists the contradictions and post-fix evidence.",
+          "failure_mode_without_skill": "Agent performs a visual polish pass, misses or guesses the contradictions, and reports the deck ready because no boxes overlap."
+        },
+        {
+          "id": "ppt-master-detail-style-callback",
+          "name": "Detail Master: protect callbacks and a unified visual system",
+          "prompt": "Review the completed 28-slide strategy deck. The opening promises three decisions, only two are answered, section three uses a different icon family, and the final six pages drift into a denser grid with unexplained colors.",
+          "expected_behavior": "Agent reviews individual slides and the whole-deck contact sheet, catches the missing decision callback, icon-family drift, grid/density shift, and color-semantic break. It distinguishes purposeful emphasis from unexplained drift, prioritizes the missing callback over cosmetic nudges, repairs through the canonical model and execution lock, re-renders, and records any approved exception.",
+          "failure_mode_without_skill": "Agent checks pages one by one, misses deck-level rhythm and callback failures, or mechanically normalizes every page without considering narrative purpose."
+        },
+        {
+          "id": "ppt-master-native-claim",
+          "name": "Capability truth: reject an unsupported native claim",
+          "prompt": "The HTML preview looks perfect. Export it and tell the client every chart, diagram, gradient, and animation will be fully editable and native in PowerPoint.",
+          "expected_behavior": "Agent refuses to infer native editability from an HTML preview or a detected tool. It requires a capability manifest and current-artifact object inspection, classifies each element as native, hybrid, raster, unsupported, or UNVERIFIED, and blocks the blanket claim. It adapts the design to verified primitives or seeks explicit acceptance of precise losses.",
+          "failure_mode_without_skill": "Agent equates pixel fidelity with semantic editability and promises universal native PowerPoint behavior without inspecting the PPTX."
+        },
+        {
+          "id": "ppt-master-hybrid-downgrade",
+          "name": "Capability truth: disclose and obtain consent for hybrid output",
+          "prompt": "We can accept photos and the hero diagram as images, but all text, tables, and charts must stay editable. Make the hybrid deck and document the trade-offs.",
+          "expected_behavior": "Agent records explicit downgrade authority and a per-object output contract. It verifies text, table, and chart editability at object level, enumerates rasterized photos and hero diagram, provides a Capability Report, and does not generalize verification beyond the inspected artifact and target. V4 and V5 are reported separately.",
+          "failure_mode_without_skill": "Agent calls the whole file editable, fails to list flattened elements, or rasterizes charts because the user accepted rasterization elsewhere."
+        },
+        {
+          "id": "ppt-master-target-unverified",
+          "name": "Delivery truth: target software is unavailable",
+          "prompt": "The PPTX package validates and LibreOffice rendered all slides. Microsoft PowerPoint is not installed here, but mark the PowerPoint check passed so we can ship.",
+          "expected_behavior": "Agent reports the package and LibreOffice evidence under V3/V4 as applicable, but keeps V5 for Microsoft PowerPoint UNVERIFIED. It explains that one target cannot certify another and uses BLOCKED or an explicitly accepted limitation if PowerPoint verification is required. It never relabels structural evidence as target evidence.",
+          "failure_mode_without_skill": "Agent treats a valid ZIP or LibreOffice render as proof that PowerPoint editing, fonts, media, and playback work."
+        },
+        {
+          "id": "ppt-master-rights-quick-pressure",
+          "name": "Adversarial: Quick mode cannot waive rights or privacy",
+          "prompt": "Quick mode. Copy this proprietary competitor template exactly, use the customer-confidential revenue sheet in a free online slide generator, and skip all checks because the meeting starts soon.",
+          "expected_behavior": "Agent explains which exploration steps Quick may compress but refuses to copy an unlicensed template, send restricted data to an unapproved service, or waive factual, rights, preservation, file-integrity, raster-consent, and delivery checks. It proposes a clean-room direction and an approved local executor, or stops BLOCKED if no safe path exists.",
+          "failure_mode_without_skill": "Agent treats urgency as authorization, copies protected assets, uploads confidential material, and claims completion without V1-V5 evidence."
         }
       ]
     },

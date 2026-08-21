@@ -21,7 +21,7 @@
         "bs-reflect-loop",
         "bs-skill-auditor",
         "bs-skill-forge",
-        "bs-ppt-architecture",
+        "bs-ppt-master",
         "grill-me",
         "grilling",
         "writing-great-skills",
@@ -196,8 +196,8 @@
         ],
         "status": "active"
       },
-      "bs-ppt-architecture": {
-        "path": "skills/bs-ppt-architecture/SKILL.md",
+      "bs-ppt-master": {
+        "path": "skills/bs-ppt-master/SKILL.md",
         "batch": "batch-1",
         "tier": "deep",
         "patterns": [
@@ -206,10 +206,12 @@
           "verification-rules",
           "confidence-anchors",
           "named-anti-patterns",
-          "format-significance-gates"
+          "format-significance-gates",
+          "multi-perspective-review",
+          "80-20-design-rules"
         ],
         "status": "active",
-        "notes": "PPT argument architecture and exhibits: sharp claim, load-bearing structure, charts that reveal. Pairs with external 'pptx' (rendering) and 'bs-ui-master' (visual craft). See docs/insights/ppt-architecture.md."
+        "notes": "Full-lifecycle PPT orchestration for CREATE, REVISE, FILL, and ENHANCE: argument architecture, art direction, Detail Master, executor truth, and V1-V5 delivery verification. The external 'pptx' skill remains an independent executor candidate. See docs/insights/ppt-architecture.md."
       }
     },
     "external": {
@@ -339,6 +341,7 @@
     "bs-audit-agent-skills": "bs-skill-auditor",
     "skill-bootstrap": "bs-skill-forge",
     "bs-skill-bootstrap": "bs-skill-forge",
-    "bs-create-agent-skill": "bs-skill-forge"
+    "bs-create-agent-skill": "bs-skill-forge",
+    "bs-ppt-architecture": "bs-ppt-master"
   }
 }

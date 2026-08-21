@@ -1,4 +1,4 @@
-<!-- Parent skill: skills/bs-ppt-architecture/SKILL.md -->
+<!-- Parent skill: skills/bs-ppt-master/SKILL.md -->
 <!-- Regression fixture: a legitimate L0 ledger. Reversible decision, no locked resource,
      so the tier table exempts it from assumption and rebuttal entries. -->
 <!-- Expected: exit code 0. A tier-blind checker wrongly failed this. -->

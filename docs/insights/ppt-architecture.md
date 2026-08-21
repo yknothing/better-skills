@@ -3,7 +3,7 @@
 > 议题：如何设计一套 PPT 方法论，使论证架构与配图配表达到卓越，并能扛住高强度对抗性评审
 > 形式：两轮共 6 位独立专家并行论证 + 主持人交叉裁决。第一轮 4 位偏审计视角，第二轮 2 位补正向标准
 > 日期：2026-08-18
-> 落地物：[`skills/bs-ppt-architecture/`](../../skills/bs-ppt-architecture/)
+> 当前落地物：[`skills/bs-ppt-master/`](../../skills/bs-ppt-master/)。本文保留 `bs-ppt-architecture` 原名，作为 Architecture 内核的历史设计裁决；该 ID 现为直接历史 alias，论证架构与 exhibits 已成为 `bs-ppt-master` 的内部模块。
 > 前置：[`ppt-attention-ledger.md`](./ppt-attention-ledger.md) —— 与本文存在真实的目标冲突，见「与注意力三账本的真实冲突」一节
 
 ---

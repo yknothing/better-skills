@@ -114,7 +114,7 @@ const expectedCanonical = [
   'bs-reflect-loop',
   'bs-skill-auditor',
   'bs-skill-forge',
-  'bs-ppt-architecture'
+  'bs-ppt-master'
 ].sort();
 const expectedH1 = {
   'bs-prdefine': 'PRDefine',
@@ -128,7 +128,7 @@ const expectedH1 = {
   'bs-reflect-loop': 'Reflect Loop',
   'bs-skill-auditor': 'Skill Auditor',
   'bs-skill-forge': 'Skill Forge',
-  'bs-ppt-architecture': 'PPT Architecture'
+  'bs-ppt-master': 'PPT Master'
 };
 const requiredDescriptionLanguage = {
   'bs-prdefine': ['Product Requirements (PR)', 'not merely a PRD'],
@@ -137,7 +137,8 @@ const requiredDescriptionLanguage = {
   'bs-ui-master': ['production-grade UI design', 'not a complete UX practice'],
   'bs-sw-master': ['Software (SW)', 'does not imply deployment'],
   'bs-reflect-loop': ['explicitly wants to extract lessons', 'executable or governance surfaces'],
-  'bs-skill-auditor': ['read-only', 'does not directly repair']
+  'bs-skill-auditor': ['read-only', 'does not directly repair'],
+  'bs-ppt-master': ['creating, revising, filling, or enhancing', 'designed and verified together']
 };
 const expectedAliases = {
   'requirements-engineering': 'bs-prdefine',
@@ -168,7 +169,8 @@ const expectedAliases = {
   'bs-audit-agent-skills': 'bs-skill-auditor',
   'skill-bootstrap': 'bs-skill-forge',
   'bs-skill-bootstrap': 'bs-skill-forge',
-  'bs-create-agent-skill': 'bs-skill-forge'
+  'bs-create-agent-skill': 'bs-skill-forge',
+  'bs-ppt-architecture': 'bs-ppt-master'
 };
 const self = registry.skills && registry.skills['self-developed'];
 const batchOne = registry.batches && registry.batches['batch-1'] && registry.batches['batch-1'].skills;
@@ -568,6 +570,57 @@ if (JSON.stringify(names) !== JSON.stringify(['bs-prdefine'])) {
 }
 " "$UPDATE_ALL_DIR/.better-skills.json"; rc=$?
 assert_exit "update-all manifest has one canonical identity" 0 "$rc"
+echo
+
+echo "T28: PPT Architecture alias installs and migrates to PPT Master"
+PPT_ALIAS_DIR="$SANDBOX/ppt-master-alias"
+mkdir -p "$PPT_ALIAS_DIR"
+out=$(run_cli add bs-ppt-architecture --target "$PPT_ALIAS_DIR" 2>&1); rc=$?
+assert_exit "PPT legacy alias add exit 0" 0 "$rc"
+echo "$out" | grep -q "'bs-ppt-architecture' is deprecated; using canonical skill ID 'bs-ppt-master'" && PASS=$((PASS + 1)) || FAIL=$((FAIL + 1))
+assert_path_exists "PPT alias created canonical directory" "$PPT_ALIAS_DIR/bs-ppt-master/SKILL.md"
+assert_path_missing "PPT alias did not create old directory" "$PPT_ALIAS_DIR/bs-ppt-architecture"
+
+PPT_MIGRATION_DIR="$SANDBOX/ppt-master-migration"
+mkdir -p "$PPT_MIGRATION_DIR"
+cp -R "$REPO_ROOT/skills/bs-ppt-master" "$PPT_MIGRATION_DIR/bs-ppt-architecture"
+node -e "
+const fs = require('fs');
+const path = require('path');
+function filesUnder(root, dir = root, out = []) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const absolute = path.join(dir, entry.name);
+    if (entry.isDirectory()) filesUnder(root, absolute, out);
+    else out.push(path.relative(root, absolute).split(path.sep).join('/'));
+  }
+  return out;
+}
+const source = process.argv[1];
+const target = process.argv[2];
+const installed = {
+  'bs-ppt-architecture': {
+    source: 'self-developed',
+    from: 'skills/bs-ppt-architecture',
+    installed_at: '2026-01-01T00:00:00.000Z',
+    method: 'copy',
+    files: filesUnder(source)
+  }
+};
+fs.writeFileSync(path.join(target, '.better-skills.json'), JSON.stringify({ version: '0.2.0-dev', installed }, null, 2) + '\n');
+" "$REPO_ROOT/skills/bs-ppt-master" "$PPT_MIGRATION_DIR"; rc=$?
+assert_exit "PPT legacy fixture setup exit 0" 0 "$rc"
+run_cli add bs-ppt-master --target "$PPT_MIGRATION_DIR" >/dev/null 2>&1; rc=$?
+assert_exit "PPT canonical add refuses duplicate legacy install" 4 "$rc"
+run_cli update bs-ppt-architecture --target "$PPT_MIGRATION_DIR" >/dev/null 2>&1; rc=$?
+assert_exit "PPT alias update migrates legacy install" 0 "$rc"
+assert_path_exists "PPT migration created canonical directory" "$PPT_MIGRATION_DIR/bs-ppt-master/SKILL.md"
+assert_path_missing "PPT migration removed old directory" "$PPT_MIGRATION_DIR/bs-ppt-architecture"
+node -e "
+const m = JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));
+const names = Object.keys(m.installed).sort();
+if (JSON.stringify(names) !== JSON.stringify(['bs-ppt-master'])) process.exit(1);
+" "$PPT_MIGRATION_DIR/.better-skills.json"; rc=$?
+assert_exit "PPT migration manifest has one canonical identity" 0 "$rc"
 echo
 
 echo "==> Result: $(green "$PASS pass") / $(red "$FAIL fail")"

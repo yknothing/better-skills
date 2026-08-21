@@ -149,7 +149,7 @@ skills/bs-ppt-master/
     `-- existing claim-ledger fixtures
 ```
 
-能力探测脚本的具体实现留到实施计划阶段决定。届时先盘点仓库已有工具和本机已安装的 PPT 能力。只有确定性脚本能比文字规则提供更可靠的证据时，才新增脚本。本 Skill 不创建渲染引擎，也不内置资产库。
+第一版能力探测脚本只做只读 discovery：检查候选 Skill、binary 和 application 是否存在，输出 `DETECTED / NOT_FOUND` 及路径证据，绝不执行候选，也绝不把发现结果提升为功能证明。`SUPPORTED` 只能来自可追溯的 executor manifest 或文档声明；`VERIFIED` 只能来自当前 artifact 的 smoke evidence、V4 对象/包检查或 V5 目标环境验证。探测到 `pptx`、`soffice` 或 PowerPoint 应用本身时，所有 feature support 和 V5 仍默认为 `UNVERIFIED`。本 Skill 不创建渲染引擎，也不内置资产库。
 
 ## 标准工作流
 

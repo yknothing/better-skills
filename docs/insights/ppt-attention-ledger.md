@@ -223,9 +223,11 @@ Tufte 的"技术报告替代幻灯片"方案与亚马逊的六页备忘录制度
 
 ## 七、对本仓库的意义
 
+> **Superseding note（2026-08-21）：** 本节保留当时提出独立 `bs-attention-ledger` 的推导，但不再作为当前实施建议。叙事注意力、跨页呼应和 Detail Master 已整合进自研 [`bs-ppt-master`](../../skills/bs-ppt-master/)；外部 `pptx` 继续是独立执行器候选，而不是用户面对的第二套 PPT 工作流。当前不再单独创建 `bs-attention-ledger`。
+
 ### 现状缺口
 
-Batch 1 的 PPT 场景目前只有外部 Reference `pptx`（Anthropic Agent Skills）。它解决的是**渲染层**问题——如何生成一个合法的 .pptx 文件。三个账本，它一个都不覆盖。这不是 `pptx` 的缺陷，是它的正确定位；缺口在我们这一侧。
+当时 Batch 1 的 PPT 场景只有外部 Reference `pptx`（Anthropic Agent Skills）。它解决的是**执行层候选能力**——如何生成一个 .pptx 文件；它不承担本文三个账本。这不是 `pptx` 的缺陷，是它的正确定位；这一控制层缺口现由 `bs-ppt-master` 承担。
 
 ### Skill 提案：`bs-attention-ledger`（提案状态，不实现）
 

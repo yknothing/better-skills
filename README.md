@@ -10,12 +10,12 @@ Better-Skills self-developed skills use the `bs-` prefix, such as `bs-ui-master`
 
 ## What's actually in here today
 
-- **12 self-developed skills** under `skills/`: `bs-prdefine`, `bs-insight-product`, `bs-prospect-customer`, `bs-ui-master`, `bs-sw-master`, `bs-reflect-loop`, `bs-prose-master`, `bs-visual-article`, `bs-social-card`, `bs-skill-forge`, `bs-skill-auditor`, `bs-ppt-architecture`
+- **12 self-developed skills** under `skills/`: `bs-prdefine`, `bs-insight-product`, `bs-prospect-customer`, `bs-ui-master`, `bs-sw-master`, `bs-reflect-loop`, `bs-prose-master`, `bs-visual-article`, `bs-social-card`, `bs-skill-forge`, `bs-skill-auditor`, `bs-ppt-master`
 - **9 external references** declared in `external/sources.yaml` (`brainstorming`, `pptx`, `grill-me`, `grilling`, `writing-great-skills`, `learn-skill`, `emil-design-eng`, `review-animations`, `animation-vocabulary`); `bash tools/sync.sh` clones the upstream repos and symlinks them under `external/`
 - **Pattern index** at `docs/patterns/README.md` — currently a single-file index of ~60 named patterns; per-pattern files are coming in Phase 1.C
 - **Research notes** at `docs/research/` — analysis of 12 top skill repositories, including [`mattpocock-analysis.md`](docs/research/mattpocock-analysis.md), [`learn-skill-analysis.md`](docs/research/learn-skill-analysis.md), and [`emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md). Other citations are missing today and will be added in Phase 3.
-- **Domain insights** at `docs/insights/` — verdicts on domain propositions, produced by a parallel expert-roundtable format (independent viewpoints + a red team + a moderator's cross-adjudication). Unlike `docs/research/`, the subject is a claim about a domain, not a skill repository. Entries: [`ppt-attention-ledger.md`](docs/insights/ppt-attention-ledger.md) (attention as a bid, not a managed resource) and [`ppt-architecture.md`](docs/insights/ppt-architecture.md) (PPT argument architecture and exhibits; the design record for `bs-ppt-architecture`).
-- **Tooling**: `tools/validate.sh` (Gate 1) and `tools/sync.sh` (external sync). `evaluation/harness/runner.js` exists but is not wired up yet — see Roadmap.
+- **Domain insights** at `docs/insights/` — verdicts on domain propositions, produced by a parallel expert-roundtable format (independent viewpoints + a red team + a moderator's cross-adjudication). Unlike `docs/research/`, the subject is a claim about a domain, not a skill repository. Entries: [`ppt-attention-ledger.md`](docs/insights/ppt-attention-ledger.md) (attention as a bid, not a managed resource) and [`ppt-architecture.md`](docs/insights/ppt-architecture.md) (the argument-and-exhibits foundation now incorporated into `bs-ppt-master`).
+- **Tooling**: `tools/validate.sh` (Gate 1), `tools/peer-review.js` (Gate 2), `tools/pattern-alignment.js` (Gate 3), `evaluation/harness/runner.js` (Gate 4 deterministic package/prompt checks), and `tools/sync.sh` (external sync). Gate 4 does not yet run an agent, open PPTX artifacts, use an LLM judge, or perform A/B tests.
 
 ## Core methodology
 
@@ -38,7 +38,7 @@ Better-Skills self-developed skills use the `bs-` prefix, such as `bs-ui-master`
 | 11 | `bs-reflect-loop` | Build | deep | General |
 | 12 | `bs-skill-auditor` | Build | standard | Meta |
 | 13 | `bs-skill-forge` | Build | standard | Meta |
-| 14 | `bs-ppt-architecture` | Build | deep | Design |
+| 14 | `bs-ppt-master` | Build | deep | Design |
 | 15 | `grill-me` | Reference | standard | General |
 | 16 | `grilling` | Reference | standard | General |
 | 17 | `writing-great-skills` | Reference | standard | Meta |
@@ -51,9 +51,9 @@ Better-Skills self-developed skills use the `bs-` prefix, such as `bs-ui-master`
 
 See [`skills.json`](skills.json) for the authoritative registry.
 
-## Scenario coverage (TBD — pending baseline tests)
+## Scenario coverage (deterministic prompt coverage; behavioral results TBD)
 
-A coverage matrix with empirical pass-rates against `evaluation/datasets/batch-1-test-prompts.json` will land once Gate 4 (Baseline Test) is wired up in Phase 2.B. Earlier drafts of this README claimed specific coverage percentages without an evaluation pipeline behind them; those numbers have been removed.
+Gate 4 currently verifies Skill packaging plus prompt schema and happy/edge/adversarial coverage. It does not execute these scenarios or establish empirical pass rates. Behavioral, qualitative, artifact, and A/B results remain TBD until those paths are wired and run.
 
 | Scenario | Primary Skill |
 |----------|--------------|
@@ -70,8 +70,8 @@ A coverage matrix with empirical pass-rates against `evaluation/datasets/batch-1
 | Writing (general) | `bs-prose-master` |
 | Brainstorming | `brainstorming` (Reference) |
 | Article Illustration | `bs-visual-article` |
-| PPT Design (rendering) | `pptx` (Reference) |
-| PPT architecture (argument + exhibits) | `bs-ppt-architecture` |
+| PPT creation, revision, template filling, enhancement, detail, and delivery orchestration | `bs-ppt-master` |
+| PPTX execution capability | `pptx` (Reference; executor candidate used through `bs-ppt-master`) |
 | Plan Stress-Test (interview) | `grill-me` / `grilling` (Reference) |
 | Skill Writing Vocabulary | `writing-great-skills` (Reference) |
 | Structured Learning Path | `learn-skill` (Reference) |
@@ -89,6 +89,7 @@ npx @yknothing/better-skills list
 # Install a skill into your Claude Code skills directory
 npx @yknothing/better-skills add bs-prospect-customer
 npx @yknothing/better-skills add bs-ui-master                  # → ~/.claude/skills/bs-ui-master
+npx @yknothing/better-skills add bs-ppt-master                 # full-lifecycle PPT orchestration
 npx @yknothing/better-skills add emil-design-eng                # motion craft (Reference)
 npx @yknothing/better-skills add grill-me --target cursor      # → ~/.cursor/skills/grill-me
 npx @yknothing/better-skills add learn-skill                   # CE-style deep learning skill
@@ -126,7 +127,7 @@ bash tools/sync.sh
 # Bump version in package.json, then:
 npm publish --access public
 
-# prepublishOnly hook auto-runs: list smoke test + tools/test-cli.sh (76 assertions)
+# prepublishOnly hook auto-runs: list smoke test + the full CLI regression suite
 ```
 
 ## Repository structure
@@ -140,8 +141,8 @@ better-skills/
 │   ├── research/          # Analysis of 12 top skill repos (citations TBD)
 │   ├── insights/          # Domain-proposition verdicts (expert-roundtable format)
 │   ├── patterns/          # Pattern index (per-pattern files in Phase 1.C)
-│   └── reviews/           # Skill review records (Gates 1–3 today; Gate 4 TBD)
-├── evaluation/            # Evaluation harness + datasets (runner not yet wired)
+│   └── reviews/           # Skill review and acceptance records
+├── evaluation/            # Deterministic Gate 4 harness + prompt datasets
 ├── tools/                 # validate.sh (Gate 1) + sync.sh (external sync)
 └── LICENSE                # MIT
 ```
@@ -156,7 +157,7 @@ This repo is honest about its phase. Progress against the published plan:
 | **1.A — Bundled resources for 8 skills** | ✅ complete | Each skill grew a `references/`, `scripts/`, or `assets/` directory; main SKILL.md trimmed; tier + Test prompts unified |
 | **1.B — Unified gate / frontmatter conventions** | ✅ complete (in 1.A) | Single `<HARD-GATE>` syntax; consistent tier declaration; ≥3 test prompts per skill |
 | **1.C — Patterns library upgrade** | ✅ complete | 59 pattern files (22 active / 37 proposed) under `docs/patterns/`; `tools/check-patterns.sh` enforces 8 schema rules + ghost / orphan detection |
-| **1.D — `npx better-skills` CLI MVP** | ✅ complete | `add`, `list`, `remove`, `update`, `validate` subcommands; zero deps; copy semantics + manifest; `tools/test-cli.sh` runs 75 assertions including adversarial and multi-generation migration cases |
+| **1.D — `npx better-skills` CLI MVP** | ✅ complete | `add`, `list`, `remove`, `update`, `validate` subcommands; zero deps; copy semantics + manifest; `tools/test-cli.sh` covers adversarial and multi-generation migration cases |
 | **2.A — `validate.sh` rewrite** | ✅ complete | Real Gate 1 as `tools/validate.js` (16 checks: frontmatter schema, name/dir match, pattern-reference integrity, gate-syntax conformance, bundled-resource existence); `validate.sh` is now a backward-compat wrapper |
 | **2.B — Evaluation harness wiring** | ✅ complete | Gate 4 runner (`evaluation/harness/runner.js`) — deterministic graders (Gate 1 pass-rate, test-prompt structure, happy/edge/adversarial coverage); LLM-judge / A/B deferred to Round 3 |
 | **2.C — Pattern alignment + peer review automation** | ✅ complete | Gate 2 (`tools/peer-review.js`: generates advocate/adversary prompts, validates review files against an 8-point schema) + Gate 3 (`tools/pattern-alignment.js`: registry↔body alignment, drift as warn, `--strict` to fail); `check-patterns.sh` retains ghost/orphan detection |

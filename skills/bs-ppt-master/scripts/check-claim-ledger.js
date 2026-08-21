@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Structural checker for a Claim Ledger (claims.md) — the machine-enforceable
-// subset of the bs-ppt-architecture requirements.
+// subset of the bs-ppt-master Architecture requirements.
 //
 // It checks two different things, and the distinction matters. Some checks serve
 // the OBJECTIVE (does a belief delta exist, does every exhibit declare a
