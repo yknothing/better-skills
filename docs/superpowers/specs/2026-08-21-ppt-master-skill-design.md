@@ -1,106 +1,106 @@
-# PPT Master Skill Design
+# PPT Master Skill 设计规范
 
-## Objective
+## 目标
 
-Promote the existing `bs-ppt-architecture` into `bs-ppt-master`: the repository's single, full-lifecycle PPT control plane for turning source material into a rigorous, visually exceptional, editable, and verified presentation.
+将现有 `bs-ppt-architecture` 升级为 `bs-ppt-master`。它是本仓库唯一的自研 PPT 全流程主入口，负责把原始材料转化为论证严谨、视觉出众、可以编辑、经过验证的演示文稿。
 
-The Skill must combine three qualities that are usually separated:
+这个 Skill 要把三种通常彼此割裂的能力融为一体：
 
-- **insight** — find the non-obvious point, belief change, decision, or story worth presenting;
-- **design mastery** — turn that insight into a coherent visual language rather than decorate a generic outline;
-- **detail mastery** — protect the meaningful details that reveal accuracy, intention, consistency, and care.
+- **洞察力**：找到真正值得讲的非共识观点、认知变化、决策或故事；
+- **设计能力**：让洞察长成一套完整的视觉语言，而不是拿通用大纲做装饰；
+- **细节能力**：守住那些最能体现准确、用心、一致性和完成度的关键细节。
 
-Its success condition is not that a `.pptx` file exists. A successful run produces a presentation whose content is supportable, whose architecture changes the audience's state, whose visual system serves the argument, whose important details survive deck-wide inspection, and whose actual editability and playback capabilities match the claims made at delivery.
+生成一个 `.pptx` 文件不算成功。真正的成功是：内容有依据，架构能够改变受众的认知或行动，视觉系统服务于论证，重要细节经得起逐页与全局检查，交付时宣称的可编辑性和播放能力也与文件的真实表现一致。
 
-## Product Identity
+## 产品身份
 
 ### Canonical ID
 
 `bs-ppt-master`
 
-### Display name
+### 展示名称
 
 `PPT Master`
 
-### Product promise
+### 产品承诺
 
-Turn material into a presentation worth believing, remembering, and acting on.
+把材料变成一份值得相信、记住并付诸行动的演示文稿。
 
-### Naming and migration
+### 命名与迁移
 
-`master` is warranted because the Skill owns the whole PPT outcome: architecture, art direction, production orchestration, detail control, and verification. It does not imply that one embedded renderer can perform every PowerPoint feature.
+`master` 在这里不是泛泛拔高。这个 Skill 确实负责 PPT 的完整结果，包括内容架构、艺术指导、生产编排、细节控制和最终验证。但它不意味着 Skill 内置的某一个渲染器能够实现 PowerPoint 的全部功能。
 
-The current `bs-ppt-architecture` becomes the internal Architecture module and a direct historical alias:
+现有 `bs-ppt-architecture` 将成为内部 Architecture 模块，同时保留为直接历史别名：
 
 ```text
 bs-ppt-architecture -> bs-ppt-master
 ```
 
-The alias must be flat. `bs-ppt-architecture` must not remain a canonical registry entry or point through another alias. Existing review records and historical design documents remain historical records; current registry, evaluation, documentation, CLI contracts, and active Skill paths move to `bs-ppt-master`.
+别名必须扁平直达。`bs-ppt-architecture` 不得继续作为 canonical registry 条目，也不得指向另一个别名。既有评审记录和历史设计文档仍然保留原名；当前 registry、评测、文档、CLI 契约和 Skill 路径统一迁移到 `bs-ppt-master`。
 
-The external `pptx` reference remains a separate executor capability, not a second user-facing PPT workflow. `bs-ppt-master` is the public orchestration entry and may delegate production work to that executor when its probed capabilities satisfy the current delivery contract.
+外部引用的 `pptx` Skill 继续作为独立执行能力存在，但不再是第二套面向用户的 PPT 工作流。`bs-ppt-master` 是统一的编排入口；当环境探测证明 `pptx` 满足当前交付契约时，可以把生产任务交给它执行。
 
-## Design Doctrine
+## 设计信条
 
-1. **Substance and form are one system.** Content architecture cannot be completed first and handed to visual design as decoration. Claim, sequence, exhibit, layout, and emphasis must co-evolve.
-2. **Design begins with insight, not a template.** The visual language must grow from the audience, occasion, thesis, evidence, and desired belief or action change.
-3. **Native-first is the default truth.** The terminal artifact should be a verified, as-native-as-practical editable `.pptx`. HTML is an authoring and review surface, not the default terminal deliverable.
-4. **Every capability claim is evidence-bound.** Native charts, animations, media, master preservation, or cross-application compatibility may be claimed only after the selected executor and resulting artifact are checked.
-5. **Meaningful detail is never an afterthought.** Accuracy, callbacks, terminology, alignment, rhythm, asset treatment, and style coherence are first-class quality dimensions.
-6. **Consistency is not uniformity.** A controlled exception can create emphasis, transition, or climax. An unexplained exception is drift.
-7. **One canonical content source.** Narrative intent, claims, slide roles, evidence, and asset relationships must not fork across multiple design variants or export formats.
-8. **No silent downgrade.** Rasterized pages, lost animations, substituted fonts, unsupported media, or unpreserved masters must be disclosed before acceptance, not buried after export.
-9. **Generation is not completion.** A deck must be rendered, inspected, repaired, and re-verified.
+1. **内容与形式是一套系统。** 不能先把内容架构做完，再把视觉设计当作装饰性交接。主张、顺序、图表、版式和强调关系必须共同演进。
+2. **设计始于洞察，而不是模板。** 视觉语言必须从受众、场合、核心主张、证据以及期望产生的认知或行动变化中生长出来。
+3. **默认追求原生交付。** 终态应是一份经过验证、尽可能使用原生对象、可以编辑的 `.pptx`。HTML 是设计、预览和修改界面，不是默认终态。
+4. **所有能力声明都要有证据。** 原生图表、动画、媒体、母版保真和跨软件兼容，只有在执行器与最终文件都经过检查后才能承诺。
+5. **关键细节从来不是收尾工作。** 准确性、前后呼应、术语、对齐、节奏、素材处理和风格统一都是一等质量指标。
+6. **统一不等于机械重复。** 有意识的变化可以承担强调、转场或高潮功能；无法解释的变化就是漂移。
+7. **内容只有一个真源。** 叙事意图、主张、页面角色、证据和素材关系不能在不同方向或导出格式中各自演化。
+8. **禁止静默降级。** 页面栅格化、动画丢失、字体替换、媒体不受支持或母版无法保留，都必须在用户接受前明确说明。
+9. **生成不等于完成。** Deck 必须经过渲染、检查、修复和重新验证。
 
-## Source Synthesis and Clean-Room Boundary
+## 参考实现的吸收与隔离
 
-The Skill synthesizes methods from three primary references without copying their runtimes, prompts, templates, fonts, or assets.
+本 Skill 吸收三个主要参考项目的方法，但不复制它们的运行时、提示词、模板、字体或资产。
 
-| Reference | Methods to absorb | Boundary and limitation to retain |
+| 参考项目 | 吸收的方法 | 必须保留的边界与限制 |
 |---|---|---|
-| [`hugohe3/ppt-master`](https://github.com/hugohe3/ppt-master) | Distinct Generate/Create Template/Fill/Enhance routes; audience-first briefing; three complete directions; separation between design specification and execution lock; first-page calibration; failure ownership and resume discipline; native-object ambition. | Treat the large runtime as an optional external executor, not bundled implementation. Probe each native feature. Do not infer complete SmartArt, chart, animation, or video support from broad marketing claims. Preserve required notices if an adapter ever invokes a separately installed copy. |
-| [`chuspeeism/dashi-ppt-skill`](https://github.com/chuspeeism/dashi-ppt-skill) | One semantic content source projected into variants; layout matching by content shape and capacity; full-deck diversity allocation; constrained custom layouts; layered schema/content/asset/render QA; browser editor as an iteration surface. | Clean-room the ideas only. The root project is AGPL-3.0 and its `html-deck-to-pptx` package declares proprietary restrictions. Never copy or extract code, templates, assets, or fonts. Raster fallback and published fidelity scores are not evidence for this Skill's output. |
-| [`jimliu/baoyu-design`](https://github.com/jimliu/baoyu-design) | Title spine before page production; fixed-canvas HTML iteration; design tokens; localhost point-and-edit workflow; semantic animation annotations; editable-versus-screenshot export truth; structural and visual verification. | Absorb only the PPT-specific loop, not the broad design operating system or giant prompt. HTML-to-PPTX remains a hybrid mapping: unsupported SVG, canvas, gradients, or arbitrary HTML may rasterize. Retain dependency notices when independently installed tools are used. |
+| [`hugohe3/ppt-master`](https://github.com/hugohe3/ppt-master) | 区分 Generate、Create Template、Fill、Enhance；先确认受众与目的；提出三套完整方向；把设计规格与执行锁分开；先做关键页校准；明确失败归属和恢复机制；追求原生对象。 | 大型运行时只能作为外部可选执行器，不能直接纳入仓库。每项原生能力都要单独探测。不能根据宽泛描述推断 SmartArt、图表、动画或视频均完整支持。若适配器调用独立安装的副本，必须保留其要求的许可声明。 |
+| [`chuspeeism/dashi-ppt-skill`](https://github.com/chuspeeism/dashi-ppt-skill) | 用一份语义内容投影出多个方向；根据内容形状和容量匹配版式；从整套 Deck 角度分配页面多样性；安全模板与受约束的自定义版式；分层进行 schema、内容、资产、渲染和视觉 QA；把浏览器编辑器作为迭代界面。 | 只允许净室吸收方法。根项目采用 AGPL-3.0，`html-deck-to-pptx` 包另有专有使用限制。不得复制或抽取代码、模板、资产或字体。它的栅格化回退和公开保真分数不能作为本 Skill 输出质量的证据。 |
+| [`jimliu/baoyu-design`](https://github.com/jimliu/baoyu-design) | 先写标题链，再生产页面；使用固定画布 HTML 迭代；建立设计 token；通过 localhost 指点修改；让动画语义可跨 HTML 与 PPTX 使用；明确可编辑导出和截图导出的真实差别；同时做结构和视觉验证。 | 只吸收 PPT 相关闭环，不引入其庞大的通用设计系统或完整提示词。HTML 到 PPTX 仍然是混合映射：不受支持的 SVG、canvas、渐变或任意 HTML 可能被栅格化。独立安装的依赖仍需保留对应声明。 |
 
-The existing `bs-ppt-architecture` remains the authoritative local source for belief delta, sharp claims, load-bearing pillars, title-chain progression, comparison baselines, exhibit incompressibility, evidence honesty, and its tested claim-ledger checker.
+现有 `bs-ppt-architecture` 仍是本仓库下列能力的权威来源：belief delta、尖锐主张、承重支柱、标题链推进、比较基线、图表不可压缩性、证据诚实，以及已经过测试的 claim ledger 检查器。
 
-## Scope and Boundaries
+## 范围与边界
 
-### In scope
+### 能做什么
 
-- creating a new deck from a brief, source files, notes, or data;
-- revising an existing deck while preserving all unapproved surfaces;
-- filling a provided template while respecting masters, layouts, placeholders, and brand rules;
-- enhancing an existing deck's argument, design, detail, and delivery readiness;
-- research and evidence handling when authorized and necessary for deck accuracy;
-- narrative architecture, exhibit design, art direction, production orchestration, speaker-support surfaces, and final QA;
-- truthful delivery of editable PPTX, preview artifacts, and capability limitations.
+- 根据 brief、源文件、笔记或数据从零创建 Deck；
+- 修改已有 Deck，同时保护所有未经授权的内容和结构；
+- 填充既有模板，同时尊重母版、版式、占位符和品牌规则；
+- 增强已有 Deck 的洞察、论证、设计、细节和交付质量；
+- 在用户授权且内容准确性确有需要时，进行研究和证据处理；
+- 完成叙事架构、图表设计、艺术指导、生产编排、演讲辅助内容和最终 QA；
+- 诚实交付可编辑 PPTX、预览产物和能力限制说明。
 
-### Out of scope unless separately requested and supported
+### 除非用户另行要求且执行环境支持，否则不做
 
-- inventing facts, data, citations, customer evidence, or financial results;
-- silently rewriting approved business positions or brand rules;
-- claiming universal compatibility across PowerPoint, Keynote, WPS, Google Slides, or web renderers;
-- treating an entire screenshot page as natively editable;
-- copying third-party templates, brand assets, icons, fonts, or code without applicable rights;
-- embedding a complete presentation runtime into Better-Skills;
-- deploying a local editor to a public interface or binding it beyond loopback without explicit authorization;
-- presentation coaching, live rehearsal, narration recording, or distribution unless requested as an additional deliverable.
+- 编造事实、数据、引用、客户证据或财务结果；
+- 静默改写已经确认的商业立场或品牌规则；
+- 宣称 PowerPoint、Keynote、WPS、Google Slides 和 Web 渲染器之间完全兼容；
+- 把整页截图描述为原生可编辑；
+- 在没有适用权利的情况下复制第三方模板、品牌资产、图标、字体或代码；
+- 在 Better-Skills 内嵌一套完整的演示文稿运行时；
+- 未经明确授权，把本地编辑器暴露到公网或绑定到 loopback 之外；
+- 演讲训练、现场排练、旁白录制或分发。用户将其作为附加交付物提出时除外。
 
-## Lifecycle Router and Preservation Contracts
+## 生命周期路由与保护契约
 
-The first decision is the lifecycle mode. Each mode has a different mutation contract.
+第一项决策是生命周期模式。不同模式拥有不同的修改权限。
 
-| Mode | Use when | Freedom | Preservation contract |
+| 模式 | 适用场景 | 自由度 | 保护契约 |
 |---|---|---|---|
-| `CREATE` | No authoritative deck exists, or the user explicitly wants a replacement | Highest | Preserve source truth, brand constraints, delivery environment, and user-approved direction. |
-| `REVISE` | An existing deck should change in named ways | Bounded | Change only authorized slides, claims, or systems. Preserve untouched content, notes, masters, links, media, and behaviors unless a verified technical constraint requires a disclosed migration. |
-| `FILL` | Content must be placed into an existing template | Low | Preserve masters, layouts, placeholders, brand tokens, slide dimensions, and template behaviors. Do not rebuild merely because the executor finds replacement easier. |
-| `ENHANCE` | The deck is substantively usable but needs stronger insight, design, consistency, or finish | Medium | Improve without silently changing factual meaning, approved intent, brand identity, or audience commitment. Every material meaning change requires confirmation. |
+| `CREATE` | 没有权威 Deck，或用户明确要求完全重做 | 最高 | 保留源材料事实、品牌约束、演示环境和用户选定的方向。 |
+| `REVISE` | 已有 Deck 需要按指定范围修改 | 受限 | 只修改获得授权的页面、主张或系统。默认保留未触及的内容、备注、母版、链接、媒体和行为。只有经验证的技术限制才能触发迁移，而且必须披露。 |
+| `FILL` | 内容需要填入现成模板 | 最低 | 保留母版、版式、占位符关系、品牌 token、页面尺寸和模板行为。不能因为执行器更容易重建，就做一个外观相似的替代品。 |
+| `ENHANCE` | Deck 基本可用，但洞察、设计、一致性或完成度不足 | 中等 | 提升表达，但不能静默改变事实含义、已确认意图、品牌身份或对受众的承诺。任何实质性的意义变化都需要确认。 |
 
-When the mode is ambiguous, inspect the artifact and ask one focused question. Do not collapse `REVISE`, `FILL`, and `ENHANCE` into a generic "edit" route.
+如果模式无法判断，应先检查实际文件，再问一个会影响判断的关键问题。不得把 `REVISE`、`FILL` 和 `ENHANCE` 混成笼统的“编辑”流程。
 
-## Core Architecture
+## 核心架构
 
 ```text
 bs-ppt-master
@@ -129,7 +129,7 @@ bs-ppt-master
     `-- target-environment delivery
 ```
 
-`SKILL.md` owns routing, hard boundaries, the shared workflow, stop conditions, and the output contract. Specialized reasoning is progressively disclosed through focused references:
+`SKILL.md` 负责路由、硬边界、共享流程、停止条件和输出契约。专门能力通过聚焦的 reference 逐步加载：
 
 ```text
 skills/bs-ppt-master/
@@ -149,383 +149,383 @@ skills/bs-ppt-master/
     `-- existing claim-ledger fixtures
 ```
 
-The exact probe implementation is selected during planning after inventorying existing repository and installed PPT tooling. Add a script only when it provides deterministic evidence that prose cannot provide as reliably. Do not create a rendering engine or asset collection under this Skill.
+能力探测脚本的具体实现留到实施计划阶段决定。届时先盘点仓库已有工具和本机已安装的 PPT 能力。只有确定性脚本能比文字规则提供更可靠的证据时，才新增脚本。本 Skill 不创建渲染引擎，也不内置资产库。
 
-## Standard Workflow
+## 标准工作流
 
-### Phase 0: Route and probe
+### Phase 0：路由与能力探测
 
-1. Classify the work as `CREATE`, `REVISE`, `FILL`, or `ENHANCE`.
-2. Inspect named inputs and preserve the original artifact or a recoverable copy before mutation.
-3. Probe available executors, renderers, and validation utilities.
-4. Compare actual capabilities with the user's hard delivery requirements.
-5. Stop before production if no route can meet the contract and the user has not approved a named downgrade.
+1. 将任务归入 `CREATE`、`REVISE`、`FILL` 或 `ENHANCE`。
+2. 检查用户指定的输入文件；修改前保留原文件或可恢复副本。
+3. 探测可用的执行器、渲染器和验证工具。
+4. 把真实能力与用户的硬性交付要求逐项比对。
+5. 如果没有任何路径满足契约，而且用户尚未接受明确的降级方案，必须在生产前停止。
 
-Exit condition: lifecycle, preservation boundary, available capabilities, and unresolved limitations are explicit.
+退出条件：生命周期、保护边界、可用能力和未解决限制均已明确。
 
-### Phase 1: Confirm the delivery brief
+### Phase 1：确认交付 Brief
 
-Before pages are created, confirm:
+创建页面前必须确认：
 
-- audience and decision context;
-- speaker-paced, reader-paced, or hybrid use;
-- what the audience believes now;
-- what they should believe, remember, or do afterward;
-- source-of-truth files and evidence constraints;
-- brand and tone constraints;
-- target application, screen, room, aspect ratio, deadline, and terminal formats.
+- 受众和决策情境；
+- 演讲者控速、读者控速或混合使用；
+- 受众现在相信什么；
+- 演示结束后，希望他们相信、记住或采取什么行动；
+- 权威源文件和证据边界；
+- 品牌和语气约束；
+- 目标软件、屏幕、会场、宽高比、截止时间和终态格式。
 
-Reuse known context and ask one question at a time only when the answer changes the deck. This is the first interaction gate.
+优先复用已经掌握的上下文。只有答案会改变 Deck 时才提问，并且一次只问一个问题。这是第一道交互确认门。
 
-### Phase 2: Discover the presentation insight
+### Phase 2：发现值得表达的洞察
 
-Apply the current Architecture module before visual production:
+视觉生产开始前，先运行现有 Architecture 模块：
 
-- establish the belief delta and requested action;
-- distinguish fact, inference, forecast, recommendation, and unsupported gap;
-- sharpen the main claim and record credible opposition;
-- build the claim ledger and evidence permission;
-- select no more than three load-bearing pillars unless the document class requires completeness;
-- write the title chain as a continuous argument;
-- give each slide a cognitive job and each exhibit a comparison or explanatory job.
+- 明确 belief delta 和需要受众采取的行动；
+- 区分事实、推断、预测、建议和证据空白；
+- 把核心主张磨尖，并记录可信的反对意见；
+- 建立 claim ledger 和证据允许的表达强度；
+- 除非文档类型要求完整覆盖，否则承重支柱不超过三个；
+- 把标题链写成可以连续阅读的完整论证；
+- 赋予每一页一个明确的认知任务，赋予每个 exhibit 一个比较或解释任务。
 
-For archival, compliance, educational, or reader-paced material, retain the existing Phase 0 exceptions from `bs-ppt-architecture`; do not force a persuasion structure onto the wrong document class.
+对于存档、合规、教学或读者控速材料，应保留 `bs-ppt-architecture` 现有 Phase 0 中的例外规则。不能把说服型结构强加给不适合的文档类型。
 
-### Phase 3: Present three complete creative directions
+### Phase 3：提出三套完整创意方向
 
-Present three genuinely different directions. Each direction includes:
+提交三套真正不同的方向。每套必须包含：
 
-- narrative mode;
-- visual thesis and references expressed as principles, not copied templates;
-- type, color, composition, image, and whitespace logic;
-- chart, table, diagram, and annotation grammar;
-- visual carrier choices;
-- one representative page or sufficiently concrete sample treatment;
-- fit, advantage, risk, and executor implications.
+- 叙事模式；
+- 视觉主张和参考原则，而不是复制模板；
+- 字体、色彩、构图、图像和留白逻辑；
+- 图表、表格、图解和标注语法；
+- 视觉载体选择；
+- 一个代表性页面，或足够具体的示例处理；
+- 适用性、优势、风险和对执行器能力的要求。
 
-Changing only palette or typography does not create a new direction. The user may select one direction or explicitly request a reconciled hybrid. If a hybrid introduces conflict, resolve the governing principle before proceeding.
+只换颜色或字体不算新方向。用户可以选择一个方向，也可以明确要求融合；如果融合会造成冲突，必须先确定统领原则。
 
-This is the second interaction gate. The selected direction becomes an execution lock so the deck does not drift page by page.
+这是第二道交互确认门。选定方向会转化为 execution lock，防止后续页面各自漂移。
 
-### Phase 4: Calibrate the method
+### Phase 4：校准方法
 
-Produce a small calibration set before the full deck:
+完整生产前，先制作一组校准页：
 
-- the cover or opening frame;
-- a representative argument page;
-- the densest or most technically risky exhibit page.
+- 封面或开场页；
+- 一页有代表性的论证页；
+- 信息最密集或技术风险最高的 exhibit 页。
 
-The calibration must prove that the visual system works for both sparse and rich pages, that the selected executor can realize it without unacceptable downgrade, and that the Detail Ledger is actionable. Fix the method before scaling the deck.
+校准页必须证明三件事：同一视觉系统同时适用于简洁页和丰富页；选定执行器能够在没有不可接受降级的情况下实现设计；Detail Ledger 确实可执行。先修正方法，再扩展全套 Deck。
 
-### Phase 5: Produce from one canonical content model
+### Phase 5：从单一内容模型生产
 
-Maintain one canonical presentation model containing, per slide:
+维护一份 canonical presentation model。每页至少记录：
 
-- slide ID and role;
-- declarative title and audience-state change;
-- claim and evidence anchors;
-- content hierarchy;
-- exhibit or visual intent;
-- source and asset references;
-- speaker-note intent when applicable;
-- detail rules and intentional exceptions.
+- slide ID 和页面角色；
+- 陈述式标题和期望产生的受众状态变化；
+- 主张和证据锚点；
+- 内容层级；
+- exhibit 或视觉意图；
+- 来源与素材引用；
+- 需要时记录 speaker notes 的意图；
+- 细节规则和有意例外。
 
-Executor-specific HTML, PptxGenJS, SVG, OOXML, or other source is derived production material. It must not become a competing truth surface for narrative content. If the executor requires an incompatible model, stop and reconcile rather than allow two silently diverging decks.
+执行器使用的 HTML、PptxGenJS、SVG、OOXML 或其他源码都只是派生生产材料，不能成为另一份叙事真源。如果执行器要求不兼容的模型，应停止并完成统一，而不是放任两套 Deck 静默分叉。
 
-### Phase 6: Verify, repair, and deliver
+### Phase 6：验证、修复与交付
 
-Run all applicable delivery checks below. A generated artifact that fails a check returns to the responsible phase. Re-render and re-check every repair. Stop after a bounded number of materially distinct attempts and report the blocking constraint instead of cycling cosmetically.
+运行下文所有适用的成品检查。任何一层失败，都要返回对应阶段处理。每次修复后必须重新渲染并复查。若已经尝试了有限次、方法上确实不同的修复仍无法通过，就应报告阻断原因，不能继续进行表面微调。
 
-## Art Direction Contract
+## 艺术指导契约
 
-High design quality is not tied to visual richness. A minimal deck and a dense editorial deck both require deliberate control of:
+高质量设计不等于丰富。极简 Deck 和浓郁的编辑型 Deck 都需要认真控制：
 
-- visual hierarchy and the first three seconds of perception;
-- grid, alignment, spacing, scale, and whitespace;
-- typography hierarchy, measure, line breaks, and language-specific composition;
-- semantic color and sufficient contrast;
-- image selection, crop, focal point, provenance, and resolution;
-- chart baseline, annotation, scale, uncertainty, and visual emphasis;
-- diagram topology, connector clarity, and reading order;
-- page-to-page rhythm, density, repetition, surprise, and climax;
-- projector-distance readability and the target display environment.
+- 视觉层级，以及受众最初三秒看到什么；
+- 网格、对齐、间距、尺度和留白；
+- 字体层级、行宽、换行以及不同语言的排版；
+- 色彩语义和足够的对比度；
+- 图像选择、裁切、视觉焦点、来源和分辨率；
+- 图表基线、标注、比例尺、不确定性和视觉强调；
+- 图解拓扑、连接关系和阅读顺序；
+- 页面之间的节奏、密度、重复、意外和高潮；
+- 远距离投影可读性和目标显示环境。
 
-Named anti-patterns include generic gradient backgrounds, ornamental card grids, equal-weight columns, unexplained icon sets, default office charts, decorative diagrams, full-page prose, and visual novelty that fights the argument.
+明确禁止的俗套包括：通用渐变背景、装饰性卡片矩阵、权重平均的分栏、不成体系的图标、Office 默认图表、只起装饰作用的图解、整页长文，以及与论证相互争夺注意力的视觉新奇。
 
-The Skill does not impose one house style. Commercial restraint, editorial sophistication, cinematic drama, technical precision, cultural expression, or another coherent language may be correct when it serves the task.
+本 Skill 不强推一种固定风格。商业克制、编辑感、电影感、技术精密、文化表达或其他完整语言，只要真正服务于任务，都可能是正确方向。
 
 ## Detail Master
 
-Detail Master is an always-on internal role, not a cosmetic final pass. It protects the details that change accuracy, understanding, credibility, style, or completion.
+Detail Master 是贯穿全程的内部角色，不是最后做一次表面润色。它只关注那些真正影响准确性、理解、可信度、风格或完成度的细节。
 
 ### Detail Ledger
 
-After the delivery brief and selected direction, create a compact ledger containing:
+交付 Brief 和创意方向确定后，建立一份精简的 Detail Ledger，记录：
 
-- canonical names, terminology, capitalization, acronyms, and language rules;
-- critical numbers, dates, units, denominators, decimal precision, and source anchors;
-- concepts introduced early that require a later answer or callback;
-- brand tokens and visual invariants;
-- grid, typography, spacing, color, icon, image, chart, and diagram rules;
-- intentional exceptions and the narrative reason for each;
-- target-environment and accessibility constraints.
+- 标准名称、术语、大小写、缩写和语言规则；
+- 关键数字、日期、单位、分母、小数精度和来源锚点；
+- 前面提出、后面必须回答或呼应的概念；
+- 品牌 token 和视觉不变量；
+- 网格、字体、间距、色彩、图标、图像、图表和图解规则；
+- 有意例外，以及每个例外承担的叙事目的；
+- 目标环境和无障碍约束。
 
-### Four intervention points
+### 四次介入
 
-1. **Specification** — validate people, facts, figures, thesis, terminology, sources, and promises before direction lock.
-2. **Calibration** — inspect hierarchy, grid, spacing, type, color semantics, crop, and sparse-versus-dense consistency on the representative pages.
-3. **Full-deck coherence** — inspect title chain, callbacks, section transitions, terminology, legends, symbols, citation form, density, pacing, and climax distribution.
-4. **Delivery** — inspect per-slide renders and a whole-deck contact sheet; test overflow, collisions, line breaks, contrast, font substitution, master relationships, editable objects, media, notes, and package integrity.
+1. **规格阶段**：方向锁定前，检查人物、事实、数字、主张、术语、来源和承诺。
+2. **校准阶段**：在代表性页面上检查层级、网格、间距、字体、色彩语义、图像裁切，以及简洁页与复杂页是否一致。
+3. **全篇一致性阶段**：检查标题链、前后呼应、章节转场、术语、图例、符号、引用形式、页面密度、节奏和高潮分布。
+4. **交付阶段**：同时检查逐页渲染图和整套 contact sheet；检查溢出、遮挡、换行、对比度、字体替换、母版关系、可编辑对象、媒体、备注和文件结构。
 
-### Detail rules
+### 细节原则
 
-- Uniformity is not the goal. A deliberate variation with a documented purpose is valid.
-- Pixel movement without cognitive or delivery impact is not mastery. Prioritize consequential details.
-- A correction is unverified until the artifact is rendered and inspected again.
-- When sub-agents are available, the final Detail Master pass should be independent from the producer. Otherwise use a fresh, separated review context rather than the production context self-certifying its own work.
+- 目标不是机械统一。有明确目的的变化是成立的。
+- 不影响认知或交付的像素移动不是大师级细节。优先处理真正有后果的问题。
+- 修复只有在文件重新渲染并通过检查后才算完成。
+- 环境支持 sub-agent 时，最终 Detail Master 检查应由独立 reviewer 完成；否则必须使用与生产过程隔离的新检查上下文，不能让创作者直接给自己判定通过。
 
-The delivery includes a compact Detail Report listing verified high-impact details, repaired defects, intentional exceptions, and remaining limitations.
+最终交付包含一份精简的 Detail Report，列出已经验证的关键细节、修复的问题、有意保留的例外和剩余限制。
 
-## Executor Contract
+## 执行器契约
 
-`bs-ppt-master` is a control plane with pluggable executors. It does not assume one executor is best for every lifecycle or environment.
+`bs-ppt-master` 是支持可插拔执行器的控制层。它不假设某个执行器适合所有生命周期和环境。
 
-### Capability manifest
+### 能力清单
 
-An executor is eligible only when its capabilities can be discovered or demonstrated. The adapter manifest must cover:
+只有能力可以被发现或证明的执行器才有资格参与选型。适配器的 capability manifest 必须覆盖：
 
-- supported lifecycle modes;
-- ability to read and preserve an existing PPTX;
-- text, shape, image, table, chart, diagram, animation, audio, and video behavior;
-- master, layout, placeholder, notes, link, and font behavior;
-- object-level native, hybrid, or raster output classification;
-- preview rendering and structural validation path;
-- required dependencies, network access, local services, and target applications;
-- licensing, attribution, and asset constraints;
-- known failure modes and degradation behavior.
+- 支持的生命周期模式；
+- 读取和保留既有 PPTX 的能力；
+- 文本、形状、图片、表格、图表、图解、动画、音频和视频的处理方式；
+- 母版、版式、占位符、备注、链接和字体的处理方式；
+- 对象级输出属于原生、混合还是栅格；
+- 预览渲染和结构验证路径；
+- 运行所需依赖、网络、本地服务和目标软件；
+- 许可证、署名和素材限制；
+- 已知失败模式和降级行为。
 
-### Selection order
+### 选择顺序
 
-1. An executor explicitly selected by the user, if it satisfies the contract.
-2. Actual environment capability probe.
-3. Lifecycle and preservation fit.
-4. Native editability and round-trip fidelity.
-5. Required visual, data, media, and interaction features.
-6. Target-application verification support.
-7. Cost and speed.
+1. 用户明确指定且满足契约的执行器；
+2. 当前环境的真实能力探测结果；
+3. 生命周期和保护契约的匹配程度；
+4. 原生可编辑性和往返保真；
+5. 当前任务要求的视觉、数据、媒体和交互能力；
+6. 是否能在目标软件中验证；
+7. 成本和速度。
 
-The existing external `pptx` Skill is the baseline editable-PPTX executor when installed and capable. Separately installed `ppt-master`, Dashi, Baoyu-style HTML, or other systems may be integrated through adapters; none becomes a hidden hard dependency.
+已引用的外部 `pptx` Skill 在完成安装并具备所需能力时，是默认的可编辑 PPTX 基础执行器。独立安装的 `ppt-master`、Dashi、Baoyu 风格 HTML 或其他系统都可以通过适配器接入，但不能成为隐藏的硬依赖。
 
-### Downgrade contract
+### 降级契约
 
-If no executor satisfies a hard native-first requirement, the Skill must present the concrete gap and bounded choices, such as:
+如果没有执行器满足原生优先的硬要求，Skill 必须明确说明能力缺口，并提供边界清楚的选择：
 
-- change the design to use supported native objects;
-- install or select a capable executor;
-- accept a hybrid artifact with named rasterized elements;
-- explicitly accept a screenshot-only deck;
-- deliver a reviewed authoring artifact without claiming final PPTX readiness.
+- 调整设计，改用执行器支持的原生对象；
+- 安装或选择更合适的执行器；
+- 接受混合文件，并明确哪些元素会被栅格化；
+- 明确接受整页截图型 Deck；
+- 只交付经过评审的设计或创作文件，不宣称最终 PPTX 已就绪。
 
-Screenshot-only export is never described as editable PPTX. User consent must name the lost capabilities.
+截图型导出绝不能被描述成可编辑 PPTX。用户同意降级时，必须清楚知道会失去哪些能力。
 
-## Verification Contract
+## 成品验证契约
 
-These five delivery checks are the PPT artifact's internal verification layers. They are distinct from Better-Skills' four repository release gates.
+下面五层检查属于 PPT 成品内部验证，和 Better-Skills 的四道仓库发布 Gate 不是一回事。
 
-### V1: Content and evidence
+### V1：内容与证据
 
-- claims match source material and permitted evidence;
-- names, numbers, dates, units, denominators, qualifiers, and citations are accurate;
-- uncertainty and unsupported gaps are visible;
-- slide titles and body content do not contradict one another;
-- no asset or statistic is presented with invented provenance.
+- 主张符合源材料和证据允许的表达强度；
+- 人名、数字、日期、单位、分母、限定词和引用准确；
+- 不确定性和证据空白没有被隐藏；
+- 页面标题与正文、不同页面之间不存在矛盾；
+- 素材和统计数据没有虚构来源。
 
-### V2: Narrative and decision
+### V2：叙事与决策
 
-- the deck matches its speaker-paced, reader-paced, educational, archival, compliance, or decision purpose;
-- the belief or action delta is explicit where applicable;
-- the title chain forms a coherent progression;
-- load-bearing pages survive deletion tests and redundant inventory is removed or annexed;
-- opening promises, transitions, and ending conclusions answer and reinforce one another.
+- Deck 符合演讲者控速、读者控速、教学、存档、合规或决策等实际用途；
+- 适用时明确 belief delta 或 action delta；
+- 标题链形成完整推进；
+- 承重页面通过删除测试，冗余内容被删除或放入附录；
+- 开篇承诺、章节转场和结尾结论相互回答、彼此强化。
 
-### V3: Detail and visual render
+### V3：细节与视觉渲染
 
-- every slide is rendered and inspected at readable size;
-- the whole deck is inspected as a contact sheet for rhythm, repetition, drift, and climax;
-- layout, type, color, images, charts, tables, diagrams, and annotations follow the locked visual grammar;
-- overflow, collision, clipping, unsafe margins, weak contrast, accidental inconsistency, and broken assets are absent;
-- intentional exceptions are documented and defensible.
+- 每一页都实际渲染，并以可读尺寸检查；
+- 整套 Deck 通过 contact sheet 检查节奏、重复、漂移和高潮；
+- 版式、字体、色彩、图片、图表、表格、图解和标注遵守已锁定的视觉语法；
+- 不存在溢出、碰撞、裁切、不安全边距、弱对比度、意外不一致和资源损坏；
+- 有意例外已经记录，并且理由成立。
 
-### V4: Native artifact
+### V4：原生文件
 
-- the PPTX package opens and has valid internal relationships;
-- masters, layouts, slide size, notes, links, media, and fonts behave as claimed;
-- each promised editable element is inspected at object level;
-- rasterized or flattened elements are enumerated;
-- no missing or external temporary path is required for playback;
-- save-and-reopen does not silently corrupt the artifact.
+- PPTX 包能够打开，内部关系有效；
+- 母版、版式、页面尺寸、备注、链接、媒体和字体表现与声明一致；
+- 所有承诺可编辑的元素都经过对象级检查；
+- 被栅格化或扁平化的元素逐项列出；
+- 播放不依赖丢失的文件或外部临时路径；
+- 保存后重新打开不会静默损坏文件。
 
-### V5: Target-environment delivery
+### V5：目标环境交付
 
-Microsoft PowerPoint is the default truth baseline. Keynote, WPS, Google Slides, LibreOffice, or browser compatibility is best-effort unless actually opened and verified in that environment. The Capability Report records the applications and behaviors that were tested.
+Microsoft PowerPoint 是默认真实性基准。Keynote、WPS、Google Slides、LibreOffice 或浏览器兼容都只能在实际打开并验证后承诺。Capability Report 必须记录检查过哪些软件和行为。
 
-If the target application is unavailable, report the gate as unverified rather than passed. Package validation or LibreOffice rendering is useful evidence but does not prove PowerPoint-perfect playback.
+如果目标软件不可用，这一层应标为 `UNVERIFIED`，不能写成通过。PPTX 包检查或 LibreOffice 渲染是有价值的证据，但不能证明文件在 PowerPoint 中完美播放。
 
-## Output Contract
+## 输出契约
 
-A standard successful delivery contains:
+一次标准成功交付至少包含：
 
-- the verified `.pptx`;
-- a whole-deck preview or contact sheet;
-- a concise Detail Report;
-- a Capability Report stating native, hybrid, rasterized, unsupported, and unverified features;
-- source and asset-rights notes when external evidence or assets were used;
-- HTML, PDF, or other derived artifacts only when requested or operationally useful.
+- 经过验证的 `.pptx`；
+- 整套预览图或 contact sheet；
+- 精简的 Detail Report；
+- Capability Report，说明哪些能力原生、哪些混合、哪些被栅格化、哪些不支持或未经验证；
+- 使用外部证据或素材时，提供来源和使用权说明；
+- 只有用户要求或工作流程确有需要时，才附带 HTML、PDF 或其他派生产物。
 
-Conversational completion must state:
+最终对话结果使用以下结构：
 
 ```markdown
-## PPT Master Delivery
+## PPT Master 交付
 
-**Mode:** CREATE | REVISE | FILL | ENHANCE
-**Direction:** ...
-**Primary artifact:** ...
-**Target verified:** ...
+**模式：** CREATE | REVISE | FILL | ENHANCE
+**创意方向：** ...
+**主要文件：** ...
+**已验证目标环境：** ...
 
-### What was delivered
+### 交付内容
 - ...
 
-### Verification
-- Content and evidence: PASS | BLOCKED | UNVERIFIED
-- Narrative and decision: PASS | BLOCKED | UNVERIFIED
-- Detail and visual: PASS | BLOCKED | UNVERIFIED
-- Native artifact: PASS | BLOCKED | UNVERIFIED
-- Target environment: PASS | BLOCKED | UNVERIFIED
+### 验证结果
+- 内容与证据：PASS | BLOCKED | UNVERIFIED
+- 叙事与决策：PASS | BLOCKED | UNVERIFIED
+- 细节与视觉：PASS | BLOCKED | UNVERIFIED
+- 原生文件：PASS | BLOCKED | UNVERIFIED
+- 目标环境：PASS | BLOCKED | UNVERIFIED
 
-### Capability truth
-- Native editable: ...
-- Hybrid or rasterized: ...
-- Unsupported or unverified: ...
+### 能力实情
+- 原生可编辑：...
+- 混合或栅格化：...
+- 不支持或未经验证：...
 
-### Meaningful detail
-- Verified or intentionally exceptional: ...
+### 关键细节
+- 已验证或有意保留的例外：...
 
-### Remaining risks
+### 剩余风险
 - ...
 ```
 
-Allowed terminal states are:
+允许的终态只有：
 
-- `DELIVERED` — all required delivery checks passed;
-- `DELIVERED_WITH_ACCEPTED_LIMITATIONS` — the user explicitly accepted named limitations and all remaining required delivery checks passed;
-- `BLOCKED` — a required capability, fact, asset right, preservation guarantee, or target-environment verification could not be obtained;
-- `DESIGN_ONLY` — the user requested or accepted a direction/specification without a final PPTX.
+- `DELIVERED`：所有必要的成品检查均通过；
+- `DELIVERED_WITH_ACCEPTED_LIMITATIONS`：用户已经明确接受具体限制，其余必要检查均通过；
+- `BLOCKED`：必要能力、事实、素材权利、保护保证或目标环境验证无法获得；
+- `DESIGN_ONLY`：用户只要求或接受设计方向与规格，不需要最终 PPTX。
 
 ## Quick Mode
 
-`QUICK` is explicit and never the silent default. It may compress direction exploration and calibration only after the Skill states:
+`QUICK` 必须由用户明确选择，不能静默启用。它可以压缩方向探索和校准，但 Skill 必须先说明：
 
-- which standard steps will be skipped;
-- which quality or preservation risks increase;
-- which final delivery checks remain mandatory;
-- whether the shortened process reduces resumability or increases rework.
+- 会跳过哪些标准步骤；
+- 哪些质量或保护风险会增加；
+- 哪些最终检查仍然不能省略；
+- 流程缩短是否会降低可恢复性或增加返工。
 
-Quick mode never waives factual accuracy, capability truth, asset rights, artifact integrity, or explicit screenshot-downgrade consent.
+Quick mode 绝不能放弃事实准确、能力实情、素材权利、文件完整性或截图降级的明确同意。
 
-## Failure Handling and Resume
+## 失败处理与恢复
 
-Failures belong to named phases:
+每类失败都必须回到明确的责任阶段：
 
-- missing or contradictory evidence returns to Insight;
-- an incoherent direction returns to Art Direction;
-- a design the executor cannot realize returns to Direction or Executor Selection;
-- local layout defects return to Production;
-- deck-wide drift returns to Detail Master;
-- broken object relationships or unsupported features return to Executor Selection or Production;
-- target-application failure returns to Production or becomes an explicit limitation choice.
+- 证据缺失或互相冲突，返回 Insight；
+- 创意方向不成立，返回 Art Direction；
+- 执行器无法实现设计，返回 Direction 或 Executor Selection；
+- 局部版式缺陷，返回 Production；
+- 全篇风格漂移，返回 Detail Master；
+- 对象关系损坏或功能不受支持，返回 Executor Selection 或 Production；
+- 目标软件验证失败，返回 Production，或由用户明确接受为限制。
 
-Record the selected direction, execution lock, capability manifest, canonical deck model, Detail Ledger, and latest gate results so the work can resume without repeating approved decisions. Never solve a renderer failure by silently weakening the delivery claim.
+记录已选方向、execution lock、capability manifest、canonical deck model、Detail Ledger 和最近一次检查结果，使任务能够从正确位置恢复，不必反复确认已经批准的决策。不能通过弱化交付声明来掩盖渲染失败。
 
-## Security, Privacy, and Rights
+## 安全、隐私与权利
 
-- Treat unpublished business, customer, financial, personnel, legal, and product material according to applicable project instructions and user authority.
-- Minimize transmission to network-backed executors. Disclose when an executor requires external services.
-- Bind local review servers to loopback by default and shut them down after use.
-- Do not place secrets, credentials, hidden comments, or temporary local paths into the deck package.
-- Record the provenance and usage right for third-party images, icons, fonts, data, and templates.
-- Do not vendor or copy code or assets from the three research references. Integrations invoke separately installed tools through adapters and retain applicable notices.
-- Keep source artifacts recoverable during `REVISE`, `FILL`, and `ENHANCE`.
+- 未公开的商业、客户、财务、人员、法律和产品材料必须遵守当前项目规则和用户授权。
+- 尽量减少向联网执行器传输材料；执行器需要外部服务时必须说明。
+- 本地预览服务默认只绑定 loopback，使用结束后关闭。
+- 不得把 secret、credential、隐藏批注或本机临时路径写入 PPTX 包。
+- 记录第三方图片、图标、字体、数据和模板的来源与使用权。
+- 不复制三个参考项目的代码或资产。通过适配器调用独立安装的工具时，保留适用的许可声明。
+- `REVISE`、`FILL` 和 `ENHANCE` 期间必须保证源文件可恢复。
 
-## Repository Integration
+## 仓库集成范围
 
-Implementation must update every current truth surface without rewriting historical evidence:
+实施时必须更新所有当前真源，同时不能篡改历史证据：
 
-- rename `skills/bs-ppt-architecture/` to `skills/bs-ppt-master/` and update frontmatter, H1, bundled links, script help, and fixtures;
-- expand the Skill with the approved modules while preserving the current architecture logic and checker coverage;
-- replace the canonical registry key and batch member in `skills.json`;
-- add the direct `bs-ppt-architecture -> bs-ppt-master` alias and enforce canonical/alias invariants;
-- update CLI expected IDs and display names;
-- migrate the current evaluation key and add full-lifecycle evaluation cases;
-- create current Gate 2 reviews under `docs/reviews/bs-ppt-master/` while preserving the old review directory as historical evidence or linking it according to the repository's review convention;
-- update README, project documentation, active insight links, and any current path references;
-- preserve the external `pptx` source declaration unchanged;
-- exclude unrelated user-owned dirty files from every commit.
+- 将 `skills/bs-ppt-architecture/` 重命名为 `skills/bs-ppt-master/`，同步更新 frontmatter、H1、内部链接、脚本帮助和 fixtures；
+- 在保留现有论证架构和 checker 覆盖的前提下，扩展已确认的内部模块；
+- 替换 `skills.json` 中的 canonical registry key 和 batch 成员；
+- 增加直接别名 `bs-ppt-architecture -> bs-ppt-master`，并继续保证 canonical/alias 不冲突、alias 不成链；
+- 更新 CLI 预期 ID 和展示名称；
+- 迁移现有评测 key，并加入全生命周期测试场景；
+- 在 `docs/reviews/bs-ppt-master/` 下生成当前 Gate 2 评审，同时根据仓库惯例保留旧 review 目录作为历史证据或建立清晰链接；
+- 更新 README、项目文档、当前 insights 链接和所有仍代表当前状态的路径引用；
+- 保持外部 `pptx` source 声明不变；
+- 所有提交都要排除与本任务无关的用户改动。
 
-Historical specs and review documents may retain the old name where they describe the old state. Any moved historical path must keep links resolvable. The implementation inventory must distinguish historical references from stale current truth.
+历史 spec 和 review 在描述旧状态时可以保留旧名称。若历史路径被移动，链接仍须可解析。实施盘点必须区分合法历史引用和已经过期的当前真源。
 
-## Evaluation Strategy
+## 评测策略
 
-The evaluation dataset should cover at least these independent behaviors:
+评测数据集至少覆盖以下独立行为：
 
-1. **Create a strategic decision deck** — requires belief delta, claim ledger, three distinct directions, calibration, native-first production, and all five delivery checks.
-2. **Transform dense quantitative material** — produces exhibits with explicit baselines, honest uncertainty, accurate data, and readable high-density composition.
-3. **Revise a fragile corporate deck** — changes only named surfaces and preserves untouched masters, notes, links, and media.
-4. **Fill a supplied template** — retains layouts and placeholders rather than rebuilding a lookalike.
-5. **Enhance a correct but visually weak deck** — improves hierarchy and finish without changing factual meaning.
-6. **Catch cross-slide contradiction** — Detail Master identifies inconsistent dates, terminology, totals, or conclusions before delivery.
-7. **Protect callback and style coherence** — finds an unclosed opening promise and unexplained visual drift.
-8. **Reject a false native claim** — executor cannot provide native charts or animation, so the Skill blocks or obtains explicit downgrade consent.
-9. **Accept a named hybrid downgrade** — user knowingly accepts specific rasterized elements and receives an accurate Capability Report.
-10. **Fail honestly on target compatibility** — artifact can be structurally validated but PowerPoint is unavailable, so the delivery gate remains `UNVERIFIED`.
-11. **Respect asset rights and privacy** — disallows copied proprietary templates and prevents sensitive source material from being sent to an unapproved network executor.
-12. **Quick-mode pressure** — compresses exploration without waiving truth, rights, or verification.
+1. **从零创建战略决策 Deck**：必须产生 belief delta、claim ledger、三套不同方向、校准页、原生优先产物，并完成五层成品检查。
+2. **把高密度数据材料转成清晰表达**：exhibit 有明确基线，如实表达不确定性，数据准确，高密度版面仍然可读。
+3. **修改结构脆弱的企业 Deck**：只改指定内容，保留未触及的母版、备注、链接和媒体。
+4. **填充现有模板**：保留版式和占位符，而不是重建一个外观相似的替代品。
+5. **增强内容正确但视觉薄弱的 Deck**：改善层级和完成度，不改变事实含义。
+6. **发现跨页矛盾**：Detail Master 能在交付前发现日期、术语、总数或结论不一致。
+7. **保护前后呼应和风格统一**：发现开篇承诺没有回收，或视觉出现无理由漂移。
+8. **拒绝虚假的原生声明**：执行器无法实现原生图表或动画时，Skill 必须阻止交付或取得明确降级同意。
+9. **正确处理混合型降级**：用户明确接受部分元素栅格化，并获得准确的 Capability Report。
+10. **如实处理目标环境缺失**：文件可以通过结构检查，但无法使用 PowerPoint 验证时，交付层保持 `UNVERIFIED`。
+11. **保护素材权利与隐私**：拒绝复制专有模板，避免把敏感材料传给未经批准的联网执行器。
+12. **抵抗 Quick mode 压力**：可以压缩探索，但不能牺牲真实性、权利和验证。
 
-Deterministic checks cover schema, registry, aliases, links, package structure, capability manifests, and required output fields. Qualitative dimensions such as insight, coherence, visual distinction, detail judgment, and aesthetic quality require an opt-in LLM or human visual judge with rendered artifacts. A claim that the Skill outperforms the external `pptx` baseline requires a real A/B run, not architectural inference.
+确定性检查负责 schema、registry、alias、链接、包结构、capability manifest 和必填输出字段。洞察、连贯性、方向差异、细节判断和审美质量必须由 opt-in LLM judge 或人类根据实际渲染产物评审。若要声称本 Skill 优于外部 `pptx` baseline，必须完成真实 A/B 测试，不能根据架构推断。
 
-## Review and Acceptance
+## 评审与验收
 
-The implementation is accepted only when:
+只有满足以下条件，实施才算完成：
 
-1. `bs-ppt-master` is the sole current self-developed PPT orchestration entry, `bs-ppt-architecture` resolves directly to it, and the external `pptx` executor remains separately declared.
-2. Frontmatter, path, H1, registry, evaluation, docs, reviews, and CLI contracts agree.
-3. Existing claim-ledger behavior and tests remain intact.
-4. The Skill does not vendor or copy code, templates, fonts, or assets from researched repositories.
-5. Lifecycle preservation, capability probing, screenshot downgrade consent, Detail Master, and five-layer delivery verification are explicit and tested.
-6. Gate 1 passes with valid portable YAML, valid references, and runtime loadability.
-7. Two independent sub-agents complete Gate 2: one advocate and one adversary. The adversary must specifically attack capability inflation, raster masquerading, preservation loss, aesthetic genericness, and self-certified detail QA.
-8. Gate 3 reports no hard alignment failure.
-9. Gate 4 passes all new deterministic cases; qualitative and A/B claims remain scoped to evidence actually collected.
-10. A separate read-only final reviewer inventories the whole repository and reports no blocking stale current reference, missing path, alias chain, rights violation, or unrelated staged file.
-11. Changes are committed in clean logical batches with human- and agent-readable messages before an authorized push.
+1. `bs-ppt-master` 是唯一的自研 PPT 编排入口，`bs-ppt-architecture` 直接指向它，外部 `pptx` executor 仍然独立声明。
+2. Frontmatter、路径、H1、registry、评测、文档、review 和 CLI 契约完全一致。
+3. 现有 claim ledger 行为和测试全部保留。
+4. Skill 没有复制或内置参考项目的代码、模板、字体或资产。
+5. 生命周期保护、能力探测、截图降级同意、Detail Master 和五层成品验证均有明确规则和测试。
+6. Gate 1 通过；portable YAML、引用文件和 runtime loadability 均有效。
+7. 两个独立 sub-agent 完成 Gate 2：一个 advocate，一个 adversary。Adversary 必须重点攻击能力夸大、栅格伪装、保护丢失、审美套路化和 Detail Master 自证通过。
+8. Gate 3 没有 hard failure。
+9. Gate 4 通过所有新增的确定性场景；定性和 A/B 结论严格受实际证据约束。
+10. 另有一个只读终审 Agent 对全仓进行盘点，并确认不存在阻断性的当前引用残留、路径缺失、alias chain、权利问题或无关暂存文件。
+11. 获得 push 授权前，变更已经按照清晰逻辑分批提交，commit message 同时便于人类和 Agent 理解。
 
-## Explicitly Rejected Architectures
+## 明确拒绝的架构
 
-### Keep `bs-ppt-architecture` and add a separate visual/render Skill
+### 保留 `bs-ppt-architecture`，再新增一个视觉或渲染 Skill
 
-Rejected because users would have to understand and coordinate overlapping entry points. Architecture and visual design would drift into a handoff rather than co-evolve.
+不采用。用户必须先理解多个重叠入口再自行编排，而且内容架构和视觉设计会变成交接关系，无法共同演进。
 
-### Bind the Skill only to the external `pptx` executor
+### 第一版只绑定外部 `pptx` executor
 
-Rejected because it makes the Skill simpler at the cost of a lower and environment-dependent ceiling. The baseline executor remains useful, but it cannot define the product architecture.
+不采用。实现会更简单，但整个产品上限会被某个环境相关执行器锁死。外部 `pptx` 可以是基础执行器，却不能定义产品架构。
 
-### Vendor a complete proprietary or copyleft presentation runtime
+### 在仓库内置完整的专有或 copyleft 演示运行时
 
-Rejected because the repository would inherit unnecessary size, maintenance, license, asset, and security obligations. The control plane should remain executor-neutral and evidence-bound.
+不采用。仓库会因此承担不必要的体积、维护、许可证、资产和安全成本。控制层应保持执行器中立，所有能力声明都由证据约束。
 
-### Make HTML or screenshot export the default
+### 默认以 HTML 或截图型 PPTX 交付
 
-Rejected because pixel fidelity would masquerade as editability and weaken the user's native-first delivery requirement.
+不采用。像素保真会被误认为可以编辑，违背原生优先的交付要求。
 
-## Planning Handoff
+## 实施计划交接
 
-After the user reviews and accepts this specification, implementation planning should use the repository's `writing-plans` workflow. The plan must begin with a full current-reference inventory, identify reusable files from `bs-ppt-architecture`, select the smallest deterministic capability-probe mechanism, and separate migration, Skill content, evaluation/review, and repository-integration commits.
+用户审阅并确认本规范后，使用仓库的 `writing-plans` 工作流制定实施计划。计划必须从全仓当前引用盘点开始，明确 `bs-ppt-architecture` 中可以直接复用的文件，选择最小的确定性能力探测方案，并把命名迁移、Skill 内容、评测与评审、仓库集成拆成边界清楚的提交批次。
