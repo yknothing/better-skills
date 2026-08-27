@@ -114,7 +114,8 @@ const expectedCanonical = [
   'bs-reflect-loop',
   'bs-skill-auditor',
   'bs-skill-forge',
-  'bs-ppt-master'
+  'bs-ppt-master',
+  'bs-uml-master'
 ].sort();
 const expectedH1 = {
   'bs-prdefine': 'PRDefine',
@@ -128,7 +129,8 @@ const expectedH1 = {
   'bs-reflect-loop': 'Reflect Loop',
   'bs-skill-auditor': 'Skill Auditor',
   'bs-skill-forge': 'Skill Forge',
-  'bs-ppt-master': 'PPT Master'
+  'bs-ppt-master': 'PPT Master',
+  'bs-uml-master': 'UML Master'
 };
 const requiredDescriptionLanguage = {
   'bs-prdefine': ['Product Requirements (PR)', 'not merely a PRD'],
@@ -138,7 +140,8 @@ const requiredDescriptionLanguage = {
   'bs-sw-master': ['Software (SW)', 'does not imply deployment'],
   'bs-reflect-loop': ['explicitly wants to extract lessons', 'executable or governance surfaces'],
   'bs-skill-auditor': ['read-only', 'does not directly repair'],
-  'bs-ppt-master': ['creating, revising, filling, or enhancing', 'designed and verified together']
+  'bs-ppt-master': ['creating, revising, filling, or enhancing', 'designed and verified together'],
+  'bs-uml-master': ['creating, revising, or reviewing UML or architecture diagrams', 'render-verified delivery']
 };
 const expectedAliases = {
   'requirements-engineering': 'bs-prdefine',

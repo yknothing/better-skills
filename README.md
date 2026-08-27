@@ -2,7 +2,7 @@
 
 A curated toolkit of Agent Skills, built by studying top skill repositories across the industry.
 
-- **Status: Phase 2 shipped.** This repo currently ships 12 self-developed `SKILL.md` files plus 9 declared external references, a 59-pattern machine-readable library under `docs/patterns/`, a zero-dependency CLI (`bin/better-skills.js`) for installing skills, and mechanized repository checks: Gate 1 (`tools/validate.js`), Gate 2 (`tools/peer-review.js`), Gate 3 (`tools/pattern-alignment.js` + `tools/check-patterns.sh`), and Gate 4 evaluation-contract checks (`evaluation/harness/runner.js`). Gate 4 is explicitly `EVAL_SCHEMA_ONLY`; it does not verify behavior or artifacts. See [Roadmap](#roadmap) for what's deferred (agent execution / LLM judge / A/B tests / npm publish). Content claims that lack execution evidence are explicitly marked **TBD**.
+- **Status: Phase 2 shipped.** This repo currently ships 13 self-developed `SKILL.md` files plus 9 declared external references, a 59-pattern machine-readable library under `docs/patterns/`, a zero-dependency CLI (`bin/better-skills.js`) for installing skills, and mechanized repository checks: Gate 1 (`tools/validate.js`), Gate 2 (`tools/peer-review.js`), Gate 3 (`tools/pattern-alignment.js` + `tools/check-patterns.sh`), and Gate 4 evaluation-contract checks (`evaluation/harness/runner.js`). Gate 4 is explicitly `EVAL_SCHEMA_ONLY`; it does not verify behavior or artifacts. See [Roadmap](#roadmap) for what's deferred (agent execution / LLM judge / A/B tests / npm publish). Content claims that lack execution evidence are explicitly marked **TBD**.
 
 ## Skill namespace
 
@@ -10,7 +10,7 @@ Better-Skills self-developed skills use the `bs-` prefix, such as `bs-ui-master`
 
 ## What's actually in here today
 
-- **12 self-developed skills** under `skills/`: `bs-prdefine`, `bs-insight-product`, `bs-prospect-customer`, `bs-ui-master`, `bs-sw-master`, `bs-reflect-loop`, `bs-prose-master`, `bs-visual-article`, `bs-social-card`, `bs-skill-forge`, `bs-skill-auditor`, `bs-ppt-master`
+- **13 self-developed skills** under `skills/`: `bs-prdefine`, `bs-insight-product`, `bs-prospect-customer`, `bs-ui-master`, `bs-sw-master`, `bs-reflect-loop`, `bs-prose-master`, `bs-visual-article`, `bs-social-card`, `bs-skill-forge`, `bs-skill-auditor`, `bs-ppt-master`, `bs-uml-master`
 - **9 external references** declared in `external/sources.yaml` (`brainstorming`, `pptx`, `grill-me`, `grilling`, `writing-great-skills`, `learn-skill`, `emil-design-eng`, `review-animations`, `animation-vocabulary`); `bash tools/sync.sh` clones the upstream repos and symlinks them under `external/`
 - **Pattern index** at `docs/patterns/README.md` — currently a single-file index of ~60 named patterns; per-pattern files are coming in Phase 1.C
 - **Research notes** at `docs/research/` — analysis of 12 top skill repositories, including [`mattpocock-analysis.md`](docs/research/mattpocock-analysis.md), [`learn-skill-analysis.md`](docs/research/learn-skill-analysis.md), and [`emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md). Other citations are missing today and will be added in Phase 3.
@@ -39,13 +39,14 @@ Better-Skills self-developed skills use the `bs-` prefix, such as `bs-ui-master`
 | 12 | `bs-skill-auditor` | Build | standard | Meta |
 | 13 | `bs-skill-forge` | Build | standard | Meta |
 | 14 | `bs-ppt-master` | Build | deep | Design |
-| 15 | `grill-me` | Reference | standard | General |
-| 16 | `grilling` | Reference | standard | General |
-| 17 | `writing-great-skills` | Reference | standard | Meta |
-| 18 | `learn-skill` | Reference | deep | General |
-| 19 | `emil-design-eng` | Reference | deep | Design |
-| 20 | `review-animations` | Reference | standard | Design |
-| 21 | `animation-vocabulary` | Reference | lightweight | Design |
+| 15 | `bs-uml-master` | Build | deep | Engineering |
+| 16 | `grill-me` | Reference | standard | General |
+| 17 | `grilling` | Reference | standard | General |
+| 18 | `writing-great-skills` | Reference | standard | Meta |
+| 19 | `learn-skill` | Reference | deep | General |
+| 20 | `emil-design-eng` | Reference | deep | Design |
+| 21 | `review-animations` | Reference | standard | Design |
+| 22 | `animation-vocabulary` | Reference | lightweight | Design |
 
 `Strategy: Build` means the skill is implemented in this repo (`skills/<name>/SKILL.md`). `Strategy: Reference` means we curate the upstream skill via `external/sources.yaml` and pull it on demand. `grill-me` is a user-invoked wrapper that delegates to the model-invoked `grilling`; both come from [mattpocock/skills](https://github.com/mattpocock/skills) and must be synced together. `writing-great-skills` is a reference skill (no steps, all in `GLOSSARY.md`) covering skill-writing vocabulary. `learn-skill` is a CE-style exhaustive sample from [koganei/learn-anything-skill](https://github.com/koganei/learn-anything-skill), kept as a deep-tier reference of the "exhaustive spec" school. Motion craft references (`emil-design-eng`, `review-animations`, `animation-vocabulary`) come from [emilkowalski/skills](https://github.com/emilkowalski/skills) and pair with Build skill `bs-ui-master` — see [`docs/research/emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md).
 
@@ -83,7 +84,7 @@ The CLI is shipped as the npm package [`@yknothing/better-skills`](https://www.n
 > **Requires**: Node.js 18+, `git` (for cloning external skills), network access on first external-skill install.
 
 ```bash
-# List all skills in the registry (12 self-developed + 9 external references)
+# List all skills in the registry (13 self-developed + 9 external references)
 npx @yknothing/better-skills list
 
 # Install a skill into your Claude Code skills directory
@@ -134,7 +135,7 @@ npm publish --access public
 
 ```
 better-skills/
-├── skills/                # Self-developed skills (12 today)
+├── skills/                # Self-developed skills (13 today)
 ├── external/sources.yaml  # Declared external skill sources
 ├── skills.json            # Canonical registry
 ├── docs/
@@ -167,7 +168,7 @@ This repo is honest about its phase. Progress against the published plan:
 
 - **Reference over rebuild** — If a skill is already excellent upstream, curate and sync; don't reimplement.
 - **Depth tiers** — `deep` (high-stakes, exhaustive precision), `standard` (principles + hard gates), `lightweight` (do one thing well).
-- **Batch iteration** — Batch 1 now contains 21 skills. Batch 2 / 3 remain frozen until every Batch 1 skill passes all 4 review gates.
+- **Batch iteration** — Batch 1 now contains 22 skills. Batch 2 / 3 remain frozen until every Batch 1 skill passes all 4 review gates.
 - **Evidence over claims** — Quality numbers in this README must be backed by the evaluation pipeline. Anything not yet measured is marked TBD.
 
 ## License

@@ -50,7 +50,7 @@ Record all reviews in `docs/reviews/<skill-name>/YYYY-MM-DD-<role>-review.md`. T
 
 | Directory | Purpose |
 |-----------|---------|
-| `skills/` | Self-developed skills (12 today) |
+| `skills/` | Self-developed skills (13 today) |
 | `external/sources.yaml` | Declared external skill sources |
 | `skills.json` | Canonical registry (the single source of truth) |
 | `docs/research/` | Analysis of 10 top skill repos. External URL citations are TBD until Phase 3 |
@@ -82,7 +82,7 @@ Skills are organized in batches for incremental delivery. **Batch 2/3 are intent
 
 | Batch | Theme | Status |
 |-------|-------|--------|
-| Batch 1 | Foundation — Core capabilities + meta-skills | active (21 skills) |
+| Batch 1 | Foundation — Core capabilities + meta-skills | active (22 skills) |
 | Batch 2 | Deepen & Expand — Audio, product design, debugging | frozen until Batch 1 closes Gate 4 |
 | Batch 3 | Creative Suite — Video, data viz, brand, landing pages | frozen until Batch 2 starts |
 
