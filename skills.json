@@ -22,6 +22,7 @@
         "bs-skill-auditor",
         "bs-skill-forge",
         "bs-ppt-master",
+        "bs-uml-master",
         "grill-me",
         "grilling",
         "writing-great-skills",
@@ -212,6 +213,23 @@
         ],
         "status": "active",
         "notes": "Full-lifecycle PPT orchestration for CREATE, REVISE, FILL, and ENHANCE: argument architecture, art direction, Detail Master, executor truth, and V1-V5 delivery verification. The external 'pptx' skill remains an independent executor candidate. See docs/insights/ppt-architecture.md."
+      },
+      "bs-uml-master": {
+        "path": "skills/bs-uml-master/SKILL.md",
+        "batch": "batch-1",
+        "tier": "deep",
+        "patterns": [
+          "hard-rules-first",
+          "progressive-disclosure",
+          "verification-rules",
+          "format-significance-gates",
+          "confidence-anchors",
+          "named-anti-patterns",
+          "80-20-design-rules",
+          "platform-degradation-rules"
+        ],
+        "status": "active",
+        "notes": "Question-first UML and architecture diagramming: mode gate (MODEL-FROM-CODE / MODEL-FROM-DESIGN / REVISE / EXPLAIN), evidence ledger as the canonical model with four projection backends (Mermaid / PlantUML / plain text / SVG-from-model), UML 2.5 semantic rules, element budget, layout-as-semantics rubric with bounded repair and backend escalation, and render-verified delivery with RENDER_VERIFIED(/structural)/SYNTAX_VERIFIED/UNVERIFIED evidence states. See docs/research/uml-diagramming-analysis.md."
       }
     },
     "external": {
