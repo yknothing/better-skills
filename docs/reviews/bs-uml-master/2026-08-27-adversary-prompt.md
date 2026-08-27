@@ -14,22 +14,22 @@ You are the **adversary reviewer** for the `bs-uml-master` skill. Your job is to
 Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
 
 **Scope Contract Version**: 1
-**Reviewed Revision to record**: e7bfa0859e94f0e207a420e305817e06e3007519
-**Reviewed Skill SHA-256 to record**: 9150fcfb0bc1a8fc64cc2ba35d74266dc80756fc4f3ce17a8e38b79ee5223d8b
-**Reviewed Manifest SHA-256 to record**: 6664cf68076666b3829fccda11ce5622c1b7b806bc7dc741153cda0e53b30791
+**Reviewed Revision to record**: 30ae1d835c8a527ae7291f2e5bc6fabd4591fcc3
+**Reviewed Skill SHA-256 to record**: 3fed930b64ea9cce2b91c86ace58f79489cb6b4cbb2280ef1e9004bb5a9bdd2b
+**Reviewed Manifest SHA-256 to record**: 17e4261ead25daa025fda1a2084c0766e05f1ccb1b794bd52bb82373821d5116
 
 - `evaluation/datasets/batch-1-test-prompts.json` — `9377d7d408018bacb2a4a714f661dfc8b53894919d5fcb3a97dceed798ac3687`
 - `evaluation/harness/runner.js` — `ee6e871ad26230c4073ba72151f1d6f5862c7c05074ba756bfe9b5e4e509f8f8`
 - `evaluation/harness/test-runner-scope.js` — `eaa773a660417049759c7e8831444a2ec5e6f73174487662018d6c2f556e879c`
 - `skills.json` — `7885f9c7cefbd700ced8fc481b1524f61de6c47c523bcc806ecca60b269dc1ce`
-- `skills/bs-uml-master/SKILL.md` — `9150fcfb0bc1a8fc64cc2ba35d74266dc80756fc4f3ce17a8e38b79ee5223d8b`
-- `skills/bs-uml-master/references/diagram-selection.md` — `afe2a152edf0eee8e5bfc4ad434004c8e056e6605ad5cca2737c844775e7cfd0`
-- `skills/bs-uml-master/references/layout-craft.md` — `2ef92cb21bd1552f88236ab501163c079c5d4309ab12e615ca968bcee2bc0e14`
+- `skills/bs-uml-master/SKILL.md` — `3fed930b64ea9cce2b91c86ace58f79489cb6b4cbb2280ef1e9004bb5a9bdd2b`
+- `skills/bs-uml-master/references/diagram-selection.md` — `cfa85279548602fe69db478866a34cbf2e59f1269a6e01a7eb35ccf4218dc10c`
+- `skills/bs-uml-master/references/layout-craft.md` — `4d414aa6fb179b12e99c2c345df80d629ac36a8f8e9de46dedf0f34bf482021f`
 - `skills/bs-uml-master/references/modeling-from-code.md` — `58dec58a2924a9f7ed77308a4e267de66811aa95b6cdd75c75bc56fdaaa061a7`
-- `skills/bs-uml-master/references/rendering-validation.md` — `932c1e5a5e54a76154706895c515e52dd1d34e3fa1ba7adfcb0be6939e39be32`
-- `skills/bs-uml-master/references/svg-presentation.md` — `03c1d49f570df9ad56a47ec33ad38766abe6ae7ce6d2c87ccc34abef931cece5`
-- `skills/bs-uml-master/references/syntax-pitfalls.md` — `148a4825603c85e1a2e1a4a679107a572009ac06eff4da91b5b0118a49fd1853`
-- `skills/bs-uml-master/references/text-diagrams.md` — `bdbd5b33e2859f2753818fff25a1c7b08a83923205dfcdf1b6f4d8960954c2f3`
+- `skills/bs-uml-master/references/rendering-validation.md` — `d409d97471777c61c2c6c628c1f78bff02732c711ec6f8d838e3d9cecb6a1a50`
+- `skills/bs-uml-master/references/svg-presentation.md` — `e3400aed86339da2ad9a8e6692727842de8fbfcb5632871d85e1d68e308dfb02`
+- `skills/bs-uml-master/references/syntax-pitfalls.md` — `c08a5e63663072e4fb11a0f149e84e75f4b85011d6f3ccd9ff6d0ca593c6acec`
+- `skills/bs-uml-master/references/text-diagrams.md` — `68ebcb460268833b13f3aa863ffc409bc599a0a4475a0b9db33ea6a78d7acab3`
 - `skills/bs-uml-master/references/uml-semantics.md` — `f8b59c246cddcf17b9520c8d7e7215940432f5118c54bf9441e1023e329330de`
 - `skills/bs-uml-master/scripts/check-mermaid.js` — `938b004901b22e27d204f9afb69cf6003ee155010f7893a84f58cd453e1c9fb4`
 - `tools/peer-review.js` — `8491cb1766b1a16f5fea2945d40e834130c32975a51701d7b1f2d82981e905a9`
@@ -45,9 +45,9 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 **Skill**: bs-uml-master
 **HUMAN_VERIFIED**: false
 **Scope Contract Version**: 1
-**Reviewed Revision**: e7bfa0859e94f0e207a420e305817e06e3007519
-**Reviewed Skill SHA-256**: 9150fcfb0bc1a8fc64cc2ba35d74266dc80756fc4f3ce17a8e38b79ee5223d8b
-**Reviewed Manifest SHA-256**: 6664cf68076666b3829fccda11ce5622c1b7b806bc7dc741153cda0e53b30791
+**Reviewed Revision**: 30ae1d835c8a527ae7291f2e5bc6fabd4591fcc3
+**Reviewed Skill SHA-256**: 3fed930b64ea9cce2b91c86ace58f79489cb6b4cbb2280ef1e9004bb5a9bdd2b
+**Reviewed Manifest SHA-256**: 17e4261ead25daa025fda1a2084c0766e05f1ccb1b794bd52bb82373821d5116
 
 ## Summary
 
@@ -55,7 +55,7 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 
 ## Evidence Reviewed
 
-(Acknowledge full manifest receipt `6664cf68076666b3829fccda11ce5622c1b7b806bc7dc741153cda0e53b30791`, then list the files and commands actually examined or rerun.)
+(Acknowledge full manifest receipt `17e4261ead25daa025fda1a2084c0766e05f1ccb1b794bd52bb82373821d5116`, then list the files and commands actually examined or rerun.)
 
 ## Findings
 
@@ -128,7 +128,7 @@ The element ledger is the canonical model; every notation — Mermaid, PlantUML,
 
 Ask (or infer and state) how the diagram will be used, then apply the matching depth:
 
-- **`sketch`** — thinking aid, disposable. Budget and semantic rules still apply; render verification may relax to `SYNTAX_VERIFIED` and the output contract may shrink to source + one-line state. Say "sketch level" in the delivery. Explicit cues — "quick", "rough", "just show me", chat-only consumption — justify *inferring and stating* `sketch`: that is classification, not downgrading. Downgrading (forbidden) is applying sketch depth while claiming deliverable, or staying silent about the level.
+- **`sketch`** — thinking aid, disposable. Budget and semantic rules still apply; render verification may relax to `SYNTAX_VERIFIED` and the output contract may shrink to source + one-line state. Say "sketch level" in the delivery. Explicit user cues — "quick", "rough", "just show me", "帮我随手画一下" — justify *inferring and stating* `sketch`: that is classification, not downgrading. The medium alone never reclassifies: a chat-delivered diagram with no such cue stays `deliverable`. Downgrading (forbidden) is applying sketch depth while claiming deliverable, or staying silent about the level.
 - **`deliverable`** — lands in docs, PRs, design reviews, wikis. Full workflow, `RENDER_VERIFIED` when tooling is obtainable.
 - **`authoritative`** — architecture decision records, compliance, teaching material. Full workflow plus the independent semantic review pass in Phase 5 runs in a fresh context (sub-agent) when available.
 
