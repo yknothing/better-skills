@@ -33,6 +33,23 @@
 
 1. Empty scripts/ — closed (F14). 2. No forward-test evidence — closed: 3/3 EXECUTED runs recorded in `2026-08-27-forward-test.md` (this exceeds the schema-only Gate 4 scope; still AI-executed, awaiting `HUMAN_VERIFIED`). 3. Tier comment normalization — deferred to Phase 1.B by design. 4. Sketch relief valve ambiguity — closed (F8). 5. Citation one-hop gap — accepted; citations live in `docs/research/uml-diagramming-analysis.md` per repo convention (URL backfill is Phase 3). 6. Kroki consent wording — the reference already requires user consent before sending source externally; wording kept ("never send… without the user's consent").
 
-## Verdict carried forward
+## Verdict carried forward (round 1)
 
-First-round adversary verdict: PASS_WITH_FIXES → all seven gating fixes applied and re-validated (Gate 1 16/16; pattern alignment 8/8 declared+in-body). The manifest-bound advocate/adversary reviews generated after these fixes are the Gate 2 records of note.
+First-round adversary verdict: PASS_WITH_FIXES → all seven gating fixes applied and re-validated (Gate 1 16/16; pattern alignment 8/8 declared+in-body).
+
+## Round 2 (revision R2: projection backends + layout-as-semantics)
+
+A fresh, independent adversary (no prior involvement) reviewed the R2 content at revision e7bfa08 with an empirical-probe mandate (37 tool calls; probes against mermaid 11.17.2, plantuml.jar with and without Graphviz, unicodedata width classes). Verdict: REQUIRES_CHANGES with 8 findings — all fixed in revision 30ae1d8:
+
+| # | Finding (probed) | Disposition |
+|---|---|---|
+| F1 HIGH | PlantUML exits 0 without Graphviz and writes an error-placard SVG for dot-dependent types; reference scoped the dot dependency backwards; smetana unmentioned | FIXED — never trust exit code alone; correct type scoping; `!pragma layout smetana` documented |
+| F2 MED | "`;` in message text tolerated on 11.17+" refuted by probe | FIXED — `;` still breaks, escape `#59;`; only `end`-in-text is tolerated |
+| F3 MED | "chat-only consumption" sketch cue swallowed default-to-deliverable | FIXED — medium alone never reclassifies; explicit user cue required |
+| F4 MED | SVG escalation could lower the evidence ceiling; no rasterize recipe | FIXED — escalation forbidden where verification cannot run; rasterize-to-inspect recipe added |
+| F5 MED | Recommended box-drawing chars are East-Asian-Ambiguous width (breaks CJK terminals); monospace-viewing upgrade unfalsifiable | FIXED — pure ASCII default with EAW warning; viewing step requires a named display act |
+| F6 LOW | Budget-justification threshold drift (9 vs 15) | FIXED — aligned to justify-above-9 everywhere |
+| F7 LOW | `A --- oB` (spaced) does not reproduce; spaceless does | FIXED — accurate reproduction documented |
+| F8 LOW | GitHub silently ignores the ELK directive; local RENDER_VERIFIED could certify unseen geometry | FIXED — rubric must run on the geometry the reader's renderer produces |
+
+Final manifest-bound reviews (advocate + adversary) were then produced against revision 30ae1d8; see the review files and `2026-08-27-final-audit.md` for the closing verdicts.
