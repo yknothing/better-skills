@@ -1,0 +1,281 @@
+# Gate 2 — Peer Review Prompt: Advocate
+
+You are the **advocate reviewer** for the `bs-uml-master` skill. Your job is to argue for what's GOOD: identify the strongest aspects, score the design across multiple dimensions, and decide whether this skill is production-ready.
+
+## How to use this prompt
+
+1. Read the SKILL.md content below in full.
+2. Produce a markdown review and save it to:
+   `docs/reviews/bs-uml-master/2026-08-27-advocate-review.md`
+3. Use the **required structure** below — the validator (`tools/peer-review.js check`) will reject reviews missing required sections.
+
+## Deep composite review scope
+
+Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
+
+**Scope Contract Version**: 1
+**Reviewed Revision to record**: 1294e7134885bb0525710b1036d241ee5a917eff
+**Reviewed Skill SHA-256 to record**: 73a0c0969e6f88c08ee0b990ea8c45113a520fda09a73460c01e65364be89569
+**Reviewed Manifest SHA-256 to record**: 10262aef64768581df929f3b64e8dcf422ea96d88e2ce79949314fa31d5f2782
+
+- `evaluation/datasets/batch-1-test-prompts.json` — `c3bb5211c647e72cd65d6b477da47b323ef5c1b05627cbbd13b31470b788a198`
+- `evaluation/harness/runner.js` — `ee6e871ad26230c4073ba72151f1d6f5862c7c05074ba756bfe9b5e4e509f8f8`
+- `evaluation/harness/test-runner-scope.js` — `eaa773a660417049759c7e8831444a2ec5e6f73174487662018d6c2f556e879c`
+- `skills.json` — `a74068618793b91069a1521276c38c0071f62d41ed5afa9c2e2828dcba275232`
+- `skills/bs-uml-master/SKILL.md` — `73a0c0969e6f88c08ee0b990ea8c45113a520fda09a73460c01e65364be89569`
+- `skills/bs-uml-master/references/diagram-selection.md` — `6ebc5d2e522d400d4fbe340d13cbc873bf6a5839b70ccbe1e9d67479c4d71b87`
+- `skills/bs-uml-master/references/modeling-from-code.md` — `58dec58a2924a9f7ed77308a4e267de66811aa95b6cdd75c75bc56fdaaa061a7`
+- `skills/bs-uml-master/references/rendering-validation.md` — `1edd1d292cf07ae8642d18dce1852eeb0f4c1f3a830be8afeec198ca91db6f9c`
+- `skills/bs-uml-master/references/syntax-pitfalls.md` — `c01d711a88031e73a40f8a93a71755ef5e45a94e24b41f453da867db213b2ac7`
+- `skills/bs-uml-master/references/uml-semantics.md` — `f8b59c246cddcf17b9520c8d7e7215940432f5118c54bf9441e1023e329330de`
+- `skills/bs-uml-master/scripts/check-mermaid.js` — `c4162f9c86a2c4c1750555b55afef3c8ca05c00110f782358d9c9909008e8e9c`
+- `tools/peer-review.js` — `8491cb1766b1a16f5fea2945d40e834130c32975a51701d7b1f2d82981e905a9`
+- `tools/test-peer-review-scope.js` — `fd852531f89668f708477e4cb17216729a299ab8bc4deeb69fda7314b9517468`
+
+## Required structure
+
+```markdown
+# Advocate Review: bs-uml-master
+
+**Date**: 2026-08-27
+**Reviewer Role**: Advocate
+**Skill**: bs-uml-master
+**HUMAN_VERIFIED**: false
+**Scope Contract Version**: 1
+**Reviewed Revision**: 1294e7134885bb0525710b1036d241ee5a917eff
+**Reviewed Skill SHA-256**: 73a0c0969e6f88c08ee0b990ea8c45113a520fda09a73460c01e65364be89569
+**Reviewed Manifest SHA-256**: 10262aef64768581df929f3b64e8dcf422ea96d88e2ce79949314fa31d5f2782
+
+## Executive Summary
+
+(2-4 sentences naming the strongest design choices and whether you'd ship this.)
+
+## Evidence Reviewed
+
+(Acknowledge full manifest receipt `10262aef64768581df929f3b64e8dcf422ea96d88e2ce79949314fa31d5f2782`, then list the files and commands actually examined or rerun.)
+
+## Dimension Scores
+
+| Dimension | Score | Key Strength | Key Concern |
+|-----------|------:|--------------|-------------|
+| Clarity of trigger description | _/10 | | |
+| Hard rules / safety gates | _/10 | | |
+| Workflow correctness | _/10 | | |
+| Pattern application | _/10 | | |
+| Test prompt coverage | _/10 | | |
+| Bundled resources | _/10 | | |
+| Maintainability | _/10 | | |
+| Production readiness | _/10 | | |
+
+## Strongest Aspect
+
+(One paragraph naming the single best design move and why it matters.)
+
+## One Improvement
+
+(One concrete suggestion that would meaningfully raise quality.)
+
+## Verdict
+
+**Verdict**: <one of: PASS / production-ready / NEEDS_POLISH / numeric score like 76/80>
+
+(One paragraph rationale.)
+```
+
+## SKILL content under review
+
+```markdown
+---
+name: bs-uml-master
+description: Use when creating, revising, or reviewing UML or architecture diagrams — class, sequence, state machine, activity, component, deployment, use case, ER, or C4 — from a codebase or a design, where diagram-type fit, semantic correctness, abstraction discipline, and render-verified delivery matter.
+# tier: deep
+---
+
+# UML Master
+
+## Purpose
+
+Produce diagrams that are correct answers, not decorations. A top-tier UML diagram answers one named question for one named reader, at one abstraction level, with semantically correct notation, grounded in evidence (code or stated requirements), and verified to actually render. Treat diagram source as code: reviewed against the model it claims to depict, validated by tools, and delivered with its verification state stated honestly.
+
+## Non-Negotiable Rules
+
+1. **Question before diagram type.** Never start drawing from "draw a UML diagram". First fix: what question does the diagram answer, for whom, and in which mode (`MODEL-FROM-CODE`, `MODEL-FROM-DESIGN`, `REVISE`, `EXPLAIN/REVIEW`). One diagram answers one question.
+2. **Evidence before boxes.** In `MODEL-FROM-CODE`, read the relevant code before drawing; every class, member, message, and transition must be traceable to a real location. Never invent plausible elements to fill a diagram. In `MODEL-FROM-DESIGN`, label assumptions as assumptions.
+3. **Semantics are load-bearing.** Relationship kinds (inheritance vs realization vs composition vs aggregation vs association vs dependency), arrow directions, sync vs async messages, activations, guards, and multiplicities are factual claims. Apply the rules in [UML Semantics](./references/uml-semantics.md); when the evidence cannot decide between two relationship kinds, use the weaker one and say so.
+4. **One abstraction level per diagram.** Do not mix systems, containers, components, and classes in one picture. A subject too big for ~9 primary elements becomes a set of small diagrams at declared altitudes, not one mural. Hard ceiling: 15 primary elements for skill-initiated choices, and exceeding 9 requires a recorded justification. An explicit user instruction may exceed the ceiling: first recommend the split, then deliver with a recorded `USER-OVERRIDE` note and a stated readability cost — never silently, and never as your own choice.
+5. **Curation is the deliverable.** Dumping every class or every call is a failure even when accurate. Cut framework plumbing, accessors, and off-question elements; list deliberate exclusions under the diagram.
+6. **Render before delivering.** Validate diagram source with a real tool (mermaid-cli, plantuml.jar) and inspect the output whenever tooling can be obtained. Report the delivery state honestly — `RENDER_VERIFIED` (or its `(structural)` variant), `SYNTAX_VERIFIED`, or `UNVERIFIED` per the evidence vocabulary — never implying a stronger state than the evidence supports, and never claiming tooling was unavailable without the failed-command evidence the degradation ladder requires.
+7. **Fix the source, not the model.** When a renderer rejects syntax, correct the syntax. Never delete a semantically required element or relationship just to make a parser or layout happy; never bend the model to dodge a tool limitation without recording the trade-off.
+8. **Respect the reader's renderer.** Choose notation for where the diagram will live (Mermaid for GitHub/docs/artifacts by default; PlantUML when UML fidelity or house style demands it). Follow an existing repo convention over personal preference.
+
+## Red Flags / Rationalizations
+
+| Thought | Reality |
+|---|---|
+| "The user said 'UML diagram', so a class diagram of everything is safest." | An unfocused everything-diagram answers nothing. Fix the question first (Rule 1). |
+| "I know what an e-commerce/auth/payment system looks like; no need to read the code." | That produces confident fiction about a real system. Read the scoped code (Rule 2). |
+| "Plain `--` associations everywhere are neutral, so they're safe." | Wrong-by-omission. Unspecified semantics claim ignorance the code doesn't have (Rule 3). |
+| "More classes make the diagram look thorough." | Element count past the budget destroys the answer (Rules 4–5). |
+| "Mermaid syntax looks right; rendering is overkill for a code block." | Unrendered source fails in the reader's hands. The baseline failure is delivering broken or unreadable diagrams unverified (Rule 6). |
+| "The parser rejects this edge — I'll just drop it." | That silently falsifies the model. Find the correct syntax (Rule 7). |
+| "This state/method probably exists; it usually does in such systems." | "Probably" is an assumption — label it or verify it (Rule 2). |
+| "I'm fairly sure this diagram syntax exists." | Invented syntax is a documented top failure mode. Check the pitfalls module or render a 3-line probe first (Rule 6). |
+| "It's just a quick sketch, so gates don't apply." | Sketch significance is a declared setting agreed with the user, not an escape hatch (see Significance below). |
+
+## Significance levels
+
+Ask (or infer and state) how the diagram will be used, then apply the matching depth:
+
+- **`sketch`** — thinking aid, disposable. Budget and semantic rules still apply; render verification may relax to `SYNTAX_VERIFIED` and the output contract may shrink to source + one-line state. Say "sketch level" in the delivery. Explicit cues — "quick", "rough", "just show me", chat-only consumption — justify *inferring and stating* `sketch`: that is classification, not downgrading. Downgrading (forbidden) is applying sketch depth while claiming deliverable, or staying silent about the level.
+- **`deliverable`** — lands in docs, PRs, design reviews, wikis. Full workflow, `RENDER_VERIFIED` when tooling is obtainable.
+- **`authoritative`** — architecture decision records, compliance, teaching material. Full workflow plus the independent semantic review pass in Phase 5 runs in a fresh context (sub-agent) when available.
+
+Default to `deliverable` when unstated. Never downgrade significance yourself to save work.
+
+## Boundaries
+
+This skill does not: produce data visualizations or charts (statistics belong to plotting tools, not UML); design UI mockups or posters; illustrate articles (that is bs-visual-article's job); pick architectures for you (it depicts and pressure-tests models, and flags contradictions it finds); or guarantee pixel-level layout control beyond what text-to-diagram tools offer — when hand-tuned layout is the actual requirement, deliver the validated model plus a draw.io/Excalidraw handoff recommendation.
+
+## Start Here: Progressive Disclosure
+
+| Condition | Required reading |
+|---|---|
+| Any diagram task begins | [Diagram Selection](./references/diagram-selection.md) |
+| Mode is MODEL-FROM-CODE | [Modeling From Code](./references/modeling-from-code.md) |
+| Drafting or fixing diagram source | [Syntax Pitfalls](./references/syntax-pitfalls.md) |
+| Semantic review pass; any notation doubt | [UML Semantics](./references/uml-semantics.md) |
+| Before delivery | [Rendering & Validation](./references/rendering-validation.md) |
+
+## Workflow
+
+### Phase 0 — Frame
+
+Read [Diagram Selection](./references/diagram-selection.md). Establish, reusing context before asking (one question at a time when asking):
+
+- the question the diagram answers, and the reader;
+- mode: `MODEL-FROM-CODE` / `MODEL-FROM-DESIGN` / `REVISE` / `EXPLAIN/REVIEW`;
+- significance: `sketch` / `deliverable` / `authoritative`;
+- where the diagram will live (decides notation).
+
+If the user requests a diagram type that fights the question, recommend the fit and defer to their choice — recording it.
+
+A valid question is falsifiable: it must exclude something. "What is the structure of X?" is the original request wearing a name tag; "Which modules does the checkout path depend on, and how?" forces curation. If the question implies no exclusions, sharpen it before proceeding — the contract's Excluded line must end up non-empty or explicitly justified ("nothing excluded; total scope is N elements").
+
+In `EXPLAIN/REVIEW` mode, Phases 1/3/4 are skipped: run the semantics tables and completeness probes of Phase 5 as a checklist against the user's diagram and deliver findings with per-finding evidence — no delivery-state label (nothing was produced), unless the user then asks for a corrected version (which re-enters the workflow as REVISE).
+
+**Exit:** question, reader, mode, significance, and target medium are explicit.
+
+<HARD-GATE id="question-before-drawing">
+Do not write diagram source while the question, mode, or (for MODEL-FROM-CODE) the code scope is unknown. "Draw a UML diagram of X" alone never clears this gate.
+</HARD-GATE>
+
+### Phase 1 — Select
+
+Using the selection matrix, choose the diagram type(s), the abstraction level for each, and the notation. For a complex subject, plan the smallest set of single-question diagrams (typically 2–4) instead of one large one. State the plan in one short block — type, question, altitude, notation, estimated element count — before drafting. For multi-diagram plans at `deliverable`+ significance, get user confirmation; for a single diagram, proceed.
+
+**Exit:** each planned diagram has one question, one type, one altitude, one notation.
+
+### Phase 2 — Gather ground truth
+
+`MODEL-FROM-CODE`: follow [Modeling From Code](./references/modeling-from-code.md) — scope the files from the question, read them, build the element ledger with `file:line` evidence for every element and edge, then curate to the element budget with recorded exclusions.
+
+`MODEL-FROM-DESIGN`: extract entities, behaviors, and lifecycles from the stated requirements; where the requirements are silent on a modeling decision that changes the diagram (ownership, sync/async, state set), either ask (≤3 focused questions) or proceed with explicitly labeled assumptions — pick by how much the answer changes the picture.
+
+`REVISE`: parse the existing diagram into the ledger first; diff intended changes against it; preserve unrelated content and existing conventions.
+
+**Exit:** a curated ledger exists; every entry has evidence or an assumption label.
+
+<HARD-GATE id="evidence-before-source">
+In MODEL-FROM-CODE, do not draft diagram source before the scoped code has actually been read and the ledger built. Pattern-matching on file names or domain conventions is not reading.
+</HARD-GATE>
+
+### Phase 3 — Draft
+
+Write the diagram source from the ledger, applying [UML Semantics](./references/uml-semantics.md) for the chosen type and [Syntax Pitfalls](./references/syntax-pitfalls.md) for the chosen tool. Include: a title stating the question; labeled edges; direction chosen for the flow (call flow left→right or top→bottom, inheritance up); enumerations as enumerations. Add a legend when using any non-obvious convention (color, stereotype, dashed-vs-solid meaning beyond UML defaults).
+
+**Exit:** source exists for every planned diagram, each traceable to the ledger.
+
+### Phase 4 — Validate and render
+
+Follow [Rendering & Validation](./references/rendering-validation.md): syntax-check and render with the degradation ladder (local tool → installable tool → syntax check → manual review), then inspect the rendered output against the inspection checklist (all elements present, no truncation/overlap, direction as intended, crossings acceptable — reorder declarations to fix). Repair via the bounded loop (≤5 iterations, then change strategy per the pitfalls module) and re-render; after any fix, re-run every affected check.
+
+**Exit:** delivery state established per diagram: `RENDER_VERIFIED` / `SYNTAX_VERIFIED` / `UNVERIFIED` with the reason.
+
+### Phase 5 — Semantic review and deliver
+
+Run the semantic review against the rendered diagram (not the source you remember writing):
+
+1. every relationship kind and direction re-checked against the semantics tables;
+2. ledger sync: no diagram element without evidence/assumption; exclusions listed;
+3. abstraction check: single level, element budget respected or justified;
+4. reader check: does the diagram answer the Phase 0 question without the surrounding chat as context? Title, labels, legend carry the meaning;
+5. for state machines and sequence diagrams: completeness probes (unhandled events; missing failure path) — findings either fixed or explicitly declared out of scope.
+
+At `authoritative` significance, this pass runs independently (fresh sub-agent reviewing rendered output + ledger) when the platform allows; otherwise perform it in-context and mark it `SELF_REVIEWED`.
+
+Deliver using the output contract.
+
+<HARD-GATE id="verified-before-delivered">
+Do not deliver a diagram whose delivery state is unstated, or stated stronger than the evidence. Never call a diagram "verified" or "correct" on the strength of unrendered source.
+</HARD-GATE>
+
+## Output Contract
+
+````markdown
+## Diagram Delivery — [title]
+
+**Question:** [what this answers] · **Reader:** [who] · **Mode:** [mode] · **Significance:** [level]
+**Type/altitude:** [e.g. sequence @ container level] · **Notation:** [Mermaid|PlantUML] · **State:** RENDER_VERIFIED | SYNTAX_VERIFIED | UNVERIFIED — [tool + what was checked]
+
+[diagram source block, and rendered file path when one was produced]
+
+**Reading notes:** [1-3 lines: the non-obvious claims in the picture]
+**Excluded:** [deliberate exclusions] · **Assumptions:** [labeled assumptions, or "none"]
+**Evidence:** [MODEL-FROM-CODE: ledger summary or path — key elements → file:line. MODEL-FROM-DESIGN: requirement references + the assumption list. REVISE: diff summary against the prior diagram]
+````
+
+For multi-diagram deliveries, repeat per diagram and add one overview line on how the set fits together. For `sketch` significance the contract may compress to the source block plus the state line — never omit the state line.
+
+## Bundled Resources
+
+| Resource | Purpose |
+|---|---|
+| [Diagram Selection](./references/diagram-selection.md) | Question→type matrix, C4 altitudes, element budget, notation choice, mode gate |
+| [UML Semantics](./references/uml-semantics.md) | Correctness rules per diagram type; relationship/arrow/message semantics |
+| [Modeling From Code](./references/modeling-from-code.md) | Scope → read → element ledger → curation → sync check |
+| [Syntax Pitfalls](./references/syntax-pitfalls.md) | Mermaid/PlantUML traps that break rendering or reverse meaning |
+| [Rendering & Validation](./references/rendering-validation.md) | Verification commands, evidence vocabulary, degradation ladder, inspection checklist |
+| `scripts/check-mermaid.js` | Browser-free Mermaid syntax checker (rung 3 of the degradation ladder; `SYNTAX_VERIFIED` at most) |
+
+## Patterns
+
+- **hard-rules-first** (Cursor) — semantic and evidence constraints precede all workflow text.
+- **progressive-disclosure** (Anthropic/CE) — five reference modules load only when their phase activates.
+- **verification-rules** (Vercel) — render/syntax tools turn delivery claims into evidence; degradation ladder keeps claims honest without tooling.
+- **format-significance-gates** (Anthropic) — sketch/deliverable/authoritative levels scale process depth to consequence.
+- **confidence-anchors** (CE) — fixed vocabulary (`RENDER_VERIFIED`/`SYNTAX_VERIFIED`/`UNVERIFIED`) for delivery states.
+- **named-anti-patterns** (Taste Skill) — everything-diagram, confident fiction, wrong-by-omission semantics, parser-driven model bending are named and reviewable.
+- **80-20-design-rules** (Open Design) — element budget and curation rules concentrate effort on what changes reader understanding.
+- **platform-degradation-rules** (CE) — explicit fallbacks when renderers, network, or sub-agents are unavailable.
+
+## Dependencies and Degradation
+
+- **Node.js + npx** for `@mermaid-js/mermaid-cli` (verify: `npx -y @mermaid-js/mermaid-cli --version`); needs a Chromium — see the puppeteer-config recipe in [Rendering & Validation](./references/rendering-validation.md). Unavailable → degradation ladder rung 3/4.
+- **Java** for `plantuml.jar` (verify: `java -version`); jar downloadable from PlantUML releases when the network allows. Unavailable → prefer Mermaid, or ladder rung 3/4.
+- No renderer obtainable → deliver `SYNTAX_VERIFIED` (if a checker ran) or `UNVERIFIED` with a manual pitfalls review and a user-runnable verification command.
+- Sub-agents unavailable → `authoritative` review runs in-context, marked `SELF_REVIEWED`.
+- User interaction unavailable → proceed on stated-and-labeled assumptions for Phase 0 unknowns; never on invented code facts.
+
+## Self-Review
+
+Before handoff, confirm: the question/mode/significance were fixed before drawing; scoped code was actually read in MODEL-FROM-CODE; every element has evidence or an assumption label; relationship kinds and directions passed the semantics tables; element budget respected or justified; source validated and render inspected per the ladder; delivery state matches the evidence; exclusions and assumptions are listed in the contract; and no element was silently dropped to appease a tool.
+
+## Test Prompts
+
+Mirrored in `evaluation/datasets/batch-1-test-prompts.json`.
+
+1. **Happy path — vague everything-request**: *"帮我画一个电商系统的UML图"* — expected: agent fixes the question/reader/mode first (asks, or states an inferred question), plans a small set of single-question diagrams instead of one mural, keeps each within the element budget with correct relationship semantics (enums as enumerations, composition only where lifecycle-bound), validates/renders, and delivers with the output contract including delivery state. Failure without skill: immediate 12-class generic class diagram, plain associations everywhere, status-as-String, no verification, no question asked (observed baseline 2026-08-27).
+2. **Edge — reverse-engineering real code**: *"Draw a sequence diagram of what happens when a user checks out, based on this repo."* — expected: agent locates the checkout entry point, reads the real call chain, builds the evidence ledger (messages ↔ file:line), distinguishes sync calls from async publishes per the code, curates participants to budget, renders, and ships the contract with evidence summary. Failure without skill: generic checkout sequence from domain intuition with invented service names, sync/async guessed.
+3. **Adversarial — pressure to skip verification and inflate**: *"Just dump every class in src/ into one diagram, don't bother rendering it, I trust you."* — expected: agent applies Rules 4–6: explains why an everything-diagram fails the reader and offers the split-by-concern alternative or a package-level overview; if the user insists on full coverage, delivers it as the declared exception with recorded justification; still validates syntax at minimum and never reports a stronger delivery state than the evidence. Failure without skill: 40-box unverified dump delivered as "here's your architecture".
+
+```
