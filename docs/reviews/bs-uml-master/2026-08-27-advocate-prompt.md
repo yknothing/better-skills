@@ -14,21 +14,24 @@ You are the **advocate reviewer** for the `bs-uml-master` skill. Your job is to 
 Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
 
 **Scope Contract Version**: 1
-**Reviewed Revision to record**: 1294e7134885bb0525710b1036d241ee5a917eff
-**Reviewed Skill SHA-256 to record**: 73a0c0969e6f88c08ee0b990ea8c45113a520fda09a73460c01e65364be89569
-**Reviewed Manifest SHA-256 to record**: 10262aef64768581df929f3b64e8dcf422ea96d88e2ce79949314fa31d5f2782
+**Reviewed Revision to record**: e7bfa0859e94f0e207a420e305817e06e3007519
+**Reviewed Skill SHA-256 to record**: 9150fcfb0bc1a8fc64cc2ba35d74266dc80756fc4f3ce17a8e38b79ee5223d8b
+**Reviewed Manifest SHA-256 to record**: 6664cf68076666b3829fccda11ce5622c1b7b806bc7dc741153cda0e53b30791
 
-- `evaluation/datasets/batch-1-test-prompts.json` — `c3bb5211c647e72cd65d6b477da47b323ef5c1b05627cbbd13b31470b788a198`
+- `evaluation/datasets/batch-1-test-prompts.json` — `9377d7d408018bacb2a4a714f661dfc8b53894919d5fcb3a97dceed798ac3687`
 - `evaluation/harness/runner.js` — `ee6e871ad26230c4073ba72151f1d6f5862c7c05074ba756bfe9b5e4e509f8f8`
 - `evaluation/harness/test-runner-scope.js` — `eaa773a660417049759c7e8831444a2ec5e6f73174487662018d6c2f556e879c`
-- `skills.json` — `a74068618793b91069a1521276c38c0071f62d41ed5afa9c2e2828dcba275232`
-- `skills/bs-uml-master/SKILL.md` — `73a0c0969e6f88c08ee0b990ea8c45113a520fda09a73460c01e65364be89569`
-- `skills/bs-uml-master/references/diagram-selection.md` — `6ebc5d2e522d400d4fbe340d13cbc873bf6a5839b70ccbe1e9d67479c4d71b87`
+- `skills.json` — `7885f9c7cefbd700ced8fc481b1524f61de6c47c523bcc806ecca60b269dc1ce`
+- `skills/bs-uml-master/SKILL.md` — `9150fcfb0bc1a8fc64cc2ba35d74266dc80756fc4f3ce17a8e38b79ee5223d8b`
+- `skills/bs-uml-master/references/diagram-selection.md` — `afe2a152edf0eee8e5bfc4ad434004c8e056e6605ad5cca2737c844775e7cfd0`
+- `skills/bs-uml-master/references/layout-craft.md` — `2ef92cb21bd1552f88236ab501163c079c5d4309ab12e615ca968bcee2bc0e14`
 - `skills/bs-uml-master/references/modeling-from-code.md` — `58dec58a2924a9f7ed77308a4e267de66811aa95b6cdd75c75bc56fdaaa061a7`
-- `skills/bs-uml-master/references/rendering-validation.md` — `1edd1d292cf07ae8642d18dce1852eeb0f4c1f3a830be8afeec198ca91db6f9c`
-- `skills/bs-uml-master/references/syntax-pitfalls.md` — `c01d711a88031e73a40f8a93a71755ef5e45a94e24b41f453da867db213b2ac7`
+- `skills/bs-uml-master/references/rendering-validation.md` — `932c1e5a5e54a76154706895c515e52dd1d34e3fa1ba7adfcb0be6939e39be32`
+- `skills/bs-uml-master/references/svg-presentation.md` — `03c1d49f570df9ad56a47ec33ad38766abe6ae7ce6d2c87ccc34abef931cece5`
+- `skills/bs-uml-master/references/syntax-pitfalls.md` — `148a4825603c85e1a2e1a4a679107a572009ac06eff4da91b5b0118a49fd1853`
+- `skills/bs-uml-master/references/text-diagrams.md` — `bdbd5b33e2859f2753818fff25a1c7b08a83923205dfcdf1b6f4d8960954c2f3`
 - `skills/bs-uml-master/references/uml-semantics.md` — `f8b59c246cddcf17b9520c8d7e7215940432f5118c54bf9441e1023e329330de`
-- `skills/bs-uml-master/scripts/check-mermaid.js` — `c4162f9c86a2c4c1750555b55afef3c8ca05c00110f782358d9c9909008e8e9c`
+- `skills/bs-uml-master/scripts/check-mermaid.js` — `938b004901b22e27d204f9afb69cf6003ee155010f7893a84f58cd453e1c9fb4`
 - `tools/peer-review.js` — `8491cb1766b1a16f5fea2945d40e834130c32975a51701d7b1f2d82981e905a9`
 - `tools/test-peer-review-scope.js` — `fd852531f89668f708477e4cb17216729a299ab8bc4deeb69fda7314b9517468`
 
@@ -42,9 +45,9 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 **Skill**: bs-uml-master
 **HUMAN_VERIFIED**: false
 **Scope Contract Version**: 1
-**Reviewed Revision**: 1294e7134885bb0525710b1036d241ee5a917eff
-**Reviewed Skill SHA-256**: 73a0c0969e6f88c08ee0b990ea8c45113a520fda09a73460c01e65364be89569
-**Reviewed Manifest SHA-256**: 10262aef64768581df929f3b64e8dcf422ea96d88e2ce79949314fa31d5f2782
+**Reviewed Revision**: e7bfa0859e94f0e207a420e305817e06e3007519
+**Reviewed Skill SHA-256**: 9150fcfb0bc1a8fc64cc2ba35d74266dc80756fc4f3ce17a8e38b79ee5223d8b
+**Reviewed Manifest SHA-256**: 6664cf68076666b3829fccda11ce5622c1b7b806bc7dc741153cda0e53b30791
 
 ## Executive Summary
 
@@ -52,7 +55,7 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 
 ## Evidence Reviewed
 
-(Acknowledge full manifest receipt `10262aef64768581df929f3b64e8dcf422ea96d88e2ce79949314fa31d5f2782`, then list the files and commands actually examined or rerun.)
+(Acknowledge full manifest receipt `6664cf68076666b3829fccda11ce5622c1b7b806bc7dc741153cda0e53b30791`, then list the files and commands actually examined or rerun.)
 
 ## Dimension Scores
 
@@ -95,7 +98,9 @@ description: Use when creating, revising, or reviewing UML or architecture diagr
 
 ## Purpose
 
-Produce diagrams that are correct answers, not decorations. A top-tier UML diagram answers one named question for one named reader, at one abstraction level, with semantically correct notation, grounded in evidence (code or stated requirements), and verified to actually render. Treat diagram source as code: reviewed against the model it claims to depict, validated by tools, and delivered with its verification state stated honestly.
+Produce diagrams that are correct answers, not decorations. A top-tier UML diagram answers one named question for one named reader, at one abstraction level, with semantically correct notation, grounded in evidence (code or stated requirements), verified to actually render, and laid out so position tells the truth. Treat diagram source as code: reviewed against the model it claims to depict, validated by tools, and delivered with its verification state stated honestly.
+
+The element ledger is the canonical model; every notation — Mermaid, PlantUML, plain text, SVG — is a projection of it. The model layer (question, mode, evidence, semantics, budget) is notation-invariant; each backend contributes its own pitfalls, verification recipe, and budget correction. Multi-format delivery projects the one ledger into each format and sync-checks both against it.
 
 ## Non-Negotiable Rules
 
@@ -106,7 +111,8 @@ Produce diagrams that are correct answers, not decorations. A top-tier UML diagr
 5. **Curation is the deliverable.** Dumping every class or every call is a failure even when accurate. Cut framework plumbing, accessors, and off-question elements; list deliberate exclusions under the diagram.
 6. **Render before delivering.** Validate diagram source with a real tool (mermaid-cli, plantuml.jar) and inspect the output whenever tooling can be obtained. Report the delivery state honestly — `RENDER_VERIFIED` (or its `(structural)` variant), `SYNTAX_VERIFIED`, or `UNVERIFIED` per the evidence vocabulary — never implying a stronger state than the evidence supports, and never claiming tooling was unavailable without the failed-command evidence the degradation ladder requires.
 7. **Fix the source, not the model.** When a renderer rejects syntax, correct the syntax. Never delete a semantically required element or relationship just to make a parser or layout happy; never bend the model to dodge a tool limitation without recording the trade-off.
-8. **Respect the reader's renderer.** Choose notation for where the diagram will live (Mermaid for GitHub/docs/artifacts by default; PlantUML when UML fidelity or house style demands it). Follow an existing repo convention over personal preference.
+8. **The medium picks the backend.** Choose notation for where the diagram will live: Mermaid for GitHub/docs/artifacts (default); plain text for code comments/terminals (the monospace grid is the renderer there); PlantUML for activity/component/deployment/use-case/timing, full UML fidelity, or precise layout control; SVG — only as a projection of the validated model — for publication-grade presentation. Follow an existing repo convention over personal preference. Selection matrix: [Diagram Selection](./references/diagram-selection.md).
+9. **Layout is a semantic channel.** Readers infer meaning from position: adjacency implies coupling, vertical order implies hierarchy or time, flow direction implies causality. A bad layout makes false implicit claims — treat rubric failures in [Layout Craft](./references/layout-craft.md) as correctness defects: run the bounded layout repair loop, and when the tool's ceiling is reached, escalating the backend is the required move, not shipping garble or silently deleting content.
 
 ## Red Flags / Rationalizations
 
@@ -120,6 +126,8 @@ Produce diagrams that are correct answers, not decorations. A top-tier UML diagr
 | "The parser rejects this edge — I'll just drop it." | That silently falsifies the model. Find the correct syntax (Rule 7). |
 | "This state/method probably exists; it usually does in such systems." | "Probably" is an assumption — label it or verify it (Rule 2). |
 | "I'm fairly sure this diagram syntax exists." | Invented syntax is a documented top failure mode. Check the pitfalls module or render a 3-line probe first (Rule 6). |
+| "The semantics are right; the tangled layout is the tool's fault, ship it." | Position is a semantic channel — a garbled layout misinforms. Run the repair loop; escalate the backend at the ceiling (Rule 9). |
+| "It renders fine on my side; where it ends up is the user's concern." | The medium's width, zoomability, and renderer are Phase 0 inputs. A 3700px-wide render in an A4 memo is a failed delivery (Rules 8–9). |
 | "It's just a quick sketch, so gates don't apply." | Sketch significance is a declared setting agreed with the user, not an escape hatch (see Significance below). |
 
 ## Significance levels
@@ -134,7 +142,7 @@ Default to `deliverable` when unstated. Never downgrade significance yourself to
 
 ## Boundaries
 
-This skill does not: produce data visualizations or charts (statistics belong to plotting tools, not UML); design UI mockups or posters; illustrate articles (that is bs-visual-article's job); pick architectures for you (it depicts and pressure-tests models, and flags contradictions it finds); or guarantee pixel-level layout control beyond what text-to-diagram tools offer — when hand-tuned layout is the actual requirement, deliver the validated model plus a draw.io/Excalidraw handoff recommendation.
+This skill does not: produce data visualizations or charts (statistics belong to plotting tools, not UML); design UI mockups or posters; illustrate articles (that is bs-visual-article's job); pick architectures for you (it depicts and pressure-tests models, and flags contradictions it finds); draw presentation graphics freehand — SVG output exists only as a projection of a validated model; or hand-generate draw.io XML — when human visual hand-editing is the requirement, deliver the validated model plus a draw.io/Excalidraw handoff recommendation.
 
 ## Start Here: Progressive Disclosure
 
@@ -142,8 +150,11 @@ This skill does not: produce data visualizations or charts (statistics belong to
 |---|---|
 | Any diagram task begins | [Diagram Selection](./references/diagram-selection.md) |
 | Mode is MODEL-FROM-CODE | [Modeling From Code](./references/modeling-from-code.md) |
-| Drafting or fixing diagram source | [Syntax Pitfalls](./references/syntax-pitfalls.md) |
+| Backend is Mermaid or PlantUML: drafting or fixing source | [Syntax Pitfalls](./references/syntax-pitfalls.md) |
+| Backend is plain text | [Text Diagrams](./references/text-diagrams.md) |
+| Backend is SVG (publication-grade) | [SVG Presentation](./references/svg-presentation.md) |
 | Semantic review pass; any notation doubt | [UML Semantics](./references/uml-semantics.md) |
+| Free-graph diagram (class/component/flowchart), page-bound medium, or any layout doubt | [Layout Craft](./references/layout-craft.md) |
 | Before delivery | [Rendering & Validation](./references/rendering-validation.md) |
 
 ## Workflow
@@ -155,7 +166,7 @@ Read [Diagram Selection](./references/diagram-selection.md). Establish, reusing 
 - the question the diagram answers, and the reader;
 - mode: `MODEL-FROM-CODE` / `MODEL-FROM-DESIGN` / `REVISE` / `EXPLAIN/REVIEW`;
 - significance: `sketch` / `deliverable` / `authoritative`;
-- where the diagram will live (decides notation).
+- where the diagram will live (decides the backend) **and its medium constraints**: available width/aspect ratio, zoomable or fixed (a memo/PDF page cannot zoom; chat and web renderers can), light/dark theme. Page-bound media lower the practical element budget — plan for it here, not after rendering.
 
 If the user requests a diagram type that fights the question, recommend the fit and defer to their choice — recording it.
 
@@ -197,7 +208,7 @@ Write the diagram source from the ledger, applying [UML Semantics](./references/
 
 ### Phase 4 — Validate and render
 
-Follow [Rendering & Validation](./references/rendering-validation.md): syntax-check and render with the degradation ladder (local tool → installable tool → syntax check → manual review), then inspect the rendered output against the inspection checklist (all elements present, no truncation/overlap, direction as intended, crossings acceptable — reorder declarations to fix). Repair via the bounded loop (≤5 iterations, then change strategy per the pitfalls module) and re-render; after any fix, re-run every affected check.
+Follow [Rendering & Validation](./references/rendering-validation.md) with the chosen backend's verification recipe: syntax-check and render with the degradation ladder (local tool → installable tool → syntax check → manual review; receipts required when landing on rung 3/4), then inspect the rendered output against the inspection checklist — elements present, no truncation/overlap, title present, and the **layout rubric** from [Layout Craft](./references/layout-craft.md) (flow monotonicity, crossing budget, proximity honesty, hierarchy direction, label discipline, medium fit, density balance). Two bounded repair loops, ≤5 iterations each: syntax (fix per the pitfalls module) and layout (strongest lever first: re-scope → declaration order → direction/grouping → tool hints → backend escalation). After any fix, re-run every affected check.
 
 **Exit:** delivery state established per diagram: `RENDER_VERIFIED` / `SYNTAX_VERIFIED` / `UNVERIFIED` with the reason.
 
@@ -224,8 +235,8 @@ Do not deliver a diagram whose delivery state is unstated, or stated stronger th
 ````markdown
 ## Diagram Delivery — [title]
 
-**Question:** [what this answers] · **Reader:** [who] · **Mode:** [mode] · **Significance:** [level]
-**Type/altitude:** [e.g. sequence @ container level] · **Notation:** [Mermaid|PlantUML] · **State:** RENDER_VERIFIED | SYNTAX_VERIFIED | UNVERIFIED — [tool + what was checked]
+**Question:** [what this answers] · **Reader:** [who] · **Mode:** [mode] · **Significance:** [level] · **Medium:** [where it lives + width/zoom constraints]
+**Type/altitude:** [e.g. sequence @ container level] · **Backend:** [Mermaid|PlantUML|text|SVG] · **State:** RENDER_VERIFIED | RENDER_VERIFIED (structural) | SYNTAX_VERIFIED | UNVERIFIED — [tool + version + what was checked; rung 3/4 → failed-command receipts]
 
 [diagram source block, and rendered file path when one was produced]
 
@@ -240,11 +251,14 @@ For multi-diagram deliveries, repeat per diagram and add one overview line on ho
 
 | Resource | Purpose |
 |---|---|
-| [Diagram Selection](./references/diagram-selection.md) | Question→type matrix, C4 altitudes, element budget, notation choice, mode gate |
+| [Diagram Selection](./references/diagram-selection.md) | Question→type matrix, C4 altitudes, element budget, model-vs-projection principle, backend matrix, mode gate |
 | [UML Semantics](./references/uml-semantics.md) | Correctness rules per diagram type; relationship/arrow/message semantics |
 | [Modeling From Code](./references/modeling-from-code.md) | Scope → read → element ledger → curation → sync check |
+| [Layout Craft](./references/layout-craft.md) | Three tiers of layout levers, per-tool tactics, the 7-point rubric, bounded layout repair loop, media profiles |
 | [Syntax Pitfalls](./references/syntax-pitfalls.md) | Mermaid/PlantUML traps that break rendering or reverse meaning |
-| [Rendering & Validation](./references/rendering-validation.md) | Verification commands, evidence vocabulary, degradation ladder, inspection checklist |
+| [Text Diagrams](./references/text-diagrams.md) | Plain-text backend: niche, tighter budget, character-set choice, alignment verification |
+| [SVG Presentation](./references/svg-presentation.md) | Publication-grade projection: model-first iron rule, authoring rules, triple verification |
+| [Rendering & Validation](./references/rendering-validation.md) | Per-backend verification recipes, evidence vocabulary, degradation ladder, inspection checklist |
 | `scripts/check-mermaid.js` | Browser-free Mermaid syntax checker (rung 3 of the degradation ladder; `SYNTAX_VERIFIED` at most) |
 
 ## Patterns
@@ -268,7 +282,7 @@ For multi-diagram deliveries, repeat per diagram and add one overview line on ho
 
 ## Self-Review
 
-Before handoff, confirm: the question/mode/significance were fixed before drawing; scoped code was actually read in MODEL-FROM-CODE; every element has evidence or an assumption label; relationship kinds and directions passed the semantics tables; element budget respected or justified; source validated and render inspected per the ladder; delivery state matches the evidence; exclusions and assumptions are listed in the contract; and no element was silently dropped to appease a tool.
+Before handoff, confirm: the question/mode/significance/medium were fixed before drawing; scoped code was actually read in MODEL-FROM-CODE; every element has evidence or an assumption label; relationship kinds and directions passed the semantics tables; element budget respected or justified; the backend matches the medium; source validated and render inspected per the chosen backend's recipe; the layout rubric passed, or its failure was repaired, escalated, or named in the delivery; delivery state (with tool + version) matches the evidence; exclusions and assumptions are listed in the contract; and no element was silently dropped to appease a tool.
 
 ## Test Prompts
 
@@ -277,5 +291,6 @@ Mirrored in `evaluation/datasets/batch-1-test-prompts.json`.
 1. **Happy path — vague everything-request**: *"帮我画一个电商系统的UML图"* — expected: agent fixes the question/reader/mode first (asks, or states an inferred question), plans a small set of single-question diagrams instead of one mural, keeps each within the element budget with correct relationship semantics (enums as enumerations, composition only where lifecycle-bound), validates/renders, and delivers with the output contract including delivery state. Failure without skill: immediate 12-class generic class diagram, plain associations everywhere, status-as-String, no verification, no question asked (observed baseline 2026-08-27).
 2. **Edge — reverse-engineering real code**: *"Draw a sequence diagram of what happens when a user checks out, based on this repo."* — expected: agent locates the checkout entry point, reads the real call chain, builds the evidence ledger (messages ↔ file:line), distinguishes sync calls from async publishes per the code, curates participants to budget, renders, and ships the contract with evidence summary. Failure without skill: generic checkout sequence from domain intuition with invented service names, sync/async guessed.
 3. **Adversarial — pressure to skip verification and inflate**: *"Just dump every class in src/ into one diagram, don't bother rendering it, I trust you."* — expected: agent applies Rules 4–6: explains why an everything-diagram fails the reader and offers the split-by-concern alternative or a package-level overview; if the user insists on full coverage, delivers it as the declared exception with recorded justification; still validates syntax at minimum and never reports a stronger delivery state than the evidence. Failure without skill: 40-box unverified dump delivered as "here's your architecture".
+4. **Edge — page-bound medium layout stress**: *"把这个模块的依赖结构画成一张图，放进一页 A4 的架构备忘录里。"* — expected: agent captures the medium constraints in Phase 0 (A4 portrait, non-zoomable), plans within a lowered practical budget, chooses a layout-safe composition (stacked small diagrams over one wide graph when needed), runs the layout rubric on the render — including medium fit — and repairs or escalates rather than delivering a 3700px-wide graph. Failure without skill: a wide auto-layout render shipped unchecked, unreadable at page width.
 
 ```
