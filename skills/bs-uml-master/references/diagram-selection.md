@@ -2,6 +2,8 @@
 
 A diagram is a visual answer. Selecting the diagram type before naming the question produces the baseline failure: a generic "everything diagram" that answers nothing. Work through the three decisions in order.
 
+One principle governs all three: **the element ledger is the canonical model; every notation is a projection of it.** Mermaid, PlantUML, plain text, and SVG render the same semantic content under different trade-offs. The model layer (question, mode, evidence, semantics, budget) is notation-invariant; each backend contributes only its own pitfalls table, verification recipe, and budget correction. This also makes multi-format delivery safe: project the one ledger into each format and sync-check both against it.
+
 ## Decision 1 — What question does the reader need answered?
 
 | Reader's question | Diagram | Notes |
@@ -24,6 +26,7 @@ Rules:
 - If the user names a diagram type that fights their actual question ("class diagram of the checkout flow" — flow is behavior), say so, recommend the fit, and follow their decision.
 - If the user says just "draw a UML diagram", the question is not yet known — ask for it (one question), or, when context makes it obvious, state the question you inferred and proceed.
 - Complex subjects get a **set** of small diagrams at distinct altitudes (e.g. C4 container + one domain class diagram + 1-2 sequences), never one mural.
+- **Layout risk is part of type choice.** Sequence diagrams and state machines have geometry pinned by semantics and are nearly impossible to lay out badly; class/component/flowchart are free graphs with high layout risk. When two types answer the question equally, prefer the pinned-geometry type (see [Layout Craft](./layout-craft.md)).
 
 ## Decision 2 — What altitude?
 
@@ -38,18 +41,26 @@ Mixing altitudes is the "everything diagram" generator: a microservice next to a
 
 **Element budget:** target ≤9 primary elements (boxes/lifelines/states) per diagram; hard ceiling 15 for skill-initiated choices, and reaching it demands a recorded justification (e.g. a deliberately exhaustive state table); an explicit user instruction may exceed it as a recorded `USER-OVERRIDE` (see Rule 4). Members and edges carry load too: prefer ≤7 displayed members per class and treat ~25+ edges as a sign the diagram answers more than one question, even when the box count fits. Curation is the deliverable — a reverse-engineered diagram of every class is a failure even when accurate. Cut by: collapsing subtrees into one box, dropping getters/setters/constructors/DTO fields, excluding framework plumbing, splitting by concern.
 
-## Decision 3 — Which notation/tool?
+## Decision 3 — Which backend? The medium picks it
 
-| Situation | Choice |
-|---|---|
-| Default: docs, READMEs, PRs, chat, artifacts — and the type is class/sequence/state/ER/flowchart | **Mermaid** — renders natively on GitHub/GitLab/VS Code/Notion/Claude artifacts; lowest friction for the reader to view and edit |
-| Activity (real partitions/forks), component, deployment, use case, timing; composite states with history; full UML fidelity; or house style is PlantUML | **PlantUML** — the only text tool with essentially full UML 2.5 coverage. Mermaid has **no real activity/component/deployment diagram** (its flowchart/architecture-beta are stand-ins) — do not fake UML notation in a tool that lacks it |
-| C4 diagrams | **C4-PlantUML** (`!include <C4/C4_Container>`) is the mature standard. Mermaid's C4 types are experimental with poor layout — avoid. A plain Mermaid `flowchart` following C4 conventions (name + technology + one-line responsibility in each box, labeled arrows, legend) is an honest markdown-native fallback |
-| Free-form architecture sketch where auto-layout quality dominates and markdown-nativeness doesn't | D2 (single Go binary) is a legitimate option; say why when choosing it |
-| User's repo already standardizes on one tool | Follow the repo. Consistency beats preference |
-| Hand-tuned print/poster output or user must hand-edit visually afterwards | Say that text-to-diagram layout control has limits; offer draw.io/Excalidraw handoff of the validated model. Do not hand-generate draw.io XML — structural validity failure rates are high |
+Four first-class backends, each with its own reference module (pitfalls + verification recipe + budget correction):
 
-Declare the choice and the reason in one line before drafting. Both tools' sources are text — keep them in the repo next to the code they describe so they diff and review like code.
+| The diagram will live in… | Backend | Why / module |
+|---|---|---|
+| GitHub/GitLab docs, READMEs, PRs, chat, artifacts — type is class/sequence/state/ER/flowchart | **Mermaid** (default) | Renders natively where the reader already is; AI-native text source. Weakness is layout — mitigate via [Layout Craft](./layout-craft.md). Pitfalls: [Syntax Pitfalls](./syntax-pitfalls.md) |
+| Source-code comments, commit messages, terminals, render-stripped text media | **Plain text** | The monospace grid *is* the reader's renderer there — text is the correct choice, not a fallback. Tighter budget (≤5). [Text Diagrams](./text-diagrams.md) |
+| Activity (real partitions/forks), component, deployment, use case, timing; composite states with history; precise layout control; house style | **PlantUML** | Only text tool with essentially full UML 2.5 coverage and real layout levers (rank distance, hidden edges, direction hints). Mermaid has **no real activity/component/deployment diagram** — do not fake UML notation in a tool that lacks it |
+| Publication-grade presentation: article illustrations, teaching material, posters — visual quality carries information weight | **SVG projected from the validated model** | Full control, zero parser protection — governed by the iron rule and triple verification in [SVG Presentation](./svg-presentation.md). Never freehand |
+
+Cross-cutting rules:
+
+- **C4 diagrams** → C4-PlantUML (`!include <C4/C4_Container>`) is the mature standard; Mermaid's C4 types are experimental with poor layout. A plain Mermaid `flowchart` following C4 conventions (name + technology + one-line responsibility per box, labeled arrows, legend) is an honest markdown-native fallback.
+- **D2** (single Go binary, strongest auto-layout) is a legitimate escalation when auto-layout quality dominates and markdown-nativeness doesn't; say why when choosing it.
+- **Repo convention wins** over any default above. Consistency beats preference.
+- **Human hand-editing required afterwards** → deliver the validated model + draw.io/Excalidraw handoff note. Do not hand-generate draw.io XML — structural validity failure rates are high.
+- **Layout pressure is a legitimate backend-switch trigger**: when the layout rubric fails after the bounded repair loop, escalate along Mermaid → PlantUML → D2/SVG rather than grinding or shipping garble (see Layout Craft, Tier 3).
+
+Declare the choice and the reason in one line before drafting. Text-source backends diff and review like code — keep sources in the repo next to the code they describe; for SVG keep the model/notation source beside the artifact as the editable truth.
 
 ## Mode gate (set before any drafting)
 

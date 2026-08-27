@@ -229,7 +229,7 @@
           "platform-degradation-rules"
         ],
         "status": "active",
-        "notes": "Question-first UML and architecture diagramming: mode gate (MODEL-FROM-CODE / MODEL-FROM-DESIGN / REVISE / EXPLAIN), evidence ledger, UML 2.5 semantic rules, element budget, Mermaid/PlantUML routing, and render-verified delivery with RENDER_VERIFIED/SYNTAX_VERIFIED/UNVERIFIED evidence states. See docs/research/uml-diagramming-analysis.md."
+        "notes": "Question-first UML and architecture diagramming: mode gate (MODEL-FROM-CODE / MODEL-FROM-DESIGN / REVISE / EXPLAIN), evidence ledger as the canonical model with four projection backends (Mermaid / PlantUML / plain text / SVG-from-model), UML 2.5 semantic rules, element budget, layout-as-semantics rubric with bounded repair and backend escalation, and render-verified delivery with RENDER_VERIFIED(/structural)/SYNTAX_VERIFIED/UNVERIFIED evidence states. See docs/research/uml-diagramming-analysis.md."
       }
     },
     "external": {

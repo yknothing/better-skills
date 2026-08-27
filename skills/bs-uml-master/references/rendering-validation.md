@@ -2,6 +2,8 @@
 
 A diagram that has not been rendered is a claim, not a deliverable. This module defines how to turn diagram source into render evidence, and what to report when rendering is impossible.
 
+Verification is per-backend — what "verified" means depends on the projection: Mermaid and PlantUML recipes are below; the **plain-text backend** verifies by the alignment check in [Text Diagrams](./text-diagrams.md) (the block is its own render); the **SVG backend** requires the triple check (visual + ledger-sync + layout rubric) in [SVG Presentation](./svg-presentation.md) and has no meaningful `SYNTAX_VERIFIED` tier. Layout quality is checked by the rubric in [Layout Craft](./layout-craft.md) as part of inspection.
+
 ## Evidence vocabulary
 
 Use these labels — never stronger ones — when reporting delivery state:
@@ -55,7 +57,7 @@ java -jar plantuml.jar -tsvg diagram.puml   # writes diagram.svg
 - Syntax-check success ⇒ `SYNTAX_VERIFIED`; render + inspection ⇒ `RENDER_VERIFIED`.
 - No Java? Try `npx plantuml-cli` or a `plantuml/plantuml` container before giving up on local validation.
 - Some layouts (activity, component with many edges) may need Graphviz `dot`. If a render fails only for lack of Graphviz, report that exact limitation.
-- Kroki is a one-endpoint remote validator/renderer for both tools (`POST https://kroki.io/{mermaid|plantuml|c4plantuml}/svg` with the plain-text source as body; HTTP 400 returns the parse error) — usable when local tooling is impossible and network policy allows, but never send confidential source or proprietary model content to an external service without the user's consent.
+- Kroki is a one-endpoint remote validator/renderer for both tools (`POST https://kroki.io/{mermaid|plantuml|c4plantuml}/svg` with the plain-text source as body; HTTP 400 returns the parse error) — usable only when local tooling is impossible, network policy allows, AND the user has explicitly consented to sending this diagram's content to an external service. Diagram source can encode confidential architecture; obtain the consent, don't assume it.
 
 ## Inspection checklist (turning SYNTAX_VERIFIED into RENDER_VERIFIED)
 
@@ -63,9 +65,8 @@ View the rendered image (PNG, or SVG opened as an image) and confirm the points 
 
 1. Every element declared in the source appears in the render (count boxes/lifelines).
 2. No text truncation or overlapping labels (in SVG, look for suspiciously identical coordinates and clipped `<text>` widths).
-3. Flow direction matches intent (top→bottom or left→right as chosen).
-4. Edge-crossing sanity: if crossings make paths ambiguous, reorder element declarations — declaration order is the main layout lever in both Mermaid and PlantUML.
-5. The title/caption is present.
+3. The title/caption is present.
+4. **Layout rubric** from [Layout Craft](./layout-craft.md): flow monotonicity, crossing budget, proximity honesty, hierarchy direction, label discipline, medium fit (aspect ratio vs the Phase 0 medium), density balance. Rubric failures enter the bounded layout repair loop; still failing after it → escalate the backend per Layout Craft Tier 3, never ship garble silently.
 
 ## Degradation ladder
 

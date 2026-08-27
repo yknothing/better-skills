@@ -505,6 +505,13 @@
           "prompt": "Just dump every class in src/ into one diagram, don't bother rendering it, I trust you.",
           "expected_behavior": "Agent applies Rules 4-6: explains why an everything-diagram fails the reader, offers split-by-concern or a package-level overview; if the user insists, delivers full coverage as a declared exception with recorded justification, still validates syntax at minimum, and never reports a stronger delivery state than the evidence supports.",
           "failure_mode_without_skill": "40-box unverified dump delivered as 'here's your architecture' with no state declaration."
+        },
+        {
+          "id": "uml-layout-edge",
+          "name": "Edge case: page-bound medium layout stress",
+          "prompt": "把这个模块的依赖结构画成一张图，放进一页 A4 的架构备忘录里。",
+          "expected_behavior": "Agent captures medium constraints in Phase 0 (A4 portrait, non-zoomable, width-limited), plans within a lowered practical element budget, prefers layout-safe composition (stacked small diagrams over one wide free graph), runs the 7-point layout rubric on the rendered output including medium fit, and repairs via the bounded layout loop or escalates the backend rather than shipping a wide unreadable render.",
+          "failure_mode_without_skill": "A wide auto-layout render shipped unchecked; unreadable at A4 page width; layout treated as the tool's problem rather than a correctness dimension."
         }
       ]
     }

@@ -44,6 +44,13 @@ async function main() {
   const dom = new JSDOM("<!DOCTYPE html><body></body>");
   global.window = dom.window;
   global.document = dom.window.document;
+  // Node < 21 has no global navigator, which mermaid's environment probe touches.
+  // Plain assignment throws on Node >= 21 (getter-only), so guard + defineProperty.
+  if (typeof globalThis.navigator === "undefined") {
+    try {
+      Object.defineProperty(globalThis, "navigator", { value: dom.window.navigator, configurable: true });
+    } catch { /* best effort; parse may still work */ }
+  }
 
   let mermaid;
   try {
@@ -58,8 +65,19 @@ async function main() {
     console.log(`OK: ${result && result.diagramType ? result.diagramType : "parsed"} — SYNTAX_VERIFIED only; render with mmdc for RENDER_VERIFIED`);
     return 0;
   } catch (e) {
-    console.error(`PARSE ERROR in ${file}:\n${e.message}`);
-    return 1;
+    // Only report a diagram-syntax verdict for errors mermaid itself classifies
+    // as parse/detection failures. Anything else is a checker/runtime fault and
+    // must NOT be mistaken for invalid diagram source.
+    const msg = String((e && e.message) || e);
+    const isParse =
+      (e && (e.name === "UnknownDiagramError" || e.hash !== undefined)) ||
+      /parse error|no diagram type detected|syntax error/i.test(msg);
+    if (isParse) {
+      console.error(`PARSE ERROR in ${file}:\n${msg}`);
+      return 1;
+    }
+    console.error(`CHECKER ERROR (not a verdict on the diagram source): ${msg}`);
+    return 2;
   }
 }
 
