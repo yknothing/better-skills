@@ -16,8 +16,8 @@ Plain-text (ASCII/Unicode box-drawing) diagrams have a legitimate niche the othe
 
 ## Character-set decision
 
-- **Unicode box-drawing** (`┌─┐│└┘├┤▶`) — cleaner; safe in most modern contexts (Git, GitHub, editors).
-- **Pure ASCII** (`+--+|`, `->`) — required when the destination may mangle Unicode (old toolchains, strict linters, email gateways).
+- **Pure ASCII** (`+--+|`, `->`) — the default. Universally single-width, immune to toolchain mangling.
+- **Unicode box-drawing** (`┌─┐│└┘├┤▶`) — cleaner-looking, but these codepoints are East-Asian-**Ambiguous** width: CJK-locale terminals and fonts render them double-width, silently breaking the grid for exactly the readers most likely to hit them. Use only when the destination's rendering is confirmed single-width and no CJK toolchain is in the reading path.
 
 Decide once per artifact and never mix.
 
@@ -33,8 +33,8 @@ Decide once per artifact and never mix.
 There is no renderer: the block itself is the render. Verification is an **alignment check**, mechanical and cheap:
 
 1. Every line of a box's top/bottom edge has the same display width; corners (`┌┐└┘` or `+`) pair up.
-2. Every vertical connector (`│`/`|`) sits in the same column on every row it spans.
+2. Every vertical connector (`│`/`|`) sits in the same column on every row it spans (mechanically checkable, e.g. one awk pass over column positions).
 3. Every arrow points at the element it means (off-by-one columns silently retarget arrows).
-4. View the block in a monospace context (editor/terminal) once, whole.
+4. The block was actually **viewed as displayed output** — printed whole in a real terminal/editor pane, or captured and looked at as an image. Claiming this step without a concrete display act (name it: "cat in terminal", "screenshot inspected") does not count.
 
-Passing 1–4 ⇒ `RENDER_VERIFIED` for this backend (record "text backend, alignment-checked"). A mechanical check without the monospace viewing ⇒ `RENDER_VERIFIED (structural)`. Always append the caveat to the delivery when the destination is not guaranteed monospace: "renders correctly only in a monospace font".
+Mechanical checks 1–3 alone ⇒ `RENDER_VERIFIED (structural)`. Adding the named display act of step 4 ⇒ `RENDER_VERIFIED` (record "text backend, alignment-checked + how it was viewed"). Always append the caveat to the delivery when the destination is not guaranteed monospace: "renders correctly only in a monospace font".

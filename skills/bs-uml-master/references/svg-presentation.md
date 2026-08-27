@@ -35,6 +35,10 @@ State plainly: the SVG is hand-laid-out; when the model changes, the SVG must be
 
 There is no meaningful `SYNTAX_VERIFIED` tier for SVG (XML well-formedness says nothing about the diagram); anything less than the three checks above is `UNVERIFIED`.
 
-## Degradation
+**Rasterize to inspect.** SVG-as-text cannot be visually inspected; turn it into pixels first: a headless Chromium screenshot (Playwright/Puppeteer `page.screenshot` of the file), or `rsvg-convert`/`resvg` where installed. Then inspect the raster as an image. Check 1 done only via text-level assertions is not check 1.
 
-Without the capacity to do the design pass properly (time, rendering, or review), do not ship a half-designed SVG: deliver the validated model with a Mermaid/PlantUML projection now, and name the SVG pass as an explicit follow-up step.
+## Degradation — and when escalating to SVG is forbidden
+
+**Do not escalate to SVG in an environment that cannot perform its verification** (no rasterizer or no image viewing): the move would lower the achievable evidence ceiling from `RENDER_VERIFIED` (attainable on Mermaid/PlantUML) to `UNVERIFIED`. Escalation must never trade verified-but-constrained for beautiful-but-unverified — stay on the strongest verifiable backend and name the presentation limitation instead.
+
+Without the capacity to do the design pass properly (time, rasterization, or review), do not ship a half-designed SVG: deliver the validated model with a Mermaid/PlantUML projection now, and name the SVG pass as an explicit follow-up step.

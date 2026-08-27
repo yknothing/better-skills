@@ -22,7 +22,7 @@ Both engines rank nodes largely by **declaration order** — declare elements in
 | Local direction hints | — | `-up->`, `-right->` etc. — use the **fewest** that work; delete no-ops (contradictory hints degrade layout) |
 | Forced alignment without a visible edge | — | hidden edges: `A -[hidden]- B` (the strongest PlantUML trick) |
 | Edge routing style | — | `skinparam linetype ortho` |
-| Alternate engine | `%%{init: {"layout": "elk"}}%%` where available — ELK beats dagre on complex graphs; verify the target renderer supports it | Graphviz is the engine; tune via the levers above |
+| Alternate engine | `%%{init: {"layout": "elk"}}%%` — ELK beats dagre on complex graphs and works in mermaid-cli. **Embedded renderers (GitHub included) silently ignore the directive and lay out with dagre** — for a diagram whose home is such a renderer, run the rubric on the dagre render (drop the directive locally), or your local `RENDER_VERIFIED` certifies a layout the reader never sees | Graphviz is the engine (`!pragma layout smetana` when dot is absent); tune via the levers above |
 | Reduce label load | short edge labels (≤4 words); move prose to notes/reading notes | same, plus `hide empty members` |
 
 ## Tier 3 — Escalate the projection (strategic)

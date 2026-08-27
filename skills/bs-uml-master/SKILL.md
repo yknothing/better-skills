@@ -44,7 +44,7 @@ The element ledger is the canonical model; every notation — Mermaid, PlantUML,
 
 Ask (or infer and state) how the diagram will be used, then apply the matching depth:
 
-- **`sketch`** — thinking aid, disposable. Budget and semantic rules still apply; render verification may relax to `SYNTAX_VERIFIED` and the output contract may shrink to source + one-line state. Say "sketch level" in the delivery. Explicit cues — "quick", "rough", "just show me", chat-only consumption — justify *inferring and stating* `sketch`: that is classification, not downgrading. Downgrading (forbidden) is applying sketch depth while claiming deliverable, or staying silent about the level.
+- **`sketch`** — thinking aid, disposable. Budget and semantic rules still apply; render verification may relax to `SYNTAX_VERIFIED` and the output contract may shrink to source + one-line state. Say "sketch level" in the delivery. Explicit user cues — "quick", "rough", "just show me", "帮我随手画一下" — justify *inferring and stating* `sketch`: that is classification, not downgrading. The medium alone never reclassifies: a chat-delivered diagram with no such cue stays `deliverable`. Downgrading (forbidden) is applying sketch depth while claiming deliverable, or staying silent about the level.
 - **`deliverable`** — lands in docs, PRs, design reviews, wikis. Full workflow, `RENDER_VERIFIED` when tooling is obtainable.
 - **`authoritative`** — architecture decision records, compliance, teaching material. Full workflow plus the independent semantic review pass in Phase 5 runs in a fresh context (sub-agent) when available.
 

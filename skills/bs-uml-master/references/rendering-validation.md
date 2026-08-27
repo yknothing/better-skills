@@ -55,8 +55,8 @@ java -jar plantuml.jar -tsvg diagram.puml   # writes diagram.svg
 ```
 
 - Syntax-check success ⇒ `SYNTAX_VERIFIED`; render + inspection ⇒ `RENDER_VERIFIED`.
+- **PlantUML exit 0 does not mean a diagram was rendered.** Without Graphviz, `-tsvg` still exits 0 and writes an error-placard SVG ("Cannot find Graphviz") for the dot-dependent diagram types — class, component, use case, object (sequence and colon-syntax activity render without dot). Never claim any verified state from PlantUML's exit code alone; open the output and confirm it is the diagram, not a placard. No Graphviz available → add `!pragma layout smetana` (PlantUML's pure-Java layout engine) and re-render, noting the engine in the state line.
 - No Java? Try `npx plantuml-cli` or a `plantuml/plantuml` container before giving up on local validation.
-- Some layouts (activity, component with many edges) may need Graphviz `dot`. If a render fails only for lack of Graphviz, report that exact limitation.
 - Kroki is a one-endpoint remote validator/renderer for both tools (`POST https://kroki.io/{mermaid|plantuml|c4plantuml}/svg` with the plain-text source as body; HTTP 400 returns the parse error) — usable only when local tooling is impossible, network policy allows, AND the user has explicitly consented to sending this diagram's content to an external service. Diagram source can encode confidential architecture; obtain the consent, don't assume it.
 
 ## Inspection checklist (turning SYNTAX_VERIFIED into RENDER_VERIFIED)

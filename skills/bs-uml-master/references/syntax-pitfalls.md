@@ -8,7 +8,7 @@ Syntax error rates in generated diagrams do not fall with model capability; vali
 
 - **Quote labels containing punctuation** (flowchart nodes). Parentheses, braces, quotes, `<`, `>`, `&` inside `[...]` node labels break parsing: `A["Validate (async)"]`, never `A[Validate (async)]`.
 - **Reserved word `end`.** Lowercase `end` as a node ID or inside message/label text terminates `subgraph`/fragment blocks (flowchart and sequence). Use `End`, quote it, or wrap it (`(end)`).
-- **IDs starting with `o` or `x`** adjacent to `--` flowchart edges parse as circle/cross edge decorations (`A --- oB`). Rename or reorder. (Flowchart-specific; class/sequence names are unaffected.)
+- **IDs starting with `o` or `x`** written flush against a `--` flowchart edge lose their first letter to a circle/cross edge decoration: `A---oB` renders an edge to a node named `B` (probed). With a space (`A --- oB`) current Mermaid parses the node as `oB`. Keep the space, or rename. (Flowchart-specific; class/sequence names are unaffected.)
 - **Comments are `%%`.** A bare `%` inside label text historically broke older parsers; current Mermaid (11.17+) accepts it — version-dependent, probe when targeting older embedded renderers.
 - **HTML entities for special characters** in text: `#59;` for `;`, `#quot;`, `#35;` for `#`.
 - **Do not invent syntax.** No PlantUML constructs (`note over` outside sequence diagrams, `skinparam`, `@startuml`), no guessed arrowheads. If unsure a construct exists, check by rendering a 3-line probe first.
@@ -28,7 +28,7 @@ Syntax error rates in generated diagrams do not fall with model capability; vali
 - **Activations must balance**: every `+` needs its `-` (`A->>+B: call` … `B-->>-A: reply`), every `activate` its `deactivate`. Unbalanced activation is a top parse-error source.
 - **Fragments close with `end`**: `alt`/`else`, `opt`, `loop`, `par`/`and`, `critical`, `break` — each block needs its `end`; nested fragments need one each.
 - **Declare participants first**, in left-to-right order: `participant OS as "Order Service"` (quotes for spaces); `actor` for humans. A typo'd name later silently creates a ghost lifeline — check the render for unexpected lifelines.
-- `end` or `;` inside message text: historically parse-breaking; current Mermaid (11.17+) tolerates both in message text — version-dependent, probe on the target renderer before relying on it (wrapping/`#59;` remain the safe form). `end` as a node/participant **ID** stays reserved.
+- `;` inside message text **still breaks the parser** (probed on 11.17) — escape as `#59;`. `end` inside message text is tolerated on 11.17+ (historically parse-breaking; probe older targets), but `end` as a node/participant **ID** stays reserved.
 - Useful: `autonumber`; `create participant X` / `destroy X` for lifecycle; `note over A,B: text`.
 
 ### stateDiagram-v2
