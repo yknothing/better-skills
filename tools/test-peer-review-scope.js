@@ -318,6 +318,49 @@ assert(
   rawHtmlIssues.some((issue) => issue.label === "Scoped review contains no raw HTML blocks" && !issue.passed),
   "raw HTML blocks must make a scoped review fail closed",
 );
+
+for (const tag of ["script", "pre", "style", "textarea"]) {
+  const splitRawHtmlPath = path.join(inlineReviewDir, `split-${tag}-review.md`);
+  fs.writeFileSync(splitRawHtmlPath, `<${tag}
+ type="text/plain">
+# Advocate Review: ${skillName}
+
+**Date**: 2099-01-01
+**Reviewer Role**: Advocate
+**Skill**: ${skillName}
+**HUMAN_VERIFIED**: false
+**Scope Contract Version**: 1
+**Reviewed Revision**: ${expected.revision}
+**Reviewed Skill SHA-256**: ${expected.skillHash}
+**Reviewed Manifest SHA-256**: ${expected.manifestHash}
+
+## Executive Summary
+
+Hidden summary.
+
+## Evidence Reviewed
+
+Full manifest receipt \`${expected.manifestHash}\` was received and independently verified.
+
+## Dimension Scores
+
+8/10
+
+## Verdict
+
+**Verdict**: PASS
+`);
+  const splitRawHtmlIssues = checkOneReview(skillName, {
+    absPath: splitRawHtmlPath,
+    date: "2099-01-01",
+    role: "advocate",
+    promptPath: inlinePromptPath,
+  });
+  assert(
+    splitRawHtmlIssues.some((issue) => issue.label === "Scoped review contains no raw HTML blocks" && !issue.passed),
+    `split unclosed <${tag} raw HTML block must make a scoped review fail closed`,
+  );
+}
 fs.rmSync(inlineReviewDir, { recursive: true, force: true });
 
 assert.strictEqual(

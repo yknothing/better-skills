@@ -722,7 +722,7 @@ function maskMarkdownCode(content) {
 
 function validateNoRawHtmlBlocks(content) {
   const syntaxVisibleContent = maskInlineCodeSpans(maskMarkdownBlockCodeOnly(content));
-  const rawHtml = syntaxVisibleContent.match(/^[ \t]{0,3}(?:<!--|<\?|<![A-Z]|<!\[CDATA\[|<\/?[A-Za-z][^>\r\n]*>)/m);
+  const rawHtml = syntaxVisibleContent.match(/^[ \t]{0,3}<(?:[A-Za-z!\/]|\?)/m);
   return {
     passed: !rawHtml,
     label: "Scoped review contains no raw HTML blocks",
