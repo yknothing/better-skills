@@ -679,10 +679,18 @@ function maskMarkdownBlockCode(content) {
 }
 
 function maskInlineCodeSpans(content) {
+  function isBackslashEscaped(position) {
+    let backslashes = 0;
+    for (let cursor = position - 1; cursor >= 0 && content[cursor] === "\\"; cursor -= 1) {
+      backslashes += 1;
+    }
+    return backslashes % 2 === 1;
+  }
+
   const output = content.split("");
   let index = 0;
   while (index < content.length) {
-    if (content[index] !== "`") {
+    if (content[index] !== "`" || isBackslashEscaped(index)) {
       index += 1;
       continue;
     }
@@ -695,6 +703,10 @@ function maskInlineCodeSpans(content) {
     while (cursor < content.length) {
       const closerStart = content.indexOf("`", cursor);
       if (closerStart < 0) break;
+      if (isBackslashEscaped(closerStart)) {
+        cursor = closerStart + 1;
+        continue;
+      }
       let runEnd = closerStart;
       while (runEnd < content.length && content[runEnd] === "`") runEnd += 1;
       if (runEnd - closerStart === delimiterLength) {

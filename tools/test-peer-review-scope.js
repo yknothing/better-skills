@@ -361,6 +361,48 @@ Full manifest receipt \`${expected.manifestHash}\` was received and independentl
     `split unclosed <${tag} raw HTML block must make a scoped review fail closed`,
   );
 }
+
+const escapedBacktickHtmlPath = path.join(inlineReviewDir, "escaped-backtick-html-review.md");
+fs.writeFileSync(escapedBacktickHtmlPath, `\\\`
+<script
+\`
+# Advocate Review: ${skillName}
+
+**Date**: 2099-01-01
+**Reviewer Role**: Advocate
+**Skill**: ${skillName}
+**HUMAN_VERIFIED**: false
+**Scope Contract Version**: 1
+**Reviewed Revision**: ${expected.revision}
+**Reviewed Skill SHA-256**: ${expected.skillHash}
+**Reviewed Manifest SHA-256**: ${expected.manifestHash}
+
+## Executive Summary
+
+Hidden summary.
+
+## Evidence Reviewed
+
+Full manifest receipt \`${expected.manifestHash}\` was received and independently verified.
+
+## Dimension Scores
+
+8/10
+
+## Verdict
+
+**Verdict**: PASS
+`);
+const escapedBacktickHtmlIssues = checkOneReview(skillName, {
+  absPath: escapedBacktickHtmlPath,
+  date: "2099-01-01",
+  role: "advocate",
+  promptPath: inlinePromptPath,
+});
+assert(
+  escapedBacktickHtmlIssues.some((issue) => issue.label === "Scoped review contains no raw HTML blocks" && !issue.passed),
+  "a backslash-escaped backtick must not hide a raw HTML opener from the scoped review check",
+);
 fs.rmSync(inlineReviewDir, { recursive: true, force: true });
 
 assert.strictEqual(
