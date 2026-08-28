@@ -403,6 +403,49 @@ assert(
   escapedBacktickHtmlIssues.some((issue) => issue.label === "Scoped review contains no raw HTML blocks" && !issue.passed),
   "a backslash-escaped backtick must not hide a raw HTML opener from the scoped review check",
 );
+
+const escapedCloserHtmlPath = path.join(inlineReviewDir, "escaped-closer-html-review.md");
+fs.writeFileSync(escapedCloserHtmlPath, `\`
+code\\\`
+<script
+\`
+# Advocate Review: ${skillName}
+
+**Date**: 2099-01-01
+**Reviewer Role**: Advocate
+**Skill**: ${skillName}
+**HUMAN_VERIFIED**: false
+**Scope Contract Version**: 1
+**Reviewed Revision**: ${expected.revision}
+**Reviewed Skill SHA-256**: ${expected.skillHash}
+**Reviewed Manifest SHA-256**: ${expected.manifestHash}
+
+## Executive Summary
+
+Hidden summary.
+
+## Evidence Reviewed
+
+Full manifest receipt \`${expected.manifestHash}\` was received and independently verified.
+
+## Dimension Scores
+
+8/10
+
+## Verdict
+
+**Verdict**: PASS
+`);
+const escapedCloserHtmlIssues = checkOneReview(skillName, {
+  absPath: escapedCloserHtmlPath,
+  date: "2099-01-01",
+  role: "advocate",
+  promptPath: inlinePromptPath,
+});
+assert(
+  escapedCloserHtmlIssues.some((issue) => issue.label === "Scoped review contains no raw HTML blocks" && !issue.passed),
+  "backslashes inside an open code span must not suppress an equal-length closing backtick run",
+);
 fs.rmSync(inlineReviewDir, { recursive: true, force: true });
 
 assert.strictEqual(

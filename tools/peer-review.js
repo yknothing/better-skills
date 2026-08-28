@@ -703,10 +703,6 @@ function maskInlineCodeSpans(content) {
     while (cursor < content.length) {
       const closerStart = content.indexOf("`", cursor);
       if (closerStart < 0) break;
-      if (isBackslashEscaped(closerStart)) {
-        cursor = closerStart + 1;
-        continue;
-      }
       let runEnd = closerStart;
       while (runEnd < content.length && content[runEnd] === "`") runEnd += 1;
       if (runEnd - closerStart === delimiterLength) {
