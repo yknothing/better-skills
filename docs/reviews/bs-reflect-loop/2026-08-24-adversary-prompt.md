@@ -1,3 +1,83 @@
+# Gate 2 — Peer Review Prompt: Adversary
+
+You are the **adversary reviewer** for the `bs-reflect-loop` skill. Your job is to break it: find ways the skill produces wrong output, fails on edge cases, contradicts itself, has bypassable safety gates, or makes the agent worse off than no skill at all. Be ruthless.
+
+## How to use this prompt
+
+1. Read the SKILL.md content below in full.
+2. Produce a markdown review and save it to:
+   `docs/reviews/bs-reflect-loop/2026-08-24-adversary-review.md`
+3. Use the **required structure** below — the validator (`tools/peer-review.js check`) will reject reviews missing required sections.
+
+## Deep composite review scope
+
+Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
+
+**Scope Contract Version**: 1
+**Reviewed Revision to record**: b5d0005aebb2bd8fcfb7389ab85d1f03f75b915d
+**Reviewed Skill SHA-256 to record**: a9a251f40de31ddc2dc56825c3fa6e369b6990f8be27a4bdd69938b5c22bc40d
+**Reviewed Manifest SHA-256 to record**: 93c5a36c556f91678fa7da9c1b78389925e03f0806dd384e01d4f796f68d8956
+
+- `docs/superpowers/plans/2026-08-20-reflect-loop-skill.md` — `e4557051951d91788118a3176274f629f4d08f320e084052b450273b2f198d49`
+- `docs/superpowers/specs/2026-08-20-reflect-loop-skill-design.md` — `15ed8ec76d2689fe3d7ade89bedd7c1d2f5d901c96964b78f02bd0ea78a52098`
+- `evaluation/datasets/batch-1-test-prompts.json` — `2b6e8b9b2e9bf2d9eea612345b1422e1ed2c7e70239f0c5584d57afd38efd5d7`
+- `evaluation/harness/runner.js` — `ee6e871ad26230c4073ba72151f1d6f5862c7c05074ba756bfe9b5e4e509f8f8`
+- `evaluation/harness/test-runner-scope.js` — `eaa773a660417049759c7e8831444a2ec5e6f73174487662018d6c2f556e879c`
+- `skills.json` — `42980748e27224d0db6f71f34c8b392eca83cc403284f53f6f176289cc044dcf`
+- `skills/bs-reflect-loop/SKILL.md` — `a9a251f40de31ddc2dc56825c3fa6e369b6990f8be27a4bdd69938b5c22bc40d`
+- `skills/bs-reflect-loop/references/deposition-routing.md` — `69aa751124d84926eb8c5414d412dc1562b51667b9067ec306d64afdd0fe9c3c`
+- `skills/bs-reflect-loop/references/office-work.md` — `2ebb05fa5c0c39042122895f30a25fcb6d7c9c8f962ebe59ba5cee2b17e947dd`
+- `skills/bs-reflect-loop/references/software-lifecycle.md` — `c4faa6121437f1856994c94c0718411a33c22fc1c62866a4f982090ff04f64d9`
+- `tools/peer-review.js` — `d61524f84e64089b330edbbd94f9594a8c69e3330967ada90c3eae96844c140d`
+- `tools/test-peer-review-scope.js` — `4199c19c580fa507b45fbe7ae3cf5abae2ebaf70916e1d3dbc98837c7d9b1423`
+
+## Required structure
+
+```markdown
+# Adversary Review: bs-reflect-loop
+
+**Date**: 2026-08-24
+**Reviewer Role**: Adversary
+**Skill**: bs-reflect-loop
+**HUMAN_VERIFIED**: false
+**Scope Contract Version**: 1
+**Reviewed Revision**: b5d0005aebb2bd8fcfb7389ab85d1f03f75b915d
+**Reviewed Skill SHA-256**: a9a251f40de31ddc2dc56825c3fa6e369b6990f8be27a4bdd69938b5c22bc40d
+**Reviewed Manifest SHA-256**: 93c5a36c556f91678fa7da9c1b78389925e03f0806dd384e01d4f796f68d8956
+
+## Summary
+
+(2-4 sentences: how many issues, of what severity, and the worst-case impact.)
+
+## Evidence Reviewed
+
+(Acknowledge full manifest receipt `93c5a36c556f91678fa7da9c1b78389925e03f0806dd384e01d4f796f68d8956`, then list the files and commands actually examined or rerun.)
+
+## Findings
+
+### F1: <short title> [CRITICAL] [OPEN]
+
+**Location**: <section / line range in SKILL.md>
+**Exploit scenario**: <how a user could trigger the failure>
+**Root cause**: <what in the skill design enables it>
+**Suggested fix**: <concrete change>
+
+### F2: <short title> [HIGH] [OPEN]
+
+(...repeat the structure for each finding...)
+
+(Every finding heading must end with exactly one severity tag [CRITICAL|HIGH|MEDIUM|LOW] and one status tag [OPEN|RESOLVED]. Use [OPEN] by default. Use [RESOLVED] only after retesting a previously reported issue. Any [OPEN] CRITICAL, HIGH, or MEDIUM finding forbids APPROVED. At least one finding must be present; if you genuinely find none, add one [LOW] [RESOLVED] finding that states the reviewed attack surface and why no issue survived.)
+
+## Verdict
+
+**Verdict**: <one of: REQUIRES_CHANGES / NEEDS_IMPROVEMENT / APPROVED>
+
+(One paragraph rationale.)
+```
+
+## SKILL content under review
+
+```markdown
 ---
 name: bs-reflect-loop
 description: Use when retrospectives and future-practice learning are requested after completed or stable work, including requests to extract lessons, tighten rules, prevent recurrence, or deposit evidence-bounded learning. Re-evaluate routing when a conversation moves from active diagnosis to reflection. Do not use while diagnosis, incident response, or implementation is still active, for summary-only requests, or as permission to modify executable or governance surfaces.
@@ -209,9 +289,7 @@ Report composable fields so storing a record cannot inflate truth and partial ou
 
 - `highest_confidence: CONFIRMED | SUPPORTED | HYPOTHESIS_ONLY | NONE` — strongest surviving learning.
 - `evidence_blocked: true | false` — whether any material candidate remained unclassifiable within the evidence budget.
-- `records_authorized: true | false`, `records_authorization_source`, and `records_target_scope` — the independent knowledge-record authority receipt; report it on every reflection, including `false` / `NONE` / `UNSPECIFIED`.
 - `records_status: DEPOSITED | CHAT_ONLY` — whether at least one authorized non-executable record was stored and read back.
-- `remediation_authorized: true | false`, `authorization_source`, and `target_scope` — the independent remediation authority receipt; report it on every reflection, including `false` / `NONE` / `UNSPECIFIED`.
 - `proposals_pending: true | false` — whether a destination choice or separate remediation remains.
 - `write_failures: []` — exact targets that were attempted but not stored; normally empty.
 
@@ -253,13 +331,7 @@ Keep the conversational output compact and omit empty sections:
 ### Deposition
 - Highest confidence: CONFIRMED | SUPPORTED | HYPOTHESIS_ONLY | NONE
 - Evidence blocked: true | false
-- Records authorized: true | false
-- Records authorization source: exact current authority | NONE
-- Records target scope: exact non-executable record | UNSPECIFIED
 - Records status: DEPOSITED | CHAT_ONLY
-- Remediation authorized: true | false
-- Remediation authorization source (`authorization_source`): exact current authority | NONE
-- Remediation target scope (`target_scope`): exact named target | UNSPECIFIED
 - Proposals pending: true | false
 - Write failures: []
 - Updated: ...
@@ -337,3 +409,5 @@ target_scope: exact named target, or UNSPECIFIED
 ```
 
 The reflection signals listed in the Entry Gate default to `remediation_authorized: false`. Set it to `true` only when the same current instruction separately names a target and explicitly requests its mutation; a generic request to “收紧规则” is insufficient. When the receipt is true, a separately declared execution phase or appropriate Skill may continue within that exact scope; otherwise leave `proposals_pending: true` and make no remediation write. **An authorized exact target does not require another authorization question**; ambiguity about target, scope, alternative, or a high-impact policy decision still requires a bounded choice. **Remediation authority never determines records status.** Set `records_status` independently from the `records_authorized` receipt and successful read-back, so an authorized learning record may be `DEPOSITED` while remediation remains unauthorized and pending. The handoff must also name the rationale, verification, and unresolved risk. Reflect Loop records why future work should change and deposits knowledge records only.
+
+```

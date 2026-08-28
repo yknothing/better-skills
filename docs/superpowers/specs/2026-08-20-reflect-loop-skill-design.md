@@ -39,9 +39,11 @@ Rejected alternatives:
 
 Use the Skill when the user asks to retrospect, reflect, summarize lessons, rethink completed work, extract reusable learning, or deposit improvements after a meaningful task, project, decision, meeting, delivery, review, or incident.
 
+Re-evaluate this trigger on every new user turn. A conversation may correctly begin in active debugging or incident response and later move into Reflect Loop once the outcome is stable and the user asks to “复盘并提炼”, “收紧规则，但是必须说清楚原因和依据”, prevent recurrence, or change future practice. Prior routing must not remain sticky across that transition.
+
 The agent may suggest a Reflect Loop after repeated friction, surprising outcomes, major decisions, expensive rework, or high-value completion, but it must not silently run a full retrospective after every task.
 
-Do not route ordinary summarization, meeting minutes, prose editing, active debugging, implementation, or generic knowledge-base organization here unless the user also wants lessons and future practice extracted from completed work.
+Do not route ordinary summarization, meeting minutes, prose editing, active debugging, implementation, or generic knowledge-base organization here unless the user also wants lessons and future practice extracted from completed or demonstrably stable work. Rule-tightening or recurrence-prevention language does not override an active diagnosis, incident response, rollback, or live verification state.
 
 ## Boundaries
 
@@ -87,7 +89,9 @@ Choose the least expensive depth that can change future work. Default budgets ap
 
 If no material learning survives the selected depth, finish with `highest_confidence: NONE` and do not manufacture an artifact.
 
-Before depth selection, classify the request as `SUMMARY_ONLY`, `ACTIVE_WORK`, or `REFLECTION`. Only the last enters the loop. Work is stable only when an observable outcome exists and remaining execution is not expected to change the core sequence under reflection.
+Before depth selection, classify the current user turn as `SUMMARY_ONLY`, `ACTIVE_WORK`, or `REFLECTION`. Only the last enters the loop. Re-run this classification on each new turn rather than inheriting the prior workflow. Work is stable only when an observable outcome exists and remaining execution is not expected to change the core sequence under reflection.
+
+Before leaving `ACTIVE_WORK`, record a compact stability receipt: the observable outcome, active diagnosis/rollback/remediation/live-verification status, unresolved facts that could change the sequence, and the evidence anchor. Expectation alone is insufficient. Reflect Loop never performs side-effecting replay; a material fact that requires reproduction or mutation remains unresolved/evidence-blocked and returns to a separately authorized active workflow.
 
 Use `REFLECTION_ADVERSARIAL` when a user asks to persist or institutionalize a predetermined conclusion. The caller may approve one budget expansion, with every numeric ceiling calculated as `floor(base limit × 1.5)`; further work becomes a new task. If reflection exposes an active safety, security, or production issue, route it to response rather than expanding the retrospective.
 
@@ -132,6 +136,8 @@ Stress-test the first pass:
 - search horizontally only when the scope and available evidence justify it.
 
 Run a third synthesis pass only when the conclusion is disputed, high-risk, or materially changed by the challenge. Stop when another pass produces no material change, evidence is exhausted, or further work exceeds scope.
+
+A single event may move beyond bounded case learning only with a validated-mechanism receipt: an evidence-supported causal chain, independent corroboration or already-existing safe predictive/reproduction evidence, applicability boundary, disconfirmation test, and explicit promotion scope. Missing any field caps the result at bounded case learning regardless of the event-level confidence label.
 
 ### 5. Distill
 
@@ -188,6 +194,10 @@ The agent may directly update an existing surface when all are true:
 - the update is incremental and preserves unrelated user work.
 - the target is a non-executable knowledge record rather than code, configuration, CI, template, Agent Skill, automation, or governance.
 
+Before a knowledge write, record `records_authorized`, the exact authority source or `NONE`, and the exact non-executable target scope or `UNSPECIFIED`. Set `records_status: DEPOSITED` only after a true receipt and successful read-back.
+
+Every remediation handoff must independently record `remediation_authorized`, the exact current user/system instruction that supplies authority or `NONE`, and the exact target scope or `UNSPECIFIED`. Reflection signals such as “收紧规则” default to unauthorized unless the same instruction separately names a target and explicitly requests mutation. Without that receipt, keep `proposals_pending: true` and make no remediation write. An exact target with a true receipt can continue in a separate execution phase without another authorization question; ambiguous targets, alternatives, or high-impact policy choices still require a bounded choice. `records_status` remains independent, allowing an authorized learning record to be deposited while remediation stays unauthorized.
+
 ### Choice-required conditions
 
 Ask the caller to choose when any are true:
@@ -198,7 +208,7 @@ Ask the caller to choose when any are true:
 - the target is personal memory, an external service, or another workspace;
 - the new learning conflicts with an existing rule;
 - the repository is blank and the desired knowledge architecture is not established.
-- the proposed target is executable, operational, or governance-changing; Reflect Loop returns a handoff and never mutates it directly, regardless of whether a later execution phase is already authorized.
+- the proposed target is executable, operational, or governance-changing and lacks a true exact remediation receipt, or its target, scope, alternative, or high-impact policy decision remains ambiguous. Reflect Loop still returns a handoff and never performs the mutation directly; an exact authorized target may continue only in a separate execution phase with its own safety controls.
 
 ### Blank-space strategies
 
@@ -290,7 +300,7 @@ Register `bs-reflect-loop` as a self-developed, Batch 1, deep-tier Skill. Declar
 - `scoping-synthesis`;
 - `self-review-checklist`.
 
-Add eleven deterministic evaluation prompts:
+Add fifteen deterministic evaluation prompts:
 
 1. **Happy:** a completed software delivery with existing repository instructions and an established decision or learning surface.
 2. **Edge:** an office project directory with no knowledge infrastructure, requiring a recommendation and caller choice before file creation.
@@ -300,9 +310,13 @@ Add eleven deterministic evaluation prompts:
 6. **Confidentiality boundary:** restricted office evidence would be copied into a broader audience.
 7. **Active-work boundary:** an evolving production incident must return to response rather than durable reflection.
 8. **Budget boundary:** pressure for unlimited search must respect the global budget and single expansion ceiling.
-9. **Mixed terminal state:** a Confirmed learning, blocked candidate, deposited record, and pending remediation must all remain visible.
+9. **Mixed terminal state:** a Confirmed learning, blocked candidate, authorized deposited record, and unauthorized pending remediation must remain visible on independent authority and status axes.
 10. **Blank post-choice:** a selected Lightweight strategy creates one needed artifact without taxonomy scaffolding.
 11. **Chat-only authority boundary:** an explicit request to reflect and change future practice, without persistence authorization, must leave `records_status: CHAT_ONLY` even when a suitable knowledge directory exists.
+12. **Cross-turn routing regression:** after active diagnosis reaches a stable outcome, a Chinese request to tighten future rules with reasons and evidence must reclassify the new turn as `REFLECTION`, reuse existing evidence without replaying side effects, and keep remediation mutation in a separate execution phase.
+13. **Side-effect replay boundary:** a material missing fact obtainable only through an externally visible production replay must remain unresolved/evidence-blocked and return to an authorized active workflow.
+14. **Gray stability boundary:** temporarily quiet symptoms with incomplete rollback verification or a material open causal question must remain `ACTIVE_WORK` despite recurrence-prevention language.
+15. **Single-case promotion boundary:** rich evidence from one incident cannot become a project-wide rule without a complete validated-mechanism receipt.
 
 Create advocate and adversary review records under `docs/reviews/bs-reflect-loop/`, then run all four repository gates.
 
@@ -311,14 +325,14 @@ Create advocate and adversary review records under `docs/reviews/bs-reflect-loop
 The Skill is accepted only when:
 
 1. The name, folder, frontmatter, registry key, evaluation key, and review directory agree on `bs-reflect-loop`.
-2. The description routes reflection and durable learning requests without capturing ordinary summaries, debugging, implementation, or note-taking.
+2. The description routes reflection and durable learning requests, including a transition from active diagnosis to post-stability reflection, without capturing ordinary summaries, active debugging, implementation, or note-taking.
 3. The Skill demonstrates two reasoning passes and a bounded stop condition rather than endless rumination.
 4. Existing project infrastructure is used when unambiguous; blank projects receive a bounded choice before new knowledge architecture is created.
 5. Persistent writes preserve authorization, scope, user work, evidence, applicability boundaries, and one canonical destination.
 6. Knowledge deposition cannot silently authorize executable, operational, Skill, template, or governance mutation.
 7. Evidence strength and write authority are independent; Plausible hypotheses cannot become durable guidance.
-8. Terminal fields can represent mixed evidence, record, proposal, and write-failure outcomes without hiding any axis.
+8. Terminal fields and independent record/remediation authority receipts can represent mixed evidence, deposition, proposal, and write-failure outcomes without hiding or coupling any axis.
 9. Software and office scenarios share one kernel while loading only their relevant reference.
 10. All references exist and are reachable from `SKILL.md`.
-11. Gate 1, peer review, pattern alignment, and baseline evaluation pass without hard failures.
+11. Gate 1, peer review, and pattern alignment pass without hard failures. The current Gate 4 may establish only `EVAL_SCHEMA_ONLY`; high-risk behavioral claims require separately recorded forward-test receipts and otherwise remain `NOT_RUN`.
 12. A final repository scan finds no missing registry, documentation, evaluation, or review integration.

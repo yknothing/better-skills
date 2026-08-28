@@ -20,7 +20,7 @@
 
 Record the canonical identity, shared loop, context-aware deposition policy, progressive-disclosure file structure, error handling, and acceptance contract. The design must contain no `TBD`, `TODO`, or unresolved naming choice.
 
-- [ ] **Step 2: Add the eleven RED prompts**
+- [ ] **Step 2: Add the fifteen RED prompts**
 
 Add a deep-tier `bs-reflect-loop` dataset entry. The first three contracts cover happy, edge, and adversarial behavior:
 
@@ -55,7 +55,7 @@ Add a deep-tier `bs-reflect-loop` dataset entry. The first three contracts cover
 }
 ```
 
-Add eight near-boundary regressions as well: a `SUMMARY_ONLY` meeting recap, a Plausible deployment hypothesis that pressures executable and Skill mutation, Restricted vendor evidence that would be copied into a broader audience, `ACTIVE_WORK`, unbounded budget pressure, mixed terminal fields, a blank project after the caller selects Lightweight deposition, and an explicit reflection request that must remain `CHAT_ONLY` because it does not authorize persistence.
+Add twelve near-boundary regressions as well: a `SUMMARY_ONLY` meeting recap, a Plausible deployment hypothesis that pressures executable and Skill mutation, Restricted vendor evidence that would be copied into a broader audience, `ACTIVE_WORK`, unbounded budget pressure, mixed terminal fields, a blank project after the caller selects Lightweight deposition, an explicit reflection request that must remain `CHAT_ONLY` because it does not authorize persistence, a Chinese cross-turn transition from stabilized diagnosis to evidence-backed future-practice reflection, a material fact that would require side-effecting replay, a gray stability state with incomplete verification, and a richly evidenced single case that still lacks a validated-mechanism receipt.
 
 - [ ] **Step 3: Verify RED**
 
@@ -218,7 +218,7 @@ node tools/pattern-alignment.js bs-reflect-loop --json
 node evaluation/harness/runner.js --skill bs-reflect-loop --json
 ```
 
-Expected: Gate 1 has zero failures, Gate 2 passes, Gate 3 has zero hard failures, and Gate 4 reports a passing score with happy/edge/adversarial coverage.
+Expected: Gate 1 has zero failures, Gate 2 passes, Gate 3 has zero hard failures, and Gate 4 reports a structural contract pass with happy/edge/adversarial coverage while remaining explicit that behavior is `NOT_RUN` unless separate forward-test receipts exist.
 
 - [ ] **Step 2: Run repository-wide gates**
 

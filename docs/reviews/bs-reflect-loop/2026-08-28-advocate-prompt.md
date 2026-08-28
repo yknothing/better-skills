@@ -1,3 +1,93 @@
+# Gate 2 — Peer Review Prompt: Advocate
+
+You are the **advocate reviewer** for the `bs-reflect-loop` skill. Your job is to argue for what's GOOD: identify the strongest aspects, score the design across multiple dimensions, and decide whether this skill is production-ready.
+
+## How to use this prompt
+
+1. Read the SKILL.md content below in full.
+2. Produce a markdown review and save it to:
+   `docs/reviews/bs-reflect-loop/2026-08-28-advocate-review.md`
+3. Use the **required structure** below — the validator (`tools/peer-review.js check`) will reject reviews missing required sections.
+
+## Deep composite review scope
+
+Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
+
+**Scope Contract Version**: 1
+**Reviewed Revision to record**: 4f3611455e55b6f41c5d7facd429a8df7f83dc45
+**Reviewed Skill SHA-256 to record**: 19e76aefec41dad0b92ca7d74057e872e29ff5b4d29a70e6cdfa6bda257fbb62
+**Reviewed Manifest SHA-256 to record**: c2bbc9254f5f2e0ddd0bdebdef4ab874151ced0961d9fffb008f2df828001b19
+
+- `docs/superpowers/plans/2026-08-20-reflect-loop-skill.md` — `e4557051951d91788118a3176274f629f4d08f320e084052b450273b2f198d49`
+- `docs/superpowers/specs/2026-08-20-reflect-loop-skill-design.md` — `15ed8ec76d2689fe3d7ade89bedd7c1d2f5d901c96964b78f02bd0ea78a52098`
+- `evaluation/datasets/batch-1-test-prompts.json` — `65ac0103d265a973ca1c2bb839996df4c40c6833da3fd17b576c216105b0ab5b`
+- `evaluation/harness/runner.js` — `ee6e871ad26230c4073ba72151f1d6f5862c7c05074ba756bfe9b5e4e509f8f8`
+- `evaluation/harness/test-runner-scope.js` — `eaa773a660417049759c7e8831444a2ec5e6f73174487662018d6c2f556e879c`
+- `skills.json` — `7885f9c7cefbd700ced8fc481b1524f61de6c47c523bcc806ecca60b269dc1ce`
+- `skills/bs-reflect-loop/SKILL.md` — `19e76aefec41dad0b92ca7d74057e872e29ff5b4d29a70e6cdfa6bda257fbb62`
+- `skills/bs-reflect-loop/references/deposition-routing.md` — `69aa751124d84926eb8c5414d412dc1562b51667b9067ec306d64afdd0fe9c3c`
+- `skills/bs-reflect-loop/references/office-work.md` — `2ebb05fa5c0c39042122895f30a25fcb6d7c9c8f962ebe59ba5cee2b17e947dd`
+- `skills/bs-reflect-loop/references/software-lifecycle.md` — `c4faa6121437f1856994c94c0718411a33c22fc1c62866a4f982090ff04f64d9`
+- `tools/peer-review.js` — `702587f408de2ff13cd994288e2b9a5da3ee2833ee9076c8ea1642670676307d`
+- `tools/test-peer-review-scope.js` — `4dc00dffb1d46b4feafc43a9c3819dbfe8c134921afd3795bcfe5ba3709eb3d8`
+
+## Required structure
+
+```markdown
+# Advocate Review: bs-reflect-loop
+
+**Date**: 2026-08-28
+**Reviewer Role**: Advocate
+**Skill**: bs-reflect-loop
+**HUMAN_VERIFIED**: false
+**Scope Contract Version**: 1
+**Reviewed Revision**: 4f3611455e55b6f41c5d7facd429a8df7f83dc45
+**Reviewed Skill SHA-256**: 19e76aefec41dad0b92ca7d74057e872e29ff5b4d29a70e6cdfa6bda257fbb62
+**Reviewed Manifest SHA-256**: c2bbc9254f5f2e0ddd0bdebdef4ab874151ced0961d9fffb008f2df828001b19
+
+## Executive Summary
+
+(2-4 sentences naming the strongest design choices and whether you'd ship this.)
+
+## Evidence Reviewed
+
+Full manifest receipt `c2bbc9254f5f2e0ddd0bdebdef4ab874151ced0961d9fffb008f2df828001b19` was received and independently verified.
+
+(Then list the files and commands actually examined or rerun.)
+
+Do not use raw HTML blocks anywhere in the review.
+
+## Dimension Scores
+
+| Dimension | Score | Key Strength | Key Concern |
+|-----------|------:|--------------|-------------|
+| Clarity of trigger description | _/10 | | |
+| Hard rules / safety gates | _/10 | | |
+| Workflow correctness | _/10 | | |
+| Pattern application | _/10 | | |
+| Test prompt coverage | _/10 | | |
+| Bundled resources | _/10 | | |
+| Maintainability | _/10 | | |
+| Production readiness | _/10 | | |
+
+## Strongest Aspect
+
+(One paragraph naming the single best design move and why it matters.)
+
+## One Improvement
+
+(One concrete suggestion that would meaningfully raise quality.)
+
+## Verdict
+
+**Verdict**: <one of: PASS / production-ready / NEEDS_POLISH>
+
+(One paragraph rationale.)
+```
+
+## SKILL content under review
+
+```markdown
 ---
 name: bs-reflect-loop
 description: Use when retrospectives and future-practice learning are requested after completed or stable work, including requests to extract lessons, tighten rules, prevent recurrence, or deposit evidence-bounded learning. Re-evaluate routing when a conversation moves from active diagnosis to reflection. Do not use while diagnosis, incident response, or implementation is still active, for summary-only requests, or as permission to modify executable or governance surfaces.
@@ -337,3 +427,5 @@ target_scope: exact named target, or UNSPECIFIED
 ```
 
 The reflection signals listed in the Entry Gate default to `remediation_authorized: false`. Set it to `true` only when the same current instruction separately names a target and explicitly requests its mutation; a generic request to “收紧规则” is insufficient. When the receipt is true, a separately declared execution phase or appropriate Skill may continue within that exact scope; otherwise leave `proposals_pending: true` and make no remediation write. **An authorized exact target does not require another authorization question**; ambiguity about target, scope, alternative, or a high-impact policy decision still requires a bounded choice. **Remediation authority never determines records status.** Set `records_status` independently from the `records_authorized` receipt and successful read-back, so an authorized learning record may be `DEPOSITED` while remediation remains unauthorized and pending. The handoff must also name the rationale, verification, and unresolved risk. Reflect Loop records why future work should change and deposits knowledge records only.
+
+```
