@@ -326,6 +326,8 @@ Full manifest receipt \`${scope.manifestHash}\` was received and independently v
 
 (Then list the files and commands actually examined or rerun.)
 
+Do not use raw HTML blocks anywhere in the review.
+
 ## Dimension Scores
 
 | Dimension | Score | Key Strength | Key Concern |
@@ -409,6 +411,8 @@ ${scope.manifest}
 Full manifest receipt \`${scope.manifestHash}\` was received and independently verified.
 
 (Then list the files and commands actually examined or rerun.)
+
+Do not use raw HTML blocks anywhere in the review.
 
 ## Findings
 
@@ -628,6 +632,7 @@ function checkOneReview(skillName, entry) {
   // the embedded SKILL.md.
   if (scopedPrompt) {
     const promptContent = fs.readFileSync(promptPath, "utf8");
+    issues.push(validateNoRawHtmlBlocks(content));
     issues.push(...validateScopeContractContent(content, promptContent, skillName));
     issues.push(validateReviewDisposition(content, entry.role));
   }
@@ -635,7 +640,7 @@ function checkOneReview(skillName, entry) {
   return issues;
 }
 
-function maskMarkdownBlockCode(content) {
+function maskMarkdownBlockCodeOnly(content) {
   const parts = content.split(/(\r?\n)/);
   let fence = null;
   for (let index = 0; index < parts.length; index += 2) {
@@ -664,7 +669,11 @@ function maskMarkdownBlockCode(content) {
     }
     if (mask) parts[index] = " ".repeat(line.length);
   }
-  return parts.join("").replace(/<!--[\s\S]*?(?:-->|$)/g, (comment) => (
+  return parts.join("");
+}
+
+function maskMarkdownBlockCode(content) {
+  return maskMarkdownBlockCodeOnly(content).replace(/<!--[\s\S]*?(?:-->|$)/g, (comment) => (
     comment.replace(/[^\r\n]/g, " ")
   ));
 }
@@ -709,6 +718,16 @@ function maskInlineCodeSpans(content) {
 
 function maskMarkdownCode(content) {
   return maskInlineCodeSpans(maskMarkdownBlockCode(content));
+}
+
+function validateNoRawHtmlBlocks(content) {
+  const syntaxVisibleContent = maskInlineCodeSpans(maskMarkdownBlockCodeOnly(content));
+  const rawHtml = syntaxVisibleContent.match(/^[ \t]{0,3}(?:<!--|<\?|<![A-Z]|<!\[CDATA\[|<\/?[A-Za-z][^>\r\n]*>)/m);
+  return {
+    passed: !rawHtml,
+    label: "Scoped review contains no raw HTML blocks",
+    detail: rawHtml ? `raw HTML opener=${rawHtml[0].trim().slice(0, HEADING_DISPLAY_MAX)}` : "",
+  };
 }
 
 function validateReviewDisposition(content, role = null) {

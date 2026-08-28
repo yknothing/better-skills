@@ -277,6 +277,47 @@ for (const label of [
     `unclosed HTML comment must not satisfy full review check: ${label}`,
   );
 }
+
+const rawHtmlReviewPath = path.join(inlineReviewDir, "raw-html-review.md");
+fs.writeFileSync(rawHtmlReviewPath, `<script type="text/plain">
+# Advocate Review: ${skillName}
+
+**Date**: 2099-01-01
+**Reviewer Role**: Advocate
+**Skill**: ${skillName}
+**HUMAN_VERIFIED**: false
+**Scope Contract Version**: 1
+**Reviewed Revision**: ${expected.revision}
+**Reviewed Skill SHA-256**: ${expected.skillHash}
+**Reviewed Manifest SHA-256**: ${expected.manifestHash}
+
+## Executive Summary
+
+Hidden summary.
+
+## Evidence Reviewed
+
+Full manifest receipt \`${expected.manifestHash}\` was received and independently verified.
+
+## Dimension Scores
+
+8/10
+
+## Verdict
+
+**Verdict**: PASS
+</script>
+`);
+const rawHtmlIssues = checkOneReview(skillName, {
+  absPath: rawHtmlReviewPath,
+  date: "2099-01-01",
+  role: "advocate",
+  promptPath: inlinePromptPath,
+});
+assert(
+  rawHtmlIssues.some((issue) => issue.label === "Scoped review contains no raw HTML blocks" && !issue.passed),
+  "raw HTML blocks must make a scoped review fail closed",
+);
 fs.rmSync(inlineReviewDir, { recursive: true, force: true });
 
 assert.strictEqual(
