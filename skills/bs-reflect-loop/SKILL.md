@@ -1,6 +1,6 @@
 ---
 name: bs-reflect-loop
-description: Use when the user explicitly wants to extract lessons, change future practice, or deposit evidence-bounded learning from completed or stable software and office work. Do not use for summary-only requests, active debugging, or as permission to modify executable or governance surfaces.
+description: Use when retrospectives and future-practice learning are requested after completed or stable work, including requests to extract lessons, tighten rules, prevent recurrence, or deposit evidence-bounded learning. Re-evaluate routing when a conversation moves from active diagnosis to reflection. Do not use while diagnosis, incident response, or implementation is still active, for summary-only requests, or as permission to modify executable or governance surfaces.
 # tier: deep
 ---
 
@@ -38,7 +38,11 @@ Transform a completed task, project, decision, meeting, delivery, review, or inc
 
 ## Entry Gate
 
-Classify the request before selecting depth:
+Reclassify the request on every user turn before selecting depth. Routing is not sticky across a conversation: the same task may move from `ACTIVE_WORK` to `REFLECTION` after the outcome stabilizes and the user asks for lessons, future-practice changes, or an evidence-backed rule.
+
+Common reflection signals include “复盘并提炼”, “收紧规则，但是必须说清楚原因和依据”, “以后怎样避免”, and “总结经验和教训”. These phrases establish reflection intent; they do not increase causal confidence or silently authorize a persistent write.
+
+Classify the current request:
 
 - `SUMMARY_ONLY` — the user wants a recap, minutes, or status with no lesson or future-practice outcome. Route to ordinary summarization.
 - `ACTIVE_WORK` — the outcome or causal sequence can still materially change. Finish or stabilize the work; a checkpoint reflection is allowed only when explicitly requested and must not claim durable causality.
@@ -46,6 +50,17 @@ Classify the request before selecting depth:
 - `REFLECTION_ADVERSARIAL` — the user wants to persist or institutionalize a predetermined conclusion. Run the evidence, promotion, and authority gates before refusing, downgrading, or proposing any change.
 
 Work is stable when an observable outcome exists and remaining execution is not expected to change the core sequence being reflected upon. Merely pausing active work does not make it stable.
+
+Before leaving `ACTIVE_WORK`, produce a compact **Stability receipt**:
+
+- **Observable outcome:** what state has actually been reached?
+- **Active-response status:** are diagnosis, rollback, remediation, or live verification complete, stopped, or still changing the result?
+- **Sequence-changing unknowns:** which unresolved facts could still alter the causal sequence?
+- **Evidence anchor:** what supports the stability judgment?
+
+Expectation alone is not a stability receipt. If rollback, live verification, or a material causal question remains active, keep durable conclusions provisional and stay in `ACTIVE_WORK`.
+
+When a request transitions from `ACTIVE_WORK` to `REFLECTION`, reuse the stabilized diagnosis and existing evidence. **Side-effecting replay is never allowed inside Reflect Loop**, even when a missing fact would materially change the learning. Inspect only read-only evidence within the reflection budget. If a missing fact requires reproduction, mutation, an external write, or another state-changing action, mark the candidate `Unresolved` or `evidence_blocked: true` and hand it to an active diagnostic or execution workflow with its own authority, safety, and rollback controls.
 
 ## Load Only What Applies
 
@@ -129,6 +144,16 @@ Use these confidence anchors:
 | **Plausible** | One explanation fits, but alternatives remain live | Keep as a case hypothesis, not a rule |
 | **Unresolved** | Evidence is missing or contradictory | Preserve the question; do not deposit as knowledge |
 
+A single event may be promoted beyond bounded case learning only with a **Validated mechanism receipt**:
+
+- causal chain supported by evidence;
+- independent corroboration or already-existing safe predictive/reproduction evidence;
+- applicability boundary;
+- disconfirmation test;
+- explicit promotion scope.
+
+Reflect Loop may inspect existing predictive or reproduction evidence but never creates it through side-effecting replay. If any receipt field is missing, cap the result at bounded case learning regardless of whether the event-level claim is `Confirmed`.
+
 Run a third synthesis pass only when the conclusion is disputed, high-risk, or materially changed by challenge. Stop when another pass adds no material change, evidence is exhausted, or further work exceeds scope.
 
 Respect the selected budget across the whole reflection, not once per finding. When the budget is exhausted, report the bounded search scope and leave unsupported candidates as hypotheses rather than silently extending the investigation.
@@ -161,6 +186,16 @@ A single event defaults to an observation or bounded case learning only when its
 ### 6. DEPOSIT — Route, write, and verify
 
 Read [deposition routing](./references/deposition-routing.md). Inspect the current project's applicable instructions and existing knowledge surfaces.
+
+Before any persistent knowledge-record write, create an independent receipt:
+
+```yaml
+records_authorized: true | false
+records_authorization_source: exact current user or system instruction, or NONE
+records_target_scope: exact named non-executable record, or UNSPECIFIED
+```
+
+Set `records_status: DEPOSITED` only when this receipt is true and the stored record passes read-back. Otherwise keep `records_status: CHAT_ONLY`. This receipt never authorizes remediation.
 
 - Update directly only when the current user or system request explicitly authorizes persistence in the current scope and the destination and convention are unambiguous. A request to reflect, analyze, or change future practice does not by itself authorize a persistent write.
 - Direct updates may change non-executable knowledge records only. Remediation targets always remain proposals inside Reflect Loop and move through a separate execution handoff.
@@ -253,6 +288,7 @@ Budget counters must come from the actual run. Never copy example counts or infe
 - Sensitive evidence was minimized and the write did not silently broaden its audience.
 - Actual writes were read back; proposed writes are not reported as completed.
 - Actual budget use and any expansion are visible in the output.
+- The entry classification was rerun for the current user turn rather than inherited from an earlier phase.
 - The result changes future work or honestly terminates without forced learning.
 
 ## Patterns
@@ -274,10 +310,22 @@ Budget counters must come from the actual run. Never copy example counts or infe
 6. Reflect on confidential vendor bids for a broadly readable workspace; minimize evidence and require confirmation before broadening access.
 7. Start a retrospective while a production incident is still changing; classify it as `ACTIVE_WORK` and route incident response.
 8. Keep expanding a Deep reflection until every repository file has been checked; enforce the budget and single-expansion ceiling.
-9. Deposit one Confirmed learning while another candidate remains evidence-blocked and a CI change is pending; report every composable status field.
+9. Deposit one Confirmed learning while another candidate remains evidence-blocked and a CI change is pending; report `records_authorized: true`, `records_status: DEPOSITED`, `remediation_authorized: false`, `proposals_pending: true`, and every other composable status field.
 10. In a blank project where the user has already selected Lightweight deposition, create exactly one needed learning artifact and no taxonomy scaffolding.
 11. Reflect on completed planning and extract lessons in a project that has an existing learnings directory, but with no request to persist; return the result with `records_status: CHAT_ONLY` and do not modify files.
+12. A conversation begins with active diagnosis of a sandboxed GUI application crash. After the cause is stabilized, the user says “可以收紧规则，但是必须说清楚原因和依据，避免一头雾水。” Reclassify the new turn from `ACTIVE_WORK` to `REFLECTION`, reuse the existing evidence without replaying the crash, distinguish the general mechanism from a bounded tool-specific operating rule, return both authority receipts as false with `records_status: CHAT_ONLY` and `proposals_pending: true`, and do not treat that phrase as write authority.
+13. A material fact could be learned only by replaying a failed production payment; refuse the replay inside Reflect Loop, mark the candidate unresolved or evidence-blocked, and hand the reproduction to an authorized active workflow.
+14. Errors are temporarily quiet but rollback verification is incomplete when the user asks to prevent recurrence and tighten rules; keep the turn in `ACTIVE_WORK`, show the failed Stability receipt, and do not deposit a durable cause or rule.
+15. One incident has rich logs and a convincing causal chain but no independent corroboration or safe predictive evidence; keep it as bounded case learning because the Validated mechanism receipt is incomplete.
 
 ## Handoff
 
-If the reflection produces remediation, Reflect Loop never performs it. Return a structured handoff naming the target, rationale, authorization already present, verification, and unresolved risk. When the same user request already authorizes the work, a separately declared execution phase or appropriate Skill may continue without another permission question; otherwise leave `proposals_pending: true`. Reflect Loop records why future work should change and deposits knowledge records only.
+If the reflection produces remediation, Reflect Loop never performs it. Every structured handoff must include:
+
+```yaml
+remediation_authorized: true | false
+authorization_source: exact current user or system instruction, or NONE
+target_scope: exact named target, or UNSPECIFIED
+```
+
+The reflection signals listed in the Entry Gate default to `remediation_authorized: false`. Set it to `true` only when the same current instruction separately names a target and explicitly requests its mutation; a generic request to “收紧规则” is insufficient. When the receipt is true, a separately declared execution phase or appropriate Skill may continue within that exact scope; otherwise leave `proposals_pending: true` and make no remediation write. **An authorized exact target does not require another authorization question**; ambiguity about target, scope, alternative, or a high-impact policy decision still requires a bounded choice. **Remediation authority never determines records status.** Set `records_status` independently from the `records_authorized` receipt and successful read-back, so an authorized learning record may be `DEPOSITED` while remediation remains unauthorized and pending. The handoff must also name the rationale, verification, and unresolved risk. Reflect Loop records why future work should change and deposits knowledge records only.

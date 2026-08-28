@@ -35,7 +35,7 @@ Prefer the nearest applicable convention over a generic filename from this Skill
 
 Give each learning one canonical home. Link from secondary surfaces only when discovery requires it; do not duplicate full content across files.
 
-Code, scripts, configuration, CI, templates, Agent Skills, automation, and governance are **remediation targets**, not knowledge-deposition surfaces. Reflect Loop never mutates them. Record the proposed change in a non-executable knowledge surface or return a structured handoff. If the current request already authorizes remediation, a separate execution phase may consume that handoff.
+Code, scripts, configuration, CI, templates, Agent Skills, automation, and governance are **remediation targets**, not knowledge-deposition surfaces. Reflect Loop never mutates them. Record the proposed change in a non-executable knowledge surface or return a structured handoff. A remediation handoff must default to `remediation_authorized: false` and record the exact authority source and target scope. Set it to `true` only when the current user or system instruction separately names the target and explicitly requests mutation; generic reflection or rule-tightening language is insufficient. A separate execution phase may consume only a handoff whose authority receipt is true and scoped to its target. Remediation authority is independent of knowledge-deposition authority: a learning record may be deposited after its own explicit authorization and read-back while remediation remains unauthorized and pending.
 
 ## 4. Decide Whether to Write
 
@@ -52,18 +52,22 @@ Update an existing surface without another permission round only when all condit
 7. The learning is supported strongly enough for that surface.
 8. The target is a non-executable knowledge record, not remediation or governance.
 
+Record these conditions as `records_authorized`, `records_authorization_source`, and `records_target_scope`. `records_status` becomes `DEPOSITED` only after a true receipt and successful read-back; it remains independent of remediation authority.
+
 ### Choice required
 
 Recommend one option and ask the caller to choose when any condition holds:
 
 - multiple destinations are equally plausible;
 - a new knowledge architecture would be created;
-- a governance file such as `AGENTS.md` would gain a project-wide rule;
-- code, scripts, configuration, CI, templates, Agent Skills, or automation would change;
+- a governance file such as `AGENTS.md` would gain a project-wide rule and the exact policy decision or target is not already explicit;
+- code, scripts, configuration, CI, templates, Agent Skills, or automation would change and the remediation receipt is not already true and exact;
 - the learning conflicts with an existing rule or record;
 - the conclusion would be promoted across projects, teams, or organizations;
 - the target is personal memory, another workspace, or an external service;
 - the write would overwrite, reorganize, or delete existing material.
+
+An exact remediation target with a true authority receipt does not require a redundant permission or choice round. It still moves to a separate execution phase and remains subject to that workflow's safety, rollback, and verification controls.
 
 ### No write
 
@@ -91,6 +95,8 @@ Match the destination's authority to the evidence:
 | Reusable pattern | Multiple independent cases and explicit non-applicable boundaries | pattern library or Skill change |
 
 Do not use an authoritative destination to make a weak conclusion look stronger.
+
+For one event, “validated mechanism” requires a causal chain supported by evidence, independent corroboration or already-existing safe predictive/reproduction evidence, an applicability boundary, a disconfirmation test, and an explicit promotion scope. Missing any field caps the result at bounded case learning. Reflect Loop may inspect existing evidence but never creates reproduction evidence through a side-effecting replay.
 
 A governing requirement may restate an already-mandated practice or select its record format. It cannot promote a new causal conclusion or substitute for evidence.
 
