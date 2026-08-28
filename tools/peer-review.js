@@ -42,7 +42,7 @@ const SEVERITY_RE = /\b(CRITICAL|HIGH|MEDIUM|LOW)\b/;
 // of the documented controlled values OR a numeric score with an explicit
 // denominator of /10, /80, or /100. The denominator restriction avoids
 // false-matching M/D date strings like "6/17" or "12/25".
-const VERDICT_RE = /(REQUIRES_CHANGES|NEEDS_IMPROVEMENT|APPROVED|PASS|production-ready|\b\d{1,3}\s*\/\s*(?:10|80|100)\b)/i;
+const VERDICT_RE = /(REQUIRES_CHANGES|NEEDS_IMPROVEMENT|NEEDS_POLISH|APPROVED|PASS|production-ready|\b\d{1,3}\s*\/\s*(?:10|80|100)\b)/i;
 const SCOPE_CONTRACT_VERSION = 1;
 
 // ---------------------------------------------------------------------------
@@ -342,7 +342,7 @@ ${scope.manifest}
 
 ## Verdict
 
-**Verdict**: <one of: PASS / production-ready / NEEDS_POLISH / numeric score like 76/80>
+**Verdict**: <one of: PASS / production-ready / NEEDS_POLISH>
 
 (One paragraph rationale.)
 \`\`\`
@@ -403,18 +403,18 @@ ${scope.manifest}
 
 ## Findings
 
-### F1: <short title>  [CRITICAL]
+### F1: <short title> [CRITICAL] [OPEN]
 
 **Location**: <section / line range in SKILL.md>
 **Exploit scenario**: <how a user could trigger the failure>
 **Root cause**: <what in the skill design enables it>
 **Suggested fix**: <concrete change>
 
-### F2: <short title>  [HIGH]
+### F2: <short title> [HIGH] [OPEN]
 
 (...repeat the structure for each finding...)
 
-(Use severity tags: CRITICAL / HIGH / MEDIUM / LOW. At least one finding must be present, even if severity is LOW. If you genuinely find none, say so explicitly and tag it LOW.)
+(Every finding heading must end with exactly one severity tag [CRITICAL|HIGH|MEDIUM|LOW] and one status tag [OPEN|RESOLVED]. Use [OPEN] by default. Use [RESOLVED] only after retesting a previously reported issue. Any [OPEN] CRITICAL, HIGH, or MEDIUM finding forbids APPROVED. At least one finding must be present; if you genuinely find none, add one [LOW] [RESOLVED] finding that states the reviewed attack surface and why no issue survived.)
 
 ## Verdict
 
@@ -619,9 +619,231 @@ function checkOneReview(skillName, entry) {
   if (scopedPrompt) {
     const promptContent = fs.readFileSync(promptPath, "utf8");
     issues.push(...validateScopeContractContent(content, promptContent, skillName));
+    issues.push(validateReviewDisposition(content, entry.role));
   }
 
   return issues;
+}
+
+function maskMarkdownCode(content) {
+  const parts = content.split(/(\r?\n)/);
+  let fence = null;
+  for (let index = 0; index < parts.length; index += 2) {
+    const line = parts[index];
+    let mask = false;
+    if (fence) {
+      mask = true;
+      const close = new RegExp(`^[ ]{0,3}${fence.character}{${fence.length},}[ \\t]*$`);
+      if (close.test(line)) fence = null;
+    } else {
+      const opening = line.match(/^[ ]{0,3}(`{3,}|~{3,})(.*)$/);
+      const validOpening = opening
+        && (opening[1][0] === "~" || !opening[2].includes("`"));
+      if (validOpening) {
+        mask = true;
+        fence = { character: opening[1][0], length: opening[1].length };
+      } else {
+        let columns = 0;
+        for (const character of line) {
+          if (character === " ") columns += 1;
+          else if (character === "\t") columns += 4 - (columns % 4);
+          else break;
+        }
+        if (columns >= 4) mask = true;
+      }
+    }
+    if (mask) parts[index] = " ".repeat(line.length);
+  }
+  return parts.join("");
+}
+
+function validateReviewDisposition(content, role = null) {
+  const analysisContent = maskMarkdownCode(content);
+  const setextHeading = analysisContent.match(/^[ \t]{0,3}\S[^\r\n]*\r?\n[ \t]{0,3}(?:=+|-+)[ \t]*$/m);
+  if (setextHeading) {
+    return {
+      passed: false,
+      label: "Review disposition is release-eligible",
+      detail: "setext headings are not allowed in a scoped review; use the controlled ATX sections",
+    };
+  }
+
+  const h2Headings = [...analysisContent.matchAll(/^[ \t]{0,3}##(?!#)\s+(.+?)(?:\s+#+)?\s*$/gm)]
+    .map((match) => ({
+      title: match[1].trim(),
+      index: match.index,
+      end: match.index + match[0].length,
+    }));
+  const verdictHeadings = h2Headings.filter((heading) => heading.title.toLowerCase() === "verdict");
+  if (verdictHeadings.length !== 1) {
+    return {
+      passed: false,
+      label: "Review disposition is release-eligible",
+      detail: `expected exactly one Markdown H2 Verdict section, found ${verdictHeadings.length}`,
+    };
+  }
+
+  const verdictHeading = verdictHeadings[0];
+  const h2AfterVerdict = h2Headings.find((heading) => heading.index > verdictHeading.index);
+  if (h2AfterVerdict) {
+    return {
+      passed: false,
+      label: "Review disposition is release-eligible",
+      detail: `Verdict must be the final H2 section; found '${h2AfterVerdict.title}' after it`,
+    };
+  }
+
+  const body = analysisContent.slice(verdictHeading.end);
+  const globalFields = [...analysisContent.matchAll(/^\*\*Verdict\*\*:\s*([^\r\n]+?)\s*$/gim)];
+  if (globalFields.length !== 1) {
+    return {
+      passed: false,
+      label: "Review disposition is release-eligible",
+      detail: `expected exactly one controlled Verdict field in the review, found ${globalFields.length}`,
+    };
+  }
+  const fields = [...body.matchAll(/^\*\*Verdict\*\*:\s*([^\r\n]+?)\s*$/gim)];
+  if (fields.length !== 1) {
+    return {
+      passed: false,
+      label: "Review disposition is release-eligible",
+      detail: `expected exactly one anchored '**Verdict**:' field, found ${fields.length}`,
+    };
+  }
+
+  const raw = fields[0][1].trim();
+  const parsed = raw.match(/^(PASS|production-ready|APPROVED|NEEDS_POLISH|REQUIRES_CHANGES|NEEDS_IMPROVEMENT)(?:\s*\(\s*\d{1,3}\s*\/\s*(?:10|80|100)\s*\))?$/i);
+  if (!parsed) {
+    return {
+      passed: false,
+      label: "Review disposition is release-eligible",
+      detail: `uncontrolled or negated disposition=${raw}`,
+    };
+  }
+
+  const disposition = parsed[1].toUpperCase();
+  const blocking = new Set(["REQUIRES_CHANGES", "NEEDS_IMPROVEMENT", "NEEDS_POLISH"]);
+  const allowedApprovals = role === "advocate"
+    ? new Set(["PASS", "PRODUCTION-READY"])
+    : (role === "adversary"
+      ? new Set(["APPROVED"])
+      : new Set(["PASS", "PRODUCTION-READY", "APPROVED"]));
+  if (blocking.has(disposition)) {
+    return {
+      passed: false,
+      label: "Review disposition is release-eligible",
+      detail: `blocking disposition=${disposition}`,
+    };
+  }
+  if (!allowedApprovals.has(disposition)) {
+    return {
+      passed: false,
+      label: "Review disposition is release-eligible",
+      detail: `disposition=${disposition} is not valid for role=${role || "unspecified"}`,
+    };
+  }
+
+  if (role === "adversary") {
+    const findingsHeadings = h2Headings.filter((heading) => heading.title.toLowerCase() === "findings");
+    if (findingsHeadings.length !== 1) {
+      return {
+        passed: false,
+        label: "Review disposition is release-eligible",
+        detail: `expected exactly one Markdown H2 Findings section, found ${findingsHeadings.length}`,
+      };
+    }
+
+    const findingsHeading = findingsHeadings[0];
+    const nextH2 = h2Headings.find((heading) => heading.index > findingsHeading.index);
+    if (!nextH2 || nextH2.index !== verdictHeading.index) {
+      return {
+        passed: false,
+        label: "Review disposition is release-eligible",
+        detail: `Findings must be followed directly by Verdict; found '${nextH2 ? nextH2.title : "no H2"}'`,
+      };
+    }
+
+    const findingsBody = analysisContent.slice(findingsHeading.end, verdictHeading.index);
+    const headingMatches = [...findingsBody.matchAll(/^[ \t]{0,3}(#{1,6})(?!#)\s+(.+?)(?:\s+#+)?\s*$/gm)];
+    if (headingMatches.length === 0) {
+      return {
+        passed: false,
+        label: "Review disposition is release-eligible",
+        detail: "approved adversary review requires at least one structured finding heading",
+      };
+    }
+
+    const parsedFindings = headingMatches.map((match, index) => {
+      const level = match[1];
+      const heading = match[2].trim();
+      const severityTags = [...heading.matchAll(/\[(CRITICAL|HIGH|MEDIUM|LOW)\]/gi)];
+      const statusTags = [...heading.matchAll(/\[(OPEN|RESOLVED)\]/gi)];
+      const exactSuffix = level === "###"
+        ? heading.match(/^.+\[(CRITICAL|HIGH|MEDIUM|LOW)\]\s+\[(OPEN|RESOLVED)\]\s*$/i)
+        : null;
+      const nextStart = index + 1 < headingMatches.length
+        ? headingMatches[index + 1].index
+        : findingsBody.length;
+      const findingBody = findingsBody.slice(match.index + match[0].length, nextStart);
+      const requiredFields = ["Location", "Exploit scenario", "Root cause", "Suggested fix"];
+      const missingFields = requiredFields.filter((field) => {
+        const escaped = field.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        return !new RegExp(`^\\*\\*${escaped}\\*\\*:\\s*\\S`, "im").test(findingBody);
+      });
+      const wellFormed = !!exactSuffix
+        && severityTags.length === 1
+        && statusTags.length === 1
+        && missingFields.length === 0;
+      return wellFormed
+        ? {
+          heading,
+          severity: exactSuffix[1].toUpperCase(),
+          status: exactSuffix[2].toUpperCase(),
+          missingFields,
+        }
+        : {
+          heading: `${level} ${heading}`,
+          severity: null,
+          status: null,
+          missingFields,
+        };
+    });
+    const malformed = parsedFindings.filter((finding) => !finding.severity);
+    if (malformed.length > 0) {
+      return {
+        passed: false,
+        label: "Review disposition is release-eligible",
+        detail: `malformed finding(s): ${malformed.map((finding) => `${finding.heading}${finding.missingFields.length ? ` missing=${finding.missingFields.join(",")}` : ""}`).join("; ")}`,
+      };
+    }
+
+    const taggedTokens = [...findingsBody.matchAll(/\[(CRITICAL|HIGH|MEDIUM|LOW|OPEN|RESOLVED)\]/gi)];
+    if (taggedTokens.length !== parsedFindings.length * 2) {
+      return {
+        passed: false,
+        label: "Review disposition is release-eligible",
+        detail: "severity/status tags must appear exactly once in each structured finding heading and nowhere else in Findings",
+      };
+    }
+
+    const blockingSeverities = new Set(["CRITICAL", "HIGH", "MEDIUM"]);
+    const unresolvedBlocking = parsedFindings
+      .filter((finding) => finding.status === "OPEN" && blockingSeverities.has(finding.severity))
+      .map((finding) => finding.heading);
+    if (unresolvedBlocking.length > 0) {
+      return {
+        passed: false,
+        label: "Review disposition is release-eligible",
+        detail: `approval conflicts with unresolved blocking finding(s): ${unresolvedBlocking.join("; ")}`,
+      };
+    }
+  }
+
+  return {
+    passed: true,
+    label: "Review disposition is release-eligible",
+    detail: `approval disposition=${disposition}`,
+  };
 }
 
 function checkSkillReviews(skillName) {
@@ -822,5 +1044,6 @@ module.exports = {
   checkOneReview,
   listReviewFiles,
   parseScopePrompt,
+  validateReviewDisposition,
   validateScopeContractContent,
 };

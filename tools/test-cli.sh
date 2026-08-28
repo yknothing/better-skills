@@ -136,9 +136,12 @@ const requiredDescriptionLanguage = {
   'bs-prospect-customer': ['evidence-backed first-customer prospecting', 'not lead scraping'],
   'bs-ui-master': ['production-grade UI design', 'not a complete UX practice'],
   'bs-sw-master': ['Software (SW)', 'does not imply deployment'],
-  'bs-reflect-loop': ['explicitly wants to extract lessons', 'executable or governance surfaces'],
+  'bs-reflect-loop': ['Use when retrospectives and future-practice learning', 'active diagnosis to reflection', 'Do not use while diagnosis, incident response, or implementation is still active', 'executable or governance surfaces'],
   'bs-skill-auditor': ['read-only', 'does not directly repair'],
   'bs-ppt-master': ['creating, revising, filling, or enhancing', 'designed and verified together']
+};
+const requiredBodyLanguage = {
+  'bs-reflect-loop': ['Reclassify the request on every user turn', '收紧规则，但是必须说清楚原因和依据', 'Side-effecting replay is never allowed inside Reflect Loop', 'Stability receipt', 'Validated mechanism receipt', 'records_authorized', 'remediation_authorized', 'Remediation authority never determines records status', 'An authorized exact target does not require another authorization question']
 };
 const expectedAliases = {
   'requirements-engineering': 'bs-prdefine',
@@ -190,11 +193,17 @@ for (const [canonicalName, meta] of Object.entries(self)) {
     throw new Error('frontmatter name mismatch: ' + canonicalName);
   }
   const skillBody = skillSource.replace(/^---\\s*\\n[\\s\\S]*?\\n---\\s*\\n/, '');
+  const frontmatter = skillSource.match(/^---\\s*\\n([\\s\\S]*?)\\n---\\s*\\n/)?.[1] || '';
   const h1 = skillBody.match(/^# (.+)$/m)?.[1];
   if (h1 !== expectedH1[canonicalName]) throw new Error('display name mismatch: ' + canonicalName);
   for (const phrase of requiredDescriptionLanguage[canonicalName] || []) {
-    if (!skillSource.includes(phrase)) {
+    if (!frontmatter.includes(phrase)) {
       throw new Error('description lost boundary language for ' + canonicalName + ': ' + phrase);
+    }
+  }
+  for (const phrase of requiredBodyLanguage[canonicalName] || []) {
+    if (!skillBody.includes(phrase)) {
+      throw new Error('skill body lost routing language for ' + canonicalName + ': ' + phrase);
     }
   }
 }

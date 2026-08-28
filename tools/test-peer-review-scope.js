@@ -6,6 +6,7 @@ const crypto = require("crypto");
 const {
   buildAdvocatePrompt,
   parseScopePrompt,
+  validateReviewDisposition,
   validateScopeContractContent,
 } = require("./peer-review");
 
@@ -56,7 +57,174 @@ function failures(reviewContent, promptContent = prompt) {
     .map((issue) => issue.label);
 }
 
+function structuredAdversaryReview(headingLine, verdict = "APPROVED", beforeVerdict = "", afterVerdict = "") {
+  return `## Findings
+
+${headingLine}
+
+**Location**: synthetic location
+**Exploit scenario**: synthetic exploit
+**Root cause**: synthetic cause
+**Suggested fix**: synthetic fix
+
+${beforeVerdict}## Verdict
+
+**Verdict**: ${verdict}
+${afterVerdict}`;
+}
+
 assert.deepStrictEqual(failures(review()), [], "valid receipt should pass");
+
+assert.strictEqual(
+  validateReviewDisposition("## Verdict\n\n**Verdict**: PASS").passed,
+  true,
+  "explicit PASS disposition should be release-eligible",
+);
+assert.strictEqual(
+  validateReviewDisposition("## Verdict\n\n**Verdict**: REQUIRES_CHANGES").passed,
+  false,
+  "REQUIRES_CHANGES disposition must fail Gate 2",
+);
+assert.strictEqual(
+  validateReviewDisposition("## Verdict\n\n**Verdict**: NEEDS_POLISH (73/80)").passed,
+  false,
+  "NEEDS_POLISH disposition must fail Gate 2 even with a numeric score",
+);
+assert.strictEqual(
+  validateReviewDisposition("## Verdict\n\n73/80").passed,
+  false,
+  "a score without an explicit approval disposition must not release",
+);
+assert.strictEqual(
+  validateReviewDisposition("## Verdict\n\n**Verdict**: NOT APPROVED").passed,
+  false,
+  "a negated approval must not release",
+);
+assert.strictEqual(
+  validateReviewDisposition("## Verdict\n\n**Verdict**: PASS\n**Verdict**: NEEDS_POLISH").passed,
+  false,
+  "duplicate or contradictory verdict fields must not release",
+);
+assert.strictEqual(
+  validateReviewDisposition("## Findings\n\n### F1: unresolved bypass [HIGH] [OPEN]\n\nStill open.\n\n## Verdict\n\n**Verdict**: APPROVED", "adversary").passed,
+  false,
+  "an unresolved HIGH finding must block adversary approval",
+);
+assert.strictEqual(
+  validateReviewDisposition(structuredAdversaryReview("### F1: prior bypass [HIGH] [RESOLVED]"), "adversary").passed,
+  true,
+  "an explicitly RESOLVED prior HIGH finding may coexist with approval",
+);
+assert.strictEqual(
+  validateReviewDisposition("## Verdict\n\n**Verdict**: PASS\n\n## Verdict\n\n**Verdict**: NEEDS_POLISH").passed,
+  false,
+  "multiple Verdict sections must not release",
+);
+assert.strictEqual(
+  validateReviewDisposition("## Findings\n\n### F1: ambiguous status [HIGH] NOT RESOLVED\n\nStill open.\n\n## Verdict\n\n**Verdict**: APPROVED", "adversary").passed,
+  false,
+  "free-form NOT RESOLVED text must not count as structured closure",
+);
+assert.strictEqual(
+  validateReviewDisposition("## Findings\n\n### F1: severity moved to body\n\nSeverity: HIGH. Still open.\n\n## Verdict\n\n**Verdict**: APPROVED", "adversary").passed,
+  false,
+  "adversary finding headings without severity and status must fail closed",
+);
+assert.strictEqual(
+  validateReviewDisposition("## Findings\n\n### F1: unresolved design gap [MEDIUM] [OPEN]\n\nStill open.\n\n## Verdict\n\n**Verdict**: APPROVED", "adversary").passed,
+  false,
+  "an unresolved MEDIUM finding must block adversary approval",
+);
+assert.strictEqual(
+  validateReviewDisposition("## Findings\n\n### F1: checked surface [LOW] [RESOLVED]\n\n#### F2: hidden bypass [HIGH] [OPEN]\n\n## Verdict\n\n**Verdict**: APPROVED", "adversary").passed,
+  false,
+  "a blocking finding hidden under a different heading level must fail closed",
+);
+assert.strictEqual(
+  validateReviewDisposition(structuredAdversaryReview("### F1: tag smuggling [HIGH] [OPEN] [LOW] [RESOLVED]"), "adversary").passed,
+  false,
+  "multiple severity or status tags must not let the final pair hide a blocker",
+);
+assert.strictEqual(
+  validateReviewDisposition(structuredAdversaryReview("   ### F1: indented blocker [HIGH] [OPEN]"), "adversary").passed,
+  false,
+  "an indented Markdown finding heading must not bypass the census",
+);
+assert.strictEqual(
+  validateReviewDisposition(structuredAdversaryReview("### F1: checked surface [LOW] [RESOLVED]", "APPROVED", "## F2: hidden blocker [HIGH] [OPEN]\n\n"), "adversary").passed,
+  false,
+  "a blocking H2 inserted between Findings and Verdict must fail closed",
+);
+assert.strictEqual(
+  validateReviewDisposition(`${structuredAdversaryReview("### F1: checked surface [LOW] [RESOLVED]")}\n\n## Verdict ##\n\n**Verdict**: REQUIRES_CHANGES`, "adversary").passed,
+  false,
+  "a second Markdown-equivalent Verdict section must fail closed",
+);
+assert.strictEqual(
+  validateReviewDisposition("## Findings\n\n### F1: missing evidence fields [LOW] [RESOLVED]\n\n## Verdict\n\n**Verdict**: APPROVED", "adversary").passed,
+  false,
+  "an adversary finding without required evidence fields must not release",
+);
+assert.strictEqual(
+  validateReviewDisposition("~~~markdown\n## Verdict\n\n**Verdict**: PASS\n~~~").passed,
+  false,
+  "a fake Verdict inside a fenced code block must not release",
+);
+assert.strictEqual(
+  validateReviewDisposition("\t## Verdict\n\n\t**Verdict**: PASS").passed,
+  false,
+  "a fake Verdict inside tab-indented code must not release",
+);
+assert.strictEqual(
+  validateReviewDisposition(" \t## Verdict\n\n**Verdict**: PASS").passed,
+  false,
+  "a space-plus-tab indented code block must not release",
+);
+assert.strictEqual(
+  validateReviewDisposition("  \t## Verdict\n\n**Verdict**: PASS").passed,
+  false,
+  "a two-spaces-plus-tab indented code block must not release",
+);
+assert.strictEqual(
+  validateReviewDisposition("## Verdict\n\n**Verdict**: PASS\n\nHidden section\n---").passed,
+  false,
+  "a setext H2 after Verdict must not bypass the final-section check",
+);
+assert.strictEqual(
+  validateReviewDisposition("## Verdict\n\n**Verdict**: PASS\n\nHidden section\n=").passed,
+  false,
+  "a one-character setext H1 underline must fail closed",
+);
+assert.strictEqual(
+  validateReviewDisposition("## Verdict\n\n**Verdict**: PASS\n\nHidden section\n--").passed,
+  false,
+  "a two-character setext H2 underline must fail closed",
+);
+assert.strictEqual(
+  validateReviewDisposition("```markdown\n## Verdict\n**Verdict**: NEEDS_POLISH\n```\n\n## Verdict\n\n**Verdict**: PASS").passed,
+  true,
+  "a fenced example must be ignored when one real controlled Verdict follows",
+);
+assert.strictEqual(
+  validateReviewDisposition("**Verdict**: REQUIRES_CHANGES\n\n## Verdict\n\n**Verdict**: PASS").passed,
+  false,
+  "a contradictory Verdict field outside the Verdict section must fail closed",
+);
+assert.strictEqual(
+  validateReviewDisposition(structuredAdversaryReview("### F1: checked surface [LOW] [RESOLVED]", "APPROVED", "# F2: hidden blocker\n\n"), "adversary").passed,
+  false,
+  "an H1 hidden inside Findings must be included in the heading census",
+);
+assert.strictEqual(
+  validateReviewDisposition(structuredAdversaryReview("### F1: checked surface [LOW] [RESOLVED]", "APPROVED", "F2: hidden blocker\n===\n\n"), "adversary").passed,
+  false,
+  "a setext H1 hidden inside Findings must fail closed",
+);
+assert.strictEqual(
+  validateReviewDisposition("```bad`\n**Verdict**: REQUIRES_CHANGES\n```\n\n## Verdict\n\n**Verdict**: PASS").passed,
+  false,
+  "an invalid backtick fence opener must not hide a rejecting Verdict field",
+);
 
 assert(
   failures(review({ revision: "0000000" })).includes("Reviewed Revision matches prompt"),
