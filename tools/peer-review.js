@@ -173,8 +173,9 @@ function parseScopePrompt(promptContent) {
 function validateScopeContractContent(reviewContent, promptContent, skillName = null) {
   const issues = [];
   const analysisContent = maskMarkdownCode(reviewContent);
+  const blockVisibleContent = maskMarkdownBlockCode(reviewContent);
   const expected = parseScopePrompt(promptContent);
-  const declaredVersion = analysisContent.match(/\*\*Scope Contract Version\*\*:\s*(\d+)/);
+  const declaredVersion = analysisContent.match(/^[ \t]{0,3}\*\*Scope Contract Version\*\*:\s*(\d+)\s*$/m);
   issues.push({
     passed: expected.version === String(SCOPE_CONTRACT_VERSION)
       && !!declaredVersion
@@ -185,7 +186,7 @@ function validateScopeContractContent(reviewContent, promptContent, skillName = 
       : "missing Scope Contract Version",
   });
 
-  const declaredRevision = analysisContent.match(/\*\*Reviewed Revision\*\*:\s*([0-9a-f]{7,40}|UNAVAILABLE)/i);
+  const declaredRevision = analysisContent.match(/^[ \t]{0,3}\*\*Reviewed Revision\*\*:\s*([0-9a-f]{7,40}|UNAVAILABLE)\s*$/im);
   issues.push({
     passed: !!declaredRevision
       && !!expected.revision
@@ -196,7 +197,7 @@ function validateScopeContractContent(reviewContent, promptContent, skillName = 
       : "missing Reviewed Revision",
   });
 
-  const declaredSkillHash = analysisContent.match(/\*\*Reviewed Skill SHA-256\*\*:\s*([0-9a-f]{64})/i);
+  const declaredSkillHash = analysisContent.match(/^[ \t]{0,3}\*\*Reviewed Skill SHA-256\*\*:\s*([0-9a-f]{64})\s*$/im);
   issues.push({
     passed: !!declaredSkillHash
       && !!expected.skillHash
@@ -207,7 +208,7 @@ function validateScopeContractContent(reviewContent, promptContent, skillName = 
       : "missing Reviewed Skill SHA-256",
   });
 
-  const declaredManifestHash = analysisContent.match(/\*\*Reviewed Manifest SHA-256\*\*:\s*([0-9a-f]{64})/i);
+  const declaredManifestHash = analysisContent.match(/^[ \t]{0,3}\*\*Reviewed Manifest SHA-256\*\*:\s*([0-9a-f]{64})\s*$/im);
   issues.push({
     passed: !!declaredManifestHash
       && !!expected.manifestHash
@@ -256,9 +257,12 @@ function validateScopeContractContent(reviewContent, promptContent, skillName = 
           : `${expected.entries.length} required files verified`)),
   });
 
-  const evidenceSection = analysisContent.match(/^##\s+Evidence Reviewed\b([^\n]*)\r?\n([\s\S]*?)(?=^##\s+|(?![\s\S]))/im);
+  const evidenceSection = blockVisibleContent.match(/^##\s+Evidence Reviewed\b([^\n]*)\r?\n([\s\S]*?)(?=^##\s+|(?![\s\S]))/im);
   const evidenceBody = evidenceSection ? evidenceSection[2] : "";
-  const receiptAcknowledged = !!expected.manifestHash && evidenceBody.includes(expected.manifestHash);
+  const receiptPattern = expected.manifestHash
+    ? new RegExp(`^[ \\t]{0,3}Full manifest receipt(?: acknowledged)?[ \\t]*(?::[ \\t]*)?\`?${expected.manifestHash}\`?(?:[ \\t]+was received\\b|[ \\t]*\\.?[ \\t]*$)`, "im")
+    : null;
+  const receiptAcknowledged = !!receiptPattern && receiptPattern.test(evidenceBody);
   issues.push({
     passed: !!evidenceSection && receiptAcknowledged,
     label: "Evidence Reviewed acknowledges full manifest receipt",
@@ -318,7 +322,9 @@ ${scope.manifest}
 
 ## Evidence Reviewed
 
-(Acknowledge full manifest receipt \`${scope.manifestHash}\`, then list the files and commands actually examined or rerun.)
+Full manifest receipt \`${scope.manifestHash}\` was received and independently verified.
+
+(Then list the files and commands actually examined or rerun.)
 
 ## Dimension Scores
 
@@ -400,7 +406,9 @@ ${scope.manifest}
 
 ## Evidence Reviewed
 
-(Acknowledge full manifest receipt \`${scope.manifestHash}\`, then list the files and commands actually examined or rerun.)
+Full manifest receipt \`${scope.manifestHash}\` was received and independently verified.
+
+(Then list the files and commands actually examined or rerun.)
 
 ## Findings
 
@@ -537,7 +545,7 @@ function checkOneReview(skillName, entry) {
   // 2. Date metadata matches filename date. Tolerate colon inside OR outside
   // the bold markers: `**Date**: 2026-06-19` and `**Date:** 2026-06-19` both
   // match. The `:?` before and after `\*\*` absorbs the colon in either spot.
-  const dateMatch = analysisContent.match(/\*\*Date:?\*\*:?\s*(\d{4}-\d{2}-\d{2})/);
+  const dateMatch = analysisContent.match(/^[ \t]{0,3}\*\*Date:?\*\*:?\s*(\d{4}-\d{2}-\d{2})\s*$/m);
   issues.push({
     passed: !!dateMatch && dateMatch[1] === entry.date,
     label: "Date metadata matches filename",
@@ -545,8 +553,8 @@ function checkOneReview(skillName, entry) {
   });
 
   // 3. Reviewer Role metadata matches role (accept "Adversarial" → adversary).
-  const roleMatch = analysisContent.match(/\*\*Reviewer\s*Role:?\*\*:?\s*(\w+)/i)
-    || analysisContent.match(/\*\*Reviewer:?\*\*:?\s*([^\n]+)/i);
+  const roleMatch = analysisContent.match(/^[ \t]{0,3}\*\*Reviewer\s*Role:?\*\*:?\s*(\w+)\s*$/im)
+    || analysisContent.match(/^[ \t]{0,3}\*\*Reviewer:?\*\*:?\s*([^\n]+?)\s*$/im);
   const declaredRole = roleMatch ? roleMatch[1].toLowerCase() : "";
   const roleAccepted = entry.role === "adversary"
     ? /adversar(y|ial)/i.test(declaredRole)
@@ -558,7 +566,7 @@ function checkOneReview(skillName, entry) {
   });
 
   // 4. Skill metadata matches (colon inside or outside bold).
-  const skillMatch = analysisContent.match(/\*\*Skill:?\*\*:?\s*([^\n]+)/);
+  const skillMatch = analysisContent.match(/^[ \t]{0,3}\*\*Skill:?\*\*:?\s*([^\n]+?)\s*$/m);
   issues.push({
     passed: !!skillMatch && skillMatch[1].toLowerCase().includes(skillName.toLowerCase()),
     label: "Skill metadata present and matches",
@@ -600,14 +608,14 @@ function checkOneReview(skillName, entry) {
   }
 
   // 8. HUMAN_VERIFIED marker present (tolerate markdown bold around the key).
-  const hasMarker = /HUMAN_VERIFIED[*\s:]*?(true|false)/i.test(analysisContent);
+  const hasMarker = /^[ \t]{0,3}(?:\*\*)?HUMAN_VERIFIED(?:\*\*)?\s*:\s*(true|false)\s*$/im.test(analysisContent);
   issues.push({
     passed: hasMarker,
     label: "HUMAN_VERIFIED marker present",
     detail: hasMarker ? "" : "expected 'HUMAN_VERIFIED: true|false' (CLAUDE.md mandate)",
   });
 
-  const promptPath = path.join(
+  const promptPath = entry.promptPath || path.join(
     REVIEWS_DIR,
     skillName,
     `${entry.date}-${entry.role}-prompt.md`,
@@ -627,7 +635,7 @@ function checkOneReview(skillName, entry) {
   return issues;
 }
 
-function maskMarkdownCode(content) {
+function maskMarkdownBlockCode(content) {
   const parts = content.split(/(\r?\n)/);
   let fence = null;
   for (let index = 0; index < parts.length; index += 2) {
@@ -656,7 +664,51 @@ function maskMarkdownCode(content) {
     }
     if (mask) parts[index] = " ".repeat(line.length);
   }
-  return parts.join("");
+  return parts.join("").replace(/<!--[\s\S]*?-->/g, (comment) => (
+    comment.replace(/[^\r\n]/g, " ")
+  ));
+}
+
+function maskInlineCodeSpans(content) {
+  const output = content.split("");
+  let index = 0;
+  while (index < content.length) {
+    if (content[index] !== "`") {
+      index += 1;
+      continue;
+    }
+
+    let openerEnd = index;
+    while (openerEnd < content.length && content[openerEnd] === "`") openerEnd += 1;
+    const delimiterLength = openerEnd - index;
+    let cursor = openerEnd;
+    let closerEnd = -1;
+    while (cursor < content.length) {
+      const closerStart = content.indexOf("`", cursor);
+      if (closerStart < 0) break;
+      let runEnd = closerStart;
+      while (runEnd < content.length && content[runEnd] === "`") runEnd += 1;
+      if (runEnd - closerStart === delimiterLength) {
+        closerEnd = runEnd;
+        break;
+      }
+      cursor = runEnd;
+    }
+
+    if (closerEnd < 0) {
+      index = openerEnd;
+      continue;
+    }
+    for (let position = index; position < closerEnd; position += 1) {
+      if (content[position] !== "\n" && content[position] !== "\r") output[position] = " ";
+    }
+    index = closerEnd;
+  }
+  return output.join("");
+}
+
+function maskMarkdownCode(content) {
+  return maskInlineCodeSpans(maskMarkdownBlockCode(content));
 }
 
 function validateReviewDisposition(content, role = null) {

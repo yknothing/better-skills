@@ -145,6 +145,86 @@ for (const label of [
   );
 }
 
+const commentedScopeReceipt = `<!--
+**Scope Contract Version**: 1
+**Reviewed Revision**: ${expected.revision}
+**Reviewed Skill SHA-256**: ${expected.skillHash}
+**Reviewed Manifest SHA-256**: ${expected.manifestHash}
+
+## Evidence Reviewed
+
+Full manifest receipt: ${expected.manifestHash}
+-->
+`;
+const commentedScopeFailures = failures(commentedScopeReceipt);
+for (const label of [
+  "Scope Contract Version matches prompt",
+  "Reviewed Revision matches prompt",
+  "Reviewed Skill SHA-256 matches prompt",
+  "Reviewed Manifest SHA-256 matches prompt",
+  "Evidence Reviewed acknowledges full manifest receipt",
+]) {
+  assert(
+    commentedScopeFailures.includes(label),
+    `HTML comments must not satisfy scope receipt: ${label}`,
+  );
+}
+
+const inlineReviewDir = fs.mkdtempSync(path.join(os.tmpdir(), "peer-review-inline-"));
+const inlineReviewPath = path.join(inlineReviewDir, "review.md");
+const inlinePromptPath = path.join(inlineReviewDir, "prompt.md");
+fs.writeFileSync(inlinePromptPath, prompt);
+fs.writeFileSync(inlineReviewPath, `# Advocate Review: ${skillName}
+
+\`**Date**: 2099-01-01\`
+\`**Reviewer Role**: Advocate\`
+\`**Skill**: ${skillName}\`
+\`**HUMAN_VERIFIED**: false\`
+\`**Scope Contract Version**: 1\`
+\`**Reviewed Revision**: ${expected.revision}\`
+\`**Reviewed Skill SHA-256**: ${expected.skillHash}\`
+\`**Reviewed Manifest SHA-256**: ${expected.manifestHash}\`
+
+## Executive Summary
+
+Real visible summary.
+
+## Evidence Reviewed
+
+\`Full manifest receipt: ${expected.manifestHash}\`
+
+## Dimension Scores
+
+8/10
+
+## Verdict
+
+**Verdict**: PASS
+`);
+const inlineReviewIssues = checkOneReview(skillName, {
+  absPath: inlineReviewPath,
+  date: "2099-01-01",
+  role: "advocate",
+  promptPath: inlinePromptPath,
+});
+for (const label of [
+  "Date metadata matches filename",
+  "Reviewer role declared and matches filename",
+  "Skill metadata present and matches",
+  "HUMAN_VERIFIED marker present",
+  "Scope Contract Version matches prompt",
+  "Reviewed Revision matches prompt",
+  "Reviewed Skill SHA-256 matches prompt",
+  "Reviewed Manifest SHA-256 matches prompt",
+  "Evidence Reviewed acknowledges full manifest receipt",
+]) {
+  assert(
+    inlineReviewIssues.some((issue) => issue.label === label && !issue.passed),
+    `inline code must not satisfy full review check: ${label}`,
+  );
+}
+fs.rmSync(inlineReviewDir, { recursive: true, force: true });
+
 assert.strictEqual(
   validateReviewDisposition("## Verdict\n\n**Verdict**: PASS").passed,
   true,
