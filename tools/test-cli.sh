@@ -114,7 +114,8 @@ const expectedCanonical = [
   'bs-reflect-loop',
   'bs-skill-auditor',
   'bs-skill-forge',
-  'bs-ppt-master'
+  'bs-ppt-master',
+  'bs-uml-master'
 ].sort();
 const expectedH1 = {
   'bs-prdefine': 'PRDefine',
@@ -128,7 +129,8 @@ const expectedH1 = {
   'bs-reflect-loop': 'Reflect Loop',
   'bs-skill-auditor': 'Skill Auditor',
   'bs-skill-forge': 'Skill Forge',
-  'bs-ppt-master': 'PPT Master'
+  'bs-ppt-master': 'PPT Master',
+  'bs-uml-master': 'UML Master'
 };
 const requiredDescriptionLanguage = {
   'bs-prdefine': ['Product Requirements (PR)', 'not merely a PRD'],
@@ -138,7 +140,8 @@ const requiredDescriptionLanguage = {
   'bs-sw-master': ['Software (SW)', 'does not imply deployment'],
   'bs-reflect-loop': ['Use when retrospectives and future-practice learning', 'active diagnosis to reflection', 'Do not use while diagnosis, incident response, or implementation is still active', 'executable or governance surfaces'],
   'bs-skill-auditor': ['read-only', 'does not directly repair'],
-  'bs-ppt-master': ['creating, revising, filling, or enhancing', 'designed and verified together']
+  'bs-ppt-master': ['creating, revising, filling, or enhancing', 'designed and verified together'],
+  'bs-uml-master': ['creating, revising, or reviewing UML or architecture diagrams', 'render-verified delivery']
 };
 const requiredBodyLanguage = {
   'bs-reflect-loop': ['Reclassify the request on every user turn', '收紧规则，但是必须说清楚原因和依据', 'Side-effecting replay is never allowed inside Reflect Loop', 'Stability receipt', 'Validated mechanism receipt', 'records_authorized', 'remediation_authorized', 'report it on every reflection', 'Remediation authority never determines records status', 'An authorized exact target does not require another authorization question', '- Records authorized: true | false', '- Records authorization source: exact current authority | NONE', '- Records target scope: exact non-executable record | UNSPECIFIED', '- Remediation authorized: true | false']

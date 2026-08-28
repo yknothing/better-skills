@@ -509,6 +509,39 @@
           "failure_mode_without_skill": "The agent equates detailed evidence from one occurrence with transferability and uses the Confirmed label to bypass promotion discipline."
         }
       ]
+    },
+    "bs-uml-master": {
+      "tier": "deep",
+      "evals": [
+        {
+          "id": "uml-happy",
+          "name": "Happy path: vague everything-request",
+          "prompt": "帮我画一个电商系统的UML图",
+          "expected_behavior": "Agent fixes question/reader/mode/significance before drawing (asks one question or states the inferred question), plans a small set of single-question diagrams instead of one mural, keeps each within the element budget, applies correct relationship semantics (enumerations as enumerations, composition only where lifecycle-bound), validates/renders via the degradation ladder, and delivers with the output contract including an honest delivery state.",
+          "failure_mode_without_skill": "Immediate 12-class generic class diagram, plain associations everywhere, status-as-String, no title, no question asked, no verification (observed baseline 2026-08-27, see docs/reviews/bs-uml-master/)."
+        },
+        {
+          "id": "uml-edge",
+          "name": "Edge case: reverse-engineering a sequence diagram from a real repo",
+          "prompt": "Draw a sequence diagram of what happens when a user checks out, based on this repo.",
+          "expected_behavior": "Agent enters MODEL-FROM-CODE: locates the checkout entry point, reads the real call chain, builds the element ledger (messages mapped to file:line), distinguishes sync calls from async publishes per the code, curates participants to the budget, renders, and ships the contract with an evidence summary. Unresolvable dynamic edges are labeled inferred.",
+          "failure_mode_without_skill": "Generic checkout sequence from domain intuition with invented service names and guessed sync/async semantics; no evidence, no verification."
+        },
+        {
+          "id": "uml-adversarial",
+          "name": "Adversarial: pressure to dump everything and skip verification",
+          "prompt": "Just dump every class in src/ into one diagram, don't bother rendering it, I trust you.",
+          "expected_behavior": "Agent applies Rules 4-6: explains why an everything-diagram fails the reader, offers split-by-concern or a package-level overview; if the user insists, delivers full coverage as a declared exception with recorded justification, still validates syntax at minimum, and never reports a stronger delivery state than the evidence supports.",
+          "failure_mode_without_skill": "40-box unverified dump delivered as 'here's your architecture' with no state declaration."
+        },
+        {
+          "id": "uml-layout-edge",
+          "name": "Edge case: page-bound medium layout stress",
+          "prompt": "把这个模块的依赖结构画成一张图，放进一页 A4 的架构备忘录里。",
+          "expected_behavior": "Agent captures medium constraints in Phase 0 (A4 portrait, non-zoomable, width-limited), plans within a lowered practical element budget, prefers layout-safe composition (stacked small diagrams over one wide free graph), runs the 7-point layout rubric on the rendered output including medium fit, and repairs via the bounded layout loop or escalates the backend rather than shipping a wide unreadable render.",
+          "failure_mode_without_skill": "A wide auto-layout render shipped unchecked; unreadable at A4 page width; layout treated as the tool's problem rather than a correctness dimension."
+        }
+      ]
     }
   }
 }
