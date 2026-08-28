@@ -14,16 +14,16 @@ You are the **advocate reviewer** for the `bs-reflect-loop` skill. Your job is t
 Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
 
 **Scope Contract Version**: 1
-**Reviewed Revision to record**: 5373570b138ee71ffe9cd6bb15bbd331368227bd
+**Reviewed Revision to record**: 4f3611455e55b6f41c5d7facd429a8df7f83dc45
 **Reviewed Skill SHA-256 to record**: 19e76aefec41dad0b92ca7d74057e872e29ff5b4d29a70e6cdfa6bda257fbb62
-**Reviewed Manifest SHA-256 to record**: 0eaf028cb9b3624f1c9279c1bbf61dcfc564581005aad3f021e78bc93b17c2c6
+**Reviewed Manifest SHA-256 to record**: c2bbc9254f5f2e0ddd0bdebdef4ab874151ced0961d9fffb008f2df828001b19
 
 - `docs/superpowers/plans/2026-08-20-reflect-loop-skill.md` — `e4557051951d91788118a3176274f629f4d08f320e084052b450273b2f198d49`
 - `docs/superpowers/specs/2026-08-20-reflect-loop-skill-design.md` — `15ed8ec76d2689fe3d7ade89bedd7c1d2f5d901c96964b78f02bd0ea78a52098`
-- `evaluation/datasets/batch-1-test-prompts.json` — `2b6e8b9b2e9bf2d9eea612345b1422e1ed2c7e70239f0c5584d57afd38efd5d7`
+- `evaluation/datasets/batch-1-test-prompts.json` — `65ac0103d265a973ca1c2bb839996df4c40c6833da3fd17b576c216105b0ab5b`
 - `evaluation/harness/runner.js` — `ee6e871ad26230c4073ba72151f1d6f5862c7c05074ba756bfe9b5e4e509f8f8`
 - `evaluation/harness/test-runner-scope.js` — `eaa773a660417049759c7e8831444a2ec5e6f73174487662018d6c2f556e879c`
-- `skills.json` — `42980748e27224d0db6f71f34c8b392eca83cc403284f53f6f176289cc044dcf`
+- `skills.json` — `7885f9c7cefbd700ced8fc481b1524f61de6c47c523bcc806ecca60b269dc1ce`
 - `skills/bs-reflect-loop/SKILL.md` — `19e76aefec41dad0b92ca7d74057e872e29ff5b4d29a70e6cdfa6bda257fbb62`
 - `skills/bs-reflect-loop/references/deposition-routing.md` — `69aa751124d84926eb8c5414d412dc1562b51667b9067ec306d64afdd0fe9c3c`
 - `skills/bs-reflect-loop/references/office-work.md` — `2ebb05fa5c0c39042122895f30a25fcb6d7c9c8f962ebe59ba5cee2b17e947dd`
@@ -41,9 +41,9 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 **Skill**: bs-reflect-loop
 **HUMAN_VERIFIED**: false
 **Scope Contract Version**: 1
-**Reviewed Revision**: 5373570b138ee71ffe9cd6bb15bbd331368227bd
+**Reviewed Revision**: 4f3611455e55b6f41c5d7facd429a8df7f83dc45
 **Reviewed Skill SHA-256**: 19e76aefec41dad0b92ca7d74057e872e29ff5b4d29a70e6cdfa6bda257fbb62
-**Reviewed Manifest SHA-256**: 0eaf028cb9b3624f1c9279c1bbf61dcfc564581005aad3f021e78bc93b17c2c6
+**Reviewed Manifest SHA-256**: c2bbc9254f5f2e0ddd0bdebdef4ab874151ced0961d9fffb008f2df828001b19
 
 ## Executive Summary
 
@@ -51,7 +51,7 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 
 ## Evidence Reviewed
 
-Full manifest receipt `0eaf028cb9b3624f1c9279c1bbf61dcfc564581005aad3f021e78bc93b17c2c6` was received and independently verified.
+Full manifest receipt `c2bbc9254f5f2e0ddd0bdebdef4ab874151ced0961d9fffb008f2df828001b19` was received and independently verified.
 
 (Then list the files and commands actually examined or rerun.)
 

@@ -5,27 +5,27 @@
 **Skill**: bs-reflect-loop
 **HUMAN_VERIFIED**: false
 **Scope Contract Version**: 1
-**Reviewed Revision**: 5373570b138ee71ffe9cd6bb15bbd331368227bd
+**Reviewed Revision**: 4f3611455e55b6f41c5d7facd429a8df7f83dc45
 **Reviewed Skill SHA-256**: 19e76aefec41dad0b92ca7d74057e872e29ff5b4d29a70e6cdfa6bda257fbb62
-**Reviewed Manifest SHA-256**: 0eaf028cb9b3624f1c9279c1bbf61dcfc564581005aad3f021e78bc93b17c2c6
+**Reviewed Manifest SHA-256**: c2bbc9254f5f2e0ddd0bdebdef4ab874151ced0961d9fffb008f2df828001b19
 
 ## Summary
 
-F1 through F8 are closed on the frozen revision, with no surviving Critical-, High-, or Medium-severity issue. Revision `5373570` preserves escaped-backtick handling for code-span openers while correctly allowing every equal-length run inside an active span to close it, preventing a real raw-HTML opener from being masked. The adversary verdict is approval, bounded by Gate 4 remaining schema-only rather than behavioral execution.
+F1 through F8 remain closed on the post-merge revision, with no surviving Critical-, High-, or Medium-severity issue. The merge adds the UML registry and evaluation entries without changing the `bs-reflect-loop` registry or 15-evaluation subtrees, and the parser still rejects stale receipts and every previously reproduced hidden-review bypass. The adversary verdict is approval, bounded by Gate 4 remaining schema-only rather than behavioral execution.
 
 ## Evidence Reviewed
 
-Full manifest receipt `0eaf028cb9b3624f1c9279c1bbf61dcfc564581005aad3f021e78bc93b17c2c6` was received and independently verified.
+Full manifest receipt `c2bbc9254f5f2e0ddd0bdebdef4ab874151ced0961d9fffb008f2df828001b19` was received and independently verified.
 
-- Read the regenerated adversary prompt in full. Reused the prior full reads of unchanged manifest files only after confirming identical SHA-256 values, then read the complete `43aecf9` and `5373570` patches for `tools/peer-review.js` and `tools/test-peer-review-scope.js`.
-- Verified `git rev-parse HEAD` as `5373570b138ee71ffe9cd6bb15bbd331368227bd`; independently recomputed all twelve file hashes and the manifest receipt, with no mismatch.
-- Ran `node tools/test-peer-review-scope.js`: pass. This replays the fenced scaffold, inline-code declaration, unclosed-comment, same-line raw-script, four split/unterminated Type-1 fixtures, escaped opener, and escaped-looking closer through complete `checkOneReview` calls.
-- Ran an additional complete-fixture matrix. Eleven line-start forms were rejected: unclosed comment, processing instruction, declaration, CDATA, split `script`, split `pre`, split `style`, split `textarea`, ordinary opening tag, ordinary closing tag, and custom tag. Seven controls were accepted without any issue: backtick fence, tilde fence, four-space indentation, tab indentation, inline code, escaped literal, and a non-opener angle-bracket form.
-- Confirmed the code-span rule against the official CommonMark 0.31.2 specification: backslash escapes apply before an opener but do not operate inside an active code span. Reproduced the former escaped-closer false green on `43aecf9`, then verified on `5373570` that all fifteen combinations of delimiter lengths one through three and zero through four preceding backslashes expose the following raw script opener and fail closed.
-- Tested four escaped-opener parity cases and five adjacent combinations covering mismatched-then-matched delimiters, backslash content, single backticks inside double-delimited spans, fenced code, and indented code. Odd opener parity exposes raw HTML, even parity forms a real code span, and every control matched the CommonMark boundary.
-- Inspected the conservative rule boundary: after fenced, indented, and inline code are masked, a code-region-external line beginning with up to three spaces and then an angle bracket followed by a letter, slash, exclamation mark, or question mark fails closed. This covers every CommonMark raw-HTML block opener class relevant to the review surface.
-- Ran `node --check tools/peer-review.js`, `node evaluation/harness/test-runner-scope.js`, `node tools/validate.js --json skills/bs-reflect-loop`, `node tools/pattern-alignment.js bs-reflect-loop --json`, and `bash tools/test-cli.sh`: syntax passed, runner-scope passed, Gate 1 was 16/16, Gate 3 passed without warnings, and CLI was 86/86.
-- Ran `node evaluation/harness/runner.js --skill bs-reflect-loop --json`: 15 contracts, structural score 100, `EVAL_SCHEMA_ONLY`, behavior `NOT_RUN`.
+- Read the regenerated post-merge adversary prompt in full and reviewed the complete bound scope. Unchanged files were reused only after their SHA-256 values matched the prior full reads; the changed dataset and registry were inspected together with both merge-parent diffs.
+- Verified `git rev-parse HEAD` as merge revision `4f3611455e55b6f41c5d7facd429a8df7f83dc45`; independently recomputed all twelve file hashes and manifest receipt `c2bbc9254f5f2e0ddd0bdebdef4ab874151ced0961d9fffb008f2df828001b19`.
+- Compared the current `bs-reflect-loop` objects in `skills.json` and `evaluation/datasets/batch-1-test-prompts.json` with first parent `dc5329c`: both subtrees are byte-for-byte equivalent after JSON parsing. The mainline contribution adds `bs-uml-master` without rewriting the reflect contract.
+- Parsed the merged registry and dataset and checked set equality: 13 self-developed skills match 13 dataset keys, every self-developed skill appears in Batch 1, the 22-entry batch list has no duplicate, and all 15 reflect evaluation IDs and required fields are unique and non-empty.
+- Attacked the authority cases after merge. The executable-boundary case retains positive remediation authority; mixed status keeps record and remediation authority independent; the Chinese cross-turn case retains both negative receipts and `CHAT_ONLY`; side-effect replay remains evidence-blocked. Terminal Status still exposes 11 of 11 machine fields and Output Contract 11 of 11 visible fields.
+- Ran the current, still-old review through `checkOneReview` before updating it: the parser rejected the stale revision, stale manifest receipt, and stale Evidence Reviewed receipt. This demonstrated that the automatic merge could not inherit the previous approval silently.
+- Ran `node tools/test-peer-review-scope.js`: pass. Replayed the post-merge delimiter matrix: all fifteen equal-delimiter closer and backslash-parity combinations exposed the following raw script opener and failed closed; four opener-parity controls matched CommonMark semantics.
+- Scanned all twelve manifest files for merge markers and found none. Ran `node --check tools/peer-review.js`, `node evaluation/harness/test-runner-scope.js`, `node tools/validate.js --json skills/bs-reflect-loop`, `node tools/pattern-alignment.js bs-reflect-loop --json`, and `bash tools/test-cli.sh`: syntax and runner scope passed, Gate 1 was 16/16, Gate 3 passed without warnings, and CLI was 86/86.
+- Ran `node evaluation/harness/runner.js --skill bs-reflect-loop --json`: exactly 15 contracts, structural score 100, `EVAL_SCHEMA_ONLY`, behavior `NOT_RUN`; the merged UML entries did not leak into the targeted run.
 - Reverified frontmatter name `bs-reflect-loop`, non-empty 464-character description, all three referenced Markdown files, and runtime resolution through `require('./lib/resolver').resolveSource('bs-reflect-loop')` to the existing self-developed skill directory.
 
 ## Findings
@@ -90,4 +90,4 @@ Full manifest receipt `0eaf028cb9b3624f1c9279c1bbf61dcfc564581005aad3f021e78bc93
 
 **Verdict**: APPROVED
 
-Revision `5373570` closes F8 without reopening F1 through F7, the bound manifest is exact and current, and all scoped structural gates pass. This approval covers Gate 2 release eligibility for the frozen implementation; it does not upgrade the harness's explicit `EVAL_SCHEMA_ONLY` and `NOT_RUN` behavioral boundary.
+Merge revision `4f3611455e55b6f41c5d7facd429a8df7f83dc45` preserves the complete F1 through F8 fixes, the merged registry and dataset remain internally consistent, and the bound manifest is exact and current. This approval covers Gate 2 release eligibility for the post-merge tree; it does not upgrade the harness's explicit `EVAL_SCHEMA_ONLY` and `NOT_RUN` behavioral boundary.
