@@ -223,6 +223,60 @@ for (const label of [
     `inline code must not satisfy full review check: ${label}`,
   );
 }
+
+const unclosedCommentReviewPath = path.join(inlineReviewDir, "unclosed-comment-review.md");
+fs.writeFileSync(unclosedCommentReviewPath, `<!--
+# Advocate Review: ${skillName}
+
+**Date**: 2099-01-01
+**Reviewer Role**: Advocate
+**Skill**: ${skillName}
+**HUMAN_VERIFIED**: false
+**Scope Contract Version**: 1
+**Reviewed Revision**: ${expected.revision}
+**Reviewed Skill SHA-256**: ${expected.skillHash}
+**Reviewed Manifest SHA-256**: ${expected.manifestHash}
+
+## Executive Summary
+
+Hidden summary.
+
+## Evidence Reviewed
+
+Full manifest receipt \`${expected.manifestHash}\` was received and independently verified.
+
+## Dimension Scores
+
+8/10
+
+## Verdict
+
+**Verdict**: PASS
+`);
+const unclosedCommentIssues = checkOneReview(skillName, {
+  absPath: unclosedCommentReviewPath,
+  date: "2099-01-01",
+  role: "advocate",
+  promptPath: inlinePromptPath,
+});
+for (const label of [
+  "H1 title contains role and skill name",
+  "Date metadata matches filename",
+  "Reviewer role declared and matches filename",
+  "Skill metadata present and matches",
+  "Summary section present",
+  "HUMAN_VERIFIED marker present",
+  "Scope Contract Version matches prompt",
+  "Reviewed Revision matches prompt",
+  "Reviewed Skill SHA-256 matches prompt",
+  "Reviewed Manifest SHA-256 matches prompt",
+  "Evidence Reviewed acknowledges full manifest receipt",
+]) {
+  assert(
+    unclosedCommentIssues.some((issue) => issue.label === label && !issue.passed),
+    `unclosed HTML comment must not satisfy full review check: ${label}`,
+  );
+}
 fs.rmSync(inlineReviewDir, { recursive: true, force: true });
 
 assert.strictEqual(

@@ -664,7 +664,7 @@ function maskMarkdownBlockCode(content) {
     }
     if (mask) parts[index] = " ".repeat(line.length);
   }
-  return parts.join("").replace(/<!--[\s\S]*?-->/g, (comment) => (
+  return parts.join("").replace(/<!--[\s\S]*?(?:-->|$)/g, (comment) => (
     comment.replace(/[^\r\n]/g, " ")
   ));
 }
