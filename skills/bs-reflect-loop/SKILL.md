@@ -209,7 +209,9 @@ Report composable fields so storing a record cannot inflate truth and partial ou
 
 - `highest_confidence: CONFIRMED | SUPPORTED | HYPOTHESIS_ONLY | NONE` — strongest surviving learning.
 - `evidence_blocked: true | false` — whether any material candidate remained unclassifiable within the evidence budget.
+- `records_authorized: true | false`, `records_authorization_source`, and `records_target_scope` — the independent knowledge-record authority receipt; report it on every reflection, including `false` / `NONE` / `UNSPECIFIED`.
 - `records_status: DEPOSITED | CHAT_ONLY` — whether at least one authorized non-executable record was stored and read back.
+- `remediation_authorized: true | false`, `authorization_source`, and `target_scope` — the independent remediation authority receipt; report it on every reflection, including `false` / `NONE` / `UNSPECIFIED`.
 - `proposals_pending: true | false` — whether a destination choice or separate remediation remains.
 - `write_failures: []` — exact targets that were attempted but not stored; normally empty.
 
@@ -251,7 +253,13 @@ Keep the conversational output compact and omit empty sections:
 ### Deposition
 - Highest confidence: CONFIRMED | SUPPORTED | HYPOTHESIS_ONLY | NONE
 - Evidence blocked: true | false
+- Records authorized: true | false
+- Records authorization source: exact current authority | NONE
+- Records target scope: exact non-executable record | UNSPECIFIED
 - Records status: DEPOSITED | CHAT_ONLY
+- Remediation authorized: true | false
+- Remediation authorization source (`authorization_source`): exact current authority | NONE
+- Remediation target scope (`target_scope`): exact named target | UNSPECIFIED
 - Proposals pending: true | false
 - Write failures: []
 - Updated: ...

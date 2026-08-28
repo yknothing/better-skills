@@ -141,7 +141,7 @@ const requiredDescriptionLanguage = {
   'bs-ppt-master': ['creating, revising, filling, or enhancing', 'designed and verified together']
 };
 const requiredBodyLanguage = {
-  'bs-reflect-loop': ['Reclassify the request on every user turn', '收紧规则，但是必须说清楚原因和依据', 'Side-effecting replay is never allowed inside Reflect Loop', 'Stability receipt', 'Validated mechanism receipt', 'records_authorized', 'remediation_authorized', 'Remediation authority never determines records status', 'An authorized exact target does not require another authorization question']
+  'bs-reflect-loop': ['Reclassify the request on every user turn', '收紧规则，但是必须说清楚原因和依据', 'Side-effecting replay is never allowed inside Reflect Loop', 'Stability receipt', 'Validated mechanism receipt', 'records_authorized', 'remediation_authorized', 'report it on every reflection', 'Remediation authority never determines records status', 'An authorized exact target does not require another authorization question', '- Records authorized: true | false', '- Records authorization source: exact current authority | NONE', '- Records target scope: exact non-executable record | UNSPECIFIED', '- Remediation authorized: true | false']
 };
 const expectedAliases = {
   'requirements-engineering': 'bs-prdefine',

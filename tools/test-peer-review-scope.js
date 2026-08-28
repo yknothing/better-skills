@@ -3,8 +3,12 @@
 
 const assert = require("assert");
 const crypto = require("crypto");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
 const {
   buildAdvocatePrompt,
+  checkOneReview,
   parseScopePrompt,
   validateReviewDisposition,
   validateScopeContractContent,
@@ -74,6 +78,72 @@ ${afterVerdict}`;
 }
 
 assert.deepStrictEqual(failures(review()), [], "valid receipt should pass");
+
+const fencedMetadataDir = fs.mkdtempSync(path.join(os.tmpdir(), "peer-review-fenced-"));
+const fencedMetadataPath = path.join(fencedMetadataDir, "review.md");
+fs.writeFileSync(fencedMetadataPath, `\`\`\`markdown
+# Advocate Review: synthetic-skill
+
+**Date**: 2099-01-01
+**Reviewer Role**: Advocate
+**Skill**: synthetic-skill
+**HUMAN_VERIFIED**: false
+
+## Executive Summary
+
+8/10
+
+## Verdict
+
+**Verdict**: PASS
+\`\`\`
+`);
+const fencedMetadataFailures = checkOneReview("synthetic-skill", {
+  absPath: fencedMetadataPath,
+  date: "2099-01-01",
+  role: "advocate",
+}).filter((issue) => !issue.passed).map((issue) => issue.label);
+for (const label of [
+  "H1 title contains role and skill name",
+  "Date metadata matches filename",
+  "Reviewer role declared and matches filename",
+  "Skill metadata present and matches",
+  "Summary section present",
+  "Verdict / score marker present",
+  "At least one dimension score (advocate, e.g. 8/10 or 85/100)",
+  "HUMAN_VERIFIED marker present",
+]) {
+  assert(
+    fencedMetadataFailures.includes(label),
+    `fenced Markdown must not satisfy review metadata: ${label}`,
+  );
+}
+fs.rmSync(fencedMetadataDir, { recursive: true, force: true });
+
+const fencedScopeReceipt = `\`\`\`markdown
+**Scope Contract Version**: 1
+**Reviewed Revision**: ${expected.revision}
+**Reviewed Skill SHA-256**: ${expected.skillHash}
+**Reviewed Manifest SHA-256**: ${expected.manifestHash}
+
+## Evidence Reviewed
+
+Full manifest receipt: ${expected.manifestHash}
+\`\`\`
+`;
+const fencedScopeFailures = failures(fencedScopeReceipt);
+for (const label of [
+  "Scope Contract Version matches prompt",
+  "Reviewed Revision matches prompt",
+  "Reviewed Skill SHA-256 matches prompt",
+  "Reviewed Manifest SHA-256 matches prompt",
+  "Evidence Reviewed acknowledges full manifest receipt",
+]) {
+  assert(
+    fencedScopeFailures.includes(label),
+    `fenced Markdown must not satisfy scope receipt: ${label}`,
+  );
+}
 
 assert.strictEqual(
   validateReviewDisposition("## Verdict\n\n**Verdict**: PASS").passed,

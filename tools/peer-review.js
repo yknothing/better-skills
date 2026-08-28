@@ -172,8 +172,9 @@ function parseScopePrompt(promptContent) {
 
 function validateScopeContractContent(reviewContent, promptContent, skillName = null) {
   const issues = [];
+  const analysisContent = maskMarkdownCode(reviewContent);
   const expected = parseScopePrompt(promptContent);
-  const declaredVersion = reviewContent.match(/\*\*Scope Contract Version\*\*:\s*(\d+)/);
+  const declaredVersion = analysisContent.match(/\*\*Scope Contract Version\*\*:\s*(\d+)/);
   issues.push({
     passed: expected.version === String(SCOPE_CONTRACT_VERSION)
       && !!declaredVersion
@@ -184,7 +185,7 @@ function validateScopeContractContent(reviewContent, promptContent, skillName = 
       : "missing Scope Contract Version",
   });
 
-  const declaredRevision = reviewContent.match(/\*\*Reviewed Revision\*\*:\s*([0-9a-f]{7,40}|UNAVAILABLE)/i);
+  const declaredRevision = analysisContent.match(/\*\*Reviewed Revision\*\*:\s*([0-9a-f]{7,40}|UNAVAILABLE)/i);
   issues.push({
     passed: !!declaredRevision
       && !!expected.revision
@@ -195,7 +196,7 @@ function validateScopeContractContent(reviewContent, promptContent, skillName = 
       : "missing Reviewed Revision",
   });
 
-  const declaredSkillHash = reviewContent.match(/\*\*Reviewed Skill SHA-256\*\*:\s*([0-9a-f]{64})/i);
+  const declaredSkillHash = analysisContent.match(/\*\*Reviewed Skill SHA-256\*\*:\s*([0-9a-f]{64})/i);
   issues.push({
     passed: !!declaredSkillHash
       && !!expected.skillHash
@@ -206,7 +207,7 @@ function validateScopeContractContent(reviewContent, promptContent, skillName = 
       : "missing Reviewed Skill SHA-256",
   });
 
-  const declaredManifestHash = reviewContent.match(/\*\*Reviewed Manifest SHA-256\*\*:\s*([0-9a-f]{64})/i);
+  const declaredManifestHash = analysisContent.match(/\*\*Reviewed Manifest SHA-256\*\*:\s*([0-9a-f]{64})/i);
   issues.push({
     passed: !!declaredManifestHash
       && !!expected.manifestHash
@@ -255,7 +256,7 @@ function validateScopeContractContent(reviewContent, promptContent, skillName = 
           : `${expected.entries.length} required files verified`)),
   });
 
-  const evidenceSection = reviewContent.match(/^##\s+Evidence Reviewed\b([^\n]*)\r?\n([\s\S]*?)(?=^##\s+|(?![\s\S]))/im);
+  const evidenceSection = analysisContent.match(/^##\s+Evidence Reviewed\b([^\n]*)\r?\n([\s\S]*?)(?=^##\s+|(?![\s\S]))/im);
   const evidenceBody = evidenceSection ? evidenceSection[2] : "";
   const receiptAcknowledged = !!expected.manifestHash && evidenceBody.includes(expected.manifestHash);
   issues.push({
@@ -517,10 +518,11 @@ function checkOneReview(skillName, entry) {
     return [{ passed: false, label: "readable", detail: e.message }];
   }
   if (content.charCodeAt(0) === UTF8_BOM) content = content.slice(1);
+  const analysisContent = maskMarkdownCode(content);
 
   // 1. H1 title contains role + skill name. Tolerate "Adversarial" as a
   // synonym for "adversary" — that's the variant several existing reviews use.
-  const firstHeading = content.split(/\r?\n/).find(l => /^#\s+/.test(l)) || "";
+  const firstHeading = analysisContent.split(/\r?\n/).find(l => /^#\s+/.test(l)) || "";
   const roleAlias = entry.role === "adversary" ? "adversar(y|ial)" : entry.role;
   const roleInTitle = new RegExp(`\\b${roleAlias}`, "i").test(firstHeading);
   const skillInTitle = firstHeading.toLowerCase().includes(skillName.toLowerCase());
@@ -535,7 +537,7 @@ function checkOneReview(skillName, entry) {
   // 2. Date metadata matches filename date. Tolerate colon inside OR outside
   // the bold markers: `**Date**: 2026-06-19` and `**Date:** 2026-06-19` both
   // match. The `:?` before and after `\*\*` absorbs the colon in either spot.
-  const dateMatch = content.match(/\*\*Date:?\*\*:?\s*(\d{4}-\d{2}-\d{2})/);
+  const dateMatch = analysisContent.match(/\*\*Date:?\*\*:?\s*(\d{4}-\d{2}-\d{2})/);
   issues.push({
     passed: !!dateMatch && dateMatch[1] === entry.date,
     label: "Date metadata matches filename",
@@ -543,8 +545,8 @@ function checkOneReview(skillName, entry) {
   });
 
   // 3. Reviewer Role metadata matches role (accept "Adversarial" → adversary).
-  const roleMatch = content.match(/\*\*Reviewer\s*Role:?\*\*:?\s*(\w+)/i)
-    || content.match(/\*\*Reviewer:?\*\*:?\s*([^\n]+)/i);
+  const roleMatch = analysisContent.match(/\*\*Reviewer\s*Role:?\*\*:?\s*(\w+)/i)
+    || analysisContent.match(/\*\*Reviewer:?\*\*:?\s*([^\n]+)/i);
   const declaredRole = roleMatch ? roleMatch[1].toLowerCase() : "";
   const roleAccepted = entry.role === "adversary"
     ? /adversar(y|ial)/i.test(declaredRole)
@@ -556,7 +558,7 @@ function checkOneReview(skillName, entry) {
   });
 
   // 4. Skill metadata matches (colon inside or outside bold).
-  const skillMatch = content.match(/\*\*Skill:?\*\*:?\s*([^\n]+)/);
+  const skillMatch = analysisContent.match(/\*\*Skill:?\*\*:?\s*([^\n]+)/);
   issues.push({
     passed: !!skillMatch && skillMatch[1].toLowerCase().includes(skillName.toLowerCase()),
     label: "Skill metadata present and matches",
@@ -564,7 +566,7 @@ function checkOneReview(skillName, entry) {
   });
 
   // 5. Has a Summary or Executive Summary section
-  const hasSummary = /^##\s+(Executive\s+)?Summary\b/im.test(content);
+  const hasSummary = /^##\s+(Executive\s+)?Summary\b/im.test(analysisContent);
   issues.push({
     passed: hasSummary,
     label: "Summary section present",
@@ -572,7 +574,7 @@ function checkOneReview(skillName, entry) {
   });
 
   // 6. Verdict marker present
-  const hasVerdict = VERDICT_RE.test(content);
+  const hasVerdict = VERDICT_RE.test(analysisContent);
   issues.push({
     passed: hasVerdict,
     label: "Verdict / score marker present",
@@ -581,7 +583,7 @@ function checkOneReview(skillName, entry) {
 
   // 7. Role-specific structure
   if (entry.role === "adversary") {
-    const hasSeverity = SEVERITY_RE.test(content);
+    const hasSeverity = SEVERITY_RE.test(analysisContent);
     issues.push({
       passed: hasSeverity,
       label: "At least one severity-tagged finding (adversary)",
@@ -589,7 +591,7 @@ function checkOneReview(skillName, entry) {
     });
   } else {
     // advocate — must have at least one numeric score "/10" or "/100" pattern
-    const hasScore = /\b\d{1,3}\s*\/\s*(?:10|100|80)\b/.test(content);
+    const hasScore = /\b\d{1,3}\s*\/\s*(?:10|100|80)\b/.test(analysisContent);
     issues.push({
       passed: hasScore,
       label: "At least one dimension score (advocate, e.g. 8/10 or 85/100)",
@@ -598,7 +600,7 @@ function checkOneReview(skillName, entry) {
   }
 
   // 8. HUMAN_VERIFIED marker present (tolerate markdown bold around the key).
-  const hasMarker = /HUMAN_VERIFIED[*\s:]*?(true|false)/i.test(content);
+  const hasMarker = /HUMAN_VERIFIED[*\s:]*?(true|false)/i.test(analysisContent);
   issues.push({
     passed: hasMarker,
     label: "HUMAN_VERIFIED marker present",
