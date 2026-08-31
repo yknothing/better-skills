@@ -14,28 +14,28 @@ You are the **advocate reviewer** for the `bs-uml-master` skill. Your job is to 
 Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
 
 **Scope Contract Version**: 1
-**Reviewed Revision to record**: 2b947008372bd45adf0ee46f7b43a0692828b9ef
-**Reviewed Skill SHA-256 to record**: bf50e9e81270da6cd27140debf9ad4baefdc779e8d79a79fc87acc581b7bf822
-**Reviewed Manifest SHA-256 to record**: 67a2fa56dd469f04de2e0b459b0e5eb0b8f377075b5c1755c330e4f977537db1
+**Reviewed Revision to record**: 9986df3a6fbeb54149a457586d5f035ee3cf4843
+**Reviewed Skill SHA-256 to record**: 4d7dd265a50f83de14ea84990932499f8b3c09e0ccbcde8a6f6736c10ff73a27
+**Reviewed Manifest SHA-256 to record**: a2dc6724fdcde28d6bdebff5b7c76b2f386ae4faad51045145bf0b3080136994
 
 - `evaluation/datasets/batch-1-test-prompts.json` — `65ac0103d265a973ca1c2bb839996df4c40c6833da3fd17b576c216105b0ab5b`
 - `evaluation/harness/runner.js` — `ee6e871ad26230c4073ba72151f1d6f5862c7c05074ba756bfe9b5e4e509f8f8`
 - `evaluation/harness/test-runner-scope.js` — `eaa773a660417049759c7e8831444a2ec5e6f73174487662018d6c2f556e879c`
 - `skills.json` — `7885f9c7cefbd700ced8fc481b1524f61de6c47c523bcc806ecca60b269dc1ce`
-- `skills/bs-uml-master/SKILL.md` — `bf50e9e81270da6cd27140debf9ad4baefdc779e8d79a79fc87acc581b7bf822`
+- `skills/bs-uml-master/SKILL.md` — `4d7dd265a50f83de14ea84990932499f8b3c09e0ccbcde8a6f6736c10ff73a27`
 - `skills/bs-uml-master/references/diagram-selection.md` — `cfa85279548602fe69db478866a34cbf2e59f1269a6e01a7eb35ccf4218dc10c`
 - `skills/bs-uml-master/references/layout-craft.md` — `642ff4ebdc11422ca7617038d4be407686a558d406a10085e54e66c9b76412c6`
 - `skills/bs-uml-master/references/modeling-from-code.md` — `58dec58a2924a9f7ed77308a4e267de66811aa95b6cdd75c75bc56fdaaa061a7`
-- `skills/bs-uml-master/references/rendering-validation.md` — `095f18830d381d901f9c10bd34612334a7428baa1b82ca00cae3e64c8a399804`
+- `skills/bs-uml-master/references/rendering-validation.md` — `818f9fd8588288f23b7924e0c4e4965efbb0f81e7116f5640200c52729c466a9`
 - `skills/bs-uml-master/references/svg-presentation.md` — `e3400aed86339da2ad9a8e6692727842de8fbfcb5632871d85e1d68e308dfb02`
 - `skills/bs-uml-master/references/syntax-pitfalls.md` — `c08a5e63663072e4fb11a0f149e84e75f4b85011d6f3ccd9ff6d0ca593c6acec`
 - `skills/bs-uml-master/references/text-diagrams.md` — `68ebcb460268833b13f3aa863ffc409bc599a0a4475a0b9db33ea6a78d7acab3`
 - `skills/bs-uml-master/references/uml-semantics.md` — `f8b59c246cddcf17b9520c8d7e7215940432f5118c54bf9441e1023e329330de`
 - `skills/bs-uml-master/scripts/check-delivery.js` — `d066754233e0400955dd33a2911a7ea817fb435e01fe4f86f2c700173dacbbd1`
 - `skills/bs-uml-master/scripts/check-mermaid.js` — `938b004901b22e27d204f9afb69cf6003ee155010f7893a84f58cd453e1c9fb4`
-- `skills/bs-uml-master/scripts/check-render-fit.js` — `43755a3210c3560f7f2eeddf8e24e824653a426c656bbe21508bbb5770d1a84e`
+- `skills/bs-uml-master/scripts/check-render-fit.js` — `dff57440c00509695ac9d48dbc872ba0653e95e369144f8005411207aac14dbb`
 - `skills/bs-uml-master/scripts/test-check-delivery.js` — `dd6edd368333271ef66cc530c695d3638d7cb0e4fc12eeb4fb8162ba135cf69e`
-- `skills/bs-uml-master/scripts/test-check-render-fit.js` — `8b20c424d881528ba7d9b7e02acd56b518bfccaf7ee4558eb06c661aef0e4010`
+- `skills/bs-uml-master/scripts/test-check-render-fit.js` — `65176b32702d0b0178d6baeac11893eab8b859f642ba0c1d887a10506423930c`
 - `tools/peer-review.js` — `702587f408de2ff13cd994288e2b9a5da3ee2833ee9076c8ea1642670676307d`
 - `tools/test-peer-review-scope.js` — `4dc00dffb1d46b4feafc43a9c3819dbfe8c134921afd3795bcfe5ba3709eb3d8`
 
@@ -49,9 +49,9 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 **Skill**: bs-uml-master
 **HUMAN_VERIFIED**: false
 **Scope Contract Version**: 1
-**Reviewed Revision**: 2b947008372bd45adf0ee46f7b43a0692828b9ef
-**Reviewed Skill SHA-256**: bf50e9e81270da6cd27140debf9ad4baefdc779e8d79a79fc87acc581b7bf822
-**Reviewed Manifest SHA-256**: 67a2fa56dd469f04de2e0b459b0e5eb0b8f377075b5c1755c330e4f977537db1
+**Reviewed Revision**: 9986df3a6fbeb54149a457586d5f035ee3cf4843
+**Reviewed Skill SHA-256**: 4d7dd265a50f83de14ea84990932499f8b3c09e0ccbcde8a6f6736c10ff73a27
+**Reviewed Manifest SHA-256**: a2dc6724fdcde28d6bdebff5b7c76b2f386ae4faad51045145bf0b3080136994
 
 ## Executive Summary
 
@@ -59,7 +59,7 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 
 ## Evidence Reviewed
 
-Full manifest receipt `67a2fa56dd469f04de2e0b459b0e5eb0b8f377075b5c1755c330e4f977537db1` was received and independently verified.
+Full manifest receipt `a2dc6724fdcde28d6bdebff5b7c76b2f386ae4faad51045145bf0b3080136994` was received and independently verified.
 
 (Then list the files and commands actually examined or rerun.)
 
@@ -231,7 +231,7 @@ Write the diagram source from the ledger, applying [UML Semantics](./references/
 
 ### Phase 4 — Validate and render
 
-Follow [Rendering & Validation](./references/rendering-validation.md) with the chosen backend's verification recipe: syntax-check and render with the degradation ladder (local tool → installable tool → syntax check → manual review; receipts required when landing on rung 3/4), then inspect the rendered output against the inspection checklist — elements present, no truncation/overlap, title present, and the **layout rubric** from [Layout Craft](./references/layout-craft.md) (flow monotonicity, crossing budget, proximity honesty, hierarchy direction, label discipline, medium fit, density balance). Medium fit is mechanical: run `node <skill-dir>/scripts/check-render-fit.js <diagram.svg>` — gestalt diagrams must fit one screen at ≥11px effective label font; linear diagrams fit the cross axis and may scroll ≤3 screens along the reading axis; a failure enters the trade-off ladder (split+wayfinding → compress → single-axis scroll → progressive disclosure → mural+companion), never ships silently. Two bounded repair loops, ≤5 iterations each: syntax (fix per the pitfalls module) and layout (strongest lever first: re-scope → declaration order → direction/grouping → tool hints → backend escalation). After any fix, re-run every affected check.
+Follow [Rendering & Validation](./references/rendering-validation.md) with the chosen backend's verification recipe: syntax-check and render with the degradation ladder (local tool → installable tool → syntax check → manual review; receipts required when landing on rung 3/4), then inspect the rendered output against the inspection checklist — elements present, no truncation/overlap, title present, and the **layout rubric** from [Layout Craft](./references/layout-craft.md) (flow monotonicity, crossing budget, proximity honesty, hierarchy direction, label discipline, medium fit, density balance). Medium fit is mechanical: run `node <skill-dir>/scripts/check-render-fit.js <diagram.svg> --viewport WxH` **passing the Phase 0 medium's viewport** (omit for the PC-screen default; an A4 memo or a chat pane is a different viewport — certifying fit against the wrong medium is a false receipt). Gestalt diagrams must fit one screen at ≥11px effective label font; linear diagrams fit the cross axis and may scroll ≤3 screens along the reading axis (`--kind linear` is a claim you must be able to defend — the tool flags it when the SVG carries no sequence markers); a failure enters the trade-off ladder (split+wayfinding → compress → single-axis scroll → progressive disclosure → mural+companion), never ships silently. Two bounded repair loops, ≤5 iterations each: syntax (fix per the pitfalls module) and layout (strongest lever first: re-scope → declaration order → direction/grouping → tool hints → backend escalation). After any fix, re-run every affected check.
 
 **Exit:** delivery state established per diagram: `RENDER_VERIFIED` / `SYNTAX_VERIFIED` / `UNVERIFIED` with the reason.
 
