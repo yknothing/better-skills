@@ -107,6 +107,27 @@ run("plantuml-type-mismatch", HDR({ Type: "sequence diagram", Backend: "PlantUML
 // 10. Contract not used at all
 run("no-contract", "here is your diagram:\n" + FLOW4, 1, [/contract was not used/]);
 
+// 11. F8: multiplicity-styled edges-only classDiagram still hits the ceiling
+const MULT = "```mermaid\nclassDiagram\n" +
+  Array.from({ length: 16 }, (_, i) => `    C${i} "1" <|-- "0..*" C${i + 1}`).join("\n") + "\n```\n";
+run("multiplicity-edges-ceiling", HDR({ Type: "Class Diagram" }) + MULT + TAIL, 1, [/> hard ceiling 15/]);
+
+// 12. F9: prose "version" no longer counts as a tool receipt
+run("prose-version-receipt", HDR({ State: "RENDER_VERIFIED — version 3.2 of my careful process" }) + FLOW4 + TAIL,
+  1, [/no tool\+version receipt/]);
+
+// 13. F10: a tiny decoy fence cannot launder a mismatched real fence
+run("decoy-fence", HDR({ Type: "Class Diagram" }) +
+  "```mermaid\nclassDiagram\n    class A\n```\n" +
+  "```mermaid\ngraph TB\n    X[\"X<br/>---<br/>f: string\"]\n```\n" + TAIL,
+  1, [/fake or mismatched notation/]);
+
+// 14. F11: fenceless deliveries — WARN with an external file ref, FAIL without
+run("fenceless-with-file", HDR() + "\nSource delivered at scratch/arch.mmd, rendered to arch.svg.\n" + TAIL,
+  0, [/external-file delivery/]);
+run("fenceless-no-source", HDR() + "\nTrust me, the diagram is great.\n" + TAIL,
+  1, [/no diagram source found/]);
+
 console.log(`\n${failures === 0 ? "ALL PASS" : failures + " FIXTURE FAILURES"}`);
 fs.rmSync(tmp, { recursive: true, force: true });
 process.exit(failures === 0 ? 0 : 1);
