@@ -63,11 +63,15 @@ function detectFont(svg) {
 }
 
 function isSequence(svg) {
-  // Require an actual sequence-diagram marker on an element, not a mention
-  // in a classDef or comment: aria role, or an actor/messageLine class
-  // attribute on a real tag.
-  return /aria-roledescription="sequence/i.test(svg) ||
-    /<(?:rect|g|line|text)\b[^>]*class="[^"]*\b(?:actor|messageLine\d*)\b/i.test(svg);
+  // Mermaid embeds the true diagram type as aria-roledescription
+  // ("sequence", "flowchart-v2", "class", ...). When present it is
+  // authoritative — a flowchart node styled `classDef actor` renders as
+  // <g class="node default actor"> and must NOT flip detection (probed).
+  const role = (svg.match(/aria-roledescription="([^"]+)"/) || [])[1];
+  if (role) return /^sequence/i.test(role);
+  // No roledescription (older renderers): fall back to actor/messageLine
+  // class markers on real elements.
+  return /<(?:rect|g|line|text)\b[^>]*class="[^"]*\b(?:actor|messageLine\d*)\b/i.test(svg);
 }
 
 function edgeSpans(svg) {
@@ -168,14 +172,15 @@ function main(argv) {
   // Long-range edges (measured at display scale)
   const scale = kind === "gestalt" ? fitBoth
     : (readingAxisVertical ? Math.min(VW / W, 1) : Math.min(VH / H, 1));
+  // Note: a gestalt diagram that fits one screen cannot have an over-screen
+  // edge by construction — this check bites on linear/scrolling diagrams,
+  // where a torn edge is a split-and-cross-reference signal.
   const longEdges = edgeSpans(svg).filter(s =>
     (readingAxisVertical ? s.dy : s.dx) * scale > (readingAxisVertical ? VH : VW));
   if (longEdges.length === 0) {
     P("no edge exceeds one screen along the reading axis (both endpoints co-visible)");
-  } else if (kind === "gestalt" && longEdges.length >= 2) {
-    F(`${longEdges.length} edges span more than one screen — their endpoints can never be seen together; split and replace with cross-references`);
   } else {
-    Wn(`${longEdges.length} edge(s) span more than one screen — consider splitting or converting to a cross-reference`);
+    Wn(`${longEdges.length} edge(s) span more than one screen — endpoints not co-visible; consider splitting or converting to a cross-reference`);
   }
 
   console.log(out.join("\n"));

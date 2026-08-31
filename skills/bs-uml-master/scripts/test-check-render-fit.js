@@ -79,9 +79,18 @@ run("sequence-line-edges", svg(700, 2400, ACTOR + lineEdge(10, 10, 20, 2300) + l
 //     the reading axis of a sequence is always vertical
 run("wide-sequence-overflow", svg(2850, 309, ACTOR), [], 1, [/cross axis does not fit/]);
 
-// 12. F3: classDef-actor text must NOT flip a gestalt tower to linear
-run("classdef-actor-spoof", svg(833, 2094, `<style>.classDef-actor{fill:red}</style>` +
-  `<text>classDef actor fill:#f9f</text>`), [], 1, [/kind=gestalt/, /does not fit one screen legibly/]);
+// 12. F3 (captured markup): a flowchart node styled `classDef actor` renders
+//     as <g class="node default actor"> with aria-roledescription="flowchart-v2"
+//     — roledescription is authoritative, must stay gestalt and FAIL the tower
+run("classdef-actor-real-markup", `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 833 2094" ` +
+  `aria-roledescription="flowchart-v2"><style>.label{font-size:16px}</style>` +
+  `<g class="node default actor"><rect width="10" height="10"/></g><text class="label">x</text></svg>`,
+  [], 1, [/kind=gestalt/, /does not fit one screen legibly/]);
+
+// 12b. Real sequence roledescription (probed value) keeps linear detection
+run("roledescription-sequence", `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 1900" ` +
+  `aria-roledescription="sequence"><style>.label{font-size:16px}</style><text class="label">x</text></svg>`,
+  [], 0, [/kind=linear/, /cross axis fits/]);
 
 // 13. F3: manual --kind linear without sequence markers leaves an audit WARN
 run("manual-linear-laundering-warn", svg(833, 2094), ["--kind", "linear"], 0,
