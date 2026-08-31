@@ -53,3 +53,13 @@ A fresh, independent adversary (no prior involvement) reviewed the R2 content at
 | F8 LOW | GitHub silently ignores the ELK directive; local RENDER_VERIFIED could certify unseen geometry | FIXED — rubric must run on the geometry the reader's renderer produces |
 
 Final manifest-bound reviews (advocate + adversary) were then produced against revision 30ae1d8; see the review files and `2026-08-27-final-audit.md` for the closing verdicts.
+
+## Round 3 (revision R3/R3.1/R3.2: cross-model robustness, 2026-08-31)
+
+Driven by the first external usage sample (Haiku 4.5 compliance theater — `2026-08-31-haiku-usage-review.md`). The enforcement tool itself became the review target, and the loop ran three tightening turns:
+
+1. **R3** (ccd86f0): check-delivery.js v1 + Minimum Compliant Path + identifiers-are-quotations; fixture-tested against the observed failure profile (4/4 caught).
+2. **R3.1** (fe42ad1): the weak-model acceptance rerun (Haiku 4.5, same task) **passed** — compliance theater not reproduced — and exposed IP-10 (YAML frontmatter blinded C5/C6); fixed same-day.
+3. **R3.2** (16a1ae4): the adversary attacked the checker with 14 delivery fixtures → 6 MEDIUM precision holes (IP-11: edges-only counting, PlantUML escape, prose-mimic receipts, tag laundering introduced by R3.1's own guard, fence targeting, sketch/recipe joint unsatisfiability) → all fixed, and the fixtures became the in-repo self-test `scripts/test-check-delivery.js` (IP-12, closing the advocate's One Improvement).
+
+Closing verdicts at 16a1ae4: adversary **APPROVED** (its own exploit fixtures re-run against v3 — every one now caught; 4 honest residuals recorded, 1 MEDIUM non-gating: IP-13); advocate rebind in the review file. The checker's header now states its own limits: it binds format, not truth — floor, not ceiling (IP-9 open for Phase 2.A).
