@@ -14,15 +14,15 @@ You are the **advocate reviewer** for the `bs-uml-master` skill. Your job is to 
 Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
 
 **Scope Contract Version**: 1
-**Reviewed Revision to record**: fe42ad1da77b6e6a0fe1772ca224340dcbd07022
-**Reviewed Skill SHA-256 to record**: 6a23545e4f1752636f935fdb6be1e92a4b2e6f11fc15d24e4b93f38ba9981084
-**Reviewed Manifest SHA-256 to record**: 8060c5dee0d1c7fc53c78e3270c4511d204d2af2b74483c33dc4df5e4759138c
+**Reviewed Revision to record**: 16a1ae4179a842b1e2ad0c8e0f4a62aad14ace22
+**Reviewed Skill SHA-256 to record**: 2f3322de034c9ee6ca0bb5e1326274b04845f90a04895b79c7c74e1cbe0bc263
+**Reviewed Manifest SHA-256 to record**: 9c70b77340b4f981fc26fa80e1777ab6182ccf21a8df5fc449b153379ffeab93
 
 - `evaluation/datasets/batch-1-test-prompts.json` — `9377d7d408018bacb2a4a714f661dfc8b53894919d5fcb3a97dceed798ac3687`
 - `evaluation/harness/runner.js` — `ee6e871ad26230c4073ba72151f1d6f5862c7c05074ba756bfe9b5e4e509f8f8`
 - `evaluation/harness/test-runner-scope.js` — `eaa773a660417049759c7e8831444a2ec5e6f73174487662018d6c2f556e879c`
 - `skills.json` — `7885f9c7cefbd700ced8fc481b1524f61de6c47c523bcc806ecca60b269dc1ce`
-- `skills/bs-uml-master/SKILL.md` — `6a23545e4f1752636f935fdb6be1e92a4b2e6f11fc15d24e4b93f38ba9981084`
+- `skills/bs-uml-master/SKILL.md` — `2f3322de034c9ee6ca0bb5e1326274b04845f90a04895b79c7c74e1cbe0bc263`
 - `skills/bs-uml-master/references/diagram-selection.md` — `cfa85279548602fe69db478866a34cbf2e59f1269a6e01a7eb35ccf4218dc10c`
 - `skills/bs-uml-master/references/layout-craft.md` — `4d414aa6fb179b12e99c2c345df80d629ac36a8f8e9de46dedf0f34bf482021f`
 - `skills/bs-uml-master/references/modeling-from-code.md` — `58dec58a2924a9f7ed77308a4e267de66811aa95b6cdd75c75bc56fdaaa061a7`
@@ -31,8 +31,9 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 - `skills/bs-uml-master/references/syntax-pitfalls.md` — `c08a5e63663072e4fb11a0f149e84e75f4b85011d6f3ccd9ff6d0ca593c6acec`
 - `skills/bs-uml-master/references/text-diagrams.md` — `68ebcb460268833b13f3aa863ffc409bc599a0a4475a0b9db33ea6a78d7acab3`
 - `skills/bs-uml-master/references/uml-semantics.md` — `f8b59c246cddcf17b9520c8d7e7215940432f5118c54bf9441e1023e329330de`
-- `skills/bs-uml-master/scripts/check-delivery.js` — `4b40250e414a84253018fa952f7d2b6d4ab12136bd7ab96c82fb6d5b13d4aedb`
+- `skills/bs-uml-master/scripts/check-delivery.js` — `51f4df69a7444d0dc1b98aec925bd95e9e5bec5570edc440a7ffc228b69cf3a0`
 - `skills/bs-uml-master/scripts/check-mermaid.js` — `938b004901b22e27d204f9afb69cf6003ee155010f7893a84f58cd453e1c9fb4`
+- `skills/bs-uml-master/scripts/test-check-delivery.js` — `6fca32f0a630c080ad2a87a92b6152b2268081a43890e1dce30158ebeefa1196`
 - `tools/peer-review.js` — `8491cb1766b1a16f5fea2945d40e834130c32975a51701d7b1f2d82981e905a9`
 - `tools/test-peer-review-scope.js` — `fd852531f89668f708477e4cb17216729a299ab8bc4deeb69fda7314b9517468`
 
@@ -46,9 +47,9 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 **Skill**: bs-uml-master
 **HUMAN_VERIFIED**: false
 **Scope Contract Version**: 1
-**Reviewed Revision**: fe42ad1da77b6e6a0fe1772ca224340dcbd07022
-**Reviewed Skill SHA-256**: 6a23545e4f1752636f935fdb6be1e92a4b2e6f11fc15d24e4b93f38ba9981084
-**Reviewed Manifest SHA-256**: 8060c5dee0d1c7fc53c78e3270c4511d204d2af2b74483c33dc4df5e4759138c
+**Reviewed Revision**: 16a1ae4179a842b1e2ad0c8e0f4a62aad14ace22
+**Reviewed Skill SHA-256**: 2f3322de034c9ee6ca0bb5e1326274b04845f90a04895b79c7c74e1cbe0bc263
+**Reviewed Manifest SHA-256**: 9c70b77340b4f981fc26fa80e1777ab6182ccf21a8df5fc449b153379ffeab93
 
 ## Executive Summary
 
@@ -56,7 +57,7 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 
 ## Evidence Reviewed
 
-(Acknowledge full manifest receipt `8060c5dee0d1c7fc53c78e3270c4511d204d2af2b74483c33dc4df5e4759138c`, then list the files and commands actually examined or rerun.)
+(Acknowledge full manifest receipt `9c70b77340b4f981fc26fa80e1777ab6182ccf21a8df5fc449b153379ffeab93`, then list the files and commands actually examined or rerun.)
 
 ## Dimension Scores
 
@@ -152,7 +153,7 @@ The floor, as a recipe. The principles above are the ceiling; no step here may b
 3. Pick type + backend from the selection matrix. The source header must match the type you name (class diagram ⇒ `classDiagram`).
 4. Draft from the ledger only; copy identifiers verbatim.
 5. Run the backend's validation command; render when obtainable; look at the image.
-6. Fill the output contract completely, then run `node <skill-dir>/scripts/check-delivery.js <draft.md>` and fix every FAIL before delivering.
+6. Fill the output contract completely (sketch: the compressed form), then run `node <skill-dir>/scripts/check-delivery.js <draft.md>` and fix every FAIL before delivering; resolve warnings or state why they stand.
 7. State line = label + tool + version + what was checked. Skipped something? Say `UNVERIFIED`, with the failed command.
 
 ## Boundaries
@@ -262,7 +263,7 @@ Do not deliver a diagram whose delivery state is unstated, or stated stronger th
 
 For multi-diagram deliveries, repeat per diagram and add one overview line on how the set fits together. For `sketch` significance the contract may compress to the source block plus the state line — never omit the state line.
 
-Every bracketed placeholder must be replaced; an unfilled or missing field is a format-invalid delivery, not a stylistic choice. Verify mechanically before handing over: `node <skill-dir>/scripts/check-delivery.js <draft.md>` — it rejects receipt-less State lines, missing Evidence/Excluded, declared-type-vs-source-header mismatches, and unjustified budget overruns. When the delivery medium pins its own renderer (a CDN `<script>`, GitHub's embedded Mermaid), verify on **that** version or state the skew explicitly.
+Every bracketed placeholder must be replaced; an unfilled or missing field is a format-invalid delivery, not a stylistic choice. Verify mechanically before handing over: `node <skill-dir>/scripts/check-delivery.js <draft.md>` — it rejects receipt-less State lines, missing Evidence/Excluded (warns instead at sketch significance, whose compressed form is legal), declared-type-vs-source mismatches, and ceiling breaches (>15 without USER-OVERRIDE; 10–15 without justification draws a warning you must still resolve). Its element counting is heuristic — a miscount is a reason to fix the counter, never a license to trust it over your own count. When the delivery medium pins its own renderer (a CDN `<script>`, GitHub's embedded Mermaid), verify on **that** version or state the skew explicitly.
 
 ## Bundled Resources
 
@@ -277,7 +278,8 @@ Every bracketed placeholder must be replaced; an unfilled or missing field is a 
 | [SVG Presentation](./references/svg-presentation.md) | Publication-grade projection: model-first iron rule, authoring rules, triple verification |
 | [Rendering & Validation](./references/rendering-validation.md) | Per-backend verification recipes, evidence vocabulary, degradation ladder, inspection checklist |
 | `scripts/check-mermaid.js` | Browser-free Mermaid syntax checker (rung 3 of the degradation ladder; `SYNTAX_VERIFIED` at most) |
-| `scripts/check-delivery.js` | Deterministic output-contract checker: receipt-bearing State line, Evidence/Excluded presence, type-vs-header consistency, element budget — run on the draft before delivering |
+| `scripts/check-delivery.js` | Deterministic output-contract checker: receipt-bearing State line, Evidence/Excluded presence, type-vs-source consistency (Mermaid and PlantUML), element budget, sketch-aware — run on the draft before delivering |
+| `scripts/test-check-delivery.js` | The checker's regression self-test: 14 fixtures encoding every failure vector found by review probes and acceptance runs — run after any checker change |
 
 ## Patterns
 
