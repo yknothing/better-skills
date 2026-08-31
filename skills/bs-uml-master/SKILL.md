@@ -61,7 +61,7 @@ The floor, as a recipe. The principles above are the ceiling; no step here may b
 3. Pick type + backend from the selection matrix. The source header must match the type you name (class diagram ⇒ `classDiagram`).
 4. Draft from the ledger only; copy identifiers verbatim.
 5. Run the backend's validation command; render when obtainable; look at the image.
-6. Fill the output contract completely, then run `node <skill-dir>/scripts/check-delivery.js <draft.md>` and fix every FAIL before delivering.
+6. Fill the output contract completely (sketch: the compressed form), then run `node <skill-dir>/scripts/check-delivery.js <draft.md>` and fix every FAIL before delivering; resolve warnings or state why they stand.
 7. State line = label + tool + version + what was checked. Skipped something? Say `UNVERIFIED`, with the failed command.
 
 ## Boundaries
@@ -171,7 +171,7 @@ Do not deliver a diagram whose delivery state is unstated, or stated stronger th
 
 For multi-diagram deliveries, repeat per diagram and add one overview line on how the set fits together. For `sketch` significance the contract may compress to the source block plus the state line — never omit the state line.
 
-Every bracketed placeholder must be replaced; an unfilled or missing field is a format-invalid delivery, not a stylistic choice. Verify mechanically before handing over: `node <skill-dir>/scripts/check-delivery.js <draft.md>` — it rejects receipt-less State lines, missing Evidence/Excluded, declared-type-vs-source-header mismatches, and unjustified budget overruns. When the delivery medium pins its own renderer (a CDN `<script>`, GitHub's embedded Mermaid), verify on **that** version or state the skew explicitly.
+Every bracketed placeholder must be replaced; an unfilled or missing field is a format-invalid delivery, not a stylistic choice. Verify mechanically before handing over: `node <skill-dir>/scripts/check-delivery.js <draft.md>` — it rejects receipt-less State lines, missing Evidence/Excluded (warns instead at sketch significance, whose compressed form is legal), declared-type-vs-source mismatches, and ceiling breaches (>15 without USER-OVERRIDE; 10–15 without justification draws a warning you must still resolve). Its element counting is heuristic — a miscount is a reason to fix the counter, never a license to trust it over your own count. When the delivery medium pins its own renderer (a CDN `<script>`, GitHub's embedded Mermaid), verify on **that** version or state the skew explicitly.
 
 ## Bundled Resources
 
@@ -186,7 +186,8 @@ Every bracketed placeholder must be replaced; an unfilled or missing field is a 
 | [SVG Presentation](./references/svg-presentation.md) | Publication-grade projection: model-first iron rule, authoring rules, triple verification |
 | [Rendering & Validation](./references/rendering-validation.md) | Per-backend verification recipes, evidence vocabulary, degradation ladder, inspection checklist |
 | `scripts/check-mermaid.js` | Browser-free Mermaid syntax checker (rung 3 of the degradation ladder; `SYNTAX_VERIFIED` at most) |
-| `scripts/check-delivery.js` | Deterministic output-contract checker: receipt-bearing State line, Evidence/Excluded presence, type-vs-header consistency, element budget — run on the draft before delivering |
+| `scripts/check-delivery.js` | Deterministic output-contract checker: receipt-bearing State line, Evidence/Excluded presence, type-vs-source consistency (Mermaid and PlantUML), element budget, sketch-aware — run on the draft before delivering |
+| `scripts/test-check-delivery.js` | The checker's regression self-test: 14 fixtures encoding every failure vector found by review probes and acceptance runs — run after any checker change |
 
 ## Patterns
 
