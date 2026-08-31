@@ -31,6 +31,10 @@
 2. LOW (R1 carry-over) — gate receipts are self-attested pending Phase 2.A mechanization; Kroki consent is now consent-required (upgraded in R2).
 3. Systemic note — registering any new skill re-hashes `skills.json`/dataset and marks earlier skills' review manifests stale (observed on bs-ppt-master); property of the manifest design, not of this skill.
 
+## R3 addendum (2026-08-31, final revision 16a1ae4)
+
+Driven by the first external usage sample (Haiku 4.5 compliance theater). Three tightening turns — R3 (enforcement moved from prose to `check-delivery.js` + Minimum Compliant Path), R3.1 (weak-model acceptance rerun PASSED, compliance theater not reproduced; found IP-10), R3.2 (adversary fixture round: 6 precision holes fixed; fixtures became the in-repo self-test, 14/14). Closing verdicts at 16a1ae4: adversary **APPROVED** (exploit fixtures re-run against v3, all caught; residuals IP-13 open, non-gating), advocate **PASS 72/80**, `peer-review.js check` 1/1 both files. Deposits: usage-review record, improvement-points ledger v1 (IP-1..13, founding CLAUDE.md trigger-1 tracking), research doc §六 (bindingness ladder, anti-degradation principles), acceptance-test record.
+
 ## Verdict
 
-**All four gates PASS at 30ae1d8.** bs-uml-master is active in `skills.json` (batch-1, deep) with the projection-backend architecture and layout-as-semantics discipline in force. Terminal state follows from recorded evidence, not schedule pressure.
+**All four gates PASS at 16a1ae4** (R1 30ae1d8 verdicts preserved above). bs-uml-master is active in `skills.json` (batch-1, deep) with projection backends, layout-as-semantics, and machine-checked delivery contracts in force. Terminal state follows from recorded evidence, not schedule pressure.
