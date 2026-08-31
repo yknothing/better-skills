@@ -34,7 +34,7 @@ const LABELS = /RENDER_VERIFIED(?:\s*\(structural\))?|SYNTAX_VERIFIED|UNVERIFIED
 // A receipt needs a tool-shaped token (known tool, *.js/*.jar, *-cli, or the
 // word "version") adjacent to a dotted version number — "checked 3.2 boxes"
 // must not pass.
-const TOOL_VERSION = /\b(?:mmdc|mermaid(?:-cli)?|plantuml|kroki|d2|graphviz|dot|chromium|[\w-]+\.(?:js|jar)|[\w-]+-cli|version)\b[^\n\d]{0,15}v?\d+(?:\.\d+)+/i;
+const TOOL_VERSION = /\b(?:mmdc|mermaid(?:-cli)?|plantuml|kroki|d2|graphviz|dot|chromium|[\w-]+\.(?:js|jar)|[\w-]+-cli)\b[^\n\d]{0,15}v?\d+(?:\.\d+)+/i;
 const TEXT_BACKEND_RECEIPT = /text backend.*(?:alignment|monospace|awk|col)/i;
 // path with extension, then :N or " file:N" / " line N" — a clock time
 // ("at 14:32") has no path and must not pass.
@@ -63,18 +63,18 @@ function headerOf(body) {
     !l.trim().startsWith("%%") && !l.trim().startsWith("title")) || "").trim();
 }
 
-function fence(block) {
-  // Prefer the first fence that actually holds diagram source — a delivery
-  // may legally lead with a receipts/output block.
+function fences(block) {
+  // ALL fences that look like diagram source. Every one is type-checked
+  // (C5) so a tiny decoy fence cannot launder a mismatched real one, and
+  // the largest element count is used for the budget (C6).
   const all = [...block.matchAll(/```([\w-]*)\r?\n([\s\S]*?)```/g)]
     .map(m => {
       const body = stripFrontmatter(m[2]);
       return { lang: (m[1] || "").toLowerCase(), body, header: headerOf(body) };
     });
-  if (all.length === 0) return null;
-  return all.find(f => /^(mermaid|plantuml|puml)$/.test(f.lang)) ||
-         all.find(f => DIAGRAM_HEADER.test(f.header)) ||
-         all[0];
+  const diagrams = all.filter(f => /^(mermaid|plantuml|puml)$/.test(f.lang) || DIAGRAM_HEADER.test(f.header));
+  if (diagrams.length > 0) return diagrams;
+  return all.length > 0 ? [all[0]] : [];
 }
 
 function stripNoise(body) {
@@ -101,9 +101,12 @@ function countPrimary(f) {
 
   const b = stripNoise(f.body);
   if (h.startsWith("classdiagram")) {
-    const decls = [...b.matchAll(/^\s*class\s+([\w~[\]]+)/gm)].map(m => m[1]);
+    // Remove quoted multiplicities entirely so `A "1" <|-- "0..*" B` still
+    // reads as a relation between A and B (IP-13/F8).
+    const c = b.replace(/"[^"]*"/g, " ");
+    const decls = [...c.matchAll(/^\s*class\s+([\w~[\]]+)/gm)].map(m => m[1]);
     // Edges-only class diagrams declare members implicitly on relation lines.
-    const rels = [...b.matchAll(/^\s*([\w~]+)\s*(?:<\|--|<\|\.\.|\*--|o--|-->|\.\.>|--|\.\.)\s*([\w~]+)/gm)]
+    const rels = [...c.matchAll(/^\s*([\w~]+)\s*(?:<\|--|<\|\.\.|\*--|o--|-->|\.\.>|--|\.\.)\s*([\w~]+)/gm)]
       .flatMap(m => [m[1], m[2]]);
     return uniq(decls.concat(rels));
   }
@@ -218,19 +221,30 @@ function checkBlock(block, idx, out) {
     ? P("Excluded declared")
     : SOFT('Excluded missing (write "nothing excluded; total scope is N elements" if true)');
 
-  // C5
-  const f = fence(block);
-  const tm = typeMatchesHeader(field(block, "Type/altitude") || field(block, "Type"), f);
-  tm.ok ? P("Declared type matches source" + (tm.note ? ` (${tm.note})` : "")) : F(tm.note);
-
-  // C6
-  const n = countPrimary(f);
-  if (n !== null) {
-    if (n > 15 && !/USER-OVERRIDE/i.test(block)) F(`~${n} primary elements > hard ceiling 15 with no USER-OVERRIDE note`);
-    else if (n > 9 && !/justif|预算|budget|USER-OVERRIDE/i.test(block)) W(`~${n} primary elements > 9 with no visible budget justification`);
-    else P(`element count ~${n} within budget discipline`);
-  } else if (f) {
-    W(`element counting unavailable for source header "${f.header}" — count manually against the budget`);
+  // C5 — every diagram-shaped fence must match the declared type (a decoy
+  // fence cannot launder a mismatched real one)
+  const fs_ = fences(block);
+  const declared = field(block, "Type/altitude") || field(block, "Type");
+  if (fs_.length === 0) {
+    // Fenceless: legal only when the source is delivered as an external file
+    /\.(mmd|puml|plantuml|svg|txt)\b/.test(block)
+      ? W("no fenced source — external-file delivery; C5/C6 not verifiable here, check the file manually")
+      : F("no diagram source found in the delivery (neither a fence nor an external source-file reference)");
+  } else {
+    for (const f of fs_) {
+      const tm = typeMatchesHeader(declared, f);
+      tm.ok ? P("Declared type matches source" + (tm.note ? ` (${tm.note})` : "")) : F(tm.note);
+    }
+    // C6 — budget judged on the largest candidate
+    const counts = fs_.map(countPrimary).filter(n => n !== null);
+    if (counts.length > 0) {
+      const n = Math.max(...counts);
+      if (n > 15 && !/USER-OVERRIDE/i.test(block)) F(`~${n} primary elements > hard ceiling 15 with no USER-OVERRIDE note`);
+      else if (n > 9 && !/justif|预算|budget|USER-OVERRIDE/i.test(block)) W(`~${n} primary elements > 9 with no visible budget justification`);
+      else P(`element count ~${n} within budget discipline`);
+    } else {
+      W(`element counting unavailable for source header "${fs_[0].header}" — count manually against the budget`);
+    }
   }
 }
 
