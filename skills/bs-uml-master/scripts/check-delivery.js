@@ -42,8 +42,12 @@ function field(block, name) {
 function fence(block) {
   const m = block.match(/```(\w*)\n([\s\S]*?)```/);
   if (!m) return null;
-  const body = m[2];
-  const header = (body.split(/\r?\n/).find(l => l.trim() && !l.trim().startsWith("---") &&
+  let body = m[2];
+  // Strip a leading YAML frontmatter block (--- ... ---) used for titles or
+  // config — otherwise its keys (e.g. "config:") masquerade as the header
+  // and C5/C6 silently skip.
+  body = body.replace(/^\s*---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
+  const header = (body.split(/\r?\n/).find(l => l.trim() &&
     !l.trim().startsWith("%%") && !l.trim().startsWith("title")) || "").trim();
   return { lang: m[1], body, header };
 }
@@ -79,12 +83,14 @@ function typeMatchesHeader(declaredType, f) {
   if (!f || !f.header) return { ok: true, note: "no fenced source found (external file delivery?)" };
   const t = (declaredType || "").toLowerCase();
   const h = f.header.toLowerCase();
+  if (h.startsWith("@startuml") || f.lang === "plantuml")
+    return { ok: true, note: "PlantUML source — Mermaid header mapping not applicable" };
   const expect = [
     [/class/, /^classdiagram/],
     [/sequence/, /^sequencediagram/],
     [/state/, /^statediagram/],
     [/\ber\b|entity/, /^erdiagram/],
-    [/flowchart|dependency|module|box-flow|component-style|c4-convention/, /^(graph|flowchart)/],
+    [/flowchart|dependency|module|box-flow|component|c4/, /^(graph|flowchart)/],
   ];
   for (const [claim, header] of expect) {
     if (claim.test(t)) return header.test(h)

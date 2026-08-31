@@ -13,5 +13,6 @@ Schema: [`../_improvement-points-schema.md`](../_improvement-points-schema.md). 
 | IP-7 | 2026-08-31 | 2026-08-27-adversary-review.md F9 (R2 round) | fable-5 adversary probe | stale-claim | LOW | Dot-dependent PlantUML type list omits state & deployment diagrams (probed: same placard behavior) | fixed:R3 |
 | IP-8 | 2026-08-31 | 2026-08-31-haiku-usage-review.md #1 (renderer skew) | haiku-4.5 + skill | gap | MED | When the delivery medium embeds its own renderer version (CDN pin, GitHub), verification must name THAT version or state the skew | fixed:R3 |
 | IP-9 | 2026-08-27 | 2026-08-27-final-audit.md follow-up 2 | fable-5 adversary | gap | LOW | Gate receipts are self-attested pending Phase 2.A mechanization (check-delivery.js partially covers; full closure is Phase 2.A) | open |
+| IP-10 | 2026-08-31 | 2026-08-31-forward-test-r3.md (Haiku acceptance run) | haiku-4.5 + R3 skill | stale-claim | MED | check-delivery.js header detection broke on Mermaid YAML frontmatter (`---\nconfig:...---`), silently skipping C5/C6; also PlantUML sources need a guard against the Mermaid header mapping | fixed:R3.1 |
 
-**Count toward upgrade trigger 1: 9** (8 fixed in R3, 1 open).
+**Count toward upgrade trigger 1: 10** (9 fixed, 1 open).
