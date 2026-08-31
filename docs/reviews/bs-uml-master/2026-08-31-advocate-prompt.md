@@ -14,11 +14,11 @@ You are the **advocate reviewer** for the `bs-uml-master` skill. Your job is to 
 Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
 
 **Scope Contract Version**: 1
-**Reviewed Revision to record**: 16a1ae4179a842b1e2ad0c8e0f4a62aad14ace22
+**Reviewed Revision to record**: a226e119365b7797ad9a24697f053a1337d198de
 **Reviewed Skill SHA-256 to record**: 2f3322de034c9ee6ca0bb5e1326274b04845f90a04895b79c7c74e1cbe0bc263
-**Reviewed Manifest SHA-256 to record**: 9c70b77340b4f981fc26fa80e1777ab6182ccf21a8df5fc449b153379ffeab93
+**Reviewed Manifest SHA-256 to record**: 30e875cb2b76a829d059c533bb8638ab97c5595c258ee615815bc5ab3f3d4394
 
-- `evaluation/datasets/batch-1-test-prompts.json` — `9377d7d408018bacb2a4a714f661dfc8b53894919d5fcb3a97dceed798ac3687`
+- `evaluation/datasets/batch-1-test-prompts.json` — `65ac0103d265a973ca1c2bb839996df4c40c6833da3fd17b576c216105b0ab5b`
 - `evaluation/harness/runner.js` — `ee6e871ad26230c4073ba72151f1d6f5862c7c05074ba756bfe9b5e4e509f8f8`
 - `evaluation/harness/test-runner-scope.js` — `eaa773a660417049759c7e8831444a2ec5e6f73174487662018d6c2f556e879c`
 - `skills.json` — `7885f9c7cefbd700ced8fc481b1524f61de6c47c523bcc806ecca60b269dc1ce`
@@ -31,11 +31,11 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 - `skills/bs-uml-master/references/syntax-pitfalls.md` — `c08a5e63663072e4fb11a0f149e84e75f4b85011d6f3ccd9ff6d0ca593c6acec`
 - `skills/bs-uml-master/references/text-diagrams.md` — `68ebcb460268833b13f3aa863ffc409bc599a0a4475a0b9db33ea6a78d7acab3`
 - `skills/bs-uml-master/references/uml-semantics.md` — `f8b59c246cddcf17b9520c8d7e7215940432f5118c54bf9441e1023e329330de`
-- `skills/bs-uml-master/scripts/check-delivery.js` — `51f4df69a7444d0dc1b98aec925bd95e9e5bec5570edc440a7ffc228b69cf3a0`
+- `skills/bs-uml-master/scripts/check-delivery.js` — `d066754233e0400955dd33a2911a7ea817fb435e01fe4f86f2c700173dacbbd1`
 - `skills/bs-uml-master/scripts/check-mermaid.js` — `938b004901b22e27d204f9afb69cf6003ee155010f7893a84f58cd453e1c9fb4`
-- `skills/bs-uml-master/scripts/test-check-delivery.js` — `6fca32f0a630c080ad2a87a92b6152b2268081a43890e1dce30158ebeefa1196`
-- `tools/peer-review.js` — `8491cb1766b1a16f5fea2945d40e834130c32975a51701d7b1f2d82981e905a9`
-- `tools/test-peer-review-scope.js` — `fd852531f89668f708477e4cb17216729a299ab8bc4deeb69fda7314b9517468`
+- `skills/bs-uml-master/scripts/test-check-delivery.js` — `dd6edd368333271ef66cc530c695d3638d7cb0e4fc12eeb4fb8162ba135cf69e`
+- `tools/peer-review.js` — `702587f408de2ff13cd994288e2b9a5da3ee2833ee9076c8ea1642670676307d`
+- `tools/test-peer-review-scope.js` — `4dc00dffb1d46b4feafc43a9c3819dbfe8c134921afd3795bcfe5ba3709eb3d8`
 
 ## Required structure
 
@@ -47,9 +47,9 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 **Skill**: bs-uml-master
 **HUMAN_VERIFIED**: false
 **Scope Contract Version**: 1
-**Reviewed Revision**: 16a1ae4179a842b1e2ad0c8e0f4a62aad14ace22
+**Reviewed Revision**: a226e119365b7797ad9a24697f053a1337d198de
 **Reviewed Skill SHA-256**: 2f3322de034c9ee6ca0bb5e1326274b04845f90a04895b79c7c74e1cbe0bc263
-**Reviewed Manifest SHA-256**: 9c70b77340b4f981fc26fa80e1777ab6182ccf21a8df5fc449b153379ffeab93
+**Reviewed Manifest SHA-256**: 30e875cb2b76a829d059c533bb8638ab97c5595c258ee615815bc5ab3f3d4394
 
 ## Executive Summary
 
@@ -57,7 +57,11 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 
 ## Evidence Reviewed
 
-(Acknowledge full manifest receipt `9c70b77340b4f981fc26fa80e1777ab6182ccf21a8df5fc449b153379ffeab93`, then list the files and commands actually examined or rerun.)
+Full manifest receipt `30e875cb2b76a829d059c533bb8638ab97c5595c258ee615815bc5ab3f3d4394` was received and independently verified.
+
+(Then list the files and commands actually examined or rerun.)
+
+Do not use raw HTML blocks anywhere in the review.
 
 ## Dimension Scores
 
@@ -82,7 +86,7 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 
 ## Verdict
 
-**Verdict**: <one of: PASS / production-ready / NEEDS_POLISH / numeric score like 76/80>
+**Verdict**: <one of: PASS / production-ready / NEEDS_POLISH>
 
 (One paragraph rationale.)
 ```
