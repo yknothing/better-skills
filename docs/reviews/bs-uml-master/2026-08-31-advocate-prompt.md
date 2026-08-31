@@ -14,17 +14,17 @@ You are the **advocate reviewer** for the `bs-uml-master` skill. Your job is to 
 Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
 
 **Scope Contract Version**: 1
-**Reviewed Revision to record**: a226e119365b7797ad9a24697f053a1337d198de
-**Reviewed Skill SHA-256 to record**: 2f3322de034c9ee6ca0bb5e1326274b04845f90a04895b79c7c74e1cbe0bc263
-**Reviewed Manifest SHA-256 to record**: 30e875cb2b76a829d059c533bb8638ab97c5595c258ee615815bc5ab3f3d4394
+**Reviewed Revision to record**: 2b947008372bd45adf0ee46f7b43a0692828b9ef
+**Reviewed Skill SHA-256 to record**: bf50e9e81270da6cd27140debf9ad4baefdc779e8d79a79fc87acc581b7bf822
+**Reviewed Manifest SHA-256 to record**: 67a2fa56dd469f04de2e0b459b0e5eb0b8f377075b5c1755c330e4f977537db1
 
 - `evaluation/datasets/batch-1-test-prompts.json` — `65ac0103d265a973ca1c2bb839996df4c40c6833da3fd17b576c216105b0ab5b`
 - `evaluation/harness/runner.js` — `ee6e871ad26230c4073ba72151f1d6f5862c7c05074ba756bfe9b5e4e509f8f8`
 - `evaluation/harness/test-runner-scope.js` — `eaa773a660417049759c7e8831444a2ec5e6f73174487662018d6c2f556e879c`
 - `skills.json` — `7885f9c7cefbd700ced8fc481b1524f61de6c47c523bcc806ecca60b269dc1ce`
-- `skills/bs-uml-master/SKILL.md` — `2f3322de034c9ee6ca0bb5e1326274b04845f90a04895b79c7c74e1cbe0bc263`
+- `skills/bs-uml-master/SKILL.md` — `bf50e9e81270da6cd27140debf9ad4baefdc779e8d79a79fc87acc581b7bf822`
 - `skills/bs-uml-master/references/diagram-selection.md` — `cfa85279548602fe69db478866a34cbf2e59f1269a6e01a7eb35ccf4218dc10c`
-- `skills/bs-uml-master/references/layout-craft.md` — `4d414aa6fb179b12e99c2c345df80d629ac36a8f8e9de46dedf0f34bf482021f`
+- `skills/bs-uml-master/references/layout-craft.md` — `642ff4ebdc11422ca7617038d4be407686a558d406a10085e54e66c9b76412c6`
 - `skills/bs-uml-master/references/modeling-from-code.md` — `58dec58a2924a9f7ed77308a4e267de66811aa95b6cdd75c75bc56fdaaa061a7`
 - `skills/bs-uml-master/references/rendering-validation.md` — `095f18830d381d901f9c10bd34612334a7428baa1b82ca00cae3e64c8a399804`
 - `skills/bs-uml-master/references/svg-presentation.md` — `e3400aed86339da2ad9a8e6692727842de8fbfcb5632871d85e1d68e308dfb02`
@@ -33,7 +33,9 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 - `skills/bs-uml-master/references/uml-semantics.md` — `f8b59c246cddcf17b9520c8d7e7215940432f5118c54bf9441e1023e329330de`
 - `skills/bs-uml-master/scripts/check-delivery.js` — `d066754233e0400955dd33a2911a7ea817fb435e01fe4f86f2c700173dacbbd1`
 - `skills/bs-uml-master/scripts/check-mermaid.js` — `938b004901b22e27d204f9afb69cf6003ee155010f7893a84f58cd453e1c9fb4`
+- `skills/bs-uml-master/scripts/check-render-fit.js` — `43755a3210c3560f7f2eeddf8e24e824653a426c656bbe21508bbb5770d1a84e`
 - `skills/bs-uml-master/scripts/test-check-delivery.js` — `dd6edd368333271ef66cc530c695d3638d7cb0e4fc12eeb4fb8162ba135cf69e`
+- `skills/bs-uml-master/scripts/test-check-render-fit.js` — `8b20c424d881528ba7d9b7e02acd56b518bfccaf7ee4558eb06c661aef0e4010`
 - `tools/peer-review.js` — `702587f408de2ff13cd994288e2b9a5da3ee2833ee9076c8ea1642670676307d`
 - `tools/test-peer-review-scope.js` — `4dc00dffb1d46b4feafc43a9c3819dbfe8c134921afd3795bcfe5ba3709eb3d8`
 
@@ -47,9 +49,9 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 **Skill**: bs-uml-master
 **HUMAN_VERIFIED**: false
 **Scope Contract Version**: 1
-**Reviewed Revision**: a226e119365b7797ad9a24697f053a1337d198de
-**Reviewed Skill SHA-256**: 2f3322de034c9ee6ca0bb5e1326274b04845f90a04895b79c7c74e1cbe0bc263
-**Reviewed Manifest SHA-256**: 30e875cb2b76a829d059c533bb8638ab97c5595c258ee615815bc5ab3f3d4394
+**Reviewed Revision**: 2b947008372bd45adf0ee46f7b43a0692828b9ef
+**Reviewed Skill SHA-256**: bf50e9e81270da6cd27140debf9ad4baefdc779e8d79a79fc87acc581b7bf822
+**Reviewed Manifest SHA-256**: 67a2fa56dd469f04de2e0b459b0e5eb0b8f377075b5c1755c330e4f977537db1
 
 ## Executive Summary
 
@@ -57,7 +59,7 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 
 ## Evidence Reviewed
 
-Full manifest receipt `30e875cb2b76a829d059c533bb8638ab97c5595c258ee615815bc5ab3f3d4394` was received and independently verified.
+Full manifest receipt `67a2fa56dd469f04de2e0b459b0e5eb0b8f377075b5c1755c330e4f977537db1` was received and independently verified.
 
 (Then list the files and commands actually examined or rerun.)
 
@@ -135,6 +137,7 @@ The element ledger is the canonical model; every notation — Mermaid, PlantUML,
 | "The semantics are right; the tangled layout is the tool's fault, ship it." | Position is a semantic channel — a garbled layout misinforms. Run the repair loop; escalate the backend at the ceiling (Rule 9). |
 | "It renders fine on my side; where it ends up is the user's concern." | The medium's width, zoomability, and renderer are Phase 0 inputs. A 3700px-wide render in an A4 memo is a failed delivery (Rules 8–9). |
 | "I filled in the contract's fields, so the work behind them is implied." | Contract format without contract work is compliance theater — an unearned `RENDER_VERIFIED` lends false authority. `scripts/check-delivery.js` rejects receipt-less claims; the work itself is yours (Rules 2, 6). |
+| "It fits — the reader just has to scroll and zoom a bit." | A gestalt diagram that needs two-axis scrolling or zooming has failed its reader. Fit one screen at ≥11px, or work the trade-off ladder (Rule 9, Layout Craft). |
 | "It's basically a class diagram, drawn as a flowchart with fancy boxes." | Fake notation. If you call it a class diagram, the source starts with `classDiagram` — pseudo-class boxes in `graph TB` lose every relationship semantic (Rule 3). |
 | "It's just a quick sketch, so gates don't apply." | Sketch significance is a declared setting agreed with the user, not an escape hatch (see Significance below). |
 
@@ -186,7 +189,7 @@ Read [Diagram Selection](./references/diagram-selection.md). Establish, reusing 
 - the question the diagram answers, and the reader;
 - mode: `MODEL-FROM-CODE` / `MODEL-FROM-DESIGN` / `REVISE` / `EXPLAIN/REVIEW`;
 - significance: `sketch` / `deliverable` / `authoritative`;
-- where the diagram will live (decides the backend) **and its medium constraints**: available width/aspect ratio, zoomable or fixed (a memo/PDF page cannot zoom; chat and web renderers can), light/dark theme. Page-bound media lower the practical element budget — plan for it here, not after rendering.
+- where the diagram will live (decides the backend) **and its medium constraints**: available width/aspect ratio, zoomable or fixed (a memo/PDF page cannot zoom; chat and web renderers can), light/dark theme. **Unstated medium defaults to a landscape PC screen** (~1470×850) — never assume the reader will zoom. Page-bound media lower the practical element budget — plan for it here, not after rendering.
 
 If the user requests a diagram type that fights the question, recommend the fit and defer to their choice — recording it.
 
@@ -228,7 +231,7 @@ Write the diagram source from the ledger, applying [UML Semantics](./references/
 
 ### Phase 4 — Validate and render
 
-Follow [Rendering & Validation](./references/rendering-validation.md) with the chosen backend's verification recipe: syntax-check and render with the degradation ladder (local tool → installable tool → syntax check → manual review; receipts required when landing on rung 3/4), then inspect the rendered output against the inspection checklist — elements present, no truncation/overlap, title present, and the **layout rubric** from [Layout Craft](./references/layout-craft.md) (flow monotonicity, crossing budget, proximity honesty, hierarchy direction, label discipline, medium fit, density balance). Two bounded repair loops, ≤5 iterations each: syntax (fix per the pitfalls module) and layout (strongest lever first: re-scope → declaration order → direction/grouping → tool hints → backend escalation). After any fix, re-run every affected check.
+Follow [Rendering & Validation](./references/rendering-validation.md) with the chosen backend's verification recipe: syntax-check and render with the degradation ladder (local tool → installable tool → syntax check → manual review; receipts required when landing on rung 3/4), then inspect the rendered output against the inspection checklist — elements present, no truncation/overlap, title present, and the **layout rubric** from [Layout Craft](./references/layout-craft.md) (flow monotonicity, crossing budget, proximity honesty, hierarchy direction, label discipline, medium fit, density balance). Medium fit is mechanical: run `node <skill-dir>/scripts/check-render-fit.js <diagram.svg>` — gestalt diagrams must fit one screen at ≥11px effective label font; linear diagrams fit the cross axis and may scroll ≤3 screens along the reading axis; a failure enters the trade-off ladder (split+wayfinding → compress → single-axis scroll → progressive disclosure → mural+companion), never ships silently. Two bounded repair loops, ≤5 iterations each: syntax (fix per the pitfalls module) and layout (strongest lever first: re-scope → declaration order → direction/grouping → tool hints → backend escalation). After any fix, re-run every affected check.
 
 **Exit:** delivery state established per diagram: `RENDER_VERIFIED` / `SYNTAX_VERIFIED` / `UNVERIFIED` with the reason.
 
@@ -262,12 +265,14 @@ Do not deliver a diagram whose delivery state is unstated, or stated stronger th
 
 **Reading notes:** [1-3 lines: the non-obvious claims in the picture]
 **Excluded:** [deliberate exclusions] · **Assumptions:** [labeled assumptions, or "none"]
-**Evidence:** [MODEL-FROM-CODE: ledger summary or path — key elements → file:line. MODEL-FROM-DESIGN: requirement references + the assumption list. REVISE: diff summary against the prior diagram]
+**Evidence:** [MODEL-FROM-CODE: ledger summary or path — key elements → file:line, **and every relationship edge's kind claim cited individually** (node-level evidence does not cover edges; observed failures concentrate on edges). MODEL-FROM-DESIGN: requirement references + the assumption list. REVISE: diff summary against the prior diagram]
 ````
 
 For multi-diagram deliveries, repeat per diagram and add one overview line on how the set fits together. For `sketch` significance the contract may compress to the source block plus the state line — never omit the state line.
 
-Every bracketed placeholder must be replaced; an unfilled or missing field is a format-invalid delivery, not a stylistic choice. Verify mechanically before handing over: `node <skill-dir>/scripts/check-delivery.js <draft.md>` — it rejects receipt-less State lines, missing Evidence/Excluded (warns instead at sketch significance, whose compressed form is legal), declared-type-vs-source mismatches, and ceiling breaches (>15 without USER-OVERRIDE; 10–15 without justification draws a warning you must still resolve). Its element counting is heuristic — a miscount is a reason to fix the counter, never a license to trust it over your own count. When the delivery medium pins its own renderer (a CDN `<script>`, GitHub's embedded Mermaid), verify on **that** version or state the skew explicitly.
+Every bracketed placeholder must be replaced; an unfilled or missing field is a format-invalid delivery, not a stylistic choice. Verify mechanically before handing over: `node <skill-dir>/scripts/check-delivery.js <draft.md>` — it rejects receipt-less State lines, missing Evidence/Excluded (warns instead at sketch significance, whose compressed form is legal), declared-type-vs-source mismatches, and ceiling breaches (>15 without USER-OVERRIDE; 10–15 without justification draws a warning you must still resolve). Its element counting is heuristic — a miscount is a reason to fix the counter, never a license to trust it over your own count.
+
+**HTML/artifact deliveries are not a bypass.** When the deliverable is an HTML page (an artifact, a report) rather than a markdown block, the discipline still applies in full: draft a markdown contract mirror and pass it through `check-delivery.js`, run `check-render-fit.js` on each rendered diagram, and verify against the renderer version the page actually pins (a CDN `<script>` decides what the reader sees, not your local tool). When the delivery medium pins its own renderer (a CDN `<script>`, GitHub's embedded Mermaid), verify on **that** version or state the skew explicitly.
 
 ## Bundled Resources
 
@@ -283,7 +288,9 @@ Every bracketed placeholder must be replaced; an unfilled or missing field is a 
 | [Rendering & Validation](./references/rendering-validation.md) | Per-backend verification recipes, evidence vocabulary, degradation ladder, inspection checklist |
 | `scripts/check-mermaid.js` | Browser-free Mermaid syntax checker (rung 3 of the degradation ladder; `SYNTAX_VERIFIED` at most) |
 | `scripts/check-delivery.js` | Deterministic output-contract checker: receipt-bearing State line, Evidence/Excluded presence, type-vs-source consistency (Mermaid and PlantUML), element budget, sketch-aware — run on the draft before delivering |
-| `scripts/test-check-delivery.js` | The checker's regression self-test: 14 fixtures encoding every failure vector found by review probes and acceptance runs — run after any checker change |
+| `scripts/test-check-delivery.js` | The delivery checker's regression self-test (18 fixtures encoding every failure vector found by review probes and acceptance runs) — run after any checker change |
+| `scripts/check-render-fit.js` | Screen-fit legibility gate: per-axis fit rules (gestalt vs linear), ≥11px effective font floor, reading-axis screen cap, long-range-edge detection — run on every rendered SVG |
+| `scripts/test-check-render-fit.js` | The fit checker's regression self-test on synthetic SVG fixtures |
 
 ## Patterns
 
