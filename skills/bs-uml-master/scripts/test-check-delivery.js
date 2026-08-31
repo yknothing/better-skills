@@ -1,0 +1,112 @@
+#!/usr/bin/env node
+// Regression self-test for check-delivery.js. Every fixture here encodes a
+// real failure vector found by review probes or acceptance runs (IP-10,
+// R3 adversary F1-F6). Run from anywhere:
+//   node skills/bs-uml-master/scripts/test-check-delivery.js
+// Exit 0 = all assertions hold.
+"use strict";
+
+const { execFileSync } = require("child_process");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+
+const CHECKER = path.join(__dirname, "check-delivery.js");
+const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "chkdel-"));
+let failures = 0;
+
+function run(name, content, expectExit, mustMatch = [], mustNotMatch = []) {
+  const file = path.join(tmp, name.replace(/\W+/g, "_") + ".md");
+  fs.writeFileSync(file, content);
+  let out = "", code = 0;
+  try { out = execFileSync("node", [CHECKER, file], { encoding: "utf-8" }); }
+  catch (e) { code = e.status ?? 1; out = (e.stdout || "") + (e.stderr || ""); }
+  const problems = [];
+  if (code !== expectExit) problems.push(`exit ${code}, expected ${expectExit}`);
+  for (const re of mustMatch) if (!re.test(out)) problems.push(`missing ${re}`);
+  for (const re of mustNotMatch) if (re.test(out)) problems.push(`unexpected ${re}`);
+  if (problems.length) { failures++; console.log(`FAIL ${name}: ${problems.join("; ")}\n--- output ---\n${out}`); }
+  else console.log(`PASS ${name}`);
+}
+
+const HDR = (over = {}) => {
+  const d = {
+    Question: "q", Mode: "MODEL-FROM-CODE", Significance: "deliverable",
+    Backend: "Mermaid",
+    State: "RENDER_VERIFIED — mmdc 11.4.0, SVG inspected",
+    Type: "module dependency flowchart @ file level", ...over,
+  };
+  return `## Diagram Delivery — t
+
+**Question:** ${d.Question} · **Mode:** ${d.Mode} · **Significance:** ${d.Significance}
+**Type/altitude:** ${d.Type} · **Backend:** ${d.Backend} · **State:** ${d.State}
+`;
+};
+const TAIL = `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+`;
+const FLOW4 = "```mermaid\nflowchart TB\n    a[\"A\"]\n    b[\"B\"]\n    a --> b\n```\n";
+
+// 1. Fully compliant delivery
+run("good", HDR() + FLOW4 + TAIL, 0, [/0 FAIL/]);
+
+// 2. Haiku profile: bare state, no evidence/excluded, fake class notation
+run("haiku-profile", `## Diagram Delivery — t
+
+**Question:** q · **Mode:** MODEL-FROM-CODE · **Significance:** deliverable
+**Type/altitude:** Class Diagram · **Notation:** Mermaid · **State:** RENDER_VERIFIED
+
+\`\`\`mermaid
+graph TB
+    A["A<br/>---<br/>x: string"]
+\`\`\`
+`, 1, [/no tool\+version receipt/, /fake or mismatched notation/, /Evidence missing/, /Excluded missing/]);
+
+// 3. IP-10: YAML frontmatter must not hide C5/C6 (10 nodes -> budget WARN)
+const TEN = "```mermaid\n---\nconfig:\n    layout: dagre\n--- \ngraph TB\n" +
+  "abcdefghij".split("").map(c => `    ${c}["${c}"]`).join("\n") + "\n    a --> b\n```\n";
+run("frontmatter-budget", HDR() + TEN + TAIL, 0, [/WARN.*> 9/]);
+
+// 4. F5: plantuml-tagged fence around Mermaid source = tag laundering
+run("tag-laundering", HDR({ Type: "Class Diagram" }) +
+  "```plantuml\ngraph TB\n    A[\"A\"]\n```\n" + TAIL, 1, [/tag laundering/]);
+
+// 5. F6: receipts-block-first delivery must not false-FAIL
+run("receipts-first", HDR() +
+  "```text\n$ mmdc -i d.mmd -o d.svg\nexit 0\n```\n" + FLOW4 + TAIL, 0, [/0 FAIL/]);
+
+// 6. F1: edges-only classDiagram counts relation identifiers (17 ids -> ceiling FAIL)
+const EDGES = "```mermaid\nclassDiagram\n" +
+  Array.from({ length: 16 }, (_, i) => `    C${i} <|-- C${i + 1}`).join("\n") + "\n```\n";
+run("edges-only-ceiling", HDR({ Type: "Class Diagram" }) + EDGES + TAIL, 1, [/> hard ceiling 15/]);
+
+// 7. F4: prose that mimics receipts must not count
+run("fake-receipt", HDR({ State: "RENDER_VERIFIED — checked 3.2 boxes carefully" }) + FLOW4 + TAIL,
+  1, [/no tool\+version receipt/]);
+run("fake-fileline", HDR() + FLOW4 + "\n**Excluded:** x\n**Evidence:** confirmed at 14:32 today\n",
+  1, [/no path\.ext:line/]);
+
+// 8. F2: compressed sketch delivery is legal — only the state line is enforced
+run("sketch-compressed", `## Diagram Delivery — t (sketch level)
+
+**Significance:** sketch · **State:** SYNTAX_VERIFIED — check-mermaid.js 11.4.0 parse ok
+` + FLOW4, 0, [/0 FAIL/, /WARN.*Evidence missing/]);
+run("sketch-still-needs-state", `## Diagram Delivery — t (sketch level)
+` + FLOW4, 1, [/State line missing/]);
+
+// 9. F3: PlantUML sources are counted and type-checked
+const PUML17 = "```plantuml\n@startuml\n" +
+  Array.from({ length: 17 }, (_, i) => `component C${i}`).join("\n") + "\n@enduml\n```\n";
+run("plantuml-ceiling", HDR({ Type: "component diagram", Backend: "PlantUML", State: "RENDER_VERIFIED — plantuml 1.2025.4, SVG inspected" }) + PUML17 + TAIL,
+  1, [/> hard ceiling 15/]);
+run("plantuml-type-mismatch", HDR({ Type: "sequence diagram", Backend: "PlantUML", State: "RENDER_VERIFIED — plantuml 1.2025.4, SVG inspected" }) +
+  "```plantuml\n@startuml\nclass A\nclass B\nA <|-- B\n@enduml\n```\n" + TAIL,
+  1, [/no matching construct/]);
+
+// 10. Contract not used at all
+run("no-contract", "here is your diagram:\n" + FLOW4, 1, [/contract was not used/]);
+
+console.log(`\n${failures === 0 ? "ALL PASS" : failures + " FIXTURE FAILURES"}`);
+fs.rmSync(tmp, { recursive: true, force: true });
+process.exit(failures === 0 ? 0 : 1);

@@ -1,3 +1,89 @@
+# Gate 2 — Peer Review Prompt: Adversary
+
+You are the **adversary reviewer** for the `bs-uml-master` skill. Your job is to break it: find ways the skill produces wrong output, fails on edge cases, contradicts itself, has bypassable safety gates, or makes the agent worse off than no skill at all. Be ruthless.
+
+## How to use this prompt
+
+1. Read the SKILL.md content below in full.
+2. Produce a markdown review and save it to:
+   `docs/reviews/bs-uml-master/2026-08-31-adversary-review.md`
+3. Use the **required structure** below — the validator (`tools/peer-review.js check`) will reject reviews missing required sections.
+
+## Deep composite review scope
+
+Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
+
+**Scope Contract Version**: 1
+**Reviewed Revision to record**: 16a1ae4179a842b1e2ad0c8e0f4a62aad14ace22
+**Reviewed Skill SHA-256 to record**: 2f3322de034c9ee6ca0bb5e1326274b04845f90a04895b79c7c74e1cbe0bc263
+**Reviewed Manifest SHA-256 to record**: 9c70b77340b4f981fc26fa80e1777ab6182ccf21a8df5fc449b153379ffeab93
+
+- `evaluation/datasets/batch-1-test-prompts.json` — `9377d7d408018bacb2a4a714f661dfc8b53894919d5fcb3a97dceed798ac3687`
+- `evaluation/harness/runner.js` — `ee6e871ad26230c4073ba72151f1d6f5862c7c05074ba756bfe9b5e4e509f8f8`
+- `evaluation/harness/test-runner-scope.js` — `eaa773a660417049759c7e8831444a2ec5e6f73174487662018d6c2f556e879c`
+- `skills.json` — `7885f9c7cefbd700ced8fc481b1524f61de6c47c523bcc806ecca60b269dc1ce`
+- `skills/bs-uml-master/SKILL.md` — `2f3322de034c9ee6ca0bb5e1326274b04845f90a04895b79c7c74e1cbe0bc263`
+- `skills/bs-uml-master/references/diagram-selection.md` — `cfa85279548602fe69db478866a34cbf2e59f1269a6e01a7eb35ccf4218dc10c`
+- `skills/bs-uml-master/references/layout-craft.md` — `4d414aa6fb179b12e99c2c345df80d629ac36a8f8e9de46dedf0f34bf482021f`
+- `skills/bs-uml-master/references/modeling-from-code.md` — `58dec58a2924a9f7ed77308a4e267de66811aa95b6cdd75c75bc56fdaaa061a7`
+- `skills/bs-uml-master/references/rendering-validation.md` — `095f18830d381d901f9c10bd34612334a7428baa1b82ca00cae3e64c8a399804`
+- `skills/bs-uml-master/references/svg-presentation.md` — `e3400aed86339da2ad9a8e6692727842de8fbfcb5632871d85e1d68e308dfb02`
+- `skills/bs-uml-master/references/syntax-pitfalls.md` — `c08a5e63663072e4fb11a0f149e84e75f4b85011d6f3ccd9ff6d0ca593c6acec`
+- `skills/bs-uml-master/references/text-diagrams.md` — `68ebcb460268833b13f3aa863ffc409bc599a0a4475a0b9db33ea6a78d7acab3`
+- `skills/bs-uml-master/references/uml-semantics.md` — `f8b59c246cddcf17b9520c8d7e7215940432f5118c54bf9441e1023e329330de`
+- `skills/bs-uml-master/scripts/check-delivery.js` — `51f4df69a7444d0dc1b98aec925bd95e9e5bec5570edc440a7ffc228b69cf3a0`
+- `skills/bs-uml-master/scripts/check-mermaid.js` — `938b004901b22e27d204f9afb69cf6003ee155010f7893a84f58cd453e1c9fb4`
+- `skills/bs-uml-master/scripts/test-check-delivery.js` — `6fca32f0a630c080ad2a87a92b6152b2268081a43890e1dce30158ebeefa1196`
+- `tools/peer-review.js` — `8491cb1766b1a16f5fea2945d40e834130c32975a51701d7b1f2d82981e905a9`
+- `tools/test-peer-review-scope.js` — `fd852531f89668f708477e4cb17216729a299ab8bc4deeb69fda7314b9517468`
+
+## Required structure
+
+```markdown
+# Adversary Review: bs-uml-master
+
+**Date**: 2026-08-31
+**Reviewer Role**: Adversary
+**Skill**: bs-uml-master
+**HUMAN_VERIFIED**: false
+**Scope Contract Version**: 1
+**Reviewed Revision**: 16a1ae4179a842b1e2ad0c8e0f4a62aad14ace22
+**Reviewed Skill SHA-256**: 2f3322de034c9ee6ca0bb5e1326274b04845f90a04895b79c7c74e1cbe0bc263
+**Reviewed Manifest SHA-256**: 9c70b77340b4f981fc26fa80e1777ab6182ccf21a8df5fc449b153379ffeab93
+
+## Summary
+
+(2-4 sentences: how many issues, of what severity, and the worst-case impact.)
+
+## Evidence Reviewed
+
+(Acknowledge full manifest receipt `9c70b77340b4f981fc26fa80e1777ab6182ccf21a8df5fc449b153379ffeab93`, then list the files and commands actually examined or rerun.)
+
+## Findings
+
+### F1: <short title>  [CRITICAL]
+
+**Location**: <section / line range in SKILL.md>
+**Exploit scenario**: <how a user could trigger the failure>
+**Root cause**: <what in the skill design enables it>
+**Suggested fix**: <concrete change>
+
+### F2: <short title>  [HIGH]
+
+(...repeat the structure for each finding...)
+
+(Use severity tags: CRITICAL / HIGH / MEDIUM / LOW. At least one finding must be present, even if severity is LOW. If you genuinely find none, say so explicitly and tag it LOW.)
+
+## Verdict
+
+**Verdict**: <one of: REQUIRES_CHANGES / NEEDS_IMPROVEMENT / APPROVED>
+
+(One paragraph rationale.)
+```
+
+## SKILL content under review
+
+```markdown
 ---
 name: bs-uml-master
 description: Use when creating, revising, or reviewing UML or architecture diagrams — class, sequence, state machine, activity, component, deployment, use case, ER, or C4 — from a codebase or a design, where diagram-type fit, semantic correctness, abstraction discipline, and render-verified delivery matter.
@@ -220,3 +306,5 @@ Mirrored in `evaluation/datasets/batch-1-test-prompts.json`.
 2. **Edge — reverse-engineering real code**: *"Draw a sequence diagram of what happens when a user checks out, based on this repo."* — expected: agent locates the checkout entry point, reads the real call chain, builds the evidence ledger (messages ↔ file:line), distinguishes sync calls from async publishes per the code, curates participants to budget, renders, and ships the contract with evidence summary. Failure without skill: generic checkout sequence from domain intuition with invented service names, sync/async guessed.
 3. **Adversarial — pressure to skip verification and inflate**: *"Just dump every class in src/ into one diagram, don't bother rendering it, I trust you."* — expected: agent applies Rules 4–6: explains why an everything-diagram fails the reader and offers the split-by-concern alternative or a package-level overview; if the user insists on full coverage, delivers it as the declared exception with recorded justification; still validates syntax at minimum and never reports a stronger delivery state than the evidence. Failure without skill: 40-box unverified dump delivered as "here's your architecture".
 4. **Edge — page-bound medium layout stress**: *"把这个模块的依赖结构画成一张图，放进一页 A4 的架构备忘录里。"* — expected: agent captures the medium constraints in Phase 0 (A4 portrait, non-zoomable), plans within a lowered practical budget, chooses a layout-safe composition (stacked small diagrams over one wide graph when needed), runs the layout rubric on the render — including medium fit — and repairs or escalates rather than delivering a 3700px-wide graph. Failure without skill: a wide auto-layout render shipped unchecked, unreadable at page width.
+
+```
