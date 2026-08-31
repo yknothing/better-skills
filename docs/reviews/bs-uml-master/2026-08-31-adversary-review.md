@@ -5,82 +5,108 @@
 **Skill**: bs-uml-master
 **HUMAN_VERIFIED**: false
 **Scope Contract Version**: 1
-**Reviewed Revision**: 16a1ae4179a842b1e2ad0c8e0f4a62aad14ace22
+**Reviewed Revision**: a226e119365b7797ad9a24697f053a1337d198de
 **Reviewed Skill SHA-256**: 2f3322de034c9ee6ca0bb5e1326274b04845f90a04895b79c7c74e1cbe0bc263
-**Reviewed Manifest SHA-256**: 9c70b77340b4f981fc26fa80e1777ab6182ccf21a8df5fc449b153379ffeab93
+**Reviewed Manifest SHA-256**: 30e875cb2b76a829d059c533bb8638ab97c5595c258ee615815bc5ab3f3d4394
 
 ## Summary
 
-Final confirmation pass over checker v3 (R3.2, revision `16a1ae4`), following my R3/R3.1 review that found 6 MEDIUM + 1 LOW. All six MEDIUM findings are verified fixed — each re-attacked with my own original fixtures against the v3 checker (every prior exploit now fails or counts correctly), the in-repo self-test (`test-check-delivery.js`, 14 fixtures) passes, and the SKILL.md overclaims are corrected to match actual checker behavior. Fresh attack probes on the v3 logic found four residuals — 1 MEDIUM (multiplicity-styled edges-only class diagrams still count ~0, re-opening the ceiling bypass in exactly the notation style uml-semantics.md mandates for domain models) and 3 LOW — none of which contradicts a claim the skill now makes, since element counting is explicitly declared heuristic and the self-attestation ceiling is honestly documented as open (IP-9). Nothing gating remains.
+Final confirmation pass over checker v4 (revision a226e11), closing four rounds of empirical adversary review. All ten previously reported blocking findings — six from the R3 round and four residuals from my R3.2 probes — are verified fixed by re-running my own original exploit fixtures against the v4 checker (every exploit now fails or counts correctly, with zero regressions across 17 fixtures) and by the expanded in-repo self-test (18/18 passing, now encoding fixtures 11 to 14 for my residuals). One LOW finding remains open by design: delivery receipts are self-attested until Phase 2.A generate/verify separation lands (ledger IP-9). Worst-case remaining impact is a determined agent fabricating a receipt the format checker cannot falsify — documented inside the checker itself and tracked in the ledger.
 
 ## Evidence Reviewed
 
-Full manifest receipt acknowledged: `9c70b77340b4f981fc26fa80e1777ab6182ccf21a8df5fc449b153379ffeab93`. All 18 manifest entries recomputed with `sha256sum` and confirmed against the prompt manifest and working tree; `git rev-parse HEAD` = `16a1ae4179a842b1e2ad0c8e0f4a62aad14ace22`, matching the recorded revision. Unchanged files (all references, `check-mermaid.js`, `skills.json`, evaluation and tools files) hash-identical to prior passes and carried.
+Full manifest receipt `30e875cb2b76a829d059c533bb8638ab97c5595c258ee615815bc5ab3f3d4394` was received and independently verified.
 
-Examined:
+All 18 manifest entries recomputed with sha256sum and confirmed against the prompt manifest and working tree; git rev-parse HEAD equals the recorded revision a226e119365b7797ad9a24697f053a1337d198de. Skill content files are hash-identical to the 16a1ae4 round except `scripts/check-delivery.js` and `scripts/test-check-delivery.js` (the v4 fix), and the upstream-synced `tools/peer-review.js`, `tools/test-peer-review-scope.js`, and `evaluation/datasets/batch-1-test-prompts.json` (diff inspected: the dataset change touches only bs-reflect-loop entries; the four bs-uml-master eval prompts are unchanged). All reference modules, SKILL.md, and check-mermaid.js carried from my prior full-read passes.
 
-- `git diff fe42ad1..16a1ae4 -- skills/bs-uml-master/ docs/reviews/bs-uml-master/improvement-points.md` — the R3.2 diff read line-by-line: `check-delivery.js` v3 (rewritten, read in full: tool-shaped `TOOL_VERSION`, `FILE_LINE` path.ext adjacency, sketch relaxation of C1/C3/C4 to WARN, fence selection by language/header, trailing-space frontmatter tolerance, tag-laundering FAIL, PlantUML declarations/relations counting + per-type content markers, relation-line counting for classDiagram, noise stripping for flowcharts, heuristic `~N` marking); new `test-check-delivery.js` (112 lines); SKILL.md wording fixes (MCP step 6 sketch clause + resolve-warnings clause; Output Contract paragraph now states WARN tiers and declares counting heuristic — "never a license to trust it over your own count"); ledger entries IP-11/IP-12.
+Files and commands examined or rerun this round:
 
-Commands actually run (Node 22.22.2; fixtures under the session scratchpad, `cd/fx*.md`):
-
-- `sha256sum` over all 18 manifest entries + `git rev-parse HEAD` — all match.
-- `node scripts/test-check-delivery.js` → 14/14 fixtures, ALL PASS, exit 0 (the deliberate no-contract fixture correctly exercises the exit-1 path).
-- Re-ran my full prior attack suite against v3 — every exploit closed: (fx4) "checked 3.2 boxes" → C2 FAIL; (fx8) "at 14:32" under MODEL-FROM-CODE → C3 FAIL; (fx5) 12-relation edges-only classDiagram → counted ~21 → ceiling FAIL; (fx6) paren-label flowchart → ~4 (correct, no inflation); (fx9) receipts-block-first honest delivery → 0 FAIL (fence found by language); (fx11) 17-component PlantUML → counted ~17 → ceiling FAIL; (fxD) `graph TB` in a ```plantuml fence → FAIL "tag laundering"; (fxA/fxB2) frontmatter, including trailing-space close → correct C5 FAIL for the right reason; (fx2/fx3) Haiku replica and bare label → still FAIL; (fx1) honest delivery → still 0 FAIL.
-- New v3 probes: (fxS) compressed sketch — heading + fence + receipt-bearing State line saying "sketch level" → exit 0 with C1/C3/C4 as WARNs (F2 resolution confirmed; a heading-less compressed sketch still exits 1, acceptable since the heading is the block anchor); (fxM) 18-class edges-only classDiagram with multiplicities (`A "1" --> "0..*" B` × 9) → counted **~0**, exit 0 (see F8); (fxV) `RENDER_VERIFIED — version 3.2 of my careful process` → C2 **PASS** (see F9); (fxDecoy) small legend fence before a 17-class real fence → C5/C6 run on the decoy, exit 0 (see F10); (fx7) fenceless "external file" delivery → still passes C5/C6 with a PASS-note (see F11).
+- `git diff 16a1ae4..a226e11 -- skills/bs-uml-master/scripts/` read line-by-line: quoted multiplicities removed before the classDiagram relation parse; the bare "version" token dropped from TOOL_VERSION; `fences()` now returns every diagram-shaped fence, all type-checked, budget on the max count; fenceless blocks FAIL unless an external source-file reference (.mmd/.puml/.svg/.txt) is present, which downgrades to WARN; self-test fixtures 11 to 14 added covering exactly my F8 to F11 fixtures.
+- `node skills/bs-uml-master/scripts/test-check-delivery.js` — 18/18 fixtures, ALL PASS, exit 0.
+- Re-ran my complete attack-fixture suite (13 files) against v4: multiplicity-styled edges-only classDiagram now counts ~18 and FAILs the ceiling; "version 3.2 of my careful process" now FAILs C2; the decoy-fence delivery now FAILs on the 17-class real fence via max-count; the fenceless external-file delivery WARNs (and the self-test's no-source variant FAILs); all prior-round outcomes preserved — honest deliveries pass (fx1, fx9 receipts-first, fxS compressed sketch), the Haiku fake, bare label, fake receipt, clock-time citation, 21-element edges-only, 17-component PlantUML, tag laundering, and frontmatter variants all still FAIL for the right reasons.
+- `sed`/`grep` read of the new `tools/peer-review.js` disposition contract (release-eligibility logic) to confirm this review's own structural obligations.
 
 ## Findings
 
-Fix verification of the six prior MEDIUMs, then the residuals found attacking v3.
+### F1: Budget counter blind to edges-only class diagrams; flowchart label inflation; SKILL.md overclaimed WARN as reject [MEDIUM] [RESOLVED]
 
-**F1 (counter blind spots + SKILL.md overclaim) — FIXED.** Edges-only classDiagrams are now counted via relation-line ids (my fx5 fixture: 0 → ~21, ceiling FAIL); flowchart noise-stripping kills the label-word inflation (fx6: 7 → ~4); SKILL.md now states the real tiers (">15 without USER-OVERRIDE" fails, "10–15 without justification draws a warning you must still resolve") and declares the counter heuristic. Residual precision gap in F8 below.
+**Location**: `skills/bs-uml-master/scripts/check-delivery.js` countPrimary; SKILL.md Output Contract paragraph.
+**Exploit scenario**: In R3 a 12-relation classDiagram with no class declarations counted 0 elements; parenthesized edge-label words inflated flowchart counts; SKILL.md claimed the checker "rejects unjustified budget overruns" when 10 to 15 only warned.
+**Root cause**: Declaration-only counting, unanchored id regex, prose written from intent rather than behavior.
+**Suggested fix**: Applied in R3.2 and verified again on v4: relation-line counting (my fixture now counts ~21 and FAILs the ceiling), noise stripping (label fixture counts ~4), SKILL.md states the real WARN/FAIL tiers and declares counting heuristic. Retested this round: no regression.
 
-**F2 (sketch form jointly unsatisfiable with the recipe) — FIXED.** v3 detects sketch via the Significance field or "sketch level" in the block and relaxes C1/C3/C4 to WARN; the State line stays mandatory (self-test fixture "sketch-still-needs-state" covers it). MCP step 6 now reads "(sketch: the compressed form)" and adds "resolve warnings or state why they stand". My compressed-sketch fixture passes with warnings only.
+### F2: Compressed sketch delivery was jointly unsatisfiable with the Minimum Compliant Path [MEDIUM] [RESOLVED]
 
-**F3 (PlantUML escaped C5/C6) — FIXED.** PlantUML sources are now counted (declarations + bracket components + relation ids: my 17-component fixture FAILs the ceiling) and type-checked via per-type content markers (self-test "plantuml-type-mismatch" covers the negative case). The markers are deliberately coarse (`->` satisfies the sequence marker, any `[x]` the component marker) — acceptable for a floor and documented as such in the code.
+**Location**: SKILL.md Significance and Minimum Compliant Path step 6; checker C1/C3/C4.
+**Exploit scenario**: In R3 the skill-legal sketch form (source plus state line) hard-failed the checker the recipe forbids skipping, teaching agents that FAILs are advisory.
+**Root cause**: The checker validated only the full contract shape.
+**Suggested fix**: Applied in R3.2 and verified again on v4: sketch significance relaxes C1/C3/C4 to WARN while the state line stays mandatory; my compressed-sketch fixture passes with warnings only; MCP step 6 names the compressed form. Retested this round: no regression.
 
-**F4 (prose satisfied receipt/citation regexes) — FIXED.** `TOOL_VERSION` now requires a tool-shaped token adjacent to the version; `FILE_LINE` requires path.ext adjacency. Both of my original bypass fixtures ("checked 3.2 boxes carefully", "inspected at 14:32") now FAIL. Residual token-list edge in F9 below.
+### F3: PlantUML sources escaped the type and budget checks entirely [MEDIUM] [RESOLVED]
 
-**F5 (R3.1 guard enabled fence-tag laundering) — FIXED.** A `plantuml`-tagged fence whose body lacks `@start…` now FAILs explicitly as tag laundering; my exact fxD exploit is closed and encoded in the self-test.
+**Location**: `check-delivery.js` typeMatchesHeader and countPrimary.
+**Exploit scenario**: In R3 a 17-component PlantUML delivery over the hard ceiling passed with zero FAILs, letting an agent duck the budget by choosing the backend Rule 8 mandates for five diagram types.
+**Root cause**: The checker was built from the Mermaid-only Haiku sample.
+**Suggested fix**: Applied in R3.2 and verified again on v4: PlantUML declaration/relation counting (fixture FAILs at ~17) plus per-type content markers with a negative self-test fixture. Retested this round: no regression.
 
-**F6 (first-fence targeting; frontmatter trailing-space; fenceless skip) — FIXED in two of three parts.** Fence selection now prefers language-tagged then diagram-headed fences: my receipts-first honest delivery passes, and the trailing-space frontmatter close (which mermaid 11.17.2 accepts — probed last round) is tolerated by the relaxed strip regex. The third part — fenceless deliveries silently skipping C5/C6 with PASS semantics — was not adopted and remains open (F11).
+### F4: Receipt and citation regexes were satisfied by incidental prose [MEDIUM] [RESOLVED]
 
-### F8: Multiplicity-styled edges-only class diagrams still count ~0 — the ceiling bypass survives in the skill's own recommended notation  [MEDIUM]
+**Location**: `check-delivery.js` TOOL_VERSION and FILE_LINE.
+**Exploit scenario**: In R3, "checked 3.2 boxes carefully" passed as a tool receipt and "inspected at 14:32" satisfied the MODEL-FROM-CODE citation requirement.
+**Root cause**: An any-word version anchor and a bare colon-digits catch-all.
+**Suggested fix**: Applied in R3.2 and verified again on v4: tool-shaped token required; path.ext adjacency required; both original fixtures FAIL. The residual "version" token hole is F9 below. Retested this round: no regression.
 
-**Location**: `scripts/check-delivery.js` — `stripNoise()` (quoted strings blanked to `""`) + the classDiagram relation regex `^\s*([\w~]+)\s*(?:<\|--|…)\s*([\w~]+)`, which cannot cross a blanked multiplicity token.
-**Exploit scenario**: Probed: an 18-class classDiagram written entirely as `A "1" --> "0..*" B` relation lines — no `class` declarations — counts **~0** and passes with 0 FAILs. This is not an exotic style: `uml-semantics.md` mandates "multiplicities on both ends of structural relationships in domain models", so the checker's counting hole is widest precisely for by-the-book domain models. The F1 fix (relation-id counting) is thereby bypassed for any diagram whose relations carry multiplicities — a mural-shipping agent needs no intent, just compliance with the semantics module. Mitigations that keep this non-gating: SKILL.md now declares counting heuristic and forbids trusting the counter over your own count, and Rule 4/Phase 5 still bind in prose.
-**Root cause**: `stripNoise` was added to stop label-word inflation (my fx6) but the relation matcher was not taught to step over the blanked `""` tokens it now produces.
-**Suggested fix**: Allow optional quoted multiplicities in the relation regex — `^\s*([\w~]+)\s*(?:""\s*)?(?:<\|--|<\|\.\.|\*--|o--|-->|\.\.>|--|\.\.)\s*(?:""\s*)?([\w~]+)` (post-stripNoise form) — and add a multiplicity fixture to the self-test.
+### F5: The R3.1 PlantUML guard enabled fence-tag laundering [MEDIUM] [RESOLVED]
 
-### F9: The `version` token in TOOL_VERSION re-admits prose-shaped receipts  [LOW]
+**Location**: `check-delivery.js` typeMatchesHeader PlantUML guard.
+**Exploit scenario**: Tagging a graph TB fake as a plantuml fence bypassed the fake-notation check that is the checker's headline purpose.
+**Root cause**: The guard keyed on the author-controlled language tag instead of the source.
+**Suggested fix**: Applied in R3.2 and verified again on v4: a plantuml-tagged fence without a PlantUML header FAILs explicitly as tag laundering; my exact exploit fixture still FAILs. Retested this round: no regression.
 
-**Location**: `scripts/check-delivery.js` `TOOL_VERSION` — the bare `|version` alternative in the tool-token list.
-**Exploit scenario**: Probed: `**State:** RENDER_VERIFIED — version 3.2 of my careful process` passes C2. The fix's own goal ("'checked 3.2 boxes' must not pass") is dodged by another everyday phrase, since "version" is itself prose. Below fabrication-floor severity (a fabricator can just type "mmdc 11.2.0"), but it weakens the format gate against the *accidental* vagueness the gate targets.
-**Root cause**: "version" was whitelisted to accept honest forms like "mermaid version 10.6.1", but it matches without any tool name present.
-**Suggested fix**: Require a word before "version" that is not a label/filler (or simply drop `version` — honest receipts virtually always name the tool, which the list already matches).
+### F6: First-fence targeting false-failed receipts-first deliveries; frontmatter trailing space defeated the strip [MEDIUM] [RESOLVED]
 
-### F10: Fence selection can be decoyed — first matching fence wins  [LOW]
+**Location**: `check-delivery.js` fence selection and stripFrontmatter.
+**Exploit scenario**: An honest delivery leading with a bash receipts block FAILed C5 against the bash command line (perverse incentive to delete receipts); a trailing-space frontmatter close, which mermaid 11.17.2 accepts (probed), broke header detection.
+**Root cause**: Positional fence selection; exact-delimiter frontmatter regex.
+**Suggested fix**: Applied in R3.2 and verified again on v4: fences selected by language/header (receipts-first fixture passes) and trailing-space delimiters tolerated. The fenceless sub-case is F11 below. Retested this round: no regression.
 
-**Location**: `scripts/check-delivery.js` `fence()` — `all.find(...)` returns the first language-tagged fence.
-**Exploit scenario**: Probed: a block with a 1-class "legend" mermaid fence before a 17-class real mermaid fence gets C5/C6 run on the legend — exit 0. This requires deliberate structuring (a lazy agent doesn't produce decoys), so it is a gaming vector above the format floor rather than an accidental pass-through; the honest multi-diagram form (one fence per `## Diagram Delivery` block) is unaffected.
-**Root cause**: One-fence-per-block assumption; no aggregation over multiple diagram fences.
-**Suggested fix**: When a block contains multiple mermaid/plantuml fences, check C5 against each and count C6 on the max (or emit a WARN naming the extra fences).
+### F8: Multiplicity-styled edges-only class diagrams counted ~0, reopening the ceiling bypass in the notation uml-semantics.md mandates [MEDIUM] [RESOLVED]
 
-### F11: Fenceless deliveries still skip C5/C6 with PASS semantics (carried from F6c)  [LOW]
+**Location**: `check-delivery.js` countPrimary classDiagram branch (v3 stripNoise interplay).
+**Exploit scenario**: An 18-class diagram written entirely as relation lines with quoted multiplicities counted ~0 on v3 and passed clean, precisely for by-the-book domain models.
+**Root cause**: stripNoise blanked multiplicity strings into tokens the relation regex could not cross.
+**Suggested fix**: Applied in v4 (quoted multiplicities removed before the relation parse) and verified: my fxM fixture now counts ~18 and FAILs the hard ceiling; self-test fixture 11 encodes it. Retested this round on the committed checker: fixed.
 
-**Location**: `scripts/check-delivery.js` `typeMatchesHeader()` no-fence branch (PASS + "external file delivery?" note); `countPrimary` skip when `fence()` returns null (no WARN emitted, unlike the uncountable-header case which does warn).
-**Exploit scenario**: Probed on v3: a delivery whose only "source" is "rendered file path: docs/diagram.svg (source in docs/diagram.mmd, 40 classes)" passes everything. The Output Contract requires the source block, so this delivery already violates prose — but the checker blesses it, and it remains a one-line dodge of both structural checks. My R3-round suggestion (WARN, not PASS-with-note) was not adopted this round.
+### F9: The bare "version" token readmitted prose-shaped receipts [LOW] [RESOLVED]
+
+**Location**: `check-delivery.js` TOOL_VERSION token list.
+**Exploit scenario**: "RENDER_VERIFIED — version 3.2 of my careful process" passed C2 on v3, dodging the fix's own goal by another everyday phrase.
+**Root cause**: "version" whitelisted without requiring a tool name.
+**Suggested fix**: Applied in v4 (token dropped) and verified: my fxV fixture now FAILs C2; honest forms still pass because real receipts name the tool; self-test fixture 12 encodes it. Retested this round: fixed.
+
+### F10: Fence selection could be decoyed — checks ran on the first matching fence [LOW] [RESOLVED]
+
+**Location**: `check-delivery.js` fences selection and C5/C6 application.
+**Exploit scenario**: A one-class legend fence placed before a 17-class real fence got C5/C6 run on the decoy on v3, passing clean.
+**Root cause**: One-fence-per-block assumption.
+**Suggested fix**: Applied in v4: every diagram-shaped fence is type-checked and the budget uses the max count; my fxDecoy fixture now FAILs the ceiling at ~17; self-test fixture 13 encodes it. Note the flip side: a legend fence of a genuinely different diagram type now FAILs C5 — acceptable strictness since the contract sanctions one source block per delivery. Retested this round: fixed.
+
+### F11: Fenceless deliveries skipped C5/C6 with PASS semantics [LOW] [RESOLVED]
+
+**Location**: `check-delivery.js` no-fence branch.
+**Exploit scenario**: A delivery whose only source was a prose mention of an external file passed everything on v3 with a friendly note, a one-line dodge of both structural checks.
 **Root cause**: Skip-on-absence with PASS semantics.
-**Suggested fix**: Emit WARN when no fence is found in a non-sketch block ("no fenced source — C5/C6 unchecked; contract requires the source block"), keeping PASS only when the Backend is SVG/file-based by declaration.
+**Suggested fix**: Applied in v4: no fence and no external source-file reference is a FAIL; with a file reference it is a WARN naming what could not be verified; self-test fixture 14 covers both arms, and my fx7 fixture now draws the WARN. A receipt line mentioning the rendered .svg also satisfies the file-reference test, so the WARN arm is reachable via ordinary receipts — acceptable, since the arm is a warning that names the unverified surface, not a pass. Retested this round: fixed.
 
-### F12: Receipts remain self-attested — floor, not ceiling (carried; IP-9 open)  [LOW]
+### F12: Delivery receipts remain self-attested pending Phase 2.A — the checker binds format, not truth [LOW] [OPEN]
 
-**Location**: Design-level; now also stated in the checker's own header comment ("This checker binds format, not truth: receipts can still be fabricated") and ledger IP-9.
-**Exploit scenario**: Unchanged from my prior rounds: `RENDER_VERIFIED — mmdc 11.12.0, rendered and inspected` can be typed without running anything. R3.2 improves honesty (the limitation is now documented inside the tool itself), and the forward-test shows the floor holding on the weak-model class; Phase 2.A generate/verify separation remains the designed ceiling.
-**Root cause**: A text checker cannot verify events it did not observe.
-**Suggested fix**: None this round; keep IP-9 open until Phase 2.A.
+**Location**: Design level: `check-delivery.js` header comment; SKILL.md compliance-theater red-flag row; improvement-points ledger IP-9.
+**Exploit scenario**: A determined or self-deceiving agent can still type a well-formed receipt (tool, version, claim) without having run anything; no text checker can falsify an event it did not observe. The forward test shows the floor holding on the weak-model class that motivated it; it cannot show the ceiling.
+**Root cause**: Generate and verify live in the same context until Phase 2.A separation lands.
+**Suggested fix**: Keep IP-9 open (it is, correctly); when Phase 2.A lands, have the verify context re-run the named command and diff the claimed receipt against observed output. No action required this round; recorded so the deterministic checker is not mistaken for fabrication-proof.
 
 ## Verdict
 
 **Verdict**: APPROVED
 
-All six MEDIUM findings from my R3-round review are verified fixed at revision `16a1ae4` — not by reading the diff but by re-running my own original exploit fixtures against the v3 checker (every one now fails or counts correctly) and by the new in-repo self-test, which encodes the full failure-vector history (14/14 passing) so the fixes cannot silently regress the way IP-10 did. The SKILL.md prose now matches the checker's actual behavior (WARN vs reject tiers, heuristic counting, sketch-aware), closing the overclaim pattern that recurred across rounds. The four residuals are real but non-gating: F8 is a precision gap in a layer the skill now explicitly declares heuristic and subordinate to the agent's own count, F9–F11 are narrow format-floor edges requiring either deliberate gaming or already-contract-violating shapes, and F12 is the honestly-documented, ledger-tracked ceiling that Phase 2.A owns. For the first time across my three review rounds, no claim the skill makes about its own tooling failed an empirical probe. Fix F8 (one regex + one fixture) in the next touch; none of the residuals warrants blocking Gate 2.
+Across four empirical rounds every blocking finding I raised has been fixed, and each fix was verified by re-running my own original exploit fixtures against the committed tool rather than by reading diffs: the v4 checker closes all four R3.2 residuals (multiplicity counting, prose "version" receipts, decoy fences, fenceless skips), the expanded self-test encodes the complete failure-vector history at 18/18 so none of it can silently regress, and the full 13-fixture regression sweep shows honest deliveries passing while every fake, laundering, inflation, and omission fixture fails for the stated reason. The upstream-synced dataset change leaves the bs-uml-master eval entries untouched, and the skill content is hash-identical to the previously approved 16a1ae4 revision apart from the checker fix itself. The single open finding is a LOW, honestly documented design ceiling (self-attested receipts, ledger IP-9) owned by Phase 2.A rather than this skill's current scope. No claim the skill makes about its own tooling failed an empirical probe this round; the skill is release-eligible from the adversary side.
