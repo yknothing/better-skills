@@ -15,7 +15,7 @@ The element ledger is the canonical model; every notation — Mermaid, PlantUML,
 ## Non-Negotiable Rules
 
 1. **Question before diagram type.** Never start drawing from "draw a UML diagram". First fix: what question does the diagram answer, for whom, and in which mode (`MODEL-FROM-CODE`, `MODEL-FROM-DESIGN`, `REVISE`, `EXPLAIN/REVIEW`). One diagram answers one question.
-2. **Evidence before boxes.** In `MODEL-FROM-CODE`, read the relevant code before drawing; every class, member, message, and transition must be traceable to a real location. Never invent plausible elements to fill a diagram. In `MODEL-FROM-DESIGN`, label assumptions as assumptions.
+2. **Evidence before boxes.** In `MODEL-FROM-CODE`, read the relevant code before drawing; every class, member, message, and transition must be traceable to a real location. Never invent plausible elements to fill a diagram. **Identifiers are quotations**: names, field types, and enum members are copied verbatim from source — a paraphrased identifier (`light` for `lightweight`) is a fabricated identifier. In `MODEL-FROM-DESIGN`, label assumptions as assumptions.
 3. **Semantics are load-bearing.** Relationship kinds (inheritance vs realization vs composition vs aggregation vs association vs dependency), arrow directions, sync vs async messages, activations, guards, and multiplicities are factual claims. Apply the rules in [UML Semantics](./references/uml-semantics.md); when the evidence cannot decide between two relationship kinds, use the weaker one and say so.
 4. **One abstraction level per diagram.** Do not mix systems, containers, components, and classes in one picture. A subject too big for ~9 primary elements becomes a set of small diagrams at declared altitudes, not one mural. Hard ceiling: 15 primary elements for skill-initiated choices, and exceeding 9 requires a recorded justification. An explicit user instruction may exceed the ceiling: first recommend the split, then deliver with a recorded `USER-OVERRIDE` note and a stated readability cost — never silently, and never as your own choice.
 5. **Curation is the deliverable.** Dumping every class or every call is a failure even when accurate. Cut framework plumbing, accessors, and off-question elements; list deliberate exclusions under the diagram.
@@ -38,6 +38,8 @@ The element ledger is the canonical model; every notation — Mermaid, PlantUML,
 | "I'm fairly sure this diagram syntax exists." | Invented syntax is a documented top failure mode. Check the pitfalls module or render a 3-line probe first (Rule 6). |
 | "The semantics are right; the tangled layout is the tool's fault, ship it." | Position is a semantic channel — a garbled layout misinforms. Run the repair loop; escalate the backend at the ceiling (Rule 9). |
 | "It renders fine on my side; where it ends up is the user's concern." | The medium's width, zoomability, and renderer are Phase 0 inputs. A 3700px-wide render in an A4 memo is a failed delivery (Rules 8–9). |
+| "I filled in the contract's fields, so the work behind them is implied." | Contract format without contract work is compliance theater — an unearned `RENDER_VERIFIED` lends false authority. `scripts/check-delivery.js` rejects receipt-less claims; the work itself is yours (Rules 2, 6). |
+| "It's basically a class diagram, drawn as a flowchart with fancy boxes." | Fake notation. If you call it a class diagram, the source starts with `classDiagram` — pseudo-class boxes in `graph TB` lose every relationship semantic (Rule 3). |
 | "It's just a quick sketch, so gates don't apply." | Sketch significance is a declared setting agreed with the user, not an escape hatch (see Significance below). |
 
 ## Significance levels
@@ -49,6 +51,18 @@ Ask (or infer and state) how the diagram will be used, then apply the matching d
 - **`authoritative`** — architecture decision records, compliance, teaching material. Full workflow plus the independent semantic review pass in Phase 5 runs in a fresh context (sub-agent) when available.
 
 Default to `deliverable` when unstated. Never downgrade significance yourself to save work.
+
+## Minimum Compliant Path
+
+The floor, as a recipe. The principles above are the ceiling; no step here may be skipped at any capability level:
+
+1. Write down Question / Reader / Mode / Significance / Medium. If `MODEL-FROM-CODE` and the files are unread, stop and read them now.
+2. Build the ledger (CODE: element → file:line; DESIGN: element → requirement or labeled assumption).
+3. Pick type + backend from the selection matrix. The source header must match the type you name (class diagram ⇒ `classDiagram`).
+4. Draft from the ledger only; copy identifiers verbatim.
+5. Run the backend's validation command; render when obtainable; look at the image.
+6. Fill the output contract completely, then run `node <skill-dir>/scripts/check-delivery.js <draft.md>` and fix every FAIL before delivering.
+7. State line = label + tool + version + what was checked. Skipped something? Say `UNVERIFIED`, with the failed command.
 
 ## Boundaries
 
@@ -134,7 +148,7 @@ Run the semantic review against the rendered diagram (not the source you remembe
 
 At `authoritative` significance, this pass runs independently (fresh sub-agent reviewing rendered output + ledger) when the platform allows; otherwise perform it in-context and mark it `SELF_REVIEWED`.
 
-Deliver using the output contract.
+Draft the delivery in the output contract, run `scripts/check-delivery.js` on the draft, fix every FAIL, then deliver.
 
 <HARD-GATE id="verified-before-delivered">
 Do not deliver a diagram whose delivery state is unstated, or stated stronger than the evidence. Never call a diagram "verified" or "correct" on the strength of unrendered source.
@@ -157,6 +171,8 @@ Do not deliver a diagram whose delivery state is unstated, or stated stronger th
 
 For multi-diagram deliveries, repeat per diagram and add one overview line on how the set fits together. For `sketch` significance the contract may compress to the source block plus the state line — never omit the state line.
 
+Every bracketed placeholder must be replaced; an unfilled or missing field is a format-invalid delivery, not a stylistic choice. Verify mechanically before handing over: `node <skill-dir>/scripts/check-delivery.js <draft.md>` — it rejects receipt-less State lines, missing Evidence/Excluded, declared-type-vs-source-header mismatches, and unjustified budget overruns. When the delivery medium pins its own renderer (a CDN `<script>`, GitHub's embedded Mermaid), verify on **that** version or state the skew explicitly.
+
 ## Bundled Resources
 
 | Resource | Purpose |
@@ -170,6 +186,7 @@ For multi-diagram deliveries, repeat per diagram and add one overview line on ho
 | [SVG Presentation](./references/svg-presentation.md) | Publication-grade projection: model-first iron rule, authoring rules, triple verification |
 | [Rendering & Validation](./references/rendering-validation.md) | Per-backend verification recipes, evidence vocabulary, degradation ladder, inspection checklist |
 | `scripts/check-mermaid.js` | Browser-free Mermaid syntax checker (rung 3 of the degradation ladder; `SYNTAX_VERIFIED` at most) |
+| `scripts/check-delivery.js` | Deterministic output-contract checker: receipt-bearing State line, Evidence/Excluded presence, type-vs-header consistency, element budget — run on the draft before delivering |
 
 ## Patterns
 

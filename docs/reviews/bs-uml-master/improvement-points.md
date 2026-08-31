@@ -1,0 +1,17 @@
+# bs-uml-master — Improvement-Points Ledger
+
+Schema: [`../_improvement-points-schema.md`](../_improvement-points-schema.md). First ledger in the repo (founds the CLAUDE.md trigger-1 tracking).
+
+| id | date | source | model/agent | class | severity | proposal | status |
+|---|---|---|---|---|---|---|---|
+| IP-1 | 2026-08-31 | 2026-08-31-haiku-usage-review.md #1 | haiku-4.5 + skill | compliance-theater | HIGH | Delivery State line without tool+version must be treated as format-invalid, not merely dishonest — enforce mechanically | fixed:R3 |
+| IP-2 | 2026-08-31 | 2026-08-31-haiku-usage-review.md #2 | haiku-4.5 + skill | fabrication | HIGH | Declared diagram type must match the source header (e.g. "class diagram" ⇒ `classDiagram`); pseudo-class boxes in `graph TB` are fake notation — checkable mechanically | fixed:R3 |
+| IP-3 | 2026-08-31 | 2026-08-31-haiku-usage-review.md #3 (`light` vs `lightweight`) | haiku-4.5 + skill | fabrication | MED | Rule: identifiers, enum members, and field names in a MODEL-FROM-CODE diagram are quotations, copied verbatim from source — paraphrase is fabrication | fixed:R3 |
+| IP-4 | 2026-08-31 | 2026-08-31-haiku-usage-review.md #8 | haiku-4.5 + skill | omission | HIGH | Evidence/Excluded contract fields are omitted when expensive; make their absence loud — delivery template with required placeholders + deterministic contract checker | fixed:R3 |
+| IP-5 | 2026-08-31 | 2026-08-31-haiku-usage-review.md #9 | haiku-4.5 + skill | omission | MED | Budget overruns shipped without justification; contract checker counts primary elements from source and compares against the declared budget note | fixed:R3 |
+| IP-6 | 2026-08-31 | 2026-08-31-haiku-usage-review.md (compliance-theater insight) | haiku-4.5 + skill | compliance-theater | HIGH | Weak models follow recipes better than principles: add a numbered "minimum compliant path" as the floor, keeping principles as the ceiling | fixed:R3 |
+| IP-7 | 2026-08-31 | 2026-08-27-adversary-review.md F9 (R2 round) | fable-5 adversary probe | stale-claim | LOW | Dot-dependent PlantUML type list omits state & deployment diagrams (probed: same placard behavior) | fixed:R3 |
+| IP-8 | 2026-08-31 | 2026-08-31-haiku-usage-review.md #1 (renderer skew) | haiku-4.5 + skill | gap | MED | When the delivery medium embeds its own renderer version (CDN pin, GitHub), verification must name THAT version or state the skew | fixed:R3 |
+| IP-9 | 2026-08-27 | 2026-08-27-final-audit.md follow-up 2 | fable-5 adversary | gap | LOW | Gate receipts are self-attested pending Phase 2.A mechanization (check-delivery.js partially covers; full closure is Phase 2.A) | open |
+
+**Count toward upgrade trigger 1: 9** (8 fixed in R3, 1 open).
