@@ -5,108 +5,75 @@
 **Skill**: bs-uml-master
 **HUMAN_VERIFIED**: false
 **Scope Contract Version**: 1
-**Reviewed Revision**: a226e119365b7797ad9a24697f053a1337d198de
-**Reviewed Skill SHA-256**: 2f3322de034c9ee6ca0bb5e1326274b04845f90a04895b79c7c74e1cbe0bc263
-**Reviewed Manifest SHA-256**: 30e875cb2b76a829d059c533bb8638ab97c5595c258ee615815bc5ab3f3d4394
+**Reviewed Revision**: 9986df3a6fbeb54149a457586d5f035ee3cf4843
+**Reviewed Skill SHA-256**: 4d7dd265a50f83de14ea84990932499f8b3c09e0ccbcde8a6f6736c10ff73a27
+**Reviewed Manifest SHA-256**: a2dc6724fdcde28d6bdebff5b7c76b2f386ae4faad51045145bf0b3080136994
 
 ## Summary
 
-Final confirmation pass over checker v4 (revision a226e11), closing four rounds of empirical adversary review. All ten previously reported blocking findings — six from the R3 round and four residuals from my R3.2 probes — are verified fixed by re-running my own original exploit fixtures against the v4 checker (every exploit now fails or counts correctly, with zero regressions across 17 fixtures) and by the expanded in-repo self-test (18/18 passing, now encoding fixtures 11 to 14 for my residuals). One LOW finding remains open by design: delivery receipts are self-attested until Phase 2.A generate/verify separation lands (ledger IP-9). Worst-case remaining impact is a determined agent fabricating a receipt the format checker cannot falsify — documented inside the checker itself and tracked in the ledger.
+Third-round review closing the R4 adversary cycle at check-render-fit v3 (9986df3). All five original findings are now verified fixed by re-running the live exploit artifacts, not by reading diffs alone: the edge parser matches 36/36 real mermaid 11 edges (was 0), the wide-sequence axis inversion FAILs, roledescription-first kind detection kills the `classDef actor` spoof on captured renderer markup and un-suppresses the laundering audit WARN, the viewport/medium wiring is documented in both canonical procedure docs, and the dead gestalt long-edge branch is removed with its reasoning recorded. One LOW residual remains open (IP-20: the fit receipt is still self-attested until check-delivery couples it), which does not block release. Worst-case impact of what remains: an agent that ignores the documented receipt requirement can still claim RENDER_VERIFIED without pasting fit output — a prose-bound, ledgered gap, not a mechanical false PASS.
 
 ## Evidence Reviewed
 
-Full manifest receipt `30e875cb2b76a829d059c533bb8638ab97c5595c258ee615815bc5ab3f3d4394` was received and independently verified.
+Full manifest receipt `a2dc6724fdcde28d6bdebff5b7c76b2f386ae4faad51045145bf0b3080136994` was received and independently verified.
 
-All 18 manifest entries recomputed with sha256sum and confirmed against the prompt manifest and working tree; git rev-parse HEAD equals the recorded revision a226e119365b7797ad9a24697f053a1337d198de. Skill content files are hash-identical to the 16a1ae4 round except `scripts/check-delivery.js` and `scripts/test-check-delivery.js` (the v4 fix), and the upstream-synced `tools/peer-review.js`, `tools/test-peer-review-scope.js`, and `evaluation/datasets/batch-1-test-prompts.json` (diff inspected: the dataset change touches only bs-reflect-loop entries; the four bs-uml-master eval prompts are unchanged). All reference modules, SKILL.md, and check-mermaid.js carried from my prior full-read passes.
+Files examined: `scripts/check-render-fit.js` v3 (full read + `git diff 2c78b61..9986df3`), `scripts/test-check-render-fit.js` v3 (diff: fixtures 12/12b rebuilt on captured markup), `SKILL.md` Phase 4, `references/rendering-validation.md`, `references/layout-craft.md`, `docs/reviews/bs-uml-master/improvement-points.md` (IP-17..IP-20). SHAs re-hashed and matched the manifest for `SKILL.md`, `check-render-fit.js`, `test-check-render-fit.js`; `git rev-parse HEAD` = the reviewed revision; `check-delivery.js` SHA unchanged, consistent with IP-20 remaining open.
 
-Files and commands examined or rerun this round:
+Probes rerun against v3 (same real-render corpus, mermaid-cli 11.16.0):
 
-- `git diff 16a1ae4..a226e11 -- skills/bs-uml-master/scripts/` read line-by-line: quoted multiplicities removed before the classDiagram relation parse; the bare "version" token dropped from TOOL_VERSION; `fences()` now returns every diagram-shaped fence, all type-checked, budget on the max count; fenceless blocks FAIL unless an external source-file reference (.mmd/.puml/.svg/.txt) is present, which downgrades to WARN; self-test fixtures 11 to 14 added covering exactly my F8 to F11 fixtures.
-- `node skills/bs-uml-master/scripts/test-check-delivery.js` — 18/18 fixtures, ALL PASS, exit 0.
-- Re-ran my complete attack-fixture suite (13 files) against v4: multiplicity-styled edges-only classDiagram now counts ~18 and FAILs the ceiling; "version 3.2 of my careful process" now FAILs C2; the decoy-fence delivery now FAILs on the 17-class real fence via max-count; the fenceless external-file delivery WARNs (and the self-test's no-source variant FAILs); all prior-round outcomes preserved — honest deliveries pass (fx1, fx9 receipts-first, fxS compressed sketch), the Haiku fake, bare label, fake receipt, clock-time citation, 21-element edges-only, 17-component PlantUML, tag laundering, and frontmatter variants all still FAIL for the right reasons.
-- `sed`/`grep` read of the new `tools/peer-review.js` disposition contract (release-eligibility logic) to confirm this review's own structural obligations.
+- `node scripts/test-check-render-fit.js` — ALL PASS, 14 fixtures; fixture 12 is now my captured exploit markup (`<g class="node default actor">` + `aria-roledescription="flowchart-v2"`, expecting gestalt + FAIL), fixture 12b the probed real `"sequence"` roledescription (expecting linear).
+- F3 live artifact 1: the round-1 rendered spoof (169x1214 `graph TB` with `classDef actor`) → now `kind=gestalt`; exits 0 legitimately because it genuinely fits one screen at 11.2px, with the 0.14:1 aspect WARN firing — correct behavior, no laundering.
+- F3 live artifact 2 (FAIL path): the same actor class injected into the real 833x2094 tower render → `kind=gestalt`, `FAIL ... 6.5px < 11px`, exit 1. The kind-poisoning vector is dead on renderer-emitted markup.
+- F3 audit trail: `--kind linear` on the spoofed SVG now emits the laundering WARN (previously suppressed because the spoof forced `seq=true`).
+- F1/F2 regressions re-run: 36 edges matched across the 7-file corpus; the 2850x309 14-participant sequence still `kind=linear` via roledescription and FAILs its cross axis at 8.3px; d1.svg FAIL / d1-elk.svg PASS unchanged.
+- F6 partial: verified the unreachable gestalt long-edge FAIL branch is removed in v3 with the mathematical reason in a comment ("a gestalt diagram that fits one screen cannot have an over-screen edge by construction"); the remaining edge verdict is a WARN that can actually fire on linear diagrams (fixtures 9–10).
 
 ## Findings
 
-### F1: Budget counter blind to edges-only class diagrams; flowchart label inflation; SKILL.md overclaimed WARN as reject [MEDIUM] [RESOLVED]
+### F1: Long-range-edge detection was inert on real mermaid output yet printed affirmative PASS evidence [HIGH] [RESOLVED]
 
-**Location**: `skills/bs-uml-master/scripts/check-delivery.js` countPrimary; SKILL.md Output Contract paragraph.
-**Exploit scenario**: In R3 a 12-relation classDiagram with no class declarations counted 0 elements; parenthesized edge-label words inflated flowchart counts; SKILL.md claimed the checker "rejects unjustified budget overruns" when 10 to 15 only warned.
-**Root cause**: Declaration-only counting, unanchored id regex, prose written from intent rather than behavior.
-**Suggested fix**: Applied in R3.2 and verified again on v4: relation-line counting (my fixture now counts ~21 and FAILs the ceiling), noise stripping (label fixture counts ~4), SKILL.md states the real WARN/FAIL tiers and declares counting heuristic. Retested this round: no regression.
+**Location**: `scripts/check-render-fit.js` `edgeSpans` (v1 lines 69–82; v2+ tag-first parser).
+**Exploit scenario**: (Round 1) Mermaid 11.16.0 emits `d=` before `class=` and renders sequence messages as `<line>` elements; the v1 class-first `<path>` regex matched 0/38 real edges, so every real render received a fabricated `PASS ... both endpoints co-visible` line while the self-test certified hand-crafted markup that never occurs.
+**Root cause**: Regex written against fixture markup instead of captured renderer output.
+**Suggested fix**: Order-independent attribute parsing, `<line>` support, real-markup fixtures. **Verified fixed** (round 2, re-confirmed at v3): 36 edges matched across the 7-file real corpus, 3/3 `<line class="messageLine0">` messages included; fixtures 9–10 lock d-before-class and line-element parsing.
 
-### F2: Compressed sketch delivery was jointly unsatisfiable with the Minimum Compliant Path [MEDIUM] [RESOLVED]
+### F2: Reading-axis heuristic inverted on wide sequence diagrams [HIGH] [RESOLVED]
 
-**Location**: SKILL.md Significance and Minimum Compliant Path step 6; checker C1/C3/C4.
-**Exploit scenario**: In R3 the skill-legal sketch form (source plus state line) hard-failed the checker the recipe forbids skipping, teaching agents that FAILs are advisory.
-**Root cause**: The checker validated only the full contract shape.
-**Suggested fix**: Applied in R3.2 and verified again on v4: sketch significance relaxes C1/C3/C4 to WARN while the state line stays mandatory; my compressed-sketch fixture passes with warnings only; MCP step 6 names the compressed form. Retested this round: no regression.
+**Location**: `scripts/check-render-fit.js` `isSequence` + `readingAxisVertical = seq ? true : H >= W`.
+**Exploit scenario**: (Round 1) A real 14-participant sequence (2850x309) was certified exit 0: W > H made v1 call the participant axis the reading axis and bless the overflow as "1.9 screens legal for linear reading".
+**Root cause**: "Reading axis = longer axis" shape heuristic standing in for the semantic fact that sequence time flows down.
+**Suggested fix**: Pin the sequence reading axis vertical by detected kind. **Verified fixed** (round 2, re-confirmed at v3 where sequence detection now flows from `aria-roledescription="sequence"`): the same SVG FAILs its cross axis at 8.3px, exit 1; fixture 11 in regression.
 
-### F3: PlantUML sources escaped the type and budget checks entirely [MEDIUM] [RESOLVED]
+### F3: Kind detection poisoned by real-element actor classes [MEDIUM] [RESOLVED]
 
-**Location**: `check-delivery.js` typeMatchesHeader and countPrimary.
-**Exploit scenario**: In R3 a 17-component PlantUML delivery over the hard ceiling passed with zero FAILs, letting an agent duck the budget by choosing the backend Rule 8 mandates for five diagram types.
-**Root cause**: The checker was built from the Mermaid-only Haiku sample.
-**Suggested fix**: Applied in R3.2 and verified again on v4: PlantUML declaration/relation counting (fixture FAILs at ~17) plus per-type content markers with a negative self-test fixture. Retested this round: no regression.
+**Location**: `scripts/check-render-fit.js` lines 65–75 (`isSequence` v3, roledescription-first).
+**Exploit scenario**: (Rounds 1–2) `classDef actor` on a flowchart renders as `<g class="node default actor">`; v1/v2 class-token matching flipped kind to linear, letting tower flowcharts through and (v2) suppressing the manual-`--kind` audit WARN — v2's fixture had encoded the spoof as text content mermaid never emits.
+**Root cause**: A user-controllable CSS class token was treated as a co-equal type signal even when the renderer's authoritative `aria-roledescription` was present.
+**Suggested fix**: Roledescription-first detection with the class heuristic only as a roledescription-less fallback, plus a captured-markup fixture. **Verified fixed in v3, exactly as specified**: `aria-roledescription` is now authoritative (`sequence` prefix ⇒ linear; anything else ⇒ gestalt regardless of classes; element-class fallback only when absent). Live re-probes: the original spoofed render is `kind=gestalt` (exits 0 only because 169x1214 genuinely fits at 11.2px, aspect WARN firing); the actor class injected into the real 833x2094 tower yields `kind=gestalt`, FAIL, exit 1; the laundering WARN fires on the spoofed SVG under `--kind linear`. Fixture 12 now carries my captured exploit markup verbatim, fixture 12b the probed `"sequence"` value. The retained manual-`--kind linear` audit-WARN compromise is defensible now that it cannot be silenced by markup: banning the flag would misfire on legitimate LR pipelines (fixture 5), and the WARN lands in the fit output that rendering-validation requires recording in the `RENDER_VERIFIED` receipt.
 
-### F4: Receipt and citation regexes were satisfied by incidental prose [MEDIUM] [RESOLVED]
+### F4: Fit gate never parameterized by the Phase 0 medium [MEDIUM] [RESOLVED]
 
-**Location**: `check-delivery.js` TOOL_VERSION and FILE_LINE.
-**Exploit scenario**: In R3, "checked 3.2 boxes carefully" passed as a tool receipt and "inspected at 14:32" satisfied the MODEL-FROM-CODE citation requirement.
-**Root cause**: An any-word version anchor and a bare colon-digits catch-all.
-**Suggested fix**: Applied in R3.2 and verified again on v4: tool-shaped token required; path.ext adjacency required; both original fixtures FAIL. The residual "version" token hole is F9 below. Retested this round: no regression.
+**Location**: `SKILL.md` Phase 4; `references/rendering-validation.md` checklist point 4.
+**Exploit scenario**: (Round 1) The flag-less Phase 4 invocation certified fit against the baked-in 1470x850 default while the declared A4 medium (794x1123) FAILs the same SVG at 8.5px — a mechanical receipt for the wrong medium, in test prompt 4's own scenario.
+**Root cause**: Phase 0 captured the medium and Phase 4 ran the checker, but nothing connected them; `--viewport` was undocumented.
+**Suggested fix**: Mandate the Phase 0 viewport in the invocation and document the flags. **Verified fixed** (round 2 diffs, unchanged at v3): Phase 4 requires "passing the Phase 0 medium's viewport ... certifying fit against the wrong medium is a false receipt"; rendering-validation documents the default and all flags. Cosmetic residual: layout-craft.md line 64 still shows a flag-less invocation — noted for its next edit; both canonical procedure docs carry the requirement.
 
-### F5: The R3.1 PlantUML guard enabled fence-tag laundering [MEDIUM] [RESOLVED]
+### F5: R4 gate not integrated into the canonical verification reference or the delivery receipt [LOW] [RESOLVED]
 
-**Location**: `check-delivery.js` typeMatchesHeader PlantUML guard.
-**Exploit scenario**: Tagging a graph TB fake as a plantuml fence bypassed the fake-notation check that is the checker's headline purpose.
-**Root cause**: The guard keyed on the author-controlled language tag instead of the source.
-**Suggested fix**: Applied in R3.2 and verified again on v4: a plantuml-tagged fence without a PlantUML header FAILs explicitly as tag laundering; my exact exploit fixture still FAILs. Retested this round: no regression.
+**Location**: `references/rendering-validation.md` checklist point 4; IP-20 in improvement-points.md.
+**Exploit scenario**: (Round 1) An agent following the "Before delivery" reference's checklist performed medium fit as prose and never ran the mechanical gate; check-delivery accepted `RENDER_VERIFIED` with no fit evidence.
+**Root cause**: R4 wired the gate into SKILL.md and layout-craft but not into the reference consulted at verification time.
+**Suggested fix**: Integrate into the checklist; couple the receipt. **Verified fixed** for the checklist half (fit gate run mechanically, output recorded in the `RENDER_VERIFIED` receipt); the receipt-coupling half is honestly ledgered as IP-20 rather than claimed, tracked as F6.
 
-### F6: First-fence targeting false-failed receipts-first deliveries; frontmatter trailing space defeated the strip [MEDIUM] [RESOLVED]
+### F6: Residual — fit receipt still self-attested until check-delivery couples it (IP-20) [LOW] [OPEN]
 
-**Location**: `check-delivery.js` fence selection and stripFrontmatter.
-**Exploit scenario**: An honest delivery leading with a bash receipts block FAILed C5 against the bash command line (perverse incentive to delete receipts); a trailing-space frontmatter close, which mermaid 11.17.2 accepts (probed), broke header detection.
-**Root cause**: Positional fence selection; exact-delimiter frontmatter regex.
-**Suggested fix**: Applied in R3.2 and verified again on v4: fences selected by language/header (receipts-first fixture passes) and trailing-space delimiters tolerated. The fenceless sub-case is F11 below. Retested this round: no regression.
-
-### F8: Multiplicity-styled edges-only class diagrams counted ~0, reopening the ceiling bypass in the notation uml-semantics.md mandates [MEDIUM] [RESOLVED]
-
-**Location**: `check-delivery.js` countPrimary classDiagram branch (v3 stripNoise interplay).
-**Exploit scenario**: An 18-class diagram written entirely as relation lines with quoted multiplicities counted ~0 on v3 and passed clean, precisely for by-the-book domain models.
-**Root cause**: stripNoise blanked multiplicity strings into tokens the relation regex could not cross.
-**Suggested fix**: Applied in v4 (quoted multiplicities removed before the relation parse) and verified: my fxM fixture now counts ~18 and FAILs the hard ceiling; self-test fixture 11 encodes it. Retested this round on the committed checker: fixed.
-
-### F9: The bare "version" token readmitted prose-shaped receipts [LOW] [RESOLVED]
-
-**Location**: `check-delivery.js` TOOL_VERSION token list.
-**Exploit scenario**: "RENDER_VERIFIED — version 3.2 of my careful process" passed C2 on v3, dodging the fix's own goal by another everyday phrase.
-**Root cause**: "version" whitelisted without requiring a tool name.
-**Suggested fix**: Applied in v4 (token dropped) and verified: my fxV fixture now FAILs C2; honest forms still pass because real receipts name the tool; self-test fixture 12 encodes it. Retested this round: fixed.
-
-### F10: Fence selection could be decoyed — checks ran on the first matching fence [LOW] [RESOLVED]
-
-**Location**: `check-delivery.js` fences selection and C5/C6 application.
-**Exploit scenario**: A one-class legend fence placed before a 17-class real fence got C5/C6 run on the decoy on v3, passing clean.
-**Root cause**: One-fence-per-block assumption.
-**Suggested fix**: Applied in v4: every diagram-shaped fence is type-checked and the budget uses the max count; my fxDecoy fixture now FAILs the ceiling at ~17; self-test fixture 13 encodes it. Note the flip side: a legend fence of a genuinely different diagram type now FAILs C5 — acceptable strictness since the contract sanctions one source block per delivery. Retested this round: fixed.
-
-### F11: Fenceless deliveries skipped C5/C6 with PASS semantics [LOW] [RESOLVED]
-
-**Location**: `check-delivery.js` no-fence branch.
-**Exploit scenario**: A delivery whose only source was a prose mention of an external file passed everything on v3 with a friendly note, a one-line dodge of both structural checks.
-**Root cause**: Skip-on-absence with PASS semantics.
-**Suggested fix**: Applied in v4: no fence and no external source-file reference is a FAIL; with a file reference it is a WARN naming what could not be verified; self-test fixture 14 covers both arms, and my fx7 fixture now draws the WARN. A receipt line mentioning the rendered .svg also satisfies the file-reference test, so the WARN arm is reachable via ordinary receipts — acceptable, since the arm is a warning that names the unverified surface, not a pass. Retested this round: fixed.
-
-### F12: Delivery receipts remain self-attested pending Phase 2.A — the checker binds format, not truth [LOW] [OPEN]
-
-**Location**: Design level: `check-delivery.js` header comment; SKILL.md compliance-theater red-flag row; improvement-points ledger IP-9.
-**Exploit scenario**: A determined or self-deceiving agent can still type a well-formed receipt (tool, version, claim) without having run anything; no text checker can falsify an event it did not observe. The forward test shows the floor holding on the weak-model class that motivated it; it cannot show the ceiling.
-**Root cause**: Generate and verify live in the same context until Phase 2.A separation lands.
-**Suggested fix**: Keep IP-9 open (it is, correctly); when Phase 2.A lands, have the verify context re-run the named command and diff the claimed receipt against observed output. No action required this round; recorded so the deterministic checker is not mistaken for fabrication-proof.
+**Location**: `scripts/check-delivery.js` C2 (SHA unchanged through v2/v3, per manifest); `docs/reviews/bs-uml-master/improvement-points.md` IP-20; `scripts/check-render-fit.js` lines 177–181 (zero-match PASS wording).
+**Exploit scenario**: check-delivery.js still passes a `RENDER_VERIFIED` state line that contains no fit-check output, so the recording requirement — including any laundering audit WARN — binds only agents already complying; a non-compliant delivery draft sails through the contract checker with fit self-attested. Secondary nit: an SVG in which `edgeSpans` recognizes zero edge elements (e.g. a hand-authored SVG with non-standard classes) still earns the affirmative `PASS ... both endpoints co-visible` line rather than a "no edges recognized" WARN — post-v3 this is a narrow honesty-of-wording issue, no longer a parser hole.
+**Root cause**: Receipt coupling was deliberately deferred (fixtures first) per IP-20; the zero-match message predates the parser fix and was not revisited.
+**Suggested fix**: Close IP-20: teach check-delivery C2 to WARN (or FAIL for screen media at deliverable+ significance) when a `RENDER_VERIFIED` claim on an SVG/Mermaid delivery carries no `check-render-fit` output line; switch the zero-match edge verdict from PASS to a neutral WARN naming how many edge elements were recognized. The v3 dead-branch removal I flagged in round 2 is verified done (unreachable gestalt FAIL arm deleted with the mathematical reason in a comment), so this finding is now exactly the ledgered IP-20 remainder plus one message-wording nit — LOW, non-blocking.
 
 ## Verdict
 
 **Verdict**: APPROVED
 
-Across four empirical rounds every blocking finding I raised has been fixed, and each fix was verified by re-running my own original exploit fixtures against the committed tool rather than by reading diffs: the v4 checker closes all four R3.2 residuals (multiplicity counting, prose "version" receipts, decoy fences, fenceless skips), the expanded self-test encodes the complete failure-vector history at 18/18 so none of it can silently regress, and the full 13-fixture regression sweep shows honest deliveries passing while every fake, laundering, inflation, and omission fixture fails for the stated reason. The upstream-synced dataset change leaves the bs-uml-master eval entries untouched, and the skill content is hash-identical to the previously approved 16a1ae4 revision apart from the checker fix itself. The single open finding is a LOW, honestly documented design ceiling (self-attested receipts, ledger IP-9) owned by Phase 2.A rather than this skill's current scope. No claim the skill makes about its own tooling failed an empirical probe this round; the skill is release-eligible from the adversary side.
+Approved on empirical evidence, not on the fix notes: every one of the five findings from rounds 1–2 was re-tested at 9986df3 against the same live artifacts that originally broke the checker, and each fix held — including the F3 repair, which follows the specified roledescription-first design exactly and now carries my captured exploit markup in its regression suite, closing the fixture-vs-reality gap that caused two rounds of strawman-certified fixes. The adversary surface that mattered — mechanical false PASS receipts from the skill's own evidence tooling — is closed: real edges parse, sequence axes cannot invert, kind cannot be poisoned by renderer-emitted markup, laundering leaves an un-suppressible audit trail, and the wrong-medium receipt is named a false receipt in the workflow text. The single remaining OPEN item is LOW (IP-20's receipt self-attestation plus a message-wording nit), honestly ledgered with a concrete closing path, and within the release rules for approval.

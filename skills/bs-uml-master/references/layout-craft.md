@@ -56,3 +56,36 @@ Record the escalation and its reason in the delivery.
 ## Media profiles for Phase 0
 
 Capture with the medium: **available width/aspect** (chat pane, README column ~900px, A4 portrait, slide 16:9), **zoomable or fixed** (web renderers zoom; print and memo PDFs do not), **theme** (dark/light/both). Non-zoomable + width-limited media lower the practical element budget below the global one — say so when it bites.
+
+**Default medium when unstated: a landscape PC screen** (viewport ≈1470×850 content area). Diagrams are overwhelmingly read on landscape screens by eyes with a hard legibility floor, while Mermaid's default growth direction is vertical — that mismatch is the physical root of the "tower diagram" disease. Never assume the reader will zoom.
+
+## Fit-to-screen discipline (the human-vision gate)
+
+A diagram must be *seen whole* (gestalt: hierarchy, flow, clusters) and then *read locally* (labels). Both die when the render doesn't fit: fit the whole and the labels drop below legibility; read the labels and the whole is lost to scrolling. The gate is mechanical — run `scripts/check-render-fit.js <diagram.svg>` on every rendered SVG:
+
+- **Effective label font at fit** = font-size × min(viewport/canvas per axis, 1) must be **≥ 11px**.
+- **Gestalt diagrams** (class, component, ER, architecture — no linear reading order): BOTH axes fit one viewport at ≥11px. There is no legitimate scrolling for a picture whose point is the whole.
+- **Linear diagrams** (sequence; genuinely line-by-line process flows, pass `--kind linear`): the cross axis must fit at ≥11px; the reading axis may extend to **≤3 viewport-screens** — scrolling along the reading axis is the native reading gesture (a 3-screen sequence diagram is legal). Each screenful must stand alone; participants ≤6 so lifelines survive working memory once headers scroll away.
+- **Every edge's two endpoints must be co-visible** at display scale. An edge is the smallest unit of meaning; one that spans more than a screen is a sentence torn in half — a split-and-cross-reference signal.
+- Aspect target for screen media: **0.5:1 – 2.5:1**, landscape-biased.
+
+## When it genuinely doesn't fit: the trade-off ladder
+
+One screen ≈ 9–15 boxes at legible size — the screen limit, the cognitive limit (7±2), and the one-question limit converge on the same number. "Doesn't fit" is usually an information-architecture problem showing up physically. Work the ladder top-down; the motto: **能拆不缩，能缩不滚，滚只沿读，巨图配图** (split before shrinking, shrink before scrolling, scroll only along the reading axis, and a mural always ships with a companion overview).
+
+1. **Split + wayfinding** (Shneiderman: overview first, zoom and filter, details on demand). One ≤9-element overview (subsystems collapsed) + N one-screen detail diagrams. The craft is the navigation: identical names and stable per-layer colors across the whole set; each detail diagram carries a one-line breadcrumb ("Overview > Quality Pipeline"); long-range edges become cross-references ("→ see diagram 3"), never lines across screens.
+2. **Compress presentation, not the model** (~30–50% capacity, zero loss): box text to 1–2 lines (detail belongs in reading notes, not boxes); hide off-question members; bundle parallel edges into one labeled edge ("×6 commands", "all but validate").
+3. **Single-axis scrolling** where the diagram kind earns it (the linear rules above).
+4. **Interactive progressive disclosure** (HTML/artifact media): tabs or stacked sections, each holding one screen-fit diagram — the *page* scrolls, the *diagrams* don't; optionally a clickable overview linking to detail anchors.
+5. **USER-OVERRIDE murals** (audit walls, posters): the medium is now print/zoomable canvas — say so; deliver the mural *plus* a one-screen companion overview. The readable deliverable is the pair.
+
+## The layered-architecture layout recipe (empirically probed, mermaid 11.x)
+
+Layered systems ("N layers of boxes with layer-to-layer edges") are the most common architecture diagram and dagre's worst case:
+
+- `graph TB` + subgraphs → each layer stacks its boxes **vertically** → a 0.4:1 tower (probed: 833×2094, 6.5px at fit).
+- `graph LR` → layers AND their interiors run horizontally → an 8.7:1 strip (probed: 3860×446). No better.
+- `direction LR` inside a subgraph is **silently ignored when the subgraph has external edges** — which layer diagrams always have. The obvious fix doesn't work; don't burn repair iterations on it.
+- **The fix: the ELK engine** — `%%{init: {"layout":"elk"}}%%` on line 1. Probed on the same source: 1494×940 (1.59:1), 14.5px at fit, zero crossings, layers as wide rows. One line.
+- ELK caveats: embedded renderers (GitHub) silently ignore the directive (dagre geometry is what those readers see — verify on dagre for GitHub-bound diagrams, per the engine row above); ELK does not preserve declaration order within a group — if internal order carries meaning (Gate 1→2→3→4), add invisible ordering edges (`G1 ~~~ G2`) or accept the shuffle knowingly.
+- Where ELK is unavailable and dagre towers persist: ladder step 1 (split the layers into diagrams) beats fighting the engine.
