@@ -66,7 +66,7 @@ View the rendered image (PNG, or SVG opened as an image) and confirm the points 
 1. Every element declared in the source appears in the render (count boxes/lifelines).
 2. No text truncation or overlapping labels (in SVG, look for suspiciously identical coordinates and clipped `<text>` widths).
 3. The title/caption is present.
-4. **Layout rubric** from [Layout Craft](./layout-craft.md): flow monotonicity, crossing budget, proximity honesty, hierarchy direction, label discipline, medium fit (aspect ratio vs the Phase 0 medium), density balance. Rubric failures enter the bounded layout repair loop; still failing after it → escalate the backend per Layout Craft Tier 3, never ship garble silently.
+4. **Layout rubric** from [Layout Craft](./layout-craft.md): flow monotonicity, crossing budget, proximity honesty, hierarchy direction, label discipline, medium fit, density balance. Medium fit runs mechanically: `node <skill-dir>/scripts/check-render-fit.js <diagram.svg> --viewport WxH` with the Phase 0 medium's viewport (default: PC screen 1470×850; flags: `--viewport WxH`, `--kind gestalt|linear|auto`, `--font N`). Rubric failures enter the bounded layout repair loop; still failing after it → escalate the backend per Layout Craft Tier 3, never ship garble silently. Record the fit output as part of the `RENDER_VERIFIED` receipt.
 
 ## Degradation ladder
 

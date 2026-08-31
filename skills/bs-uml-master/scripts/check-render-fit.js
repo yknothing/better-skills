@@ -62,20 +62,39 @@ function detectFont(svg) {
   return best ? Number(best[0]) : 16;
 }
 
-function detectKind(svg) {
-  return /class="[^"]*\bactor\b|aria-roledescription="sequence/i.test(svg) ? "linear" : "gestalt";
+function isSequence(svg) {
+  // Require an actual sequence-diagram marker on an element, not a mention
+  // in a classDef or comment: aria role, or an actor/messageLine class
+  // attribute on a real tag.
+  return /aria-roledescription="sequence/i.test(svg) ||
+    /<(?:rect|g|line|text)\b[^>]*class="[^"]*\b(?:actor|messageLine\d*)\b/i.test(svg);
 }
 
 function edgeSpans(svg) {
-  // Edge path endpoints from the d attribute of edge-ish paths.
+  // Edge endpoints. Mermaid 11 emits attributes in varying order (d= often
+  // BEFORE class=), and sequence messages are <line> elements, not <path>.
+  // Match tags first, then read attributes order-independently.
   const spans = [];
-  for (const m of svg.matchAll(/<path[^>]*class="[^"]*(?:edge|flowchart-link|relation|transition|messageLine)[^"]*"[^>]*\bd="([^"]+)"/g)) {
-    const nums = [...m[1].matchAll(/(-?\d+(?:\.\d+)?)[,\s]+(-?\d+(?:\.\d+)?)/g)]
-      .map(p => [Number(p[1]), Number(p[2])]);
-    if (nums.length >= 2) {
-      const [x1, y1] = nums[0];
-      const [x2, y2] = nums[nums.length - 1];
-      spans.push({ dx: Math.abs(x2 - x1), dy: Math.abs(y2 - y1) });
+  const EDGE_CLASS = /\b(?:edge|edgePath|flowchart-link|relation|transition|messageLine\d*|edgePaths?)\b/;
+  for (const tag of svg.matchAll(/<(path|line)\b[^>]*>/g)) {
+    const t = tag[0];
+    const cls = (t.match(/class="([^"]*)"/) || [])[1] || "";
+    if (!EDGE_CLASS.test(cls)) continue;
+    if (tag[1] === "line") {
+      const g = (n) => Number((t.match(new RegExp(`\\b${n}="(-?\\d+(?:\\.\\d+)?)"`)) || [])[1]);
+      const x1 = g("x1"), y1 = g("y1"), x2 = g("x2"), y2 = g("y2");
+      if ([x1, y1, x2, y2].every(Number.isFinite))
+        spans.push({ dx: Math.abs(x2 - x1), dy: Math.abs(y2 - y1) });
+    } else {
+      const d = (t.match(/\bd="([^"]+)"/) || [])[1];
+      if (!d) continue;
+      const nums = [...d.matchAll(/(-?\d+(?:\.\d+)?)[,\s]+(-?\d+(?:\.\d+)?)/g)]
+        .map(p => [Number(p[1]), Number(p[2])]);
+      if (nums.length >= 2) {
+        const [x1, y1] = nums[0];
+        const [x2, y2] = nums[nums.length - 1];
+        spans.push({ dx: Math.abs(x2 - x1), dy: Math.abs(y2 - y1) });
+      }
     }
   }
   return spans;
@@ -100,10 +119,12 @@ function main(argv) {
 
   const [VW, VH] = opts.viewport;
   const font = opts.font || detectFont(svg);
-  const kind = opts.kind === "auto" ? detectKind(svg) : opts.kind;
-  // Reading axis: the LONGER axis for linear diagrams (sequence grows down,
-  // pipelines grow right); irrelevant for gestalt.
-  const readingAxisVertical = H >= W;
+  const seq = isSequence(svg);
+  const kind = opts.kind === "auto" ? (seq ? "linear" : "gestalt") : opts.kind;
+  // Reading axis: a sequence diagram ALWAYS reads vertically (time axis) —
+  // a wide one means participant overflow, never "horizontal reading".
+  // Only a manually declared linear pipeline uses the longer-axis heuristic.
+  const readingAxisVertical = seq ? true : H >= W;
 
   const out = [];
   let failed = 0;
@@ -112,6 +133,9 @@ function main(argv) {
   const Wn = (l) => out.push(`  WARN  ${l}`);
 
   out.push(`  INFO  canvas ${W.toFixed(0)}x${H.toFixed(0)} (aspect ${(W / H).toFixed(2)}:1), viewport ${VW}x${VH}, label font ${font}px, kind=${kind}`);
+  if (opts.kind === "linear" && !seq) {
+    Wn("kind=linear was declared manually and the SVG carries no sequence markers — this claim must be defensible (a genuinely line-by-line process flow); declaring linear to launder a gestalt fit failure violates Rule 6");
+  }
 
   const fitBoth = Math.min(VW / W, VH / H, 1); // never upscale for the check
   const effBoth = font * fitBoth;

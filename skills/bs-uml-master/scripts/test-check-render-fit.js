@@ -63,6 +63,30 @@ run("gestalt-edges-covisible", svg(1400, 800, edge(10, 10, 1300, 700)), [], 0,
 // 8. Usage errors
 run("no-viewbox", `<svg xmlns="http://www.w3.org/2000/svg"><text>x</text></svg>`, [], 2, [/no viewBox/]);
 
+// 9. F1: real mermaid 11 attribute order — d= BEFORE class= — must still be parsed
+const edgeDFirst = (x1, y1, x2, y2) =>
+  `<path d="M ${x1},${y1} L ${x2},${y2}" class="edgePath flowchart-link"/>`;
+run("edge-d-before-class", svg(700, 2400, ACTOR + edgeDFirst(10, 10, 20, 2300) + edgeDFirst(30, 50, 40, 2350)),
+  [], 0, [/WARN.*2 edge\(s\) span more than one screen/]);
+
+// 10. F1: sequence messages are <line> elements, not <path>
+const lineEdge = (x1, y1, x2, y2) =>
+  `<line class="messageLine0" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+run("sequence-line-edges", svg(700, 2400, ACTOR + lineEdge(10, 10, 20, 2300) + lineEdge(30, 50, 40, 2350)),
+  [], 0, [/WARN.*2 edge\(s\) span more than one screen/]);
+
+// 11. F2: a WIDE sequence (participant overflow) must FAIL the cross axis —
+//     the reading axis of a sequence is always vertical
+run("wide-sequence-overflow", svg(2850, 309, ACTOR), [], 1, [/cross axis does not fit/]);
+
+// 12. F3: classDef-actor text must NOT flip a gestalt tower to linear
+run("classdef-actor-spoof", svg(833, 2094, `<style>.classDef-actor{fill:red}</style>` +
+  `<text>classDef actor fill:#f9f</text>`), [], 1, [/kind=gestalt/, /does not fit one screen legibly/]);
+
+// 13. F3: manual --kind linear without sequence markers leaves an audit WARN
+run("manual-linear-laundering-warn", svg(833, 2094), ["--kind", "linear"], 0,
+  [/WARN.*declared manually.*no sequence markers/]);
+
 console.log(`\n${failures === 0 ? "ALL PASS" : failures + " FIXTURE FAILURES"}`);
 fs.rmSync(tmp, { recursive: true, force: true });
 process.exit(failures === 0 ? 0 : 1);
