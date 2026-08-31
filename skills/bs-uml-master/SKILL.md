@@ -39,6 +39,7 @@ The element ledger is the canonical model; every notation — Mermaid, PlantUML,
 | "The semantics are right; the tangled layout is the tool's fault, ship it." | Position is a semantic channel — a garbled layout misinforms. Run the repair loop; escalate the backend at the ceiling (Rule 9). |
 | "It renders fine on my side; where it ends up is the user's concern." | The medium's width, zoomability, and renderer are Phase 0 inputs. A 3700px-wide render in an A4 memo is a failed delivery (Rules 8–9). |
 | "I filled in the contract's fields, so the work behind them is implied." | Contract format without contract work is compliance theater — an unearned `RENDER_VERIFIED` lends false authority. `scripts/check-delivery.js` rejects receipt-less claims; the work itself is yours (Rules 2, 6). |
+| "It fits — the reader just has to scroll and zoom a bit." | A gestalt diagram that needs two-axis scrolling or zooming has failed its reader. Fit one screen at ≥11px, or work the trade-off ladder (Rule 9, Layout Craft). |
 | "It's basically a class diagram, drawn as a flowchart with fancy boxes." | Fake notation. If you call it a class diagram, the source starts with `classDiagram` — pseudo-class boxes in `graph TB` lose every relationship semantic (Rule 3). |
 | "It's just a quick sketch, so gates don't apply." | Sketch significance is a declared setting agreed with the user, not an escape hatch (see Significance below). |
 
@@ -90,7 +91,7 @@ Read [Diagram Selection](./references/diagram-selection.md). Establish, reusing 
 - the question the diagram answers, and the reader;
 - mode: `MODEL-FROM-CODE` / `MODEL-FROM-DESIGN` / `REVISE` / `EXPLAIN/REVIEW`;
 - significance: `sketch` / `deliverable` / `authoritative`;
-- where the diagram will live (decides the backend) **and its medium constraints**: available width/aspect ratio, zoomable or fixed (a memo/PDF page cannot zoom; chat and web renderers can), light/dark theme. Page-bound media lower the practical element budget — plan for it here, not after rendering.
+- where the diagram will live (decides the backend) **and its medium constraints**: available width/aspect ratio, zoomable or fixed (a memo/PDF page cannot zoom; chat and web renderers can), light/dark theme. **Unstated medium defaults to a landscape PC screen** (~1470×850) — never assume the reader will zoom. Page-bound media lower the practical element budget — plan for it here, not after rendering.
 
 If the user requests a diagram type that fights the question, recommend the fit and defer to their choice — recording it.
 
@@ -132,7 +133,7 @@ Write the diagram source from the ledger, applying [UML Semantics](./references/
 
 ### Phase 4 — Validate and render
 
-Follow [Rendering & Validation](./references/rendering-validation.md) with the chosen backend's verification recipe: syntax-check and render with the degradation ladder (local tool → installable tool → syntax check → manual review; receipts required when landing on rung 3/4), then inspect the rendered output against the inspection checklist — elements present, no truncation/overlap, title present, and the **layout rubric** from [Layout Craft](./references/layout-craft.md) (flow monotonicity, crossing budget, proximity honesty, hierarchy direction, label discipline, medium fit, density balance). Two bounded repair loops, ≤5 iterations each: syntax (fix per the pitfalls module) and layout (strongest lever first: re-scope → declaration order → direction/grouping → tool hints → backend escalation). After any fix, re-run every affected check.
+Follow [Rendering & Validation](./references/rendering-validation.md) with the chosen backend's verification recipe: syntax-check and render with the degradation ladder (local tool → installable tool → syntax check → manual review; receipts required when landing on rung 3/4), then inspect the rendered output against the inspection checklist — elements present, no truncation/overlap, title present, and the **layout rubric** from [Layout Craft](./references/layout-craft.md) (flow monotonicity, crossing budget, proximity honesty, hierarchy direction, label discipline, medium fit, density balance). Medium fit is mechanical: run `node <skill-dir>/scripts/check-render-fit.js <diagram.svg>` — gestalt diagrams must fit one screen at ≥11px effective label font; linear diagrams fit the cross axis and may scroll ≤3 screens along the reading axis; a failure enters the trade-off ladder (split+wayfinding → compress → single-axis scroll → progressive disclosure → mural+companion), never ships silently. Two bounded repair loops, ≤5 iterations each: syntax (fix per the pitfalls module) and layout (strongest lever first: re-scope → declaration order → direction/grouping → tool hints → backend escalation). After any fix, re-run every affected check.
 
 **Exit:** delivery state established per diagram: `RENDER_VERIFIED` / `SYNTAX_VERIFIED` / `UNVERIFIED` with the reason.
 
@@ -166,12 +167,14 @@ Do not deliver a diagram whose delivery state is unstated, or stated stronger th
 
 **Reading notes:** [1-3 lines: the non-obvious claims in the picture]
 **Excluded:** [deliberate exclusions] · **Assumptions:** [labeled assumptions, or "none"]
-**Evidence:** [MODEL-FROM-CODE: ledger summary or path — key elements → file:line. MODEL-FROM-DESIGN: requirement references + the assumption list. REVISE: diff summary against the prior diagram]
+**Evidence:** [MODEL-FROM-CODE: ledger summary or path — key elements → file:line, **and every relationship edge's kind claim cited individually** (node-level evidence does not cover edges; observed failures concentrate on edges). MODEL-FROM-DESIGN: requirement references + the assumption list. REVISE: diff summary against the prior diagram]
 ````
 
 For multi-diagram deliveries, repeat per diagram and add one overview line on how the set fits together. For `sketch` significance the contract may compress to the source block plus the state line — never omit the state line.
 
-Every bracketed placeholder must be replaced; an unfilled or missing field is a format-invalid delivery, not a stylistic choice. Verify mechanically before handing over: `node <skill-dir>/scripts/check-delivery.js <draft.md>` — it rejects receipt-less State lines, missing Evidence/Excluded (warns instead at sketch significance, whose compressed form is legal), declared-type-vs-source mismatches, and ceiling breaches (>15 without USER-OVERRIDE; 10–15 without justification draws a warning you must still resolve). Its element counting is heuristic — a miscount is a reason to fix the counter, never a license to trust it over your own count. When the delivery medium pins its own renderer (a CDN `<script>`, GitHub's embedded Mermaid), verify on **that** version or state the skew explicitly.
+Every bracketed placeholder must be replaced; an unfilled or missing field is a format-invalid delivery, not a stylistic choice. Verify mechanically before handing over: `node <skill-dir>/scripts/check-delivery.js <draft.md>` — it rejects receipt-less State lines, missing Evidence/Excluded (warns instead at sketch significance, whose compressed form is legal), declared-type-vs-source mismatches, and ceiling breaches (>15 without USER-OVERRIDE; 10–15 without justification draws a warning you must still resolve). Its element counting is heuristic — a miscount is a reason to fix the counter, never a license to trust it over your own count.
+
+**HTML/artifact deliveries are not a bypass.** When the deliverable is an HTML page (an artifact, a report) rather than a markdown block, the discipline still applies in full: draft a markdown contract mirror and pass it through `check-delivery.js`, run `check-render-fit.js` on each rendered diagram, and verify against the renderer version the page actually pins (a CDN `<script>` decides what the reader sees, not your local tool). When the delivery medium pins its own renderer (a CDN `<script>`, GitHub's embedded Mermaid), verify on **that** version or state the skew explicitly.
 
 ## Bundled Resources
 
@@ -187,7 +190,9 @@ Every bracketed placeholder must be replaced; an unfilled or missing field is a 
 | [Rendering & Validation](./references/rendering-validation.md) | Per-backend verification recipes, evidence vocabulary, degradation ladder, inspection checklist |
 | `scripts/check-mermaid.js` | Browser-free Mermaid syntax checker (rung 3 of the degradation ladder; `SYNTAX_VERIFIED` at most) |
 | `scripts/check-delivery.js` | Deterministic output-contract checker: receipt-bearing State line, Evidence/Excluded presence, type-vs-source consistency (Mermaid and PlantUML), element budget, sketch-aware — run on the draft before delivering |
-| `scripts/test-check-delivery.js` | The checker's regression self-test: 14 fixtures encoding every failure vector found by review probes and acceptance runs — run after any checker change |
+| `scripts/test-check-delivery.js` | The delivery checker's regression self-test (18 fixtures encoding every failure vector found by review probes and acceptance runs) — run after any checker change |
+| `scripts/check-render-fit.js` | Screen-fit legibility gate: per-axis fit rules (gestalt vs linear), ≥11px effective font floor, reading-axis screen cap, long-range-edge detection — run on every rendered SVG |
+| `scripts/test-check-render-fit.js` | The fit checker's regression self-test on synthetic SVG fixtures |
 
 ## Patterns
 

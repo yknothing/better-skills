@@ -19,4 +19,8 @@ Schema: [`../_improvement-points-schema.md`](../_improvement-points-schema.md). 
 
 | IP-13 | 2026-08-31 | 2026-08-31-adversary-review.md F8-F11 (final round) | fable-5 adversary, exploit fixtures | stale-claim | MED/LOW | Checker v3 residuals: multiplicity-styled edges-only class diagrams count ~0 (stripNoise blanks `"1"`/`"0..*"` across relations); `version` token re-admits prose receipts; decoy-fence selection; fenceless deliveries skip C5/C6 silently | fixed:R3.3 (checker v4: quoted multiplicities removed before relation parse, `version` token dropped, ALL diagram-shaped fences type-checked with max-count budget, fenceless requires an external-file reference; fixtures 11–14) |
 
-**Count toward upgrade trigger 1: 13** (12 fixed, 1 open: IP-9 → Phase 2.A).
+| IP-14 | 2026-08-31 | 2026-08-31-haiku-usage-review-2.md #1-2 | haiku-4.5 + R3 skill | gap | HIGH | Layout verdicts were judgment calls; screen-fit is now a mechanical gate (check-render-fit.js: per-axis rules, 11px floor, ≤3-screen reading axis, torn-edge detection, PC-screen default medium) + the probed layered-architecture recipe (subgraph direction ignored w/ external edges; ELK one-line fix) | fixed:R4 |
+| IP-15 | 2026-08-31 | 2026-08-31-haiku-usage-review-2.md #3 | haiku-4.5 + R3 skill | compliance-theater | HIGH | HTML/artifact deliveries bypassed the markdown-bound contract checker entirely; contract now requires a markdown mirror + fit checks against the page's pinned renderer | fixed:R4 |
+| IP-16 | 2026-08-31 | 2026-08-31-haiku-usage-review-2.md #4 | haiku-4.5 + R3 skill | fabrication | MED | Fabrications concentrate on edges while node facts verify; Evidence field now requires every relationship edge's kind claim cited individually | fixed:R4 |
+
+**Count toward upgrade trigger 1: 16** (15 fixed, 1 open: IP-9 → Phase 2.A).
