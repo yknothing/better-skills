@@ -298,16 +298,30 @@ function checkBlock(block, idx, out) {
     const textBackend = /^\s*(?:plain\s*[- ]?text|text|ascii(?:\s*art)?)\s*$/i.test(backend || "") &&
       !visualFence;
     if (!textBackend) {
-      const wins = fitReceiptWindows(block);
+      // Diagram-shaped fences are masked before any receipt analysis so a
+      // legitimate failure-path node (`FAIL["Gate failed"]`) can't trip the
+      // verdict scan (R6.2 adversary F10); receipt text never lives inside
+      // a diagram fence, so windows lose nothing.
+      const masked = block.replace(/```([\w-]*)\r?\n([\s\S]*?)```/g, (m, lang, body) => {
+        const b = stripFrontmatter(body);
+        return (/^(mermaid|plantuml|puml)$/i.test(lang) || DIAGRAM_HEADER.test(headerOf(b)))
+          ? "```" + lang + "\n```" : m;
+      });
+      const wins = fitReceiptWindows(masked);
       const clean = wins.filter(w =>
         !(/\b(?:did\s*n[o']t|not\s+run|wasn't\s+run|would|should|could|expect\w*|estimat\w*|plan(?:ned|ning)?|roughly|approximately)\b|大约|预计|未运行|没有运行/i.test(w)));
-      // FAIL verdicts are scanned block-wide, not per-window: a smuggled
-      // second receipt (dual-profile FAIL after a PASS window) or a FAIL
-      // line padded out of its window must still demand the trade-off
-      // (R6.1 adversary F8). Tool verdict lines start with FAIL; summary
-      // lines carry "N FAIL".
-      const failing = /^\s*FAIL\b/m.test(block) ||
-        /\b[1-9]\d*\s+FAIL\b/.test(block.replace(/\b0\s+FAIL\b/g, ""));
+      // FAIL detection is a union of three scans (R6.1 F8 + R6.2 F10 +
+      // the advocate's inline-condensation regression probe):
+      //  1. any FAIL token inside a matched receipt window (inline one-line
+      //     receipts included) other than literal "0 FAIL";
+      //  2. block-wide line-start verdict lines carrying fit-tool
+      //     vocabulary — catches receipts padded/smuggled outside windows
+      //     while prose like "FAIL states are dashed" stays clean;
+      //  3. block-wide "N FAIL" summary counts.
+      const failing =
+        wins.some(w => /\bFAIL\b/.test(w.replace(/\b0\s+FAIL\b/g, ""))) ||
+        /^\s*FAIL\b[^\n]*(?:px|screen|aspect|viewport|co-visible)/im.test(masked) ||
+        /\b[1-9]\d*\s+FAIL\b/.test(masked.replace(/\b0\s+FAIL\b/g, ""));
       if (wins.length === 0) {
         SOFT("RENDER_VERIFIED without a check-render-fit receipt (tool name + canvas WxH + effective px + verdict, together within a few lines) — fit claims made in prose are self-certification, not verification (IP-20/IP-25)");
       } else if (clean.length === 0) {

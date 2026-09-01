@@ -293,6 +293,40 @@ run("fit-receipt-neighbor-hedge-ok", HDR() + FLOW4 + `
 **Fit:** check-render-fit.js — canvas 1200x760, 16px at fit, PASS (pc 1470x850)
 `, 0, [/check-render-fit receipt present/]);
 
+// 19. R6.3 (advocate regression probe): an inline one-line FAIL receipt
+//     with NO summary count is still a failing receipt (window scan)
+run("fit-receipt-inline-fail-no-summary", HDR() + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+**Fit:** check-render-fit.js — canvas 698x1648, FAIL 8.3px below the 11px floor
+`, 1, [/fit receipt contains a FAIL verdict with no recorded trade-off/]);
+
+// R6.3 (adversary F10): a legitimate failure-path node named FAIL inside a
+// diagram fence must NOT trip the verdict scan when the receipt is clean
+run("fail-node-in-fence-clean-receipt", HDR() +
+  "```mermaid\nflowchart TB\n    a[\"A\"]\n    FAIL[\"Gate failed\"]\n    a --> FAIL\n```\n" + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+**Fit:** check-render-fit.js — canvas 1200x760, 16px at fit, PASS (pc 1470x850); 0 FAIL
+`, 0, [/check-render-fit receipt present/]);
+// …and a prose reading-note line starting with FAIL, away from the receipt,
+// stays clean too
+run("fail-prose-line-clean-receipt", HDR() + FLOW4 + `
+**Reading notes:** states are color-coded.
+FAIL states are drawn dashed in this notation; see the legend note.
+
+(filler so the prose line sits outside the receipt window)
+(filler line two)
+(filler line three)
+(filler line four)
+(filler line five)
+(filler line six)
+(filler line seven)
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+**Fit:** check-render-fit.js — canvas 1200x760, 16px at fit, PASS (pc 1470x850)
+`, 0, [/check-render-fit receipt present/]);
+
 // 16. IP-24: escape entities inside quoted PlantUML display names must not
 //     trip the inline-color WARN; real inline colors still must
 run("plantuml-quoted-entity-not-color", HDR({ Type: "state machine", Backend: "PlantUML", State: "RENDER_VERIFIED — plantuml 1.2025.4, SVG inspected" }) +
