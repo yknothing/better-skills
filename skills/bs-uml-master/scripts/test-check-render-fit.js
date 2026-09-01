@@ -22,7 +22,7 @@ const ACTOR = `<rect class="actor" x="0" y="0" width="10" height="10"/>`;
 const edge = (x1, y1, x2, y2) =>
   `<path class="edgePath flowchart-link" d="M ${x1},${y1} L ${x2},${y2}"/>`;
 
-function run(name, content, args, expectExit, mustMatch = []) {
+function run(name, content, args, expectExit, mustMatch = [], mustNotMatch = []) {
   const file = path.join(tmp, name.replace(/\W+/g, "_") + ".svg");
   fs.writeFileSync(file, content);
   let out = "", code = 0;
@@ -31,6 +31,7 @@ function run(name, content, args, expectExit, mustMatch = []) {
   const problems = [];
   if (code !== expectExit) problems.push(`exit ${code}, expected ${expectExit}`);
   for (const re of mustMatch) if (!re.test(out)) problems.push(`missing ${re}`);
+  for (const re of mustNotMatch) if (re.test(out)) problems.push(`unexpected ${re}`);
   if (problems.length) { failures++; console.log(`FAIL ${name}: ${problems.join("; ")}\n--- output ---\n${out}`); }
   else console.log(`PASS ${name}`);
 }
@@ -95,6 +96,27 @@ run("roledescription-sequence", `<svg xmlns="http://www.w3.org/2000/svg" viewBox
 // 13. F3: manual --kind linear without sequence markers leaves an audit WARN
 run("manual-linear-laundering-warn", svg(833, 2094), ["--kind", "linear"], 0,
   [/WARN.*declared manually.*no sequence markers/]);
+
+// 14. R5 media profiles — the medium inversion, mechanically:
+//     a portrait shape on phone is in the aspect band (fails only on volume);
+//     the same landscape layout that wins on pc draws the aspect WARN on phone
+run("phone-small-portrait-fits", svg(400, 900), ["--medium", "phone"], 0,
+  [/medium=phone/, /fits one screen/], [/WARN.*aspect/]);
+run("phone-big-tower-volume-not-direction", svg(833, 2094), ["--medium", "phone"], 1,
+  [/does not fit one screen legibly/], [/WARN.*aspect/]);
+run("phone-landscape-shape-warned", svg(1494, 940), ["--medium", "phone"], 1,
+  [/WARN.*aspect 1\.59:1 is far from this medium's band/]);
+run("pc-landscape-shape-in-band", svg(1400, 800), [], 0, [/fits one screen/], [/WARN.*aspect/]);
+run("bad-medium-usage", svg(400, 900), ["--medium", "watch"], 2, [/Usage/]);
+
+// 15. R5.1 non-scrollable media: linear diagrams get NO scrolling allowance
+//     on a4/slide — 2 screens that pass on pc must FAIL there
+run("slide-linear-no-scroll", svg(700, 1500, ACTOR), ["--medium", "slide"], 1,
+  [/non-scrollable/, /cannot scroll/]);
+run("a4-linear-no-scroll", svg(700, 2200, ACTOR), ["--medium", "a4"], 1, [/cannot scroll/]);
+run("pc-same-linear-scrolls", svg(700, 1500, ACTOR), [], 0, [/legal for linear reading on a scrollable medium/]);
+run("readme-profile-works", svg(850, 800), ["--medium", "readme"], 0, [/medium=readme/, /fits one screen/]);
+run("phone-landscape-profile", svg(700, 350), ["--medium", "phone-landscape"], 0, [/fits one screen/]);
 
 console.log(`\n${failures === 0 ? "ALL PASS" : failures + " FIXTURE FAILURES"}`);
 fs.rmSync(tmp, { recursive: true, force: true });

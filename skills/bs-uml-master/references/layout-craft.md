@@ -57,7 +57,18 @@ Record the escalation and its reason in the delivery.
 
 Capture with the medium: **available width/aspect** (chat pane, README column ~900px, A4 portrait, slide 16:9), **zoomable or fixed** (web renderers zoom; print and memo PDFs do not), **theme** (dark/light/both). Non-zoomable + width-limited media lower the practical element budget below the global one — say so when it bites.
 
-**Default medium when unstated: a landscape PC screen** (viewport ≈1470×850 content area). Diagrams are overwhelmingly read on landscape screens by eyes with a hard legibility floor, while Mermaid's default growth direction is vertical — that mismatch is the physical root of the "tower diagram" disease. Never assume the reader will zoom.
+**Named media profiles** (`check-render-fit.js --medium <name>`; `--viewport WxH` for anything else):
+
+| Profile | Viewport | Notes |
+|---|---|---|
+| `pc` (default when unstated) | 1470×850 | Landscape laptop content area. Mermaid's vertical default growth fights this — the physical root of tower disease |
+| `phone` | 390×740 | Portrait. Gestalt capacity collapses to ~4–5 boxes; vertical linear flows are native (scroll = reading gesture); wide row layouts die here |
+| `phone-landscape` | 740×390 | Rotated phone; short bursts only |
+| `a4` | 794×1123 | Print/PDF page, non-zoomable |
+| `readme` | 900×850 | GitHub README column |
+| `slide` | 1280×720 | 16:9 presentation |
+
+**The rules are viewport-parametric — that is the essence.** Fit the cross axis, scroll only along the reading axis, keep every edge co-visible, stay near the medium's own aspect band: none of these mention a specific screen. The numbers flow from the profile, and conclusions legitimately invert between media — the 0.40:1 tower that fails a PC screen has the *right shape* for a phone (its remaining failure there is content volume, not direction), while the 1.59:1 ELK row layout that wins on PC draws the opposite-direction aspect warning on a phone (probed, both). Composition direction follows the medium's short axis: landscape media want row-stacked layouts, portrait media want single-column ones. A diagram that must serve two media either carries fit receipts for both profiles or ships as two projections of the same ledger — never assume one render serves all screens.
 
 ## Fit-to-screen discipline (the human-vision gate)
 

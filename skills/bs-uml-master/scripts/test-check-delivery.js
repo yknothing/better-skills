@@ -122,6 +122,27 @@ run("decoy-fence", HDR({ Type: "Class Diagram" }) +
   "```mermaid\ngraph TB\n    X[\"X<br/>---<br/>f: string\"]\n```\n" + TAIL,
   1, [/fake or mismatched notation/]);
 
+// 13b. C7: color styling without a legend/declared dimension draws a WARN;
+//      with a declared dimension it stays clean
+const COLORED = "```mermaid\nflowchart TB\n    a[\"A\"]\n    b[\"B\"]\n    a --> b\n    classDef app fill:#56B4E9\n    class a app\n```\n";
+run("color-without-legend", HDR() + COLORED + TAIL, 0, [/WARN.*no legend\/declared color dimension/]);
+run("color-with-dimension", HDR() + COLORED + "\n**Excluded:** x · color = architectural layer (legend below)\n**Evidence:** lib/cli.js:4\n",
+  0, [/0 FAIL/], [/WARN.*color/]);
+// C7 bypass probes (R5 adversary F2): themeVariables, PlantUML inline #hex,
+// and the "no legend needed" silencing must all still draw the WARN
+run("color-themevariables-bypass", HDR() +
+  "```mermaid\n%%{init: {\"themeVariables\": {\"primaryColor\": \"#ff0000\"}}}%%\nflowchart TB\n    a[\"A\"]\n```\n" + TAIL,
+  0, [/WARN.*no legend\/declared color dimension/]);
+run("color-plantuml-inline-bypass", HDR({ Type: "component diagram", Backend: "PlantUML", State: "RENDER_VERIFIED — plantuml 1.2025.4, SVG inspected" }) +
+  "```plantuml\n@startuml\ncomponent Api #lightblue\ncomponent Db #FFAA00\nApi --> Db\n@enduml\n```\n" + TAIL,
+  0, [/WARN.*no legend\/declared color dimension/]);
+run("color-no-legend-silencing", HDR() + COLORED + "\n**Excluded:** x (no legend needed here)\n**Evidence:** lib/cli.js:4\n",
+  0, [/WARN.*no legend\/declared color dimension/]);
+// Mermaid escape entities must NOT false-positive as color
+run("entities-not-color", HDR() +
+  "```mermaid\nflowchart TB\n    a[\"uses #quot;x#quot;\"]\n    b[\"B\"]\n    a --> b\n```\n" + TAIL,
+  0, [/0 FAIL/], [/WARN.*color/]);
+
 // 14. F11: fenceless deliveries — WARN with an external file ref, FAIL without
 run("fenceless-with-file", HDR() + "\nSource delivered at scratch/arch.mmd, rendered to arch.svg.\n" + TAIL,
   0, [/external-file delivery/]);
