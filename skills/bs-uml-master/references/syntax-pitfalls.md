@@ -12,6 +12,7 @@ Syntax error rates in generated diagrams do not fall with model capability; vali
 - **Comments are `%%`.** A bare `%` inside label text historically broke older parsers; current Mermaid (11.17+) accepts it — version-dependent, probe when targeting older embedded renderers.
 - **HTML entities for special characters** in text: `#59;` for `;`, `#quot;`, `#35;` for `#`.
 - **Do not invent syntax.** No PlantUML constructs (`note over` outside sequence diagrams, `skinparam`, `@startuml`), no guessed arrowheads. If unsure a construct exists, check by rendering a 3-line probe first.
+- **Do not invent engine guarantees either.** `graph TB`/dagre does not "automatically avoid crossings" — layout engines *heuristically minimize* crossings and routinely fail on dense or long-range edges (probed: dashed constraint edges routed through box gaps, reading as a phantom chain). Crossing and overlap claims come from inspecting the render, never from the engine's reputation.
 - Styling: `%%{init: {...}}%%` directive on line 1; `classDef`/`class` for flowcharts; themes `default`/`neutral`/`dark`/`forest`/`base`.
 
 ### classDiagram
