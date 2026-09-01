@@ -5,67 +5,103 @@
 **Skill**: bs-uml-master
 **HUMAN_VERIFIED**: false
 **Scope Contract Version**: 1
-**Reviewed Revision**: ae6eb2414f8bb92fdca00b635d14d60e7c56ab2b
-**Reviewed Skill SHA-256**: 2dbe3df32e0968aff89a296f586a2e867e21a7f447d76b1a75d7384a5cb9f45d
-**Reviewed Manifest SHA-256**: a4b8d8be703c8572619f5e0a296a2e78e89516fd09ac102b84d5b331f6268279
+**Reviewed Revision**: 7f9fdae59ddd9ce37bb60d446952cc2176613b13
+**Reviewed Skill SHA-256**: da8087e49d55d0f4c732f4adfe04021d2965153577fd9d780f6ae836f22e1abb
+**Reviewed Manifest SHA-256**: caa8e19fb16a7b7427706cee14b0e181c0682601b3723d9e73857d06345d77de
 
 ## Summary
 
-Second-round review of R5 closing at ae6eb24. My three blocking-track findings are verified fixed by re-running the original exploit artifacts: non-scrollable media (a4/slide) now collapse the linear allowance to one screen with an explicit "cannot scroll" FAIL, all three C7 bypass families (themeVariables, stroke/color-only, PlantUML inline hex/name) now draw the WARN, the "no legend needed" silencer is stripped before the legend test, and the `--medium` flag plus its last-wins rule are documented in both canonical procedure texts with per-profile fixtures. Two LOW findings remain OPEN: the pre-existing, ledgered IP-20 receipt-coupling gap, and one new WARN-tier false positive the C7 fix introduced (mermaid `#quot;` entities on keyword-led lines such as `state "..."` trip the PlantUML inline-color detector). Neither blocks release; worst case is a spurious advisory WARN on an uncolored diagram.
+Fourth pass, after R6.3 (commit 7f9fdae) closed the third-pass finding F10 and the advocate-caught inline-FAIL regression. The final micro-replay confirms all ten findings from this round fixed by direct probe: the F10 false positives now exit 0 (FAIL-named diagram node, FAIL-leading prose line), the inline one-line FAIL receipt without a summary is caught by the new union scan, the F7/F8/F9 vectors stay closed (n1b/n2/n4 exit 1, n3 exits 0), and a last probe of the union logic (a FAIL verdict pushed beyond the window with no verdict token inside it) fails safe as a missing receipt. Every exploit vector from all four passes is pinned in the 47-fixture self-test, all passing. No finding remains open; the fit gate survives every bypass this round could construct, and the two-direction fixtures guard the precision/recall balance.
 
 ## Evidence Reviewed
 
-Full manifest receipt `a4b8d8be703c8572619f5e0a296a2e78e89516fd09ac102b84d5b331f6268279` was received and independently verified.
+Full manifest receipt `caa8e19fb16a7b7427706cee14b0e181c0682601b3723d9e73857d06345d77de` was received and independently verified.
 
-Files examined: `scripts/check-render-fit.js` (full diff `a1f466c..ae6eb24`: MEDIA entries gain `scrollable`, `maxScreens = scrollable ? 3 : 1`, non-scrollable INFO tag and FAIL message), `scripts/check-delivery.js` (C7 detection broadened + anti-silencing strip), both self-test diffs (fit fixtures 15-block: slide/a4/pc-contrast/readme/phone-landscape; delivery: themeVariables/PlantUML-inline/silencing/entity fixtures), `SKILL.md` Phase 4 (now `--medium <profile>` with the non-scrollable note), `references/rendering-validation.md` (profiles, non-scrollable rule, last-wins rule, all flags). All manifest SHAs re-hashed and matched (layout-craft and color-semantics unchanged from a1f466c, as the manifest states); `git rev-parse HEAD` = the reviewed revision.
+All 21 manifest entries re-hashed with `sha256sum` against the regenerated prompt at revision 7f9fdae59ddd9ce37bb60d446952cc2176613b13 — all match.
 
-Probes rerun against ae6eb24:
+Files read in full across the four passes: `skills/bs-uml-master/SKILL.md`, `skills/bs-uml-master/scripts/check-delivery.js` (all four revisions, plus `git show` on 617e76c, 1f4219a, and 7f9fdae for the R6.1/R6.2/R6.3 diffs), `skills/bs-uml-master/scripts/check-render-fit.js`, `skills/bs-uml-master/scripts/test-check-delivery.js`, `skills/bs-uml-master/references/layout-craft.md`, `skills/bs-uml-master/references/syntax-pitfalls.md`, `skills/bs-uml-master/references/rendering-validation.md`, `docs/reviews/bs-uml-master/2026-09-01-haiku-usage-review-3.md`, `docs/reviews/bs-uml-master/improvement-points.md`, `tools/peer-review.js`.
 
-- Self-tests: fit 24/24 ALL PASS, delivery 24/24 ALL PASS (the fix notes said 25; actual count is 24 — cosmetic).
-- F1 artifacts: 700x1500 sequence on `--medium slide` → `FAIL reading axis spans 2.1 screens but medium "slide" cannot scroll — everything must fit one page/slide`, exit 1 (was exit 0); 700x2200 on `--medium a4` → exit 1 (was exit 0); the same 700x1500 on default pc → exit 0 with the reworded "legal for linear reading on a scrollable medium" WARN. INFO now prints `medium=slide (non-scrollable)`.
-- F2 artifacts: all five round-1 delivery drafts rerun — themeVariables-only, stroke/color-only, PlantUML `component X #E69F00`, classDef-fill positive control, and the "no legend needed" silencer now ALL draw the C7 WARN (silencer included); the declared-dimension fixture stays clean.
-- F2 regression probe (new): an uncolored mermaid `stateDiagram-v2` with `state "uses #quot;fast#quot; mode" as s1` draws a spurious C7 color WARN — the entity guard fixture covers flowchart node lines (`a["#quot;..."]`, verified clean) but keyword-led lines (`state`, `participant`, `class`) enter the PlantUML inline-color branch, where `quot` matches the `#[A-Za-z]{3,20}` name form.
-- F3: `--medium` verified in SKILL.md Phase 4 and rendering-validation checklist point 4 (profile list, a4/slide non-scrollable note, last-wins rule); per-profile fixtures present for slide, a4, readme, phone-landscape. The script's lines 2–4 header comment still reads "landscape PC screens" (stale, cosmetic) and `--medium` + `--viewport` together still resolve silently by documented last-wins (INFO discloses the effective medium).
+Commands run (cwd `/home/user/better-skills`):
+
+- `git rev-parse HEAD` → 7f9fdae59ddd9ce37bb60d446952cc2176613b13.
+- `node skills/bs-uml-master/scripts/test-check-delivery.js` → ALL PASS (47 fixtures; my p1/p1b/p2/p3/p3b/p4, n1b/n2/n3/n4, n5/n5b vectors confirmed pinned, plus the inline-FAIL regression fixture).
+- `node skills/bs-uml-master/scripts/test-check-render-fit.js` → ALL PASS.
+- 21 probe deliveries built and run through `node skills/bs-uml-master/scripts/check-delivery.js <file>` across the four passes under the session scratchpad `adv-r6/` directory: p-series (p1, p1b, p2, p3, p3b, p4, p5, p5b, p6, p6b, p6c, p7), n-series (n1, n1b, n2, n3, n4, n5, n5b), and this pass's fresh n6 (inline one-line FAIL receipt, no summary — exit 1 as required) and n7 (FAIL verdict 9 lines below the tool token with no verdict token in the window — exit 1 as a missing receipt, fails safe); per-probe exit codes and check lines cited in the findings.
 
 ## Findings
 
-### F1: Scroll allowance applied to non-scrollable media [MEDIUM] [RESOLVED]
+### F1: C8 exemption keyed on a substring match of the Backend field [MEDIUM] [RESOLVED]
 
-**Location**: `scripts/check-render-fit.js` MEDIA table (`scrollable` per profile) and the linear reading-axis rule (`maxScreens = opts.scrollable ? 3 : 1`); layout-craft/SKILL.md Phase 4 wording.
-**Exploit scenario**: (Round 1) A 700x1500 sequence render on `--medium slide` exited 0 with "2.1 screens — legal for linear reading" — a mechanically certified receipt for a diagram that cannot be delivered on a projected slide; same class of wrong conclusion at `--medium a4` (print cuts at page boundaries).
-**Root cause**: Profiles were reduced to viewport geometry; the 3-screen allowance encoded a scrollable-screen assumption that predated the fixed-media profiles.
-**Suggested fix**: Per-profile `scrollable` flag collapsing the linear allowance to 1 screen on a4/slide, with a "cannot scroll" FAIL and doc mirror. **Verified fixed exactly as specified**: both round-1 probes now exit 1 with the explicit split-across-pages/slides message, the pc contrast case still scrolls legally, INFO labels non-scrollable media, and fixtures pin slide, a4, and the pc contrast.
+**Location**: `skills/bs-uml-master/scripts/check-delivery.js` line 298 (was line 281 at 757ff4e).
+**Exploit scenario**: First pass: `**Backend:** Mermaid (text annotations)` (probe p1) and the unreplaced template placeholder `**Backend:** [Mermaid|PlantUML|text|SVG]` (probe p1b) silently skipped the fit gate — exit 0, no C8 line emitted.
+**Root cause**: `\btext\b`/`\bascii\b` word-boundary substring test on the Backend field instead of a whole-field match.
+**Suggested fix**: Implemented in R6.1 (whole-field anchor) and hardened in R6.2 (see F7). Replay at 1f4219a: p1 and p1b exit 1 on C8; fixtures `fit-bypass-backend-substring` / `fit-bypass-backend-placeholder` pin both vectors.
 
-### F2: C7 color gate bypassed by three styling families and silenced by disclaiming the legend [MEDIUM] [RESOLVED]
+### F2: FAIL-receipt smuggling via truncated or reordered verbatim tool output [MEDIUM] [RESOLVED]
 
-**Location**: `scripts/check-delivery.js` C7 (broadened detection regex + PlantUML inline-color line matcher + anti-silencing strip); `test-check-delivery.js` bypass fixtures.
-**Exploit scenario**: (Round 1) themeVariables color overrides, stroke/color-only classDef/linkStyle styling, and PlantUML inline `#hex`/`#name` element colors all escaped detection, and appending "no legend needed" silenced the WARN via the bare `/legend/i` match.
-**Root cause**: Detection enumerated one syntax form per idea instead of the color channels; the exemption matched the word "legend" anywhere.
-**Suggested fix**: Broaden detection to fill/stroke/color/themeVariables/inline-#, narrow the exemption to declaration-shaped evidence. **Verified fixed**: all five round-1 probe drafts rerun — every bypass now WARNs, the silencer now WARNs (negated-legend phrasing is stripped before the test), the declared-dimension case stays clean, and each family has a regression fixture. One narrow false positive introduced by the inline-color branch is recorded as F5 (LOW) — it does not reopen this finding, whose subject was missed detections.
+**Location**: `skills/bs-uml-master/scripts/check-delivery.js` lines 301-318 (was line 288 at 757ff4e), with `skills/bs-uml-master/references/rendering-validation.md` checklist item 4.
+**Exploit scenario**: First pass: pasting the fit tool's per-line `FAIL ... 8.3px < 11px` verdict without the trailing `1 FAIL` summary (probe p3), or the ordering `verdict FAIL (count: FAIL 1)` (probe p3b), passed C8 as "receipt present" — a measured fit failure shipped with exit 0 and no trade-off.
+**Root cause**: The failing-receipt detector required the digits-then-FAIL summary shape, which per-line verdicts and reorderings never produce.
+**Suggested fix**: Implemented in R6.1 (window FAIL scan) and generalized block-wide in R6.2 (see F8). Replay at 1f4219a: p3 and p3b exit 1 demanding the trade-off; fixture `fit-receipt-perline-fail-smuggle` pins the vector; rendering-validation.md now instructs pasting the output intact including the summary line.
 
-### F3: R5 flag and doc drift — `--medium` undocumented, silent flag override, stale comments, profile fixture gaps [LOW] [RESOLVED]
+### F3: Receipt shape satisfiable by scattered, negated prose [MEDIUM] [RESOLVED]
 
-**Location**: `SKILL.md` Phase 4; `references/rendering-validation.md` checklist point 4; `test-check-render-fit.js` profile fixtures.
-**Exploit scenario**: (Round 1) Agents working from the two canonical procedure texts never learned `--medium` existed; `--medium a4 --viewport 1470x850` silently checked the PC viewport; four of six profiles had no self-test coverage.
-**Root cause**: The R5 feature landed in the script and layout-craft without revisiting the R4.1 invocation text.
-**Suggested fix**: Document `--medium` as the primary form with the interaction rule; add profile fixtures. **Verified fixed for everything substantive**: Phase 4 now instructs `--medium <profile>` with the non-scrollable caveat, rendering-validation lists all profiles, flags, and the explicit "later flag wins" rule, and readme/phone-landscape/slide/a4 fixtures exist. Two cosmetic residuals stay on record without reopening a LOW: the script's header comment still says "landscape PC screens", and the flag interaction remains silent-but-documented (a usage error or precedence WARN would be sturdier); INFO's `medium=custom` disclosure mitigates.
+**Location**: `skills/bs-uml-master/scripts/check-delivery.js` lines 301-315 and `fitReceiptWindows` lines 325-338 (was lines 283-285 at 757ff4e).
+**Exploit scenario**: First pass: "I did not run check-render-fit on this one. The canvas is roughly 1200x760 and labels use 16px, which should PASS comfortably." satisfied all four receipt tokens block-wide (probe p2, exit 0).
+**Root cause**: No contiguity requirement — the four tokens were tested independently against the whole block.
+**Suggested fix**: Implemented in R6.1 (co-occurrence window + hedge/negation guard), window made forward-only in R6.2. Replay at 1f4219a: p2 exits 1 on the hedge guard; fixtures `fit-receipt-scattered-tokens` and `fit-receipt-hedged` pin both halves.
 
-### F4: IP-20 carryover — fit receipt still self-attested by check-delivery [LOW] [OPEN]
+### F4: Stray "sketch level" phrase relaxed gates on a declared deliverable [LOW] [RESOLVED]
 
-**Location**: `scripts/check-delivery.js` C2 (untouched by the R5.1 fix); `docs/reviews/bs-uml-master/improvement-points.md` IP-20.
-**Exploit scenario**: Unchanged: a delivery claiming `RENDER_VERIFIED` with a tool+version receipt but no pasted check-render-fit output passes check-delivery, so per-medium fit conclusions — now including the non-scrollable FAILs — bind only agents that already comply; a wrong-medium or ignored-FAIL receipt is not mechanically caught.
-**Root cause**: Receipt coupling deliberately deferred (fixtures first) per the open IP-20 ledger entry.
-**Suggested fix**: Close IP-20: C2 WARNs (FAIL at deliverable+ for screen/page media) when a `RENDER_VERIFIED` state line for an SVG/Mermaid delivery carries no check-render-fit output line, and require the medium named in that line to match the contract's Medium field.
+**Location**: `skills/bs-uml-master/scripts/check-delivery.js` lines 201-204 (was lines 191-193 at 757ff4e).
+**Exploit scenario**: First pass: `**Significance:** deliverable` plus the prose "This goes well beyond sketch level polish" softened C1/C3/C4/C8 to WARN (probe p4, exit 0 with a receipt-less RENDER_VERIFIED).
+**Root cause**: The block-wide phrase fallback was ORed with, rather than subordinated to, the declared Significance field.
+**Suggested fix**: Implemented in R6.1: the declared field is authoritative; the phrase fallback applies only when the field is absent. Replay at 1f4219a: p4 exits 1 with 3 FAILs; fixture `sketch-phrase-cannot-downgrade` pins it.
 
-### F5: C7 inline-color detector false-positives on mermaid entities in keyword-led lines [LOW] [OPEN]
+### F5: IP-24 quote guard hid real inline color behind a stray legal quote [LOW] [RESOLVED]
 
-**Location**: `scripts/check-delivery.js` C7 PlantUML inline-color branch (`^\s*(?:class|state|participant|...)[^\n#]*#(?:hex|[A-Za-z]{3,20})\b`); `test-check-delivery.js` "entities-not-color" fixture (covers flowchart node lines only).
-**Exploit scenario**: Probed: an uncolored mermaid `stateDiagram-v2` containing `state "uses #quot;fast#quot; mode" as s1` draws the C7 "color styling present" WARN — `state` matches the keyword alternation (shared between PlantUML and mermaid), and `quot` matches the color-name form. Same shape reachable via `participant A as x #quot; y` or classDiagram `class Foo["... #quot; ..."]`. Impact is advisory-only noise (a WARN the author must talk down in an uncolored delivery), but WARN fatigue erodes the gate's credibility.
-**Root cause**: The inline-color branch applies PlantUML line grammar to all fence bodies, and the entity guard fixture only encodes the flowchart form where the line starts with a node id.
-**Suggested fix**: Skip the inline-color branch for fences whose header is a known mermaid type (the fence's `lang`/header is already computed for C5), or exclude the entity vocabulary (`quot|amp|lt|gt|nbsp|semi` and `#\d+;` numeric forms) from the color-name match; add the `state "...#quot;..."` fixture.
+**Location**: `skills/bs-uml-master/scripts/check-delivery.js` lines 95, 118, 275 (the three quote-blanking sites).
+**Exploit scenario**: First pass: a legal PlantUML comment containing one double quote (`' reviewer said "looks good`) paired across newlines with the next label's opening quote, swallowing the `state` keyword of `state "Fast Mode" as s1 #lightblue` — no C7 color WARN (probes p6, p6c).
+**Root cause**: Document-scoped quote pairing matched across newlines.
+**Suggested fix**: Implemented in R6.1: pairing is line-bounded at all three sites. Replay at 1f4219a: p6, p6b, and p6c all draw the C7 color WARN (WARN-tier as designed).
+
+### F6: artifact-399ed2df replays are mechanically caught [LOW] [RESOLVED]
+
+**Location**: `skills/bs-uml-master/scripts/check-delivery.js` C8 (lines 288-321) and C5 (lines 149-191); replayed against `docs/reviews/bs-uml-master/2026-09-01-haiku-usage-review-3.md`.
+**Exploit scenario**: Retest of the previously reported theater, re-run at 1f4219a: probe p5 (the artifact's 说明 — RENDER_VERIFIED, self-graded ✅ rubric table, zero receipts) exits 1 on C8; probe p5b (diagram ④'s pseudo-class `graph TB` declared "Class Diagram") exits 1 on C5 + C8.
+**Root cause**: Not applicable — recorded as retest evidence across all three revisions of this round.
+**Suggested fix**: Keep p5/p5b encoded as fixtures alongside `fit-receipt-missing` so the CJK-flavored replay stays pinned.
+
+### F7: "Backend: text" over a Mermaid fence exempted C8 with no cross-check [MEDIUM] [RESOLVED]
+
+**Location**: `skills/bs-uml-master/scripts/check-delivery.js` lines 296-299 (`visualFence`; was lines 294-295 at 617e76c).
+**Exploit scenario**: Second pass: `**Backend:** text` declared over a mermaid-tagged `flowchart TB` fence with `State: RENDER_VERIFIED — mmdc 11.4.0` exited 0 with C8 silently skipped (probe n2) — one self-declared word bought the exemption against checkable source.
+**Root cause**: The C8 exemption trusted the Backend field in isolation, never comparing it to the fence language/header the checker already extracts for C5.
+**Suggested fix**: Implemented in R6.2: the text exemption is void when any fence is mermaid/plantuml-shaped (`visualFence` via the same `fences()`/`DIAGRAM_HEADER` machinery). Replay at 1f4219a, re-confirmed at 7f9fdae: n2 exits 1 on C8; vector pinned as a fixture. The genuine text-backend fixture (` ```text ` fence) still passes, so the exemption survives for honest text deliveries.
+
+### F8: FAIL verdicts outside the first matching receipt window escaped the trade-off gate [MEDIUM] [RESOLVED]
+
+**Location**: `skills/bs-uml-master/scripts/check-delivery.js` lines 304-318 (`failing`, block-wide) and `fitReceiptWindows` lines 325-338 (was the single-window return at 617e76c), against the dual-profile instruction in `skills/bs-uml-master/references/layout-craft.md`.
+**Exploit scenario**: Second pass: a layout-craft-compliant dual-media delivery — verbatim PASS(pc) receipt, six prose lines, then a verbatim `FAIL ...; 1 FAIL` (a4) receipt — exited 0 (probe n1b, no dishonesty required); padding a per-line FAIL below the window with a genuine PASS line inside also exited 0 (probe n4). A regression of R6's block-wide summary scan.
+**Root cause**: `fitReceiptWindow` returned the first token-satisfying window and the FAIL scan ran only on it.
+**Suggested fix**: Implemented in R6.2: FAIL verdicts are scanned block-wide (`^\s*FAIL\b` verdict lines plus `[1-9]\d*\s+FAIL` summaries after removing literal `0 FAIL`), and all matching windows are collected and hedge-scanned individually. Replay at 1f4219a, with n1b/n4 re-confirmed failing at 7f9fdae: all exit 1 demanding the trade-off; n1b/n4 pinned as fixtures. The block-wide scan trades this bypass for a new fails-safe false positive — split out as F10.
+
+### F9: Hedge guard's lookback failed honest receipts on unrelated contract prose [LOW] [RESOLVED]
+
+**Location**: `skills/bs-uml-master/scripts/check-delivery.js` line 333 (`lines.slice(i, i + 8)`; was the `i - 2` lookback at 617e76c).
+**Exploit scenario**: Second pass: an honest verbatim PASS receipt placed directly under `**Excluded:** helper modules (roughly 20 files off-question)` exited 1 as hedge language — the hedge word sat in a neighboring contract field inside the 2-line lookback (probe n3).
+**Root cause**: The hedge scan ran over the window's lookback lines, which the contract layout fills with prose-bearing fields.
+**Suggested fix**: Implemented in R6.2: windows are forward-only from the tool token. Replay at 1f4219a, re-confirmed at 7f9fdae: n3 exits 0 with the receipt accepted; pinned as fixture `fit-receipt-neighbor-hedge-ok`.
+
+### F10: Block-wide FAIL scan false-positives on FAIL-named diagram nodes and FAIL-leading prose lines [LOW] [RESOLVED]
+
+**Location**: `skills/bs-uml-master/scripts/check-delivery.js` lines 301-324 (was the raw-block `/^\s*FAIL\b/m` scan at 1f4219a).
+**Exploit scenario**: Third pass: an honest delivery with a genuinely passing receipt (`... PASS ...; 0 FAIL`) whose fenced flowchart models a failure path with a node named FAIL (`FAIL["Gate failed"]`, probe n5), or whose prose reading-note line starts with "FAIL states are modeled out of scope" (probe n5b), exited 1 demanding a trade-off for a failure that does not exist — fails-safe over-blocking whose cheapest silencer (writing "ladder" anywhere) trains the theater the gate exists to prevent.
+**Root cause**: The R6.2 fix for F8 widened the FAIL scan from the receipt window to the raw block without masking fenced diagram source or requiring the tool's verdict-line shape.
+**Suggested fix**: Implemented in R6.3: diagram-shaped fences are masked before receipt analysis, and FAIL detection is a three-way union — any FAIL in a matched window, block-wide line-start FAIL lines carrying fit vocabulary (px/screen/aspect/viewport/co-visible), and block-wide `N FAIL` summaries. Replay at 7f9fdae: n5 and n5b exit 0 (fixtures `fail-node-in-fence-clean-receipt`, `fail-prose-line-clean-receipt`); n1b/n4 still exit 1, so the precision fix did not reopen F8; the advocate-caught inline one-line FAIL receipt without a summary now exits 1 via the window scan (probe n6, fixture `fit-receipt-inline-fail-no-summary`); and the last union probe — a FAIL verdict pushed 9 lines below the tool token with no verdict token left in the window (probe n7) — fails safe as a missing receipt.
 
 ## Verdict
 
 **Verdict**: APPROVED
 
-Approved on re-execution evidence: every blocking finding from the first R5 round was re-tested at ae6eb24 with the original exploit artifacts and each fix held — the physically undeliverable slide/a4 receipts now FAIL with an actionable message while the pc contrast case still passes, all three C7 bypass families and the silencer now draw the WARN, and the documentation and fixture gaps are closed with the last-wins rule stated where operators will read it. The two remaining OPEN findings are LOW and within the release rules: IP-20 is a pre-existing, honestly ledgered coupling gap with a concrete closing path, and the new entity false positive is advisory-tier noise with a one-line fix and no false-negative consequence. The R5 feature claims as shipped now survive their adversarial edges: conclusions invert between media on volume, direction, and — after this fix — scrollability.
+Every finding this round produced — ten across three passes, including three MEDIUM C8 bypasses, a MEDIUM backend-laundering hole, and a MEDIUM receipt-window regression — is confirmed closed by direct replay at revision 7f9fdae: all twenty-one probes land where they should, every exploit vector is pinned as a regression fixture (47/47 passing, with both-direction fixtures guarding the F8-vs-F10 precision/recall balance), and the artifact-399ed2df theater that motivated R6 stays mechanically caught through all four revisions. The remaining residuals are the documented design ceiling, not open defects: the checker binds format, and a determined fabricator inventing a clean unhedged receipt wholesale remains out of scope for this layer (IP-9, Phase 2.A). With zero open findings and the attack surface of this round exhausted against the current checker, approval is the evidence-supported disposition.

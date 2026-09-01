@@ -38,6 +38,8 @@ Record the escalation and its reason in the delivery.
 
 ## The layout rubric (checkable, run on the rendered image)
 
+The rubric is filled from evidence, not intentions: point 6 (medium fit) comes from a pasted `check-render-fit.js` receipt, points 2 and 5 (crossings, label collisions) from actually looking at the render. A rubric row asserted without its evidence is not a passed check — it is the compliance theater the delivery checker (C8) exists to catch. The ≤3-screen scroll allowance below never applies to gestalt diagrams, and "the medium is zoomable" waives nothing.
+
 1. **Flow monotonicity** — one dominant reading direction; backward edges only for genuine feedback/callbacks, visually distinct (dashed/labeled).
 2. **Crossing budget** — target 0 crossings at ≤9 elements. Each surviving crossing must be one that declaration reordering demonstrably could not remove (you tried).
 3. **Proximity honesty** — related elements adjacent; unrelated elements separated; ≥3 elements sharing a concern get a named group.
