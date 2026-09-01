@@ -275,8 +275,10 @@ function checkBlock(block, idx, out) {
   // "medium fit ✅" with no checker output is the exploit this closes
   // (usage sample #3: four towers, all self-certified as fitting).
   if (stateLine && /RENDER_VERIFIED/.test(stateLine)) {
-    const textBackend = TEXT_BACKEND_RECEIPT.test(stateLine) ||
-      /\b(?:plain\s*)?(?:text|ascii)\b/i.test(backend || "");
+    // Exemption keys on the declared Backend field only — a State line that
+    // merely *claims* a text-backend receipt on a visual backend would
+    // otherwise dodge C8 while C2 accepts the same phrase as its receipt.
+    const textBackend = /\b(?:plain\s*)?(?:text|ascii)\b/i.test(backend || "");
     if (!textBackend) {
       const hasTool = /check-render-fit/i.test(block);
       const hasShape = /\b\d+x\d+\b/.test(block) &&

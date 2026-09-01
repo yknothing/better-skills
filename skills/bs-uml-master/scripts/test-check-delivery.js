@@ -180,6 +180,13 @@ run("fit-receipt-sketch-warns", `## Diagram Delivery — t (sketch level)
 **Significance:** sketch · **State:** RENDER_VERIFIED — mmdc 11.4.0, SVG inspected
 ` + FLOW4, 0, [/WARN.*check-render-fit receipt/]);
 
+// A State line merely claiming a text-backend receipt on a visual backend
+// must NOT dodge C8 (exemption keys on the Backend field, not the State)
+run("fit-bypass-fake-text-receipt", HDR({ State: "RENDER_VERIFIED — text backend alignment verified via col check" }) + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+`, 1, [/RENDER_VERIFIED without a check-render-fit receipt/]);
+
 // 16. IP-24: escape entities inside quoted PlantUML display names must not
 //     trip the inline-color WARN; real inline colors still must
 run("plantuml-quoted-entity-not-color", HDR({ Type: "state machine", Backend: "PlantUML", State: "RENDER_VERIFIED — plantuml 1.2025.4, SVG inspected" }) +
