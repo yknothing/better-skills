@@ -14,9 +14,9 @@ You are the **advocate reviewer** for the `bs-uml-master` skill. Your job is to 
 Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
 
 **Scope Contract Version**: 1
-**Reviewed Revision to record**: 757ff4e0ac1d16433e5da07d417a28732598e01d
+**Reviewed Revision to record**: 617e76c680bcc737f61125ac7037e4a713189026
 **Reviewed Skill SHA-256 to record**: da8087e49d55d0f4c732f4adfe04021d2965153577fd9d780f6ae836f22e1abb
-**Reviewed Manifest SHA-256 to record**: 66fc802e686037e7c9fb02003f262f3979283ac60c55fb6738137dc9e33df09d
+**Reviewed Manifest SHA-256 to record**: 722bc165f72decd301e2af1da9638465f994e39a422c23db50b77d97f63f812a
 
 - `evaluation/datasets/batch-1-test-prompts.json` — `65ac0103d265a973ca1c2bb839996df4c40c6833da3fd17b576c216105b0ab5b`
 - `evaluation/harness/runner.js` — `ee6e871ad26230c4073ba72151f1d6f5862c7c05074ba756bfe9b5e4e509f8f8`
@@ -27,15 +27,15 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 - `skills/bs-uml-master/references/diagram-selection.md` — `cfa85279548602fe69db478866a34cbf2e59f1269a6e01a7eb35ccf4218dc10c`
 - `skills/bs-uml-master/references/layout-craft.md` — `5f6d1b3850d99c8f0399bc7c551de872385cd10b4035f5dc56092e6deb29aad5`
 - `skills/bs-uml-master/references/modeling-from-code.md` — `58dec58a2924a9f7ed77308a4e267de66811aa95b6cdd75c75bc56fdaaa061a7`
-- `skills/bs-uml-master/references/rendering-validation.md` — `a2266154565e658d4b9bd38628fbc4748a8ff33505e686ca6cd26602e21b3c07`
+- `skills/bs-uml-master/references/rendering-validation.md` — `9d25351abf9b7cc3607f2c92e99d985cb18eeaca85fe782faa7606e0ad88b5d0`
 - `skills/bs-uml-master/references/svg-presentation.md` — `e3400aed86339da2ad9a8e6692727842de8fbfcb5632871d85e1d68e308dfb02`
 - `skills/bs-uml-master/references/syntax-pitfalls.md` — `1a6927e31ebc35dd1e275613dd3d9db9984f605cdc202f73156615956f929b9f`
 - `skills/bs-uml-master/references/text-diagrams.md` — `68ebcb460268833b13f3aa863ffc409bc599a0a4475a0b9db33ea6a78d7acab3`
 - `skills/bs-uml-master/references/uml-semantics.md` — `f8b59c246cddcf17b9520c8d7e7215940432f5118c54bf9441e1023e329330de`
-- `skills/bs-uml-master/scripts/check-delivery.js` — `dff6c0d80ca26bf919403587366eaa4b103a78904675e07b4434df55744d4f4f`
+- `skills/bs-uml-master/scripts/check-delivery.js` — `f92e949e96089509e84fabdf879f3563424398edd461398a91e95ca44019d551`
 - `skills/bs-uml-master/scripts/check-mermaid.js` — `938b004901b22e27d204f9afb69cf6003ee155010f7893a84f58cd453e1c9fb4`
 - `skills/bs-uml-master/scripts/check-render-fit.js` — `ce446534903ec12a64f68f1a24cc31bf5796a46b44c066e13bd6e2bd837ec2b3`
-- `skills/bs-uml-master/scripts/test-check-delivery.js` — `9118d22250dc67598265dcd3a2e910079dab6399f6e25869879d26629bb5accc`
+- `skills/bs-uml-master/scripts/test-check-delivery.js` — `c7f4359cced58d130d0310c26a5241a42fe52f151403d5de663df46e11730ecf`
 - `skills/bs-uml-master/scripts/test-check-render-fit.js` — `7be5631a90b5640f98dbdb38b89de47a3606b78dee15f0db971e82807892d749`
 - `tools/peer-review.js` — `702587f408de2ff13cd994288e2b9a5da3ee2833ee9076c8ea1642670676307d`
 - `tools/test-peer-review-scope.js` — `4dc00dffb1d46b4feafc43a9c3819dbfe8c134921afd3795bcfe5ba3709eb3d8`
@@ -50,9 +50,9 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 **Skill**: bs-uml-master
 **HUMAN_VERIFIED**: false
 **Scope Contract Version**: 1
-**Reviewed Revision**: 757ff4e0ac1d16433e5da07d417a28732598e01d
+**Reviewed Revision**: 617e76c680bcc737f61125ac7037e4a713189026
 **Reviewed Skill SHA-256**: da8087e49d55d0f4c732f4adfe04021d2965153577fd9d780f6ae836f22e1abb
-**Reviewed Manifest SHA-256**: 66fc802e686037e7c9fb02003f262f3979283ac60c55fb6738137dc9e33df09d
+**Reviewed Manifest SHA-256**: 722bc165f72decd301e2af1da9638465f994e39a422c23db50b77d97f63f812a
 
 ## Executive Summary
 
@@ -60,7 +60,7 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 
 ## Evidence Reviewed
 
-Full manifest receipt `66fc802e686037e7c9fb02003f262f3979283ac60c55fb6738137dc9e33df09d` was received and independently verified.
+Full manifest receipt `722bc165f72decd301e2af1da9638465f994e39a422c23db50b77d97f63f812a` was received and independently verified.
 
 (Then list the files and commands actually examined or rerun.)
 
