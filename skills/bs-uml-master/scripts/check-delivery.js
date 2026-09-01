@@ -245,6 +245,14 @@ function checkBlock(block, idx, out) {
     } else {
       W(`element counting unavailable for source header "${fs_[0].header}" — count manually against the budget`);
     }
+    // C7 — color discipline: styling beyond the default theme demands a
+    // declared dimension + legend (see color-semantics.md); decorative
+    // rainbow is anti-information.
+    const colored = fs_.some(f =>
+      /\b(?:classDef\s+\w+[^\n]*fill|style\s+\w+\s+fill|skinparam[^\n]*Color|fill\s*[:=]\s*["']?#)/i.test(f.body));
+    if (colored && !/legend|图例|color\s*(?:=|dimension|encodes)/i.test(block)) {
+      W("color styling present but no legend/declared color dimension in the delivery — decorative color is anti-information (color-semantics.md)");
+    }
   }
 }
 

@@ -22,7 +22,7 @@ The element ledger is the canonical model; every notation — Mermaid, PlantUML,
 6. **Render before delivering.** Validate diagram source with a real tool (mermaid-cli, plantuml.jar) and inspect the output whenever tooling can be obtained. Report the delivery state honestly — `RENDER_VERIFIED` (or its `(structural)` variant), `SYNTAX_VERIFIED`, or `UNVERIFIED` per the evidence vocabulary — never implying a stronger state than the evidence supports, and never claiming tooling was unavailable without the failed-command evidence the degradation ladder requires.
 7. **Fix the source, not the model.** When a renderer rejects syntax, correct the syntax. Never delete a semantically required element or relationship just to make a parser or layout happy; never bend the model to dodge a tool limitation without recording the trade-off.
 8. **The medium picks the backend.** Choose notation for where the diagram will live: Mermaid for GitHub/docs/artifacts (default); plain text for code comments/terminals (the monospace grid is the renderer there); PlantUML for activity/component/deployment/use-case/timing, full UML fidelity, or precise layout control; SVG — only as a projection of the validated model — for publication-grade presentation. Follow an existing repo convention over personal preference. Selection matrix: [Diagram Selection](./references/diagram-selection.md).
-9. **Layout is a semantic channel.** Readers infer meaning from position: adjacency implies coupling, vertical order implies hierarchy or time, flow direction implies causality. A bad layout makes false implicit claims — treat rubric failures in [Layout Craft](./references/layout-craft.md) as correctness defects: run the bounded layout repair loop, and when the tool's ceiling is reached, escalating the backend is the required move, not shipping garble or silently deleting content.
+9. **Position and color are semantic channels.** Readers infer meaning from position (adjacency = coupling, vertical order = hierarchy/time, flow = causality) and assume color means something — a bad layout makes false implicit claims, and decorative rainbow color makes readers hunt for meaning that isn't there. Treat rubric failures in [Layout Craft](./references/layout-craft.md) as correctness defects with the bounded repair loop and backend escalation; use color only per [Color Semantics](./references/color-semantics.md) — one declared dimension, a unified legend across the set, colorblind-safe palette, never color alone. Layout adapts to the medium's profile (the rules are viewport-parametric; conclusions legitimately invert between a PC screen and a phone); default is no color at all.
 
 ## Red Flags / Rationalizations
 
@@ -40,6 +40,7 @@ The element ledger is the canonical model; every notation — Mermaid, PlantUML,
 | "It renders fine on my side; where it ends up is the user's concern." | The medium's width, zoomability, and renderer are Phase 0 inputs. A 3700px-wide render in an A4 memo is a failed delivery (Rules 8–9). |
 | "I filled in the contract's fields, so the work behind them is implied." | Contract format without contract work is compliance theater — an unearned `RENDER_VERIFIED` lends false authority. `scripts/check-delivery.js` rejects receipt-less claims; the work itself is yours (Rules 2, 6). |
 | "It fits — the reader just has to scroll and zoom a bit." | A gestalt diagram that needs two-axis scrolling or zooming has failed its reader. Fit one screen at ≥11px, or work the trade-off ladder (Rule 9, Layout Craft). |
+| "Different colors per box make it look richer." | Decorative rainbow is anti-information: readers hunt for a meaning that isn't there. Color encodes one declared dimension with a unified legend, or stays default (Rule 9, Color Semantics). |
 | "It's basically a class diagram, drawn as a flowchart with fancy boxes." | Fake notation. If you call it a class diagram, the source starts with `classDiagram` — pseudo-class boxes in `graph TB` lose every relationship semantic (Rule 3). |
 | "It's just a quick sketch, so gates don't apply." | Sketch significance is a declared setting agreed with the user, not an escape hatch (see Significance below). |
 
@@ -80,6 +81,7 @@ This skill does not: produce data visualizations or charts (statistics belong to
 | Backend is SVG (publication-grade) | [SVG Presentation](./references/svg-presentation.md) |
 | Semantic review pass; any notation doubt | [UML Semantics](./references/uml-semantics.md) |
 | Free-graph diagram (class/component/flowchart), page-bound medium, or any layout doubt | [Layout Craft](./references/layout-craft.md) |
+| Any color/styling beyond the renderer's default theme | [Color Semantics](./references/color-semantics.md) |
 | Before delivery | [Rendering & Validation](./references/rendering-validation.md) |
 
 ## Workflow
@@ -127,7 +129,7 @@ In MODEL-FROM-CODE, do not draft diagram source before the scoped code has actua
 
 ### Phase 3 — Draft
 
-Write the diagram source from the ledger, applying [UML Semantics](./references/uml-semantics.md) for the chosen type and [Syntax Pitfalls](./references/syntax-pitfalls.md) for the chosen tool. Include: a title stating the question; labeled edges; direction chosen for the flow (call flow left→right or top→bottom, inheritance up); enumerations as enumerations. Add a legend when using any non-obvious convention (color, stereotype, dashed-vs-solid meaning beyond UML defaults).
+Write the diagram source from the ledger, applying [UML Semantics](./references/uml-semantics.md) for the chosen type and [Syntax Pitfalls](./references/syntax-pitfalls.md) for the chosen tool. Include: a title stating the question; labeled edges; direction chosen for the flow (call flow left→right or top→bottom, inheritance up) **and for the medium's short axis**; enumerations as enumerations. Color only per [Color Semantics](./references/color-semantics.md): one declared dimension, `classDef`/stereotype-driven (never per-node whims), unified legend, redundant encoding — or no color at all. Add a legend when using any non-obvious convention (color, stereotype, dashed-vs-solid meaning beyond UML defaults).
 
 **Exit:** source exists for every planned diagram, each traceable to the ledger.
 
@@ -183,7 +185,8 @@ Every bracketed placeholder must be replaced; an unfilled or missing field is a 
 | [Diagram Selection](./references/diagram-selection.md) | Question→type matrix, C4 altitudes, element budget, model-vs-projection principle, backend matrix, mode gate |
 | [UML Semantics](./references/uml-semantics.md) | Correctness rules per diagram type; relationship/arrow/message semantics |
 | [Modeling From Code](./references/modeling-from-code.md) | Scope → read → element ledger → curation → sync check |
-| [Layout Craft](./references/layout-craft.md) | Three tiers of layout levers, per-tool tactics, the 7-point rubric, bounded layout repair loop, media profiles |
+| [Layout Craft](./references/layout-craft.md) | Three tiers of layout levers, per-tool tactics, the 7-point rubric, bounded layout repair loop, named media profiles (viewport-parametric fit rules) |
+| [Color Semantics](./references/color-semantics.md) | Color as the second semantic channel: three laws, colorblind-safe default palette, per-backend implementation, legend unification |
 | [Syntax Pitfalls](./references/syntax-pitfalls.md) | Mermaid/PlantUML traps that break rendering or reverse meaning |
 | [Text Diagrams](./references/text-diagrams.md) | Plain-text backend: niche, tighter budget, character-set choice, alignment verification |
 | [SVG Presentation](./references/svg-presentation.md) | Publication-grade projection: model-first iron rule, authoring rules, triple verification |

@@ -122,6 +122,13 @@ run("decoy-fence", HDR({ Type: "Class Diagram" }) +
   "```mermaid\ngraph TB\n    X[\"X<br/>---<br/>f: string\"]\n```\n" + TAIL,
   1, [/fake or mismatched notation/]);
 
+// 13b. C7: color styling without a legend/declared dimension draws a WARN;
+//      with a declared dimension it stays clean
+const COLORED = "```mermaid\nflowchart TB\n    a[\"A\"]\n    b[\"B\"]\n    a --> b\n    classDef app fill:#56B4E9\n    class a app\n```\n";
+run("color-without-legend", HDR() + COLORED + TAIL, 0, [/WARN.*no legend\/declared color dimension/]);
+run("color-with-dimension", HDR() + COLORED + "\n**Excluded:** x · color = architectural layer (legend below)\n**Evidence:** lib/cli.js:4\n",
+  0, [/0 FAIL/], [/WARN.*color/]);
+
 // 14. F11: fenceless deliveries — WARN with an external file ref, FAIL without
 run("fenceless-with-file", HDR() + "\nSource delivered at scratch/arch.mmd, rendered to arch.svg.\n" + TAIL,
   0, [/external-file delivery/]);

@@ -26,18 +26,37 @@
 
 const fs = require("fs");
 
-const DEFAULT_VIEWPORT = [1470, 850]; // typical laptop browser content area
 const LEGIBLE_PX = 11;
 const MAX_READING_SCREENS = 3;
 
+// Named media profiles. The fit rules are viewport-parametric — the rules
+// never change, the numbers flow from the medium. The same model may need
+// DIFFERENT projections per medium (a wide row layout that wins on a PC
+// fails on a phone; a vertical linear flow is native there).
+const MEDIA = {
+  pc: [1470, 850],               // landscape laptop browser content (default)
+  phone: [390, 740],             // portrait phone CSS viewport
+  "phone-landscape": [740, 390],
+  a4: [794, 1123],               // A4 portrait at 96dpi CSS px
+  readme: [900, 850],            // GitHub README column
+  slide: [1280, 720],            // 16:9 presentation
+};
+const DEFAULT_VIEWPORT = MEDIA.pc;
+
 function parseArgs(argv) {
-  const opts = { viewport: DEFAULT_VIEWPORT, kind: "auto", font: null, file: null };
+  const opts = { viewport: DEFAULT_VIEWPORT, medium: "pc", kind: "auto", font: null, file: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--viewport") {
       const m = String(argv[++i]).match(/^(\d+)x(\d+)$/);
       if (!m) return null;
       opts.viewport = [Number(m[1]), Number(m[2])];
+      opts.medium = "custom";
+    } else if (a === "--medium") {
+      const v = argv[++i];
+      if (!MEDIA[v]) return null;
+      opts.viewport = MEDIA[v];
+      opts.medium = v;
     } else if (a === "--kind") {
       const v = argv[++i];
       if (!["gestalt", "linear", "auto"].includes(v)) return null;
@@ -107,7 +126,7 @@ function edgeSpans(svg) {
 function main(argv) {
   const opts = parseArgs(argv);
   if (!opts) {
-    console.error("Usage: node check-render-fit.js <diagram.svg> [--viewport WxH] [--kind gestalt|linear|auto] [--font N]");
+    console.error("Usage: node check-render-fit.js <diagram.svg> [--medium pc|phone|phone-landscape|a4|readme|slide] [--viewport WxH] [--kind gestalt|linear|auto] [--font N]");
     return 2;
   }
   let svg;
@@ -136,7 +155,7 @@ function main(argv) {
   const F = (l) => { out.push(`  FAIL  ${l}`); failed++; };
   const Wn = (l) => out.push(`  WARN  ${l}`);
 
-  out.push(`  INFO  canvas ${W.toFixed(0)}x${H.toFixed(0)} (aspect ${(W / H).toFixed(2)}:1), viewport ${VW}x${VH}, label font ${font}px, kind=${kind}`);
+  out.push(`  INFO  canvas ${W.toFixed(0)}x${H.toFixed(0)} (aspect ${(W / H).toFixed(2)}:1), medium=${opts.medium} viewport ${VW}x${VH}, label font ${font}px, kind=${kind}`);
   if (opts.kind === "linear" && !seq) {
     Wn("kind=linear was declared manually and the SVG carries no sequence markers — this claim must be defensible (a genuinely line-by-line process flow); declaring linear to launder a gestalt fit failure violates Rule 6");
   }
@@ -150,9 +169,12 @@ function main(argv) {
     } else {
       F(`gestalt diagram does not fit one screen legibly: effective label font ${effBoth.toFixed(1)}px < ${LEGIBLE_PX}px — split by question/altitude, compress presentation, or (layered subgraph structures on a controlled renderer) switch to the ELK layout engine; see layout-craft.md fit-to-screen ladder`);
     }
-    const aspect = W / H;
-    if (aspect < 0.5 || aspect > 2.5) {
-      Wn(`aspect ${aspect.toFixed(2)}:1 is far from the landscape-screen band (0.5–2.5) — likely a layout-direction problem, not a content problem`);
+    // The healthy aspect band follows the VIEWPORT's aspect (a portrait
+    // phone wants portrait-ish diagrams; a landscape screen wants
+    // landscape-ish ones) — the rule is medium-relative, not PC-absolute.
+    const aspect = W / H, va = VW / VH;
+    if (aspect < va * 0.3 || aspect > va * 1.5) {
+      Wn(`aspect ${aspect.toFixed(2)}:1 is far from this medium's band (${(va * 0.3).toFixed(2)}–${(va * 1.5).toFixed(2)} for viewport aspect ${va.toFixed(2)}) — likely a layout-direction problem, not a content problem`);
     }
   } else {
     // linear: cross axis must fit; reading axis capped in screens
