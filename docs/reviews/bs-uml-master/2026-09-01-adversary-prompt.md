@@ -14,9 +14,9 @@ You are the **adversary reviewer** for the `bs-uml-master` skill. Your job is to
 Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
 
 **Scope Contract Version**: 1
-**Reviewed Revision to record**: 1f4219aa0d7bd418340e8ccafe4f4bea980edd4f
+**Reviewed Revision to record**: 7f9fdae59ddd9ce37bb60d446952cc2176613b13
 **Reviewed Skill SHA-256 to record**: da8087e49d55d0f4c732f4adfe04021d2965153577fd9d780f6ae836f22e1abb
-**Reviewed Manifest SHA-256 to record**: f359fb36645b3b9a00fe01f960aec88682f9b94885f6242038beb181f54b22a8
+**Reviewed Manifest SHA-256 to record**: caa8e19fb16a7b7427706cee14b0e181c0682601b3723d9e73857d06345d77de
 
 - `evaluation/datasets/batch-1-test-prompts.json` — `65ac0103d265a973ca1c2bb839996df4c40c6833da3fd17b576c216105b0ab5b`
 - `evaluation/harness/runner.js` — `ee6e871ad26230c4073ba72151f1d6f5862c7c05074ba756bfe9b5e4e509f8f8`
@@ -32,10 +32,10 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 - `skills/bs-uml-master/references/syntax-pitfalls.md` — `1a6927e31ebc35dd1e275613dd3d9db9984f605cdc202f73156615956f929b9f`
 - `skills/bs-uml-master/references/text-diagrams.md` — `68ebcb460268833b13f3aa863ffc409bc599a0a4475a0b9db33ea6a78d7acab3`
 - `skills/bs-uml-master/references/uml-semantics.md` — `f8b59c246cddcf17b9520c8d7e7215940432f5118c54bf9441e1023e329330de`
-- `skills/bs-uml-master/scripts/check-delivery.js` — `58391a7d47f8b2a5f54293103a0059382413ffbda662e466f20d409580d38104`
+- `skills/bs-uml-master/scripts/check-delivery.js` — `b11a5a2bc4c188215d832d91ac4f79dae68e0170f276c625702909880cd52e5a`
 - `skills/bs-uml-master/scripts/check-mermaid.js` — `938b004901b22e27d204f9afb69cf6003ee155010f7893a84f58cd453e1c9fb4`
 - `skills/bs-uml-master/scripts/check-render-fit.js` — `ce446534903ec12a64f68f1a24cc31bf5796a46b44c066e13bd6e2bd837ec2b3`
-- `skills/bs-uml-master/scripts/test-check-delivery.js` — `f0a9f235362ae8f68b570348438378d9fa95ed0d8c8510baaa2c5cb269227db1`
+- `skills/bs-uml-master/scripts/test-check-delivery.js` — `ddf300acdbf41c557eb910017826aa454b418e9e94eb4c059aedbe382f57c6e0`
 - `skills/bs-uml-master/scripts/test-check-render-fit.js` — `7be5631a90b5640f98dbdb38b89de47a3606b78dee15f0db971e82807892d749`
 - `tools/peer-review.js` — `702587f408de2ff13cd994288e2b9a5da3ee2833ee9076c8ea1642670676307d`
 - `tools/test-peer-review-scope.js` — `4dc00dffb1d46b4feafc43a9c3819dbfe8c134921afd3795bcfe5ba3709eb3d8`
@@ -50,9 +50,9 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 **Skill**: bs-uml-master
 **HUMAN_VERIFIED**: false
 **Scope Contract Version**: 1
-**Reviewed Revision**: 1f4219aa0d7bd418340e8ccafe4f4bea980edd4f
+**Reviewed Revision**: 7f9fdae59ddd9ce37bb60d446952cc2176613b13
 **Reviewed Skill SHA-256**: da8087e49d55d0f4c732f4adfe04021d2965153577fd9d780f6ae836f22e1abb
-**Reviewed Manifest SHA-256**: f359fb36645b3b9a00fe01f960aec88682f9b94885f6242038beb181f54b22a8
+**Reviewed Manifest SHA-256**: caa8e19fb16a7b7427706cee14b0e181c0682601b3723d9e73857d06345d77de
 
 ## Summary
 
@@ -60,7 +60,7 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 
 ## Evidence Reviewed
 
-Full manifest receipt `f359fb36645b3b9a00fe01f960aec88682f9b94885f6242038beb181f54b22a8` was received and independently verified.
+Full manifest receipt `caa8e19fb16a7b7427706cee14b0e181c0682601b3723d9e73857d06345d77de` was received and independently verified.
 
 (Then list the files and commands actually examined or rerun.)
 
