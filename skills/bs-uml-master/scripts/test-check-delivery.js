@@ -156,7 +156,7 @@ run("fit-receipt-fail-silent", HDR() + FLOW4 + `
 **Excluded:** x · **Assumptions:** none
 **Evidence:** lib/cli.js:4
 **Fit:** check-render-fit.js — canvas 698x1648, FAIL 8.3px < 11px; 1 FAIL
-`, 1, [/fit receipt reports FAIL with no recorded trade-off/]);
+`, 1, [/fit receipt contains a FAIL verdict with no recorded trade-off/]);
 // …but is honest with a recorded USER-OVERRIDE trade-off
 run("fit-receipt-fail-override", HDR() + FLOW4 + `
 **Excluded:** x · **Assumptions:** none
@@ -186,6 +186,65 @@ run("fit-bypass-fake-text-receipt", HDR({ State: "RENDER_VERIFIED — text backe
 **Excluded:** x · **Assumptions:** none
 **Evidence:** lib/cli.js:4
 `, 1, [/RENDER_VERIFIED without a check-render-fit receipt/]);
+
+// 17. R6.1 (adversary F1): the text-backend exemption must match the WHOLE
+//     Backend field — "Mermaid (text annotations)" and the unreplaced
+//     template placeholder are visual deliveries and need the receipt
+run("fit-bypass-backend-substring", HDR({ Backend: "Mermaid (text annotations)" }) + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+`, 1, [/RENDER_VERIFIED without a check-render-fit receipt/]);
+run("fit-bypass-backend-placeholder", HDR({ Backend: "[Mermaid|PlantUML|text|SVG]" }) + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+`, 1, [/RENDER_VERIFIED without a check-render-fit receipt/]);
+
+// R6.1 (adversary F2): verbatim per-line FAIL output pasted WITHOUT the
+// trailing "1 FAIL" summary still counts as a failing receipt
+run("fit-receipt-perline-fail-smuggle", HDR() + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+**Fit:** check-render-fit.js output:
+INFO canvas 698x1648 (aspect 0.42:1), medium=pc viewport 1470x850, label font 16px
+FAIL gestalt diagram does not fit one screen legibly: effective label font 8.3px
+`, 1, [/fit receipt contains a FAIL verdict with no recorded trade-off/]);
+
+// R6.1 (adversary F3): the four receipt tokens scattered across the
+// delivery's prose do not form a receipt — they must co-occur in a window
+run("fit-receipt-scattered-tokens", HDR() + FLOW4 + `
+**Excluded:** x · **Assumptions:** none — I always run check-render-fit on real deliveries.
+**Evidence:** lib/cli.js:4
+
+(reading notes filler line one)
+(reading notes filler line two)
+(reading notes filler line three)
+(reading notes filler line four)
+(reading notes filler line five)
+The canvas is 1200x760 and labels sit at 16px, which I consider a PASS.
+`, 1, [/RENDER_VERIFIED without a check-render-fit receipt/]);
+// …and hedge language inside the window is a prediction, not a receipt
+run("fit-receipt-hedged", HDR() + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+**Fit:** check-render-fit was not run here, but canvas is roughly 1200x760 at 16px so it should PASS
+`, 1, [/hedge\/negation language/]);
+
+// R6.1 (adversary F4): a declared non-sketch Significance field wins over a
+// stray "sketch level" phrase — nothing relaxes
+run("sketch-phrase-cannot-downgrade", `## Diagram Delivery — t (sketch level)
+
+**Question:** q · **Mode:** MODEL-FROM-CODE · **Significance:** deliverable
+**Type/altitude:** module dependency flowchart @ file level · **Backend:** Mermaid · **State:** RENDER_VERIFIED — mmdc 11.4.0, SVG inspected
+` + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+`, 1, [/RENDER_VERIFIED without a check-render-fit receipt/], [/WARN.*check-render-fit receipt/]);
+
+// R6.1 (adversary F5): a stray quote on one line must not pair across
+// newlines and hide a real inline color from C7
+run("plantuml-stray-quote-color-hides", HDR({ Type: "state machine", Backend: "PlantUML", State: "RENDER_VERIFIED — plantuml 1.2025.4, SVG inspected" }) +
+  "```plantuml\n@startuml\n' note: legacy \" naming kept\nstate \"Fast Mode\" as s1 #lightblue\n[*] --> s1\n@enduml\n```\n" + TAIL,
+  0, [/WARN.*no legend\/declared color dimension/]);
 
 // 16. IP-24: escape entities inside quoted PlantUML display names must not
 //     trip the inline-color WARN; real inline colors still must

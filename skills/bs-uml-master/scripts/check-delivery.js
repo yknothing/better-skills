@@ -18,14 +18,21 @@
 //      >9 warns without a justification mention (counting is heuristic —
 //      it under/over-counting is a reason to improve it, never to trust it
 //      over your own count)
+//   C7 color styling beyond the default theme without a declared color
+//      dimension/legend draws a WARN (decorative rainbow is
+//      anti-information; see color-semantics.md)
 //   C8 a RENDER_VERIFIED claim on a visual backend must carry a
 //      check-render-fit receipt (tool name + canvas WxH + effective px +
-//      verdict) — fit/rubric verdicts asserted in prose with no pasted
-//      checker output are the review layer's compliance theater (IP-20,
-//      IP-25); a receipt reporting FAIL needs a recorded trade-off
+//      verdict, co-occurring within a few lines) — fit/rubric verdicts
+//      asserted in prose with no pasted checker output are the review
+//      layer's compliance theater (IP-20, IP-25); a receipt containing a
+//      FAIL verdict needs a recorded trade-off, and hedge language
+//      ("should PASS") disqualifies the receipt
 //
 // Sketch significance: only C2 and C5 are enforced; C1/C3/C4/C8 become
-// warns (the contract's compressed sketch form is legal).
+// warns (the contract's compressed sketch form is legal). A declared
+// Significance field is authoritative — a stray "sketch level" phrase
+// cannot downgrade a delivery whose field says otherwise.
 //
 // This checker binds format, not truth: receipts can still be fabricated.
 // It raises the floor; independent verification (Phase 2.A) is the ceiling.
@@ -85,7 +92,7 @@ function fences(block) {
 function stripNoise(body) {
   // Remove quoted labels and |edge labels| so their words can't be counted
   // as node ids.
-  return body.replace(/"[^"]*"/g, '""').replace(/\|[^|\n]*\|/g, "||");
+  return body.replace(/"[^"\n]*"/g, '""').replace(/\|[^|\n]*\|/g, "||");
 }
 
 function countPrimary(f) {
@@ -108,7 +115,7 @@ function countPrimary(f) {
   if (h.startsWith("classdiagram")) {
     // Remove quoted multiplicities entirely so `A "1" <|-- "0..*" B` still
     // reads as a relation between A and B (IP-13/F8).
-    const c = b.replace(/"[^"]*"/g, " ");
+    const c = b.replace(/"[^"\n]*"/g, " ");
     const decls = [...c.matchAll(/^\s*class\s+([\w~[\]]+)/gm)].map(m => m[1]);
     // Edges-only class diagrams declare members implicitly on relation lines.
     const rels = [...c.matchAll(/^\s*([\w~]+)\s*(?:<\|--|<\|\.\.|\*--|o--|-->|\.\.>|--|\.\.)\s*([\w~]+)/gm)]
@@ -188,8 +195,13 @@ function checkBlock(block, idx, out) {
   const F = (l) => { out.push(`  FAIL  D${idx} ${l}`); out.failed++; };
   const W = (l) => out.push(`  WARN  D${idx} ${l}`);
 
-  const sig = (field(block, "Significance") || "").toLowerCase();
-  const sketch = /sketch/.test(sig) || /sketch level/i.test(block);
+  // A declared Significance field is authoritative — the "sketch level"
+  // phrase elsewhere in the block relaxes nothing when the field says
+  // deliverable/authoritative (R6 adversary F4).
+  const sigField = field(block, "Significance");
+  const sketch = sigField
+    ? /sketch/i.test(sigField)
+    : /sketch level/i.test(block);
   const SOFT = sketch ? W : F; // sketch relaxes C1/C3/C4 to warnings
 
   // C1
@@ -260,7 +272,7 @@ function checkBlock(block, idx, out) {
       // PlantUML inline element colors: `class X #lightblue`, `[Comp] #FFAA00`.
       // Quoted display names are blanked first so entities inside labels
       // (`state "uses #quot;fast#quot; mode"`) can't trip it (IP-24).
-      /^\s*(?:abstract\s+)?(?:class|state|component|participant|actor|node|rectangle|package|database|interface|\[[^\]]+\])[^\n#]*#(?:[0-9a-fA-F]{3,8}|[A-Za-z]{3,20})\b/m.test(f.body.replace(/"[^"]*"/g, '""')));
+      /^\s*(?:abstract\s+)?(?:class|state|component|participant|actor|node|rectangle|package|database|interface|\[[^\]]+\])[^\n#]*#(?:[0-9a-fA-F]{3,8}|[A-Za-z]{3,20})\b/m.test(f.body.replace(/"[^"\n]*"/g, '""')));
     if (colored) {
       // Anti-silencing: "no legend needed" must not satisfy the check.
       const cleaned = block.replace(/(?:no|without|not?\s+\w*)\s+(?:legend|图例)[^\n]*/gi, "");
@@ -275,23 +287,41 @@ function checkBlock(block, idx, out) {
   // "medium fit ✅" with no checker output is the exploit this closes
   // (usage sample #3: four towers, all self-certified as fitting).
   if (stateLine && /RENDER_VERIFIED/.test(stateLine)) {
-    // Exemption keys on the declared Backend field only — a State line that
-    // merely *claims* a text-backend receipt on a visual backend would
-    // otherwise dodge C8 while C2 accepts the same phrase as its receipt.
-    const textBackend = /\b(?:plain\s*)?(?:text|ascii)\b/i.test(backend || "");
+    // Exemption keys on the declared Backend field only, and only when the
+    // whole field IS a text backend — substring matching let
+    // "Mermaid (text annotations)" and the unreplaced template placeholder
+    // "[Mermaid|PlantUML|text|SVG]" skip the gate (R6 adversary F1).
+    const textBackend = /^\s*(?:plain\s*[- ]?text|text|ascii(?:\s*art)?)\s*$/i.test(backend || "");
     if (!textBackend) {
-      const hasTool = /check-render-fit/i.test(block);
-      const hasShape = /\b\d+x\d+\b/.test(block) &&
-        /\d+(?:\.\d+)?px/.test(block) && /\b(?:PASS|FAIL)\b/.test(block);
-      if (!hasTool || !hasShape) {
-        SOFT("RENDER_VERIFIED without a check-render-fit receipt (tool name + canvas WxH + effective px + verdict) — fit claims made in prose are self-certification, not verification (IP-20/IP-25)");
-      } else if (/\b[1-9]\d*\s+FAIL\b/.test(block) && !/USER-OVERRIDE|trade-?off|取舍|ladder/i.test(block)) {
-        F("fit receipt reports FAIL with no recorded trade-off/USER-OVERRIDE — a failing fit never ships silently (layout-craft.md trade-off ladder)");
+      const win = fitReceiptWindow(block);
+      if (!win) {
+        SOFT("RENDER_VERIFIED without a check-render-fit receipt (tool name + canvas WxH + effective px + verdict, together within a few lines) — fit claims made in prose are self-certification, not verification (IP-20/IP-25)");
+      } else if (/\b(?:did\s*n[o']t|not\s+run|wasn't\s+run|would|should|could|expect\w*|estimat\w*|plan(?:ned|ning)?|roughly|approximately)\b|大约|预计|未运行|没有运行/i.test(win)) {
+        F("fit receipt window contains hedge/negation language (\"should PASS\", \"did not run\", \"roughly\") — a receipt is pasted tool output, not a prediction");
+      } else if (/\bFAIL\b/.test(win.replace(/\b0\s+FAIL\b/g, "")) &&
+                 !/USER-OVERRIDE|trade-?off|取舍|ladder/i.test(block)) {
+        F("fit receipt contains a FAIL verdict with no recorded trade-off/USER-OVERRIDE — a failing fit never ships silently (layout-craft.md trade-off ladder)");
       } else {
         P("check-render-fit receipt present alongside RENDER_VERIFIED");
       }
     }
   }
+}
+
+// A fit receipt is the tool's own output pasted (nearly) intact: the tool
+// token, canvas WxH, an effective-px figure, and a verdict must co-occur
+// within a 6-line window — tokens scattered across the delivery's prose do
+// not form a receipt (R6 adversary F3). Returns the first matching window's
+// text (so the caller can inspect its verdicts — R6 adversary F2), or null.
+function fitReceiptWindow(block) {
+  const lines = block.split(/\r?\n/);
+  for (let i = 0; i < lines.length; i++) {
+    if (!/check-render-fit/i.test(lines[i])) continue;
+    const win = lines.slice(Math.max(0, i - 2), i + 6).join("\n");
+    if (/\b\d+x\d+\b/.test(win) && /\d+(?:\.\d+)?px/.test(win) &&
+        /\b(?:PASS|FAIL)\b/.test(win)) return win;
+  }
+  return null;
 }
 
 function main(argv) {
