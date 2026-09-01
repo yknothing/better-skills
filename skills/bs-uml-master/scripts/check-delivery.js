@@ -18,9 +18,14 @@
 //      >9 warns without a justification mention (counting is heuristic —
 //      it under/over-counting is a reason to improve it, never to trust it
 //      over your own count)
+//   C8 a RENDER_VERIFIED claim on a visual backend must carry a
+//      check-render-fit receipt (tool name + canvas WxH + effective px +
+//      verdict) — fit/rubric verdicts asserted in prose with no pasted
+//      checker output are the review layer's compliance theater (IP-20,
+//      IP-25); a receipt reporting FAIL needs a recorded trade-off
 //
-// Sketch significance: only C2 and C5 are enforced; C1/C3/C4 become warns
-// (the contract's compressed sketch form is legal).
+// Sketch significance: only C2 and C5 are enforced; C1/C3/C4/C8 become
+// warns (the contract's compressed sketch form is legal).
 //
 // This checker binds format, not truth: receipts can still be fabricated.
 // It raises the floor; independent verification (Phase 2.A) is the ceiling.
@@ -252,14 +257,36 @@ function checkBlock(block, idx, out) {
     // colors, and PlantUML inline #hex/#name styling.
     const colored = fs_.some(f =>
       /\b(?:classDef\s+\w+[^\n]*(?:fill|stroke|color)|style\s+\w+\s+(?:fill|stroke|color)|themeVariables|skinparam[^\n]*Color|(?:fill|stroke|color)\s*[:=]\s*["']?#)/i.test(f.body) ||
-      // PlantUML inline element colors: `class X #lightblue`, `[Comp] #FFAA00`
-      // (kept off label text so Mermaid escape entities like #quot; don't trip it)
-      /^\s*(?:abstract\s+)?(?:class|state|component|participant|actor|node|rectangle|package|database|interface|\[[^\]]+\])[^\n#]*#(?:[0-9a-fA-F]{3,8}|[A-Za-z]{3,20})\b/m.test(f.body));
+      // PlantUML inline element colors: `class X #lightblue`, `[Comp] #FFAA00`.
+      // Quoted display names are blanked first so entities inside labels
+      // (`state "uses #quot;fast#quot; mode"`) can't trip it (IP-24).
+      /^\s*(?:abstract\s+)?(?:class|state|component|participant|actor|node|rectangle|package|database|interface|\[[^\]]+\])[^\n#]*#(?:[0-9a-fA-F]{3,8}|[A-Za-z]{3,20})\b/m.test(f.body.replace(/"[^"]*"/g, '""')));
     if (colored) {
       // Anti-silencing: "no legend needed" must not satisfy the check.
       const cleaned = block.replace(/(?:no|without|not?\s+\w*)\s+(?:legend|图例)[^\n]*/gi, "");
       if (!/legend|图例|color\s*(?:=|dimension|encodes)/i.test(cleaned)) {
         W("color styling present but no legend/declared color dimension in the delivery — decorative color is anti-information (color-semantics.md)");
+      }
+    }
+  }
+
+  // C8 — receipts-or-silence for fit claims: RENDER_VERIFIED on a visual
+  // backend requires a pasted check-render-fit receipt. A self-graded
+  // "medium fit ✅" with no checker output is the exploit this closes
+  // (usage sample #3: four towers, all self-certified as fitting).
+  if (stateLine && /RENDER_VERIFIED/.test(stateLine)) {
+    const textBackend = TEXT_BACKEND_RECEIPT.test(stateLine) ||
+      /\b(?:plain\s*)?(?:text|ascii)\b/i.test(backend || "");
+    if (!textBackend) {
+      const hasTool = /check-render-fit/i.test(block);
+      const hasShape = /\b\d+x\d+\b/.test(block) &&
+        /\d+(?:\.\d+)?px/.test(block) && /\b(?:PASS|FAIL)\b/.test(block);
+      if (!hasTool || !hasShape) {
+        SOFT("RENDER_VERIFIED without a check-render-fit receipt (tool name + canvas WxH + effective px + verdict) — fit claims made in prose are self-certification, not verification (IP-20/IP-25)");
+      } else if (/\b[1-9]\d*\s+FAIL\b/.test(block) && !/USER-OVERRIDE|trade-?off|取舍|ladder/i.test(block)) {
+        F("fit receipt reports FAIL with no recorded trade-off/USER-OVERRIDE — a failing fit never ships silently (layout-craft.md trade-off ladder)");
+      } else {
+        P("check-render-fit receipt present alongside RENDER_VERIFIED");
       }
     }
   }

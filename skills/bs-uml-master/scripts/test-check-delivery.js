@@ -42,10 +42,11 @@ const HDR = (over = {}) => {
 **Type/altitude:** ${d.Type} · **Backend:** ${d.Backend} · **State:** ${d.State}
 `;
 };
+const FIT = "**Fit:** check-render-fit.js — canvas 1200x760, 16px at fit, PASS (pc 1470x850)\n";
 const TAIL = `
 **Excluded:** x · **Assumptions:** none
 **Evidence:** lib/cli.js:4
-`;
+${FIT}`;
 const FLOW4 = "```mermaid\nflowchart TB\n    a[\"A\"]\n    b[\"B\"]\n    a --> b\n```\n";
 
 // 1. Fully compliant delivery
@@ -126,7 +127,7 @@ run("decoy-fence", HDR({ Type: "Class Diagram" }) +
 //      with a declared dimension it stays clean
 const COLORED = "```mermaid\nflowchart TB\n    a[\"A\"]\n    b[\"B\"]\n    a --> b\n    classDef app fill:#56B4E9\n    class a app\n```\n";
 run("color-without-legend", HDR() + COLORED + TAIL, 0, [/WARN.*no legend\/declared color dimension/]);
-run("color-with-dimension", HDR() + COLORED + "\n**Excluded:** x · color = architectural layer (legend below)\n**Evidence:** lib/cli.js:4\n",
+run("color-with-dimension", HDR() + COLORED + "\n**Excluded:** x · color = architectural layer (legend below)\n**Evidence:** lib/cli.js:4\n" + FIT,
   0, [/0 FAIL/], [/WARN.*color/]);
 // C7 bypass probes (R5 adversary F2): themeVariables, PlantUML inline #hex,
 // and the "no legend needed" silencing must all still draw the WARN
@@ -136,12 +137,57 @@ run("color-themevariables-bypass", HDR() +
 run("color-plantuml-inline-bypass", HDR({ Type: "component diagram", Backend: "PlantUML", State: "RENDER_VERIFIED — plantuml 1.2025.4, SVG inspected" }) +
   "```plantuml\n@startuml\ncomponent Api #lightblue\ncomponent Db #FFAA00\nApi --> Db\n@enduml\n```\n" + TAIL,
   0, [/WARN.*no legend\/declared color dimension/]);
-run("color-no-legend-silencing", HDR() + COLORED + "\n**Excluded:** x (no legend needed here)\n**Evidence:** lib/cli.js:4\n",
+run("color-no-legend-silencing", HDR() + COLORED + "\n**Excluded:** x (no legend needed here)\n**Evidence:** lib/cli.js:4\n" + FIT,
   0, [/WARN.*no legend\/declared color dimension/]);
 // Mermaid escape entities must NOT false-positive as color
 run("entities-not-color", HDR() +
   "```mermaid\nflowchart TB\n    a[\"uses #quot;x#quot;\"]\n    b[\"B\"]\n    a --> b\n```\n" + TAIL,
   0, [/0 FAIL/], [/WARN.*color/]);
+
+// 15. R6/C8: RENDER_VERIFIED with no check-render-fit receipt = the usage
+//     sample #3 exploit (self-certified "medium fit ✅", four towers shipped)
+run("fit-receipt-missing", HDR() + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+Rubric self-check: flow ✅, crossings 0 ✅, medium fit ✅ (zoomable, no compression needed)
+`, 1, [/RENDER_VERIFIED without a check-render-fit receipt/]);
+// A receipt reporting failures cannot ship silently…
+run("fit-receipt-fail-silent", HDR() + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+**Fit:** check-render-fit.js — canvas 698x1648, FAIL 8.3px < 11px; 1 FAIL
+`, 1, [/fit receipt reports FAIL with no recorded trade-off/]);
+// …but is honest with a recorded USER-OVERRIDE trade-off
+run("fit-receipt-fail-override", HDR() + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+**Fit:** check-render-fit.js — canvas 698x1648, FAIL 8.3px < 11px; 1 FAIL
+USER-OVERRIDE: user requested the full mural; companion overview delivered alongside.
+`, 0, [/check-render-fit receipt present/]);
+// SYNTAX_VERIFIED and text-backend deliveries are exempt from C8
+run("fit-not-required-syntax-verified", HDR({ State: "SYNTAX_VERIFIED — check-mermaid.js 11.17.2 parse ok" }) + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+`, 0, [/0 FAIL/]);
+run("fit-not-required-text-backend", HDR({ Type: "ASCII structure @ file level", Backend: "plain text", State: "RENDER_VERIFIED — text backend alignment verified via awk col check" }) +
+  "```text\n+---+\n| A |\n+---+\n```\n" + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+`, 0, [/0 FAIL/]);
+// Sketch significance relaxes C8 to a WARN
+run("fit-receipt-sketch-warns", `## Diagram Delivery — t (sketch level)
+
+**Significance:** sketch · **State:** RENDER_VERIFIED — mmdc 11.4.0, SVG inspected
+` + FLOW4, 0, [/WARN.*check-render-fit receipt/]);
+
+// 16. IP-24: escape entities inside quoted PlantUML display names must not
+//     trip the inline-color WARN; real inline colors still must
+run("plantuml-quoted-entity-not-color", HDR({ Type: "state machine", Backend: "PlantUML", State: "RENDER_VERIFIED — plantuml 1.2025.4, SVG inspected" }) +
+  "```plantuml\n@startuml\nstate \"uses #quot;fast#quot; mode\" as s1\n[*] --> s1\n@enduml\n```\n" + TAIL,
+  0, [/0 FAIL/], [/WARN.*color/]);
+run("plantuml-quoted-name-real-color", HDR({ Type: "state machine", Backend: "PlantUML", State: "RENDER_VERIFIED — plantuml 1.2025.4, SVG inspected" }) +
+  "```plantuml\n@startuml\nstate \"Fast Mode\" as s1 #lightblue\n[*] --> s1\n@enduml\n```\n" + TAIL,
+  0, [/WARN.*no legend\/declared color dimension/]);
 
 // 14. F11: fenceless deliveries — WARN with an external file ref, FAIL without
 run("fenceless-with-file", HDR() + "\nSource delivered at scratch/arch.mmd, rendered to arch.svg.\n" + TAIL,
