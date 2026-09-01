@@ -5,28 +5,28 @@
 **Skill**: bs-uml-master
 **HUMAN_VERIFIED**: false
 **Scope Contract Version**: 1
-**Reviewed Revision**: 1f4219aa0d7bd418340e8ccafe4f4bea980edd4f
+**Reviewed Revision**: 7f9fdae59ddd9ce37bb60d446952cc2176613b13
 **Reviewed Skill SHA-256**: da8087e49d55d0f4c732f4adfe04021d2965153577fd9d780f6ae836f22e1abb
-**Reviewed Manifest SHA-256**: f359fb36645b3b9a00fe01f960aec88682f9b94885f6242038beb181f54b22a8
+**Reviewed Manifest SHA-256**: caa8e19fb16a7b7427706cee14b0e181c0682601b3723d9e73857d06345d77de
 
 ## Summary
 
-Third pass, after R6.2 (commit 1f4219a) closed the second-pass findings F7-F9. All seventeen accumulated probes were replayed at this revision: every one of the nine previously reported findings is now confirmed fixed by direct replay (each original exploit exits 1 or draws the designed WARN; the honest-delivery false positive from F9 exits 0), the artifact-399ed2df theater replays remain closed, and all four second-round vectors are pinned as fixtures (self-test now 44/44). One new LOW issue emerged from probing the new block-wide FAIL scan: it false-positives on honest deliveries whose fenced diagram legitimately contains a node named FAIL (failure-path modeling the skill itself encourages) or whose prose has a line starting with FAIL — fails-safe over-blocking, not a bypass. No open finding is MEDIUM or above; the fit gate now survives every bypass this round could construct.
+Fourth pass, after R6.3 (commit 7f9fdae) closed the third-pass finding F10 and the advocate-caught inline-FAIL regression. The final micro-replay confirms all ten findings from this round fixed by direct probe: the F10 false positives now exit 0 (FAIL-named diagram node, FAIL-leading prose line), the inline one-line FAIL receipt without a summary is caught by the new union scan, the F7/F8/F9 vectors stay closed (n1b/n2/n4 exit 1, n3 exits 0), and a last probe of the union logic (a FAIL verdict pushed beyond the window with no verdict token inside it) fails safe as a missing receipt. Every exploit vector from all four passes is pinned in the 47-fixture self-test, all passing. No finding remains open; the fit gate survives every bypass this round could construct, and the two-direction fixtures guard the precision/recall balance.
 
 ## Evidence Reviewed
 
-Full manifest receipt `f359fb36645b3b9a00fe01f960aec88682f9b94885f6242038beb181f54b22a8` was received and independently verified.
+Full manifest receipt `caa8e19fb16a7b7427706cee14b0e181c0682601b3723d9e73857d06345d77de` was received and independently verified.
 
-All 21 manifest entries re-hashed with `sha256sum` against the regenerated prompt at revision 1f4219aa0d7bd418340e8ccafe4f4bea980edd4f — all match.
+All 21 manifest entries re-hashed with `sha256sum` against the regenerated prompt at revision 7f9fdae59ddd9ce37bb60d446952cc2176613b13 — all match.
 
-Files read in full across the three passes: `skills/bs-uml-master/SKILL.md`, `skills/bs-uml-master/scripts/check-delivery.js` (all three revisions, plus `git show 617e76c` and `git show 1f4219a` for the R6.1/R6.2 diffs), `skills/bs-uml-master/scripts/check-render-fit.js`, `skills/bs-uml-master/scripts/test-check-delivery.js`, `skills/bs-uml-master/references/layout-craft.md`, `skills/bs-uml-master/references/syntax-pitfalls.md`, `skills/bs-uml-master/references/rendering-validation.md`, `docs/reviews/bs-uml-master/2026-09-01-haiku-usage-review-3.md`, `docs/reviews/bs-uml-master/improvement-points.md`, `tools/peer-review.js`.
+Files read in full across the four passes: `skills/bs-uml-master/SKILL.md`, `skills/bs-uml-master/scripts/check-delivery.js` (all four revisions, plus `git show` on 617e76c, 1f4219a, and 7f9fdae for the R6.1/R6.2/R6.3 diffs), `skills/bs-uml-master/scripts/check-render-fit.js`, `skills/bs-uml-master/scripts/test-check-delivery.js`, `skills/bs-uml-master/references/layout-craft.md`, `skills/bs-uml-master/references/syntax-pitfalls.md`, `skills/bs-uml-master/references/rendering-validation.md`, `docs/reviews/bs-uml-master/2026-09-01-haiku-usage-review-3.md`, `docs/reviews/bs-uml-master/improvement-points.md`, `tools/peer-review.js`.
 
 Commands run (cwd `/home/user/better-skills`):
 
-- `git rev-parse HEAD` → 1f4219aa0d7bd418340e8ccafe4f4bea980edd4f.
-- `node skills/bs-uml-master/scripts/test-check-delivery.js` → ALL PASS (44 fixtures; my p1/p1b/p2/p3/p3b/p4, n1b/n2/n3/n4 vectors confirmed pinned).
+- `git rev-parse HEAD` → 7f9fdae59ddd9ce37bb60d446952cc2176613b13.
+- `node skills/bs-uml-master/scripts/test-check-delivery.js` → ALL PASS (47 fixtures; my p1/p1b/p2/p3/p3b/p4, n1b/n2/n3/n4, n5/n5b vectors confirmed pinned, plus the inline-FAIL regression fixture).
 - `node skills/bs-uml-master/scripts/test-check-render-fit.js` → ALL PASS.
-- 19 probe deliveries built and run through `node skills/bs-uml-master/scripts/check-delivery.js <file>` across the three passes under the session scratchpad `adv-r6/` directory: p-series (p1, p1b, p2, p3, p3b, p4, p5, p5b, p6, p6b, p6c, p7), n-series (n1, n1b, n2, n3, n4), and this pass's fresh n5/n5b; per-probe exit codes and check lines cited in the findings.
+- 21 probe deliveries built and run through `node skills/bs-uml-master/scripts/check-delivery.js <file>` across the four passes under the session scratchpad `adv-r6/` directory: p-series (p1, p1b, p2, p3, p3b, p4, p5, p5b, p6, p6b, p6c, p7), n-series (n1, n1b, n2, n3, n4, n5, n5b), and this pass's fresh n6 (inline one-line FAIL receipt, no summary — exit 1 as required) and n7 (FAIL verdict 9 lines below the tool token with no verdict token in the window — exit 1 as a missing receipt, fails safe); per-probe exit codes and check lines cited in the findings.
 
 ## Findings
 
@@ -77,31 +77,31 @@ Commands run (cwd `/home/user/better-skills`):
 **Location**: `skills/bs-uml-master/scripts/check-delivery.js` lines 296-299 (`visualFence`; was lines 294-295 at 617e76c).
 **Exploit scenario**: Second pass: `**Backend:** text` declared over a mermaid-tagged `flowchart TB` fence with `State: RENDER_VERIFIED — mmdc 11.4.0` exited 0 with C8 silently skipped (probe n2) — one self-declared word bought the exemption against checkable source.
 **Root cause**: The C8 exemption trusted the Backend field in isolation, never comparing it to the fence language/header the checker already extracts for C5.
-**Suggested fix**: Implemented in R6.2: the text exemption is void when any fence is mermaid/plantuml-shaped (`visualFence` via the same `fences()`/`DIAGRAM_HEADER` machinery). Replay at 1f4219a: n2 exits 1 on C8; vector pinned as a fixture. The genuine text-backend fixture (` ```text ` fence) still passes, so the exemption survives for honest text deliveries.
+**Suggested fix**: Implemented in R6.2: the text exemption is void when any fence is mermaid/plantuml-shaped (`visualFence` via the same `fences()`/`DIAGRAM_HEADER` machinery). Replay at 1f4219a, re-confirmed at 7f9fdae: n2 exits 1 on C8; vector pinned as a fixture. The genuine text-backend fixture (` ```text ` fence) still passes, so the exemption survives for honest text deliveries.
 
 ### F8: FAIL verdicts outside the first matching receipt window escaped the trade-off gate [MEDIUM] [RESOLVED]
 
 **Location**: `skills/bs-uml-master/scripts/check-delivery.js` lines 304-318 (`failing`, block-wide) and `fitReceiptWindows` lines 325-338 (was the single-window return at 617e76c), against the dual-profile instruction in `skills/bs-uml-master/references/layout-craft.md`.
 **Exploit scenario**: Second pass: a layout-craft-compliant dual-media delivery — verbatim PASS(pc) receipt, six prose lines, then a verbatim `FAIL ...; 1 FAIL` (a4) receipt — exited 0 (probe n1b, no dishonesty required); padding a per-line FAIL below the window with a genuine PASS line inside also exited 0 (probe n4). A regression of R6's block-wide summary scan.
 **Root cause**: `fitReceiptWindow` returned the first token-satisfying window and the FAIL scan ran only on it.
-**Suggested fix**: Implemented in R6.2: FAIL verdicts are scanned block-wide (`^\s*FAIL\b` verdict lines plus `[1-9]\d*\s+FAIL` summaries after removing literal `0 FAIL`), and all matching windows are collected and hedge-scanned individually. Replay at 1f4219a: n1, n1b, and n4 all exit 1 demanding the trade-off; n1b/n4 pinned as fixtures. The block-wide scan trades this bypass for a new fails-safe false positive — split out as F10.
+**Suggested fix**: Implemented in R6.2: FAIL verdicts are scanned block-wide (`^\s*FAIL\b` verdict lines plus `[1-9]\d*\s+FAIL` summaries after removing literal `0 FAIL`), and all matching windows are collected and hedge-scanned individually. Replay at 1f4219a, with n1b/n4 re-confirmed failing at 7f9fdae: all exit 1 demanding the trade-off; n1b/n4 pinned as fixtures. The block-wide scan trades this bypass for a new fails-safe false positive — split out as F10.
 
 ### F9: Hedge guard's lookback failed honest receipts on unrelated contract prose [LOW] [RESOLVED]
 
 **Location**: `skills/bs-uml-master/scripts/check-delivery.js` line 333 (`lines.slice(i, i + 8)`; was the `i - 2` lookback at 617e76c).
 **Exploit scenario**: Second pass: an honest verbatim PASS receipt placed directly under `**Excluded:** helper modules (roughly 20 files off-question)` exited 1 as hedge language — the hedge word sat in a neighboring contract field inside the 2-line lookback (probe n3).
 **Root cause**: The hedge scan ran over the window's lookback lines, which the contract layout fills with prose-bearing fields.
-**Suggested fix**: Implemented in R6.2: windows are forward-only from the tool token. Replay at 1f4219a: n3 exits 0 with the receipt accepted; pinned as fixture `fit-receipt-neighbor-hedge-ok`.
+**Suggested fix**: Implemented in R6.2: windows are forward-only from the tool token. Replay at 1f4219a, re-confirmed at 7f9fdae: n3 exits 0 with the receipt accepted; pinned as fixture `fit-receipt-neighbor-hedge-ok`.
 
-### F10: Block-wide FAIL scan false-positives on FAIL-named diagram nodes and FAIL-leading prose lines [LOW] [OPEN]
+### F10: Block-wide FAIL scan false-positives on FAIL-named diagram nodes and FAIL-leading prose lines [LOW] [RESOLVED]
 
-**Location**: `skills/bs-uml-master/scripts/check-delivery.js` lines 309-310 (`const failing = /^\s*FAIL\b/m.test(block) || ...` — scanned over the whole block including fenced diagram source and prose).
-**Exploit scenario**: Probe n5: an honest delivery with a genuinely passing receipt (`... PASS ...; 0 FAIL`) whose fenced flowchart models a failure path with a node named FAIL (`FAIL["Gate failed"]`, `FAIL --> Retry`) exits 1: "fit receipt contains a FAIL verdict with no recorded trade-off". Probe n5b: the same false positive from a prose reading-note line that happens to start with "FAIL states are modeled out of scope". Failure-path modeling is territory the skill itself steers into (Phase 5's completeness probes demand missing-failure-path checks), so FAIL-named states/nodes are realistic honest content. The error is fails-safe (over-blocking, not a bypass), but it demands a trade-off note for a failure that does not exist, and the cheapest "fix" available to an agent — adding the word "ladder" or "trade-off" anywhere in the block — silences the check without meaning anything, training exactly the theater the gate exists to prevent.
-**Root cause**: The R6.2 fix for F8 widened the FAIL scan from the receipt window to the raw block without masking fenced diagram source or requiring the tool's verdict-line shape, so any line-leading `FAIL` token anywhere in the delivery reads as a tool verdict.
-**Suggested fix**: Mask fenced code (as `tools/peer-review.js` does for reviews) before the block-wide scan, and tighten the verdict-line regex toward the tool's actual output shape (e.g. `^\s*FAIL\s{2,}` — check-render-fit emits two-space-padded verdict lines) while keeping the `[1-9]\d*\s+FAIL` summary scan block-wide. Pin n5 (must stay 0-FAIL) and n1b/n4 (must stay failing) together so the precision fix cannot silently reopen F8.
+**Location**: `skills/bs-uml-master/scripts/check-delivery.js` lines 301-324 (was the raw-block `/^\s*FAIL\b/m` scan at 1f4219a).
+**Exploit scenario**: Third pass: an honest delivery with a genuinely passing receipt (`... PASS ...; 0 FAIL`) whose fenced flowchart models a failure path with a node named FAIL (`FAIL["Gate failed"]`, probe n5), or whose prose reading-note line starts with "FAIL states are modeled out of scope" (probe n5b), exited 1 demanding a trade-off for a failure that does not exist — fails-safe over-blocking whose cheapest silencer (writing "ladder" anywhere) trains the theater the gate exists to prevent.
+**Root cause**: The R6.2 fix for F8 widened the FAIL scan from the receipt window to the raw block without masking fenced diagram source or requiring the tool's verdict-line shape.
+**Suggested fix**: Implemented in R6.3: diagram-shaped fences are masked before receipt analysis, and FAIL detection is a three-way union — any FAIL in a matched window, block-wide line-start FAIL lines carrying fit vocabulary (px/screen/aspect/viewport/co-visible), and block-wide `N FAIL` summaries. Replay at 7f9fdae: n5 and n5b exit 0 (fixtures `fail-node-in-fence-clean-receipt`, `fail-prose-line-clean-receipt`); n1b/n4 still exit 1, so the precision fix did not reopen F8; the advocate-caught inline one-line FAIL receipt without a summary now exits 1 via the window scan (probe n6, fixture `fit-receipt-inline-fail-no-summary`); and the last union probe — a FAIL verdict pushed 9 lines below the tool token with no verdict token left in the window (probe n7) — fails safe as a missing receipt.
 
 ## Verdict
 
 **Verdict**: APPROVED
 
-Every finding this round produced — nine across two passes, including three MEDIUM C8 bypasses, a MEDIUM backend-laundering hole, and a MEDIUM receipt-window regression — is now confirmed closed by direct replay at revision 1f4219a: all seventeen prior probes land where they should, the seventeen exploit vectors are pinned as regression fixtures (44/44 passing), and the artifact-399ed2df theater that motivated R6 stays mechanically caught through all three revisions. The one remaining open finding, F10, is a LOW fails-safe false positive: it blocks honest deliveries rather than admitting dishonest ones, its silencing lever is already governed by prose rules, and its fix is a masking/precision change with both-direction fixtures specified above. With no open MEDIUM-or-above finding and the attack surface of this round exhausted against the current checker, approval is the evidence-supported disposition; F10 should be taken up in the next point release alongside any advocate-side items.
+Every finding this round produced — ten across three passes, including three MEDIUM C8 bypasses, a MEDIUM backend-laundering hole, and a MEDIUM receipt-window regression — is confirmed closed by direct replay at revision 7f9fdae: all twenty-one probes land where they should, every exploit vector is pinned as a regression fixture (47/47 passing, with both-direction fixtures guarding the F8-vs-F10 precision/recall balance), and the artifact-399ed2df theater that motivated R6 stays mechanically caught through all four revisions. The remaining residuals are the documented design ceiling, not open defects: the checker binds format, and a determined fabricator inventing a clean unhedged receipt wholesale remains out of scope for this layer (IP-9, Phase 2.A). With zero open findings and the attack surface of this round exhausted against the current checker, approval is the evidence-supported disposition.
