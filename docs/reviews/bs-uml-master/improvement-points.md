@@ -33,4 +33,6 @@ Schema: [`../_improvement-points-schema.md`](../_improvement-points-schema.md). 
 
 | IP-23 | 2026-09-01 | 2026-09-01-adversary-review.md F1-F3 (R5 round) | fable-5 adversary, probe fixtures | stale-claim | MED | Scroll allowance ignored scrollability (a4/slide cannot scroll — linear diagrams got 3 screens there); C7 bypassed by themeVariables/stroke-only/PlantUML inline #hex and silenced by "no legend needed"; --medium undocumented in Phase 4/rendering-validation with 4 profile gaps in fixtures | fixed:R5.1 (media carry a scrollable property collapsing the allowance to 1 on print/slide; C7 detection broadened with entity-safe PlantUML matching + anti-silencing strip; flags and last-wins documented; 24 fit + 24 delivery fixtures) |
 
-**Count toward upgrade trigger 1: 23** (21 fixed, 2 open: IP-9 → Phase 2.A, IP-20 → checker coupling).
+| IP-24 | 2026-09-01 | 2026-09-01-adversary-review.md F5 (final round) | fable-5 adversary probe | stale-claim | LOW | C7's PlantUML inline-color branch false-positives on quoted labels containing escape entities in keyword-led lines (`state "uses #quot;fast#quot; mode"` → WARN); one-line fix: exclude matches inside quoted strings | open |
+
+**Count toward upgrade trigger 1: 24** (21 fixed, 3 open: IP-9 → Phase 2.A, IP-20 → checker coupling, IP-24 → C7 quote-guard).
