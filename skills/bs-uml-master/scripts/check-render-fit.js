@@ -33,29 +33,34 @@ const MAX_READING_SCREENS = 3;
 // never change, the numbers flow from the medium. The same model may need
 // DIFFERENT projections per medium (a wide row layout that wins on a PC
 // fails on a phone; a vertical linear flow is native there).
+// scrollable=false media (print pages, projected slides) cannot scroll at
+// all — the linear reading-axis allowance collapses to one screen there.
 const MEDIA = {
-  pc: [1470, 850],               // landscape laptop browser content (default)
-  phone: [390, 740],             // portrait phone CSS viewport
-  "phone-landscape": [740, 390],
-  a4: [794, 1123],               // A4 portrait at 96dpi CSS px
-  readme: [900, 850],            // GitHub README column
-  slide: [1280, 720],            // 16:9 presentation
+  pc: { vp: [1470, 850], scrollable: true },   // landscape laptop (default)
+  phone: { vp: [390, 740], scrollable: true }, // portrait phone CSS viewport
+  "phone-landscape": { vp: [740, 390], scrollable: true },
+  a4: { vp: [794, 1123], scrollable: false },  // print page at 96dpi CSS px
+  readme: { vp: [900, 850], scrollable: true },// GitHub README column
+  slide: { vp: [1280, 720], scrollable: false }, // projected 16:9
 };
-const DEFAULT_VIEWPORT = MEDIA.pc;
+const DEFAULT_VIEWPORT = MEDIA.pc.vp;
 
 function parseArgs(argv) {
-  const opts = { viewport: DEFAULT_VIEWPORT, medium: "pc", kind: "auto", font: null, file: null };
+  const opts = { viewport: DEFAULT_VIEWPORT, medium: "pc", scrollable: true, kind: "auto", font: null, file: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--viewport") {
+      // Later flags win; a bare viewport is assumed scrollable (browser-ish).
       const m = String(argv[++i]).match(/^(\d+)x(\d+)$/);
       if (!m) return null;
       opts.viewport = [Number(m[1]), Number(m[2])];
       opts.medium = "custom";
+      opts.scrollable = true;
     } else if (a === "--medium") {
       const v = argv[++i];
       if (!MEDIA[v]) return null;
-      opts.viewport = MEDIA[v];
+      opts.viewport = MEDIA[v].vp;
+      opts.scrollable = MEDIA[v].scrollable;
       opts.medium = v;
     } else if (a === "--kind") {
       const v = argv[++i];
@@ -155,7 +160,7 @@ function main(argv) {
   const F = (l) => { out.push(`  FAIL  ${l}`); failed++; };
   const Wn = (l) => out.push(`  WARN  ${l}`);
 
-  out.push(`  INFO  canvas ${W.toFixed(0)}x${H.toFixed(0)} (aspect ${(W / H).toFixed(2)}:1), medium=${opts.medium} viewport ${VW}x${VH}, label font ${font}px, kind=${kind}`);
+  out.push(`  INFO  canvas ${W.toFixed(0)}x${H.toFixed(0)} (aspect ${(W / H).toFixed(2)}:1), medium=${opts.medium}${opts.scrollable ? "" : " (non-scrollable)"} viewport ${VW}x${VH}, label font ${font}px, kind=${kind}`);
   if (opts.kind === "linear" && !seq) {
     Wn("kind=linear was declared manually and the SVG carries no sequence markers — this claim must be defensible (a genuinely line-by-line process flow); declaring linear to launder a gestalt fit failure violates Rule 6");
   }
@@ -186,9 +191,14 @@ function main(argv) {
       F(`cross axis does not fit legibly (${effCross.toFixed(1)}px < ${LEGIBLE_PX}px) — too many ${readingAxisVertical ? "participants/columns" : "rows"}; curate or split`);
     }
     const screens = readingAxisVertical ? (H * crossFit) / VH : (W * crossFit) / VW;
+    // Scrolling is only a reading gesture on media that can scroll — a
+    // print page or projected slide gets exactly one screen, linear or not.
+    const maxScreens = opts.scrollable ? MAX_READING_SCREENS : 1;
     if (screens <= 1) P(`reading axis fits one screen (${screens.toFixed(2)})`);
-    else if (screens <= MAX_READING_SCREENS) Wn(`reading axis spans ${screens.toFixed(1)} screens — legal for linear reading; each screenful must stand alone`);
-    else F(`reading axis spans ${screens.toFixed(1)} screens > ${MAX_READING_SCREENS} — split into scenario phases with cross-references`);
+    else if (screens <= maxScreens) Wn(`reading axis spans ${screens.toFixed(1)} screens — legal for linear reading on a scrollable medium; each screenful must stand alone`);
+    else F(opts.scrollable
+      ? `reading axis spans ${screens.toFixed(1)} screens > ${maxScreens} — split into scenario phases with cross-references`
+      : `reading axis spans ${screens.toFixed(1)} screens but medium "${opts.medium}" cannot scroll — everything must fit one page/slide; split across pages/slides instead`);
   }
 
   // Long-range edges (measured at display scale)

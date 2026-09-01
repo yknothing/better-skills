@@ -247,11 +247,20 @@ function checkBlock(block, idx, out) {
     }
     // C7 — color discipline: styling beyond the default theme demands a
     // declared dimension + legend (see color-semantics.md); decorative
-    // rainbow is anti-information.
+    // rainbow is anti-information. Detection covers classDef/style fills,
+    // stroke-only styling, themeVariables color overrides, skinparam
+    // colors, and PlantUML inline #hex/#name styling.
     const colored = fs_.some(f =>
-      /\b(?:classDef\s+\w+[^\n]*fill|style\s+\w+\s+fill|skinparam[^\n]*Color|fill\s*[:=]\s*["']?#)/i.test(f.body));
-    if (colored && !/legend|图例|color\s*(?:=|dimension|encodes)/i.test(block)) {
-      W("color styling present but no legend/declared color dimension in the delivery — decorative color is anti-information (color-semantics.md)");
+      /\b(?:classDef\s+\w+[^\n]*(?:fill|stroke|color)|style\s+\w+\s+(?:fill|stroke|color)|themeVariables|skinparam[^\n]*Color|(?:fill|stroke|color)\s*[:=]\s*["']?#)/i.test(f.body) ||
+      // PlantUML inline element colors: `class X #lightblue`, `[Comp] #FFAA00`
+      // (kept off label text so Mermaid escape entities like #quot; don't trip it)
+      /^\s*(?:abstract\s+)?(?:class|state|component|participant|actor|node|rectangle|package|database|interface|\[[^\]]+\])[^\n#]*#(?:[0-9a-fA-F]{3,8}|[A-Za-z]{3,20})\b/m.test(f.body));
+    if (colored) {
+      // Anti-silencing: "no legend needed" must not satisfy the check.
+      const cleaned = block.replace(/(?:no|without|not?\s+\w*)\s+(?:legend|图例)[^\n]*/gi, "");
+      if (!/legend|图例|color\s*(?:=|dimension|encodes)/i.test(cleaned)) {
+        W("color styling present but no legend/declared color dimension in the delivery — decorative color is anti-information (color-semantics.md)");
+      }
     }
   }
 }

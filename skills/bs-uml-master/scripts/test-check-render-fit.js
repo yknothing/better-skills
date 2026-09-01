@@ -109,6 +109,15 @@ run("phone-landscape-shape-warned", svg(1494, 940), ["--medium", "phone"], 1,
 run("pc-landscape-shape-in-band", svg(1400, 800), [], 0, [/fits one screen/], [/WARN.*aspect/]);
 run("bad-medium-usage", svg(400, 900), ["--medium", "watch"], 2, [/Usage/]);
 
+// 15. R5.1 non-scrollable media: linear diagrams get NO scrolling allowance
+//     on a4/slide — 2 screens that pass on pc must FAIL there
+run("slide-linear-no-scroll", svg(700, 1500, ACTOR), ["--medium", "slide"], 1,
+  [/non-scrollable/, /cannot scroll/]);
+run("a4-linear-no-scroll", svg(700, 2200, ACTOR), ["--medium", "a4"], 1, [/cannot scroll/]);
+run("pc-same-linear-scrolls", svg(700, 1500, ACTOR), [], 0, [/legal for linear reading on a scrollable medium/]);
+run("readme-profile-works", svg(850, 800), ["--medium", "readme"], 0, [/medium=readme/, /fits one screen/]);
+run("phone-landscape-profile", svg(700, 350), ["--medium", "phone-landscape"], 0, [/fits one screen/]);
+
 console.log(`\n${failures === 0 ? "ALL PASS" : failures + " FIXTURE FAILURES"}`);
 fs.rmSync(tmp, { recursive: true, force: true });
 process.exit(failures === 0 ? 0 : 1);
