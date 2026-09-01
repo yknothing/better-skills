@@ -290,16 +290,29 @@ function checkBlock(block, idx, out) {
     // Exemption keys on the declared Backend field only, and only when the
     // whole field IS a text backend — substring matching let
     // "Mermaid (text annotations)" and the unreplaced template placeholder
-    // "[Mermaid|PlantUML|text|SVG]" skip the gate (R6 adversary F1).
-    const textBackend = /^\s*(?:plain\s*[- ]?text|text|ascii(?:\s*art)?)\s*$/i.test(backend || "");
+    // "[Mermaid|PlantUML|text|SVG]" skip the gate (R6 adversary F1). And a
+    // "text" declaration over a mermaid/plantuml-shaped fence is a lie the
+    // fences already expose — the fence wins (R6.1 adversary F7).
+    const visualFence = fs_.some(f =>
+      /^(mermaid|plantuml|puml)$/.test(f.lang) || DIAGRAM_HEADER.test(f.header));
+    const textBackend = /^\s*(?:plain\s*[- ]?text|text|ascii(?:\s*art)?)\s*$/i.test(backend || "") &&
+      !visualFence;
     if (!textBackend) {
-      const win = fitReceiptWindow(block);
-      if (!win) {
+      const wins = fitReceiptWindows(block);
+      const clean = wins.filter(w =>
+        !(/\b(?:did\s*n[o']t|not\s+run|wasn't\s+run|would|should|could|expect\w*|estimat\w*|plan(?:ned|ning)?|roughly|approximately)\b|大约|预计|未运行|没有运行/i.test(w)));
+      // FAIL verdicts are scanned block-wide, not per-window: a smuggled
+      // second receipt (dual-profile FAIL after a PASS window) or a FAIL
+      // line padded out of its window must still demand the trade-off
+      // (R6.1 adversary F8). Tool verdict lines start with FAIL; summary
+      // lines carry "N FAIL".
+      const failing = /^\s*FAIL\b/m.test(block) ||
+        /\b[1-9]\d*\s+FAIL\b/.test(block.replace(/\b0\s+FAIL\b/g, ""));
+      if (wins.length === 0) {
         SOFT("RENDER_VERIFIED without a check-render-fit receipt (tool name + canvas WxH + effective px + verdict, together within a few lines) — fit claims made in prose are self-certification, not verification (IP-20/IP-25)");
-      } else if (/\b(?:did\s*n[o']t|not\s+run|wasn't\s+run|would|should|could|expect\w*|estimat\w*|plan(?:ned|ning)?|roughly|approximately)\b|大约|预计|未运行|没有运行/i.test(win)) {
+      } else if (clean.length === 0) {
         F("fit receipt window contains hedge/negation language (\"should PASS\", \"did not run\", \"roughly\") — a receipt is pasted tool output, not a prediction");
-      } else if (/\bFAIL\b/.test(win.replace(/\b0\s+FAIL\b/g, "")) &&
-                 !/USER-OVERRIDE|trade-?off|取舍|ladder/i.test(block)) {
+      } else if (failing && !/USER-OVERRIDE|trade-?off|取舍|ladder/i.test(block)) {
         F("fit receipt contains a FAIL verdict with no recorded trade-off/USER-OVERRIDE — a failing fit never ships silently (layout-craft.md trade-off ladder)");
       } else {
         P("check-render-fit receipt present alongside RENDER_VERIFIED");
@@ -310,18 +323,21 @@ function checkBlock(block, idx, out) {
 
 // A fit receipt is the tool's own output pasted (nearly) intact: the tool
 // token, canvas WxH, an effective-px figure, and a verdict must co-occur
-// within a 6-line window — tokens scattered across the delivery's prose do
-// not form a receipt (R6 adversary F3). Returns the first matching window's
-// text (so the caller can inspect its verdicts — R6 adversary F2), or null.
-function fitReceiptWindow(block) {
+// within an 8-line forward window — tokens scattered across the delivery's
+// prose do not form a receipt (R6 adversary F3). Forward-only: a lookback
+// pulled neighboring contract fields into the hedge scan and false-FAILed
+// honest deliveries (R6.1 adversary F9). Returns ALL matching windows so
+// the caller can hedge-scan each (R6.1 adversary F8).
+function fitReceiptWindows(block) {
   const lines = block.split(/\r?\n/);
+  const wins = [];
   for (let i = 0; i < lines.length; i++) {
     if (!/check-render-fit/i.test(lines[i])) continue;
-    const win = lines.slice(Math.max(0, i - 2), i + 6).join("\n");
+    const win = lines.slice(i, i + 8).join("\n");
     if (/\b\d+x\d+\b/.test(win) && /\d+(?:\.\d+)?px/.test(win) &&
-        /\b(?:PASS|FAIL)\b/.test(win)) return win;
+        /\b(?:PASS|FAIL)\b/.test(win)) wins.push(win);
   }
-  return null;
+  return wins;
 }
 
 function main(argv) {

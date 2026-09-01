@@ -246,6 +246,53 @@ run("plantuml-stray-quote-color-hides", HDR({ Type: "state machine", Backend: "P
   "```plantuml\n@startuml\n' note: legacy \" naming kept\nstate \"Fast Mode\" as s1 #lightblue\n[*] --> s1\n@enduml\n```\n" + TAIL,
   0, [/WARN.*no legend\/declared color dimension/]);
 
+// 18. R6.2 (adversary F7): declaring "Backend: text" over a mermaid-shaped
+//     fence is a lie the fence exposes — the exemption must not apply
+run("fit-bypass-text-over-mermaid-fence", HDR({ Backend: "text" }) + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+`, 1, [/RENDER_VERIFIED without a check-render-fit receipt/]);
+
+// R6.2 (adversary F8): a clean PASS window must not launder a second FAIL
+// receipt further down (dual-profile smuggling) — FAIL scan is block-wide
+run("fit-receipt-dual-profile-smuggle", HDR() + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+**Fit:** check-render-fit.js — canvas 1200x760, 16px at fit, PASS (pc 1470x850)
+
+(reading notes filler line one)
+(reading notes filler line two)
+(reading notes filler line three)
+(reading notes filler line four)
+(reading notes filler line five)
+(reading notes filler line six)
+a4 run: canvas 1200x760, 8.9px at fit; 1 FAIL
+`, 1, [/fit receipt contains a FAIL verdict with no recorded trade-off/]);
+// …and a per-line FAIL padded outside the tool window is still caught
+run("fit-receipt-padded-fail", HDR() + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+**Fit:** check-render-fit.js output (pc):
+INFO canvas 1200x760, label font 16px
+PASS no edge exceeds one screen along the reading axis
+(filler one)
+(filler two)
+(filler three)
+(filler four)
+(filler five)
+(filler six)
+FAIL gestalt diagram does not fit one screen legibly: effective label font 8.9px
+`, 1, [/fit receipt contains a FAIL verdict with no recorded trade-off/]);
+
+// R6.2 (adversary F9): an honest receipt below contract fields containing
+// incidental hedge words ("roughly 20 files") must NOT be false-FAILed —
+// the window is forward-only from the tool token
+run("fit-receipt-neighbor-hedge-ok", HDR() + FLOW4 + `
+**Excluded:** helper modules (roughly 20 files off-question) · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+**Fit:** check-render-fit.js — canvas 1200x760, 16px at fit, PASS (pc 1470x850)
+`, 0, [/check-render-fit receipt present/]);
+
 // 16. IP-24: escape entities inside quoted PlantUML display names must not
 //     trip the inline-color WARN; real inline colors still must
 run("plantuml-quoted-entity-not-color", HDR({ Type: "state machine", Backend: "PlantUML", State: "RENDER_VERIFIED — plantuml 1.2025.4, SVG inspected" }) +
