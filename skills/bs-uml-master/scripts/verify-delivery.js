@@ -1,0 +1,215 @@
+#!/usr/bin/env node
+// One-shot delivery verifier for bs-uml-master (R7). The single entry point
+// that runs every check the skill demands, on markdown OR HTML, and emits
+// the receipt block to paste into the delivery.
+//
+//   node verify-delivery.js <delivery.md|page.html> [--medium pc|phone|...]
+//        [--kind gestalt|linear|auto] [--out <dir>] [--repo <root>]
+//        [--puppeteer <cfg.json>] [--no-render] [--no-pin-install]
+//
+// Why one command: usage sample #4 (11 artifact versions) never ran a
+// single checker — the HTML medium had no markdown to hand to
+// check-delivery, the pinned CDN renderer (mermaid 10.6.1) was never
+// parsed against, and "blank page" was blamed on the CDN while one
+// diagram per version failed to parse. Every one of those was a
+// prose-bound step a model could skip. This binds them all to one call:
+//
+//   1. extract diagram sources (```mermaid fences, or HTML .mermaid blocks —
+//      an HTML page is turned into a markdown mirror automatically, so the
+//      HTML medium is no longer a contract bypass)
+//   2. syntax-check each source on the LOCAL mermaid (check-mermaid.js) and,
+//      when the page pins a CDN version, on THAT version too (installed
+//      into --out on demand) — the reader's renderer is the one that counts
+//   3. render with mermaid-cli and run check-render-fit for --medium
+//   4. run check-delivery on the (mirror) markdown
+//   5. run check-evidence against --repo for MODEL-FROM-CODE citations
+//   6. print a receipt whose lines satisfy check-delivery C8, stamped with a
+//      content hash so a typed imitation is one more lie to tell
+//
+// Format-bound like every checker here: it cannot prove the model is true.
+// Exit 0 = no FAIL anywhere, 1 = any FAIL, 2 = usage error.
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const { spawnSync } = require("child_process");
+const { createRequire } = require("module");
+
+const HERE = __dirname;
+const VERSION = "1";
+const DIAGRAM_HEADER = /^(classdiagram|sequencediagram|statediagram|erdiagram|graph\b|flowchart\b|@start)/i;
+
+function unescapeHtml(s) {
+  return s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&");
+}
+
+function detectPin(html) {
+  const m = html.match(/mermaid(?:\.min)?(?:\.js)?[@/]v?(\d+\.\d+\.\d+)/i) || html.match(/\/mermaid\/(\d+\.\d+\.\d+)\//i);
+  return m ? m[1] : null;
+}
+
+// HTML → markdown mirror. Every <h2> whose section holds a mermaid block
+// becomes a "## Diagram Delivery" header; <strong>Label:</strong> becomes
+// **Label:**; mermaid blocks become fences. Good enough for check-delivery to
+// judge the contract the page actually carries.
+function buildMirror(html, pin) {
+  let s = html.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<style[\s\S]*?<\/style>/gi, "");
+  // Fence the mermaid blocks first and park them behind placeholders so the
+  // tag stripping below cannot touch <br/> and friends inside diagram labels.
+  const parked = [];
+  s = s.replace(/<(?:div|pre)[^>]*class="(?:[^"]*\s)?mermaid(?:\s[^"]*)?"[^>]*>([\s\S]*?)<\/(?:div|pre)>/gi, (m, src) => {
+    parked.push("```mermaid\n" + unescapeHtml(src).trim() + "\n```");
+    return `\n\n@@MERMAID${parked.length - 1}@@\n\n`;
+  });
+  // section by h2: a section holding a diagram becomes a Diagram Delivery block
+  const parts = s.split(/<h2[^>]*>/i);
+  const out = [parts[0]];
+  for (let i = 1; i < parts.length; i++) {
+    const end = parts[i].indexOf("</h2>");
+    const title = end >= 0 ? parts[i].slice(0, end) : "";
+    const body = end >= 0 ? parts[i].slice(end + 5) : parts[i];
+    const t = unescapeHtml(title.replace(/<[^>]+>/g, "")).replace(/\s+/g, " ").trim();
+    if (/@@MERMAID\d+@@/.test(body)) {
+      out.push(`\n\n## Diagram Delivery — ${t}\n` + (pin ? `**Renderer pin:** mermaid@${pin} (CDN)\n` : "") + body);
+    } else out.push(`\n\n### ${t}\n` + body);
+  }
+  s = out.join("");
+  s = s.replace(/<(?:strong|b)>\s*([^<:]{1,40}?)\s*[:：]\s*<\/(?:strong|b)>/gi, (m, l) => `**${l.trim() === "Q" ? "Question" : l.trim()}:**`);
+  s = s.replace(/<br\s*\/?>/gi, "\n").replace(/<\/(?:p|div|li|tr|h[1-6])>/gi, "\n").replace(/<[^>]+>/g, "");
+  s = unescapeHtml(s).replace(/@@MERMAID(\d+)@@/g, (m, i) => parked[+i]);
+  s = s.split("\n").map(l => l.replace(/[ \t]+$/g, "")).join("\n").replace(/\n{3,}/g, "\n\n");
+  return s.trim() + "\n";
+}
+
+function extractSources(md) {
+  const out = [];
+  for (const m of md.matchAll(/```([\w-]*)\r?\n([\s\S]*?)```/g)) {
+    const body = m[2].replace(/^\s*---[^\S\r\n]*\r?\n[\s\S]*?\r?\n---[^\S\r\n]*\r?\n/, "");
+    const header = (body.split(/\r?\n/).find(l => l.trim() && !l.trim().startsWith("%%")) || "").trim();
+    if (/^(mermaid)$/.test((m[1] || "").toLowerCase()) || DIAGRAM_HEADER.test(header)) out.push(body.trim() + "\n");
+  }
+  return out;
+}
+
+function run(cmd, args, opts = {}) {
+  const r = spawnSync(cmd, args, { encoding: "utf-8", timeout: opts.timeout || 240000, cwd: opts.cwd || process.cwd(), env: process.env });
+  return { code: r.status === null ? 2 : r.status, out: (r.stdout || "") + (r.stderr || "") };
+}
+
+function mermaidVersionAt(cwd) {
+  try {
+    const req = createRequire(path.join(cwd, "noop.js"));
+    return JSON.parse(fs.readFileSync(req.resolve("mermaid/package.json"), "utf-8")).version;
+  } catch { return null; }
+}
+
+function parseWith(cwd, mmd) {
+  const r = run("node", [path.join(HERE, "check-mermaid.js"), mmd], { cwd });
+  if (r.code === 0) return { status: "OK", detail: "" };
+  if (r.code === 1) {
+    const line = (r.out.match(/line (\d+)/i) || [])[1];
+    return { status: "FAIL", detail: line ? `line ${line}` : (r.out.split("\n").find(l => /error/i.test(l)) || "parse error").trim().slice(0, 80) };
+  }
+  return { status: "UNCHECKED", detail: (r.out.split("\n").find(l => l.trim()) || "checker unavailable").trim().slice(0, 100) };
+}
+
+function svgSize(svg) {
+  const vb = svg.match(/viewBox="[\d.\-]+\s+[\d.\-]+\s+([\d.]+)\s+([\d.]+)"/);
+  if (vb) return `${Math.round(+vb[1])}x${Math.round(+vb[2])}`;
+  const w = svg.match(/\swidth="([\d.]+)/), h = svg.match(/\sheight="([\d.]+)/);
+  return w && h ? `${Math.round(+w[1])}x${Math.round(+h[1])}` : "?x?";
+}
+
+function main(argv) {
+  const file = argv[0];
+  if (!file || file.startsWith("--")) { console.error("Usage: node verify-delivery.js <delivery.md|page.html> [--medium pc] [--kind auto] [--out dir] [--repo root] [--puppeteer cfg] [--no-render] [--no-pin-install]"); return 2; }
+  const flag = (n, d) => { const i = argv.indexOf(n); return i >= 0 && argv[i + 1] && !argv[i + 1].startsWith("--") ? argv[i + 1] : d; };
+  const has = (n) => argv.includes(n);
+  const medium = flag("--medium", "pc"), kind = flag("--kind", null);
+  const out = path.resolve(flag("--out", ".uml-verify"));
+  const repo = flag("--repo", fs.existsSync(path.join(process.cwd(), ".git")) ? process.cwd() : null);
+  let pup = flag("--puppeteer", process.env.PUPPETEER_CONFIG || null);
+  if (!pup && fs.existsSync(path.join(process.cwd(), "puppeteer.json"))) pup = path.join(process.cwd(), "puppeteer.json");
+  fs.mkdirSync(out, { recursive: true });
+
+  let text;
+  try { text = fs.readFileSync(file, "utf-8"); } catch (e) { console.error(`cannot read ${file}: ${e.message}`); return 2; }
+  const isHtml = /\.html?$/i.test(file) || /<(?:html|div|pre)[\s>]/i.test(text.slice(0, 4000)) && /class="(?:[^"]*\s)?mermaid(?:\s|")/.test(text);
+  const pin = isHtml ? detectPin(text) : (text.match(/\*\*Renderer pin:\*\*\s*mermaid@(\d+\.\d+\.\d+)/) || [])[1] || null;
+  let md = text, mirror = null;
+  if (isHtml) { md = buildMirror(text, pin); mirror = path.join(out, "mirror.md"); fs.writeFileSync(mirror, md); }
+  const sources = extractSources(md);
+
+  const localVer = mermaidVersionAt(process.cwd()) || mermaidVersionAt(HERE);
+  let pinDir = null, pinNote = "";
+  if (pin && pin !== localVer && !has("--no-pin-install")) {
+    pinDir = path.join(out, `mermaid-${pin}`);
+    if (!fs.existsSync(path.join(pinDir, "node_modules", "mermaid"))) {
+      fs.mkdirSync(pinDir, { recursive: true });
+      const r = run("npm", ["install", "--no-save", "--silent", "--prefix", pinDir, `mermaid@${pin}`, "jsdom"], { cwd: pinDir, timeout: 300000 });
+      if (r.code !== 0) { pinNote = `pinned mermaid@${pin} UNCHECKED (install failed: ${r.out.trim().split("\n").pop().slice(0, 80)})`; pinDir = null; }
+    }
+  } else if (pin && pin === localVer) pinNote = `pinned mermaid@${pin} = local`;
+
+  const lines = [];
+  let anyFail = false, fitLines = [];
+  sources.forEach((src, i) => {
+    const n = i + 1, mmd = path.join(out, `d${n}.mmd`);
+    fs.writeFileSync(mmd, src);
+    const cells = [];
+    let verified = false;
+    const local = parseWith(process.cwd(), mmd);
+    if (local.status === "OK") verified = true;
+    cells.push(`parse mermaid@${localVer || "?"} ${local.status}${local.detail ? " " + local.detail : ""}`);
+    if (local.status === "FAIL") anyFail = true;
+    if (pinDir) {
+      const p = parseWith(pinDir, mmd);
+      cells.push(`parse mermaid@${pin} (pinned) ${p.status}${p.detail ? " " + p.detail : ""}`);
+      if (p.status === "FAIL") anyFail = true;
+    }
+    if (!has("--no-render")) {
+      const svg = path.join(out, `d${n}.svg`);
+      const args = ["-y", "@mermaid-js/mermaid-cli", ...(pup ? ["-p", pup] : []), "-i", mmd, "-o", svg];
+      const r = run("npx", args, { timeout: 300000 });
+      if (r.code === 0 && fs.existsSync(svg)) {
+        verified = true;
+        const size = svgSize(fs.readFileSync(svg, "utf-8"));
+        const fit = run("node", [path.join(HERE, "check-render-fit.js"), svg, "--medium", medium, ...(kind ? ["--kind", kind] : [])]);
+        const px = (fit.out.match(/effective label font (\d+(?:\.\d+)?)px/) || fit.out.match(/label font (\d+(?:\.\d+)?)px/) || [])[1];
+        const verdict = fit.code === 0 ? "PASS" : "FAIL";
+        if (fit.code === 1) anyFail = true;
+        cells.push(`render mmdc OK · check-render-fit(${medium}) canvas ${size} ${px ? px + "px" : "?px"} ${verdict}`);
+        fitLines.push(`d${n}:\n` + fit.out.trim().split("\n").map(l => "    " + l).join("\n"));
+      } else {
+        anyFail = true;
+        const err = (r.out.split("\n").find(l => /error|expect|parse/i.test(l)) || "render failed").trim().slice(0, 90);
+        cells.push(`render mmdc FAIL (${err})`);
+      }
+    }
+    if (!verified) { anyFail = true; cells.push("NO VERIFICATION SUCCEEDED (install mermaid+jsdom for parsing, or allow rendering)"); }
+    lines.push(`  d${n}: ${cells.join(" · ")}`);
+  });
+
+  const del = run("node", [path.join(HERE, "check-delivery.js"), mirror || file]);
+  const delSummary = (del.out.trim().split("\n").pop() || "").trim();
+  if (del.code === 1) anyFail = true;
+  let evSummary = "skipped (no --repo and cwd is not a git root)";
+  if (repo) {
+    const ev = run("node", [path.join(HERE, "check-evidence.js"), mirror || file, "--repo", repo]);
+    evSummary = (ev.out.trim().split("\n").pop() || "").trim();
+    if (ev.code === 1) anyFail = true;
+  }
+
+  const id = crypto.createHash("sha256").update(sources.join("\n---\n") + lines.join("\n") + delSummary + evSummary).digest("hex").slice(0, 12);
+  const head = `## verify-delivery receipt ${id} (bs-uml-master verify-delivery.js v${VERSION}, ${new Date().toISOString().slice(0, 16)}Z)`;
+  const meta = `input: ${path.basename(file)}${mirror ? ` (HTML → mirror ${path.relative(process.cwd(), mirror)})` : ""} · diagrams: ${sources.length} · medium=${medium}${pin ? ` · renderer pin: mermaid@${pin} (CDN)${pinNote ? " — " + pinNote : ""}` : ""}`;
+  const tail = [`  check-delivery: ${delSummary || "no output"}`, `  check-evidence: ${evSummary}`, `VERDICT: ${anyFail ? "FAIL" : "PASS"} — ${anyFail ? "fix every FAIL above before delivering; a FAIL that stays needs a recorded trade-off" : "paste this receipt into the delivery"}`];
+  console.log([head, meta, ...lines, ...tail].join("\n"));
+  if (fitLines.length) console.log("\nfit details:\n" + fitLines.join("\n"));
+  if (sources.length === 0) { console.log("\n  FAIL  no diagram sources found (no ```mermaid fences / HTML .mermaid blocks)"); return 1; }
+  return anyFail ? 1 : 0;
+}
+
+if (require.main === module) process.exit(main(process.argv.slice(2)));
+module.exports = { detectPin, buildMirror, extractSources, svgSize };
