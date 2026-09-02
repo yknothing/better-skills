@@ -53,7 +53,10 @@ function unescapeHtml(s) {
 // no quotes (R7 adversary F2). Nesting-aware: the matching close tag is
 // found by depth counting, so a wrapper <div> around the block, or a block
 // inside a <pre>, cannot truncate or hide it.
-const OPEN_TAG = /<(div|pre|code|section|textarea|p)\b([^>]*)>/gi;
+// Any element at all can be the container (figure, span, li, td, article…):
+// the scanner accepts every non-void tag (R7.2, adversary F2).
+const OPEN_TAG = /<([a-zA-Z][\w-]*)\b([^>]*?)\/?>/g;
+const VOID = new Set(["br", "img", "hr", "input", "meta", "link", "area", "base", "col", "embed", "source", "track", "wbr", "script", "style"]);
 function hasMermaidClass(attrs) {
   const m = attrs.match(/\bclass\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i);
   if (!m) return false;
@@ -67,8 +70,8 @@ function parkMermaidBlocks(html) {
   const re = new RegExp(OPEN_TAG.source, "gi");
   let m;
   while ((m = re.exec(html)) !== null) {
-    if (!hasMermaidClass(m[2])) continue;
     const tag = m[1].toLowerCase();
+    if (VOID.has(tag) || m[0].endsWith("/>") || !hasMermaidClass(m[2])) continue;
     const bodyStart = m.index + m[0].length;
     // depth-count to the matching close tag
     const pair = new RegExp(`<(/?)${tag}\\b[^>]*>`, "gi");
@@ -87,8 +90,12 @@ function parkMermaidBlocks(html) {
   return { text: out + html.slice(pos), blocks };
 }
 
-function detectPin(html) {
+function detectPin(htmlRaw) {
+  // Commented-out tags are not loaded by the browser (R7.2, adversary F13).
+  const html = htmlRaw.replace(/<!--[\s\S]*?-->/g, "");
   const urls = [];
+  for (const im of html.matchAll(/<script\b[^>]*type\s*=\s*["']importmap["'][^>]*>([\s\S]*?)<\/script>/gi))
+    for (const u of im[1].matchAll(/["'](https?:\/\/[^"'\s]*mermaid[^"'\s]*)["']/gi)) urls.push(u[1]);
   for (const m of html.matchAll(/<script\b[^>]*\bsrc\s*=\s*["']?([^"'\s>]+)/gi)) urls.push(m[1]);
   for (const m of html.matchAll(/\bimport\b[^;\n]*?["']([^"']*mermaid[^"']*)["']/gi)) urls.push(m[1]);
   let floating = false;

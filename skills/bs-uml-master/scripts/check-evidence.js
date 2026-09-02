@@ -24,19 +24,28 @@ const fs = require("fs");
 const path = require("path");
 
 const CITE = /([\w*.][\w*.\\/-]*\.[a-z]{1,6})(?::L?|\s+file:|\s+lines?\s+)(\d+)(?:\s*[-–]\s*L?(\d+))?/g;
-const IDENT = /`([^`\n]{2,60})`|\b([A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)+)\b|\b([a-z]+[A-Z][A-Za-z0-9]+)\b|\b([A-Z][A-Z0-9]{3,}(?:_[A-Z0-9]+)*)\b/g;
+// Token classes and how an absence is graded (R7.2, adversary F5):
+//   strong  → FAIL when absent: `backticked`, snake_case, camelCase with a
+//             ≥2-letter head (frozenUntil), PascalCase with ≥2 humps
+//             (ReviewRecord, SkillStatus)
+//   weak    → WARN when absent: ALL_CAPS acronyms/states (ACTIVE, HTTP) and
+//             short-head camel (gRPC, iOS) — often prose or diagram labels
+const IDENT = /`([^`\n]{2,60})`|\b([A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)+)\b|\b([a-z]+[A-Z][A-Za-z0-9]+)\b|\b([A-Z][a-z0-9]+(?:[A-Z][a-z0-9]+)+)\b|\b([A-Z][A-Z0-9]{3,}(?:_[A-Z0-9]+)*)\b/g;
 const STOP = new Set(["MODEL_FROM_CODE", "MODEL_FROM_DESIGN", "RENDER_VERIFIED", "SYNTAX_VERIFIED", "UNVERIFIED", "SELF_REVIEWED", "USER_OVERRIDE", "HARD_GATE", "README", "SKILL", "CLAUDE", "HTML", "JSON", "YAML", "ASCII", "UML", "SVG", "PNG", "PASS", "FAIL", "WARN", "INFO", "TODO", "TBD", "iPhone", "iPad", "iOS", "macOS", "JavaScript", "TypeScript", "GitHub", "GitLab", "PlantUML", "OpenAPI", "GraphQL", "PostgreSQL", "MongoDB", "MySQL", "LaTeX", "eBay", "YouTube", "LinkedIn", "PowerPoint", "WordPress", "jQuery"]);
 
 function identifiers(text) {
-  const out = new Set();
+  const out = new Map(); // token → "strong" | "weak"
   for (const m of text.matchAll(IDENT)) {
-    const tok = (m[1] || m[2] || m[3] || m[4] || "").trim();
+    const tok = (m[1] || m[2] || m[3] || m[4] || m[5] || "").trim();
     if (!tok || STOP.has(tok) || STOP.has(tok.replace(/-/g, "_"))) continue;
     if (/^[\w*.\\/-]+\.[a-z]{1,6}(?::\d+)?$/.test(tok)) continue; // paths are not identifiers
     if (/^(?:https?|file):/.test(tok)) continue;
-    out.add(tok);
+    let kind = "strong";
+    if (m[5]) kind = "weak";                                  // ALL_CAPS
+    else if (m[3] && /^[a-z]{1}[A-Z]/.test(tok)) kind = "weak"; // gRPC, iOS, eBay
+    if (!out.has(tok) || kind === "strong") out.set(tok, kind);
   }
-  return [...out];
+  return [...out.entries()].map(([token, kind]) => ({ token, kind }));
 }
 
 // Whole-token presence: "id" must not match inside "batch_id", nor
@@ -71,6 +80,10 @@ function checkDelivery(md, repo) {
     return v;
   };
   lines.forEach((line, idx) => {
+    // Ledger rows sometimes put the element on one line and its citation on
+    // the next; a citation whose own segment names nothing borrows the
+    // identifiers of the previous non-citing line (R7.2, adversary F5).
+    const prev = idx > 0 && !/[\w*.][\w*.\\/-]*\.[a-z]{1,6}(?::L?|\s+file:|\s+lines?\s+)\d+/.test(lines[idx - 1]) ? lines[idx - 1] : "";
     for (const seg of segments(line)) {
       const where = `L${idx + 1} ${seg.path}:${seg.from}${seg.to !== seg.from ? "-" + seg.to : ""}`;
       if (seg.path.includes("*")) { results.push({ level: "WARN", msg: `${where} — glob path is not a citation; cite one concrete file` }); continue; }
@@ -79,15 +92,21 @@ function checkDelivery(md, repo) {
       if (!file) { results.push({ level: "FAIL", msg: `${where} — cited path does not exist in the repository` }); continue; }
       const from = Math.min(seg.from, seg.to), to = Math.max(seg.from, seg.to);
       if (from < 1 || to > file.length) { results.push({ level: "FAIL", msg: `${where} — cited line(s) outside the file (1–${file.length})` }); continue; }
-      const idents = identifiers(seg.text);
+      let idents = identifiers(seg.text);
+      let borrowed = false;
+      if (idents.length === 0 && prev) { idents = identifiers(prev); borrowed = idents.length > 0; }
       if (idents.length === 0) { results.push({ level: "PASS", msg: `${where} resolves (no identifier tokens to cross-check)` }); continue; }
       const near = file.slice(Math.max(0, from - 4), Math.min(file.length, to + 3)).join("\n");
       const whole = file.join("\n");
-      const missingNear = idents.filter(t => !present(near, t));
-      const missingAll = missingNear.filter(t => !present(whole, t));
-      if (missingAll.length) results.push({ level: "FAIL", msg: `${where} — identifier(s) ${missingAll.map(t => `"${t}"`).join(", ")} appear nowhere in the cited file: claimed element absent from its own citation (fabrication signature — Rule 2: identifiers are quotations)` });
-      else if (missingNear.length) results.push({ level: "WARN", msg: `${where} — ${missingNear.map(t => `"${t}"`).join(", ")} not within ±3 lines of the citation (elsewhere in file): tighten the line reference` });
-      else results.push({ level: "PASS", msg: `${where} resolves; ${idents.length} identifier(s) found at the citation` });
+      const missingNear = idents.filter(t => !present(near, t.token));
+      const missingAll = missingNear.filter(t => !present(whole, t.token));
+      const src = borrowed ? " (identifiers taken from the previous line)" : "";
+      const q = (arr) => arr.map(t => `"${t.token}"`).join(", ");
+      const strongAbsent = missingAll.filter(t => t.kind === "strong"), weakAbsent = missingAll.filter(t => t.kind === "weak");
+      if (strongAbsent.length) results.push({ level: "FAIL", msg: `${where} — identifier(s) ${q(strongAbsent)} appear nowhere in the cited file: claimed element absent from its own citation (fabrication signature — Rule 2: identifiers are quotations)${src}` });
+      else if (weakAbsent.length) results.push({ level: "WARN", msg: `${where} — ${q(weakAbsent)} appear nowhere in the cited file (acronym/state-shaped token: diagram label, or a fabricated state?)${src}` });
+      else if (missingNear.length) results.push({ level: "WARN", msg: `${where} — ${q(missingNear)} not within ±3 lines of the citation (elsewhere in file): tighten the line reference${src}` });
+      else results.push({ level: "PASS", msg: `${where} resolves; ${idents.length} identifier(s) found at the citation${src}` });
     }
   });
   return results;

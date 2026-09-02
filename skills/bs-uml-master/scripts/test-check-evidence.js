@@ -54,6 +54,12 @@ run("backslash-path", "frozen_until → src\\batch.js:4", 0, [/^\s+PASS/m], [/^\
 run("reversed-range", "frozen_until → src/batch.js:6-2", 0, [/^\s+PASS/m], [/^\s+(?:WARN|FAIL)/m]);
 run("line-zero", "frozen_until → src/batch.js:0", 1, [/FAIL.*outside the file/]);
 run("traversal", "frozen_until → ../etc/passwd.txt:1", 1, [/FAIL.*escapes the repository root/]);
+// 9. R7.2 (adversary F5 + advocate): PascalCase fabrications are caught;
+//    ALL_CAPS / short-head camel absences only WARN; previous-line borrowing
+run("pascalcase-fabrication", "entity ReviewRecord persisted → src/batch.js:2", 1, [/FAIL.*"ReviewRecord".*appear nowhere/]);
+run("allcaps-absent-warns-only", "state UNFROZEN and gRPC over HTTPS → src/batch.js:3", 0, [/WARN.*"UNFROZEN".*acronym\/state-shaped/], [/^\s+FAIL/m]);
+run("prev-line-borrowing", "Batch.created_at (registry timestamp)\n→ src/batch.js:2-5", 1, [/FAIL.*"created_at".*previous line/]);
+run("prev-line-not-borrowed-when-own-idents", "frozen_until → src/batch.js:4\nstatus → src/batch.js:3", 0, [/^\s+PASS/m], [/^\s+(?:WARN|FAIL)/m]);
 // 7. no citations at all → WARN, exit 0 (C3 owns the "must cite" rule)
 run("no-citations", "just prose here", 0, [/WARN.*no file:line citations/]);
 console.log(`\n${failures === 0 ? "ALL PASS" : failures + " FIXTURE FAILURES"}`);

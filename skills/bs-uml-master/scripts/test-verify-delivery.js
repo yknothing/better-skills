@@ -97,6 +97,14 @@ check("stale-receipt-flagged", r.code === 1 && /STALE RECEIPT 000000000000/.test
 check("verdict-wording-no-exemption-words", !/trade-?off|USER-OVERRIDE|取舍|ladder/i.test(r.out.split("\n").find(l => l.startsWith("VERDICT:")) || ""), r.out);
 fs.rmSync(tmp2, { recursive: true, force: true });
 
+// 13. R7.2 (adversary F2 residual): any container tag is extracted, void tags never
+const anyTag = "<h2>a</h2><figure class=\"mermaid\">\ngraph TB\n a-->b\n</figure><li class='mermaid'>graph LR\n c-->d</li><td class=mermaid>erDiagram\n A ||--o{ B : x</td><article class=\"mermaid\"><span>graph TB\n e-->f</span></article><br class=\"mermaid\"/>";
+check("extract-any-container-tag", V.parkMermaidBlocks(anyTag).blocks.length === 4, String(V.parkMermaidBlocks(anyTag).blocks.length));
+
+// 14. R7.2 (adversary F13): commented-out script tags do not set the pin; importmap loads are pinned
+check("pin-ignores-html-comment", V.detectPin('<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.17.2/mermaid.min.js"></script> --><script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>').version === "10.6.1");
+check("pin-importmap", (() => { const p = V.detectPin('<script type="importmap">{"imports":{"mermaid":"https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs"}}</script><script type="module">import mermaid from "mermaid";</script>'); return p.version === "11.4.1" && p.floating === false; })());
+
 console.log(`\n${failures === 0 ? "ALL PASS" : failures + " FIXTURE FAILURES"}`);
 fs.rmSync(tmp, { recursive: true, force: true });
 process.exit(failures === 0 ? 0 : 1);
