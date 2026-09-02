@@ -14,33 +14,33 @@ You are the **adversary reviewer** for the `bs-uml-master` skill. Your job is to
 Do not review only the embedded SKILL.md. Read every file in this manifest plus the actual command outputs you cite. The manifest binds the requested scope; it does not claim the files are correct.
 
 **Scope Contract Version**: 1
-**Reviewed Revision to record**: d578e78cc2b64a2829a50bd3b05cd90257756c84
-**Reviewed Skill SHA-256 to record**: 454a862bdf526571f1e5f4fafcb6bbcffdb59d5f18f69c8e55d047368843386c
-**Reviewed Manifest SHA-256 to record**: f9a4c79202155ecfa724e8fe3a87a991df7d4645e2cd3b09f806043e26d532c7
+**Reviewed Revision to record**: 27cdde624e73bb22632a290bf815c04b991efd4a
+**Reviewed Skill SHA-256 to record**: 89a3b833b714aa537e1339636abb2e8289d7daaaa5dd272a88561c52b57f1c13
+**Reviewed Manifest SHA-256 to record**: dfb01cbb361de5987b323b4e5b76e8e87ce3c3e4a203a9b26de39795f32dfdc6
 
 - `evaluation/datasets/batch-1-test-prompts.json` — `22625636259880ff41378a46b3401dd0274a48db0225e019e344ad59eaa62f43`
 - `evaluation/harness/runner.js` — `ee6e871ad26230c4073ba72151f1d6f5862c7c05074ba756bfe9b5e4e509f8f8`
 - `evaluation/harness/test-runner-scope.js` — `eaa773a660417049759c7e8831444a2ec5e6f73174487662018d6c2f556e879c`
 - `skills.json` — `7885f9c7cefbd700ced8fc481b1524f61de6c47c523bcc806ecca60b269dc1ce`
-- `skills/bs-uml-master/SKILL.md` — `454a862bdf526571f1e5f4fafcb6bbcffdb59d5f18f69c8e55d047368843386c`
+- `skills/bs-uml-master/SKILL.md` — `89a3b833b714aa537e1339636abb2e8289d7daaaa5dd272a88561c52b57f1c13`
 - `skills/bs-uml-master/references/color-semantics.md` — `abaa0de652b94df1e0ef6a99abb76703ca9bc6ddec42e6a61940aa9018af8e23`
 - `skills/bs-uml-master/references/diagram-selection.md` — `cfa85279548602fe69db478866a34cbf2e59f1269a6e01a7eb35ccf4218dc10c`
 - `skills/bs-uml-master/references/layout-craft.md` — `c03bdcae428f7ef955f7ed3c68d65c27f0a7d1a85a51e1799e58e9b20b3c30dc`
 - `skills/bs-uml-master/references/modeling-from-code.md` — `e10964ceaedb02fac16f77299d7edc36e2ac2037dab2faeb16a5ca46eb9fe16d`
 - `skills/bs-uml-master/references/rendering-validation.md` — `d0490c6b7b446a56f4ee761647e588ede8d9453ffb9c638766bd26ac0076c1a1`
 - `skills/bs-uml-master/references/svg-presentation.md` — `e3400aed86339da2ad9a8e6692727842de8fbfcb5632871d85e1d68e308dfb02`
-- `skills/bs-uml-master/references/syntax-pitfalls.md` — `af16fd8a034262370976e62c28102a064a6ab4bbde4f505fc25bffd2449ad73d`
+- `skills/bs-uml-master/references/syntax-pitfalls.md` — `3d8ad48c85151cadaa9c2d85fecb5c2cd617cc326c6b5165c31aff44f7afaef1`
 - `skills/bs-uml-master/references/text-diagrams.md` — `68ebcb460268833b13f3aa863ffc409bc599a0a4475a0b9db33ea6a78d7acab3`
 - `skills/bs-uml-master/references/uml-semantics.md` — `f8b59c246cddcf17b9520c8d7e7215940432f5118c54bf9441e1023e329330de`
-- `skills/bs-uml-master/scripts/check-delivery.js` — `b11a5a2bc4c188215d832d91ac4f79dae68e0170f276c625702909880cd52e5a`
-- `skills/bs-uml-master/scripts/check-evidence.js` — `554563a1f4c5ec79210cc4e6236c8f373a89aa48a12cb250e5d773dcf799b2da`
+- `skills/bs-uml-master/scripts/check-delivery.js` — `7027b07342b00aaf3f60932cc1223ebcf720b7e5b58cacc22d83fe9dab81e647`
+- `skills/bs-uml-master/scripts/check-evidence.js` — `0490ee88b6414214c6a7c002000bc3963cfa933a7c03881ce5b1d660a92e41ba`
 - `skills/bs-uml-master/scripts/check-mermaid.js` — `938b004901b22e27d204f9afb69cf6003ee155010f7893a84f58cd453e1c9fb4`
 - `skills/bs-uml-master/scripts/check-render-fit.js` — `ce446534903ec12a64f68f1a24cc31bf5796a46b44c066e13bd6e2bd837ec2b3`
-- `skills/bs-uml-master/scripts/test-check-delivery.js` — `ddf300acdbf41c557eb910017826aa454b418e9e94eb4c059aedbe382f57c6e0`
-- `skills/bs-uml-master/scripts/test-check-evidence.js` — `a574312ac5b0281ecfbe6a773602f53c764c1bd639826192d7921d85f0bf7aa8`
+- `skills/bs-uml-master/scripts/test-check-delivery.js` — `f4c5b34ace49f0feaba9a31fd1e1b7b1a44c100cca02a7958c6c1056a77fa8af`
+- `skills/bs-uml-master/scripts/test-check-evidence.js` — `7cc4c0efa589da159c21331058bef6771cdeee746d28067c4dbcd91d831fe70a`
 - `skills/bs-uml-master/scripts/test-check-render-fit.js` — `7be5631a90b5640f98dbdb38b89de47a3606b78dee15f0db971e82807892d749`
-- `skills/bs-uml-master/scripts/test-verify-delivery.js` — `48989e956fa6d99c29c34d7f8c2c5412d2a1173b417cd3484d5de68128f3634c`
-- `skills/bs-uml-master/scripts/verify-delivery.js` — `54b9a88bf7fc5123ed7ca4422643826c055e74708e4e5fc844ebad19e0c63a5e`
+- `skills/bs-uml-master/scripts/test-verify-delivery.js` — `6683e623a2c806a841735e09026981276565fce52350f7a37c8abcd3ea140f2a`
+- `skills/bs-uml-master/scripts/verify-delivery.js` — `d3ca0258cc2418ef8b1d786768ff1656219c1c69ad692ab56b10739bd90692ed`
 - `tools/peer-review.js` — `702587f408de2ff13cd994288e2b9a5da3ee2833ee9076c8ea1642670676307d`
 - `tools/test-peer-review-scope.js` — `4dc00dffb1d46b4feafc43a9c3819dbfe8c134921afd3795bcfe5ba3709eb3d8`
 
@@ -54,9 +54,9 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 **Skill**: bs-uml-master
 **HUMAN_VERIFIED**: false
 **Scope Contract Version**: 1
-**Reviewed Revision**: d578e78cc2b64a2829a50bd3b05cd90257756c84
-**Reviewed Skill SHA-256**: 454a862bdf526571f1e5f4fafcb6bbcffdb59d5f18f69c8e55d047368843386c
-**Reviewed Manifest SHA-256**: f9a4c79202155ecfa724e8fe3a87a991df7d4645e2cd3b09f806043e26d532c7
+**Reviewed Revision**: 27cdde624e73bb22632a290bf815c04b991efd4a
+**Reviewed Skill SHA-256**: 89a3b833b714aa537e1339636abb2e8289d7daaaa5dd272a88561c52b57f1c13
+**Reviewed Manifest SHA-256**: dfb01cbb361de5987b323b4e5b76e8e87ce3c3e4a203a9b26de39795f32dfdc6
 
 ## Summary
 
@@ -64,7 +64,7 @@ Do not review only the embedded SKILL.md. Read every file in this manifest plus 
 
 ## Evidence Reviewed
 
-Full manifest receipt `f9a4c79202155ecfa724e8fe3a87a991df7d4645e2cd3b09f806043e26d532c7` was received and independently verified.
+Full manifest receipt `dfb01cbb361de5987b323b4e5b76e8e87ce3c3e4a203a9b26de39795f32dfdc6` was received and independently verified.
 
 (Then list the files and commands actually examined or rerun.)
 
@@ -253,7 +253,7 @@ Run the semantic review against the rendered diagram (not the source you remembe
 
 At `authoritative` significance, this pass runs independently (fresh sub-agent reviewing rendered output + ledger) when the platform allows; otherwise perform it in-context and mark it `SELF_REVIEWED`.
 
-Draft the delivery in the output contract, run `scripts/check-delivery.js` on the draft, fix every FAIL, then deliver.
+Draft the delivery in the output contract, run `scripts/verify-delivery.js` on the draft (it includes `check-delivery`, the fit gate and citation integrity), fix every FAIL, paste the receipt, then deliver.
 
 <HARD-GATE id="verified-before-delivered">
 Do not deliver a diagram whose delivery state is unstated, or stated stronger than the evidence. Never call a diagram "verified" or "correct" on the strength of unrendered source.
@@ -277,7 +277,7 @@ Do not deliver a diagram whose delivery state is unstated, or stated stronger th
 
 For multi-diagram deliveries, repeat per diagram and add one overview line on how the set fits together. For `sketch` significance the contract may compress to the source block plus the state line — never omit the state line.
 
-Every bracketed placeholder must be replaced; an unfilled or missing field is a format-invalid delivery, not a stylistic choice. Verify mechanically before handing over: `node <skill-dir>/scripts/check-delivery.js <draft.md>` — it rejects receipt-less State lines, missing Evidence/Excluded (warns instead at sketch significance, whose compressed form is legal), declared-type-vs-source mismatches, ceiling breaches (>15 without USER-OVERRIDE; 10–15 without justification draws a warning you must still resolve), and `RENDER_VERIFIED` claims on visual backends that lack a `check-render-fit` receipt. Its element counting is heuristic — a miscount is a reason to fix the counter, never a license to trust it over your own count.
+Every bracketed placeholder must be replaced; an unfilled or missing field is a format-invalid delivery, not a stylistic choice. Verify mechanically before handing over: `node <skill-dir>/scripts/verify-delivery.js <draft.md|page.html> --medium <profile> --repo <root>` (the one-shot entry; its `check-delivery` component rejects receipt-less State lines, missing Evidence/Excluded (warns instead at sketch significance, whose compressed form is legal), declared-type-vs-source mismatches, ceiling breaches (>15 without USER-OVERRIDE; 10–15 without justification draws a warning you must still resolve), and `RENDER_VERIFIED` claims on visual backends that lack a `check-render-fit` receipt. Its element counting is heuristic — a miscount is a reason to fix the counter, never a license to trust it over your own count.
 
 **Receipts or silence.** Any verification-flavored verdict in a delivery — medium fit, crossing count, a rubric checklist, "no truncation" — may appear only next to the pasted output of the tool that produced it (`check-render-fit.js` line for fit; the render you actually inspected for crossings/overlap). A self-graded rubric table with ✅ marks and no receipts is the delivery-layer lie moved up into the review layer; write the receipt or write nothing.
 
