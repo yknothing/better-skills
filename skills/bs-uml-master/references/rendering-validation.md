@@ -19,6 +19,24 @@ Name the tool **and version** in the state line (`mmdc 11.x`, `plantuml 1.2025.x
 
 A renderer that exits 0 can still produce an unreadable diagram (label collisions, 40-box sprawl, truncated text). **The delivery gate is on the label matching the evidence, never on withholding the diagram.** For `deliverable` significance, `RENDER_VERIFIED` is required whenever any ladder rung ≤2 succeeds; when only rung 3/4 is reachable, deliver at the honest weaker label — with the failed-attempt evidence the ladder requires.
 
+## One command first: `verify-delivery.js`
+
+Every check below is bound into one call, so the cheapest path is also the compliant one:
+
+```bash
+node <skill-dir>/scripts/verify-delivery.js <delivery.md | page.html> --medium <profile> [--repo <root>] [--puppeteer cfg.json]
+```
+
+It extracts every diagram (markdown fences, or the `.mermaid` blocks of an HTML page — the page is turned into a markdown mirror automatically, so an HTML artifact is a first-class input, never a bypass), syntax-checks each source on the local Mermaid **and on the version the page pins via CDN** (installed on demand into `.uml-verify/`), renders with mermaid-cli, runs `check-render-fit` for the declared medium, `check-delivery` on the mirror, and `check-evidence` against the repository, then prints a hash-stamped receipt whose lines satisfy C8. Paste the receipt into the delivery verbatim. A diagram that nothing could verify is reported as such and never yields PASS. Run it after **every** revision — a delivery that passed yesterday is unverified today.
+
+## Pinned-renderer parity
+
+An HTML page that loads `mermaid/10.6.1/mermaid.min.js` from a CDN is rendered by 10.6.1 for every reader, whatever your local tool is. Two rules: **pin what you verified** — write the CDN pin to the version your verification ran on (mermaid-cli reports its bundled version; the version you *remember* is training-data memory, not a verification), and if the page must keep an older pin, **verify on the pin**: `verify-delivery.js` does this automatically; by hand, `npm install --no-save --prefix .uml-verify/mermaid-10.6.1 mermaid@10.6.1 jsdom` then `cd .uml-verify/mermaid-10.6.1 && node <skill-dir>/scripts/check-mermaid.js <diagram.mmd>`. State the skew explicitly whenever the pinned version could not be checked.
+
+## "The page is blank / half the diagrams are missing"
+
+A reader reporting a blank or partial page is reporting a **parse error**, until proven otherwise: one source that the pinned renderer rejects breaks its block (and, in mermaid 10.x, can stop the page's remaining blocks). Triage in this order — (1) run `verify-delivery.js` on the page; a `parse … (pinned) FAIL line N` names the culprit; (2) fix that source per the pitfalls module and re-verify; (3) only then consider CDN or network causes, with evidence (a fetch of the script URL). Never "fall back" to a text or markdown version to escape the symptom: a backend switch is a REVISE of the projection that needs the same contract and receipts, and it silently deletes the picture the reader asked for.
+
 ## Mermaid validation
 
 Preferred: `@mermaid-js/mermaid-cli` (`mmdc`). It both syntax-checks and renders.

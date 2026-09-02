@@ -92,6 +92,10 @@ One screen ≈ 9–15 boxes at legible size — the screen limit, the cognitive 
 4. **Interactive progressive disclosure** (HTML/artifact media): tabs or stacked sections, each holding one screen-fit diagram — the *page* scrolls, the *diagrams* don't; optionally a clickable overview linking to detail anchors.
 5. **USER-OVERRIDE murals** (audit walls, posters): the medium is now print/zoomable canvas — say so; deliver the mural *plus* a one-screen companion overview. The readable deliverable is the pair.
 
+## Revising under critique — subtract, never add
+
+When a reader says "the layout is unreadable", the failing response is to redraw *bigger*: more altitude layers, more entities, more decoration (usage sample #4 went 3 → 4 → 6 diagrams and 20 → 23 nodes across eight revisions while every version stayed below the 11px floor). The protocol: **measure first** (`check-render-fit` on the current render — the number decides, not the impression); **work the ladder top-down** (re-scope/split → compress → direction/engine); **element count is non-increasing** across a critique-driven revision unless the question itself changed; **one lever per round**, re-verified, with a stated diff ("split ④ into ④a/④b; ELK on ①"); after **two rounds** that still fail the gate, stop redrawing and ask one scoping question. Never respond to a rendering complaint by switching backend or dropping the contract — that trades the reader's picture for your relief.
+
 ## The layered-architecture layout recipe (empirically probed, mermaid 11.x)
 
 Layered systems ("N layers of boxes with layer-to-layer edges") are the most common architecture diagram and dagre's worst case:

@@ -4,6 +4,8 @@ Syntax error rates in generated diagrams do not fall with model capability; vali
 
 ## Mermaid
 
+The version you *remember* (`10.6.1` is a common training-data default) is not the version you verified — pin CDN loads to the version your tool ran, or verify on the pin ([Rendering & Validation](./rendering-validation.md)). Version-scoped claims below name their probe version; re-probe when the pin differs.
+
 ### All diagram types
 
 - **Quote labels containing punctuation** (flowchart nodes). Parentheses, braces, quotes, `<`, `>`, `&` inside `[...]` node labels break parsing: `A["Validate (async)"]`, never `A[Validate (async)]`.
@@ -38,6 +40,11 @@ Syntax error rates in generated diagrams do not fall with model capability; vali
 - Transition labels are plain text: `S1 --> S2 : pay [balance>0] / capture` — Mermaid does not parse guard/action structure, so keep the `trigger [guard] / effect` convention inside the label text.
 - **Cross-composite transitions are unsupported** (inner state of one composite → inner state of another). Restructure (transition to/from the composite boundary) or switch to PlantUML.
 - Composites: `state Active { ... }`; concurrency separator `--`; pseudostates `state c <<choice>>`, `<<fork>>`, `<<join>>`.
+
+- **One colon per transition.** `A --> B: label` — the first `:` starts the label, a second colon inside it (`frozen_until: 'x'`) is a parse error on 10.x (probed on 10.6.1 — the CDN pin of usage sample #4, where it blanked the page) and only tolerated from 11.x. Put field/value detail in a note, not in the transition text.
+- **No flowchart edge syntax here.** `A -->|label| B` is flowchart-only; in `stateDiagram-v2` it is a parse error (probed). Transitions label with `: text`.
+- **Notes need their own lines.** `note right of S` opens a block that ends with `end note`; text on the same line as the opener is a lexical error (probed). Box-drawing/check-mark glyphs (`━`, `✓`) inside transition labels are lexical hazards on 10.x — keep them to notes or drop them.
+- **`<br/>` in transition labels** renders on 11.x but is the first thing to remove when a state diagram fails on an older pinned renderer.
 
 ### Coverage gaps → route to PlantUML
 

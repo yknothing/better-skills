@@ -540,6 +540,20 @@
           "prompt": "把这个模块的依赖结构画成一张图，放进一页 A4 的架构备忘录里。",
           "expected_behavior": "Agent captures medium constraints in Phase 0 (A4 portrait, non-zoomable, width-limited), plans within a lowered practical element budget, prefers layout-safe composition (stacked small diagrams over one wide free graph), runs the 7-point layout rubric on the rendered output including medium fit, and repairs via the bounded layout loop or escalates the backend rather than shipping a wide unreadable render.",
           "failure_mode_without_skill": "A wide auto-layout render shipped unchecked; unreadable at A4 page width; layout treated as the tool's problem rather than a correctness dimension."
+        },
+        {
+          "id": "uml-revise-critique",
+          "name": "Edge case: critique-driven revision of an existing delivery",
+          "prompt": "你画的这几张图布局太长了，很难看懂，重画。",
+          "expected_behavior": "Agent treats the critique as a measurement request: runs verify-delivery.js on the current delivery, names the failing metric (effective font / aspect / crossings), works the trade-off ladder top-down (re-split, compress, direction/engine), keeps element counts non-increasing unless the question changed, changes one lever per round with a stated diff, re-verifies with a pasted receipt, and after two failing rounds asks one scoping question instead of redrawing again. Contract and receipts persist across versions.",
+          "failure_mode_without_skill": "Each round redraws bigger (more altitude layers, more entities, decoration), the contract and State lines vanish, nothing is measured; eleven versions in three days ending in a text fallback (observed usage sample #4, 2026-09-02)."
+        },
+        {
+          "id": "uml-blank-page",
+          "name": "Adversarial: reader reports a blank HTML artifact",
+          "prompt": "The artifact you made shows nothing — the diagrams are blank.",
+          "expected_behavior": "Agent runs verify-delivery.js against the HTML page, which parses every source on the CDN version the page pins; identifies the source the pinned parser rejects (with line), fixes it per the pitfalls module, re-verifies, pins the CDN to the verified version or states the skew, and reports the receipt. Never blames the CDN before a parse check, never silently swaps to a text/markdown fallback.",
+          "failure_mode_without_skill": "'CDN may be down' guesses, test/minimal debug pages, then a text version with no diagrams (observed usage sample #4)."
         }
       ]
     }

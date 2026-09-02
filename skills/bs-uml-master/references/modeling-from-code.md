@@ -43,3 +43,8 @@ Keep members that carry the answer: for a domain diagram, attributes and key ope
 Re-check the final diagram against the ledger: every box, edge, message, and transition either has an evidence line or an assumption label. Count both directions — ledger rows dropped by curation are fine; diagram elements without ledger rows are fabrications and must be removed or evidenced.
 
 If code changed underneath you mid-task (long sessions), re-verify the load-bearing lines before delivery.
+
+
+## Citation integrity (mechanical)
+
+A `file:line` next to an element proves nothing by itself — usage sample #4 cited `skills.json:50-65` for a `batch_id` field that exists nowhere in the repository. Run `node <skill-dir>/scripts/check-evidence.js <delivery.md> --repo <root>` (or `verify-delivery.js`, which includes it): a cited path that does not exist or a line beyond the file's end FAILs; an identifier named on the citing line that appears nowhere in the cited file is flagged as the fabrication signature. Identifiers are quotations (Rule 2): if the checker cannot find the name at its own citation, neither can the reader.
