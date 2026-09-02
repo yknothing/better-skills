@@ -44,9 +44,61 @@ function unescapeHtml(s) {
   return s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&");
 }
 
+// Renderer pin: read ONLY from <script src=…> attributes and ES import
+// specifiers (a prose mention of "mermaid 10.6.1" must not spoof it — R7
+// adversary F4). Returns { version, floating } — floating = mermaid is loaded
+// without an exact version (@latest, major-only, unversioned path).
+// Any element the browser hands to mermaid: div/pre/code/section/textarea/p
+// with a class token "mermaid" or "language-mermaid", in double, single or
+// no quotes (R7 adversary F2). Nesting-aware: the matching close tag is
+// found by depth counting, so a wrapper <div> around the block, or a block
+// inside a <pre>, cannot truncate or hide it.
+const OPEN_TAG = /<(div|pre|code|section|textarea|p)\b([^>]*)>/gi;
+function hasMermaidClass(attrs) {
+  const m = attrs.match(/\bclass\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i);
+  if (!m) return false;
+  return (m[1] ?? m[2] ?? m[3]).split(/\s+/).some(t => /^(?:mermaid|language-mermaid)$/i.test(t));
+}
+// Returns { text, blocks } — text with each mermaid element replaced by
+// @@MERMAID<n>@@, blocks = the raw inner sources in order.
+function parkMermaidBlocks(html) {
+  const blocks = [];
+  let out = "", pos = 0;
+  const re = new RegExp(OPEN_TAG.source, "gi");
+  let m;
+  while ((m = re.exec(html)) !== null) {
+    if (!hasMermaidClass(m[2])) continue;
+    const tag = m[1].toLowerCase();
+    const bodyStart = m.index + m[0].length;
+    // depth-count to the matching close tag
+    const pair = new RegExp(`<(/?)${tag}\\b[^>]*>`, "gi");
+    pair.lastIndex = bodyStart;
+    let depth = 1, end = -1, closeLen = 0, t;
+    while ((t = pair.exec(html)) !== null) {
+      depth += t[1] ? -1 : 1;
+      if (depth === 0) { end = t.index; closeLen = t[0].length; break; }
+    }
+    if (end < 0) continue;
+    blocks.push(html.slice(bodyStart, end));
+    out += html.slice(pos, m.index) + `\n\n@@MERMAID${blocks.length - 1}@@\n\n`;
+    pos = end + closeLen;
+    re.lastIndex = pos;
+  }
+  return { text: out + html.slice(pos), blocks };
+}
+
 function detectPin(html) {
-  const m = html.match(/mermaid(?:\.min)?(?:\.js)?[@/]v?(\d+\.\d+\.\d+)/i) || html.match(/\/mermaid\/(\d+\.\d+\.\d+)\//i);
-  return m ? m[1] : null;
+  const urls = [];
+  for (const m of html.matchAll(/<script\b[^>]*\bsrc\s*=\s*["']?([^"'\s>]+)/gi)) urls.push(m[1]);
+  for (const m of html.matchAll(/\bimport\b[^;\n]*?["']([^"']*mermaid[^"']*)["']/gi)) urls.push(m[1]);
+  let floating = false;
+  for (const u of urls) {
+    if (!/mermaid/i.test(u)) continue;
+    const v = u.match(/mermaid(?:\.min)?(?:\.js)?[@/]v?(\d+\.\d+\.\d+)(?![\d.])/i) || u.match(/\/mermaid\/(\d+\.\d+\.\d+)\//i);
+    if (v) return { version: v[1], floating: false };
+    floating = true;
+  }
+  return { version: null, floating };
 }
 
 // HTML → markdown mirror. Every <h2> whose section holds a mermaid block
@@ -57,11 +109,11 @@ function buildMirror(html, pin) {
   let s = html.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<style[\s\S]*?<\/style>/gi, "");
   // Fence the mermaid blocks first and park them behind placeholders so the
   // tag stripping below cannot touch <br/> and friends inside diagram labels.
-  const parked = [];
-  s = s.replace(/<(?:div|pre)[^>]*class="(?:[^"]*\s)?mermaid(?:\s[^"]*)?"[^>]*>([\s\S]*?)<\/(?:div|pre)>/gi, (m, src) => {
-    parked.push("```mermaid\n" + unescapeHtml(src).trim() + "\n```");
-    return `\n\n@@MERMAID${parked.length - 1}@@\n\n`;
-  });
+  const pk = parkMermaidBlocks(s);
+  // Only WRAPPING tags are removed (a <code> inside <pre class="mermaid">);
+  // <br/>, <b> etc. inside labels are diagram source and stay.
+  const parked = pk.blocks.map(src => "```mermaid\n" + unescapeHtml(src.replace(/^\s*<(?:code|span)\b[^>]*>/i, "").replace(/<\/(?:code|span)>\s*$/i, "")).trim() + "\n```");
+  s = pk.text;
   // section by h2: a section holding a diagram becomes a Diagram Delivery block
   const parts = s.split(/<h2[^>]*>/i);
   const out = [parts[0]];
@@ -76,7 +128,7 @@ function buildMirror(html, pin) {
   }
   s = out.join("");
   s = s.replace(/<(?:strong|b)>\s*([^<:]{1,40}?)\s*[:：]\s*<\/(?:strong|b)>/gi, (m, l) => `**${l.trim() === "Q" ? "Question" : l.trim()}:**`);
-  s = s.replace(/<br\s*\/?>/gi, "\n").replace(/<\/(?:p|div|li|tr|h[1-6])>/gi, "\n").replace(/<[^>]+>/g, "");
+  s = s.replace(/<br\s*\/?>/gi, "\n").replace(/<\/t[dh]>/gi, " | ").replace(/<\/(?:p|div|li|tr|h[1-6])>/gi, "\n").replace(/<[^>]+>/g, "");
   s = unescapeHtml(s).replace(/@@MERMAID(\d+)@@/g, (m, i) => parked[+i]);
   s = s.split("\n").map(l => l.replace(/[ \t]+$/g, "")).join("\n").replace(/\n{3,}/g, "\n\n");
   return s.trim() + "\n";
@@ -124,19 +176,31 @@ function svgSize(svg) {
 function main(argv) {
   const file = argv[0];
   if (!file || file.startsWith("--")) { console.error("Usage: node verify-delivery.js <delivery.md|page.html> [--medium pc] [--kind auto] [--out dir] [--repo root] [--puppeteer cfg] [--no-render] [--no-pin-install]"); return 2; }
-  const flag = (n, d) => { const i = argv.indexOf(n); return i >= 0 && argv[i + 1] && !argv[i + 1].startsWith("--") ? argv[i + 1] : d; };
   const has = (n) => argv.includes(n);
-  const medium = flag("--medium", "pc"), kind = flag("--kind", null);
-  const out = path.resolve(flag("--out", ".uml-verify"));
+  const flag = (n, d) => {
+    const i = argv.indexOf(n);
+    if (i < 0) return d;
+    if (!argv[i + 1] || argv[i + 1].startsWith("--")) throw new Error(`${n} needs a value`);
+    return argv[i + 1];
+  };
+  let medium, kind, out;
+  try {
+    medium = flag("--medium", "pc"); kind = flag("--kind", null); out = path.resolve(flag("--out", ".uml-verify"));
+  } catch (e) { console.error(`usage error: ${e.message}`); return 2; }
+  const MEDIA = ["pc", "phone", "phone-landscape", "a4", "readme", "slide"];
+  if (!MEDIA.includes(medium)) { console.error(`usage error: --medium must be one of ${MEDIA.join("|")} (got "${medium}")`); return 2; }
+  if (kind && !["gestalt", "linear", "auto"].includes(kind)) { console.error(`usage error: --kind must be gestalt|linear|auto (got "${kind}")`); return 2; }
   const repo = flag("--repo", fs.existsSync(path.join(process.cwd(), ".git")) ? process.cwd() : null);
   let pup = flag("--puppeteer", process.env.PUPPETEER_CONFIG || null);
   if (!pup && fs.existsSync(path.join(process.cwd(), "puppeteer.json"))) pup = path.join(process.cwd(), "puppeteer.json");
-  fs.mkdirSync(out, { recursive: true });
+  try { fs.mkdirSync(out, { recursive: true }); } catch (e) { console.error(`usage error: cannot create --out ${out}: ${e.code || e.message}`); return 2; }
+  if (!fs.statSync(out).isDirectory()) { console.error(`usage error: --out ${out} is not a directory`); return 2; }
 
   let text;
   try { text = fs.readFileSync(file, "utf-8"); } catch (e) { console.error(`cannot read ${file}: ${e.message}`); return 2; }
-  const isHtml = /\.html?$/i.test(file) || /<(?:html|div|pre)[\s>]/i.test(text.slice(0, 4000)) && /class="(?:[^"]*\s)?mermaid(?:\s|")/.test(text);
-  const pin = isHtml ? detectPin(text) : (text.match(/\*\*Renderer pin:\*\*\s*mermaid@(\d+\.\d+\.\d+)/) || [])[1] || null;
+  const isHtml = /\.html?$/i.test(file) || (/<(?:html|div|pre|section)[\s>]/i.test(text.slice(0, 4000)) && parkMermaidBlocks(text).blocks.length > 0);
+  const pinInfo = isHtml ? detectPin(text) : { version: (text.match(/\*\*Renderer pin:\*\*\s*mermaid@(\d+\.\d+\.\d+)/) || [])[1] || null, floating: false };
+  const pin = pinInfo.version;
   let md = text, mirror = null;
   if (isHtml) { md = buildMirror(text, pin); mirror = path.join(out, "mirror.md"); fs.writeFileSync(mirror, md); }
   const sources = extractSources(md);
@@ -151,6 +215,8 @@ function main(argv) {
       if (r.code !== 0) { pinNote = `pinned mermaid@${pin} UNCHECKED (install failed: ${r.out.trim().split("\n").pop().slice(0, 80)})`; pinDir = null; }
     }
   } else if (pin && pin === localVer) pinNote = `pinned mermaid@${pin} = local`;
+  else if (pin && has("--no-pin-install")) pinNote = `pinned mermaid@${pin} NOT CHECKED (--no-pin-install) — state the skew in the delivery`;
+  if (pinInfo.floating && !pin) pinNote = "mermaid loaded WITHOUT an exact version (floating/latest) — every reader gets a different renderer; pin the CDN to the version you verified";
 
   const lines = [];
   let anyFail = false, fitLines = [];
@@ -177,8 +243,8 @@ function main(argv) {
         const size = svgSize(fs.readFileSync(svg, "utf-8"));
         const fit = run("node", [path.join(HERE, "check-render-fit.js"), svg, "--medium", medium, ...(kind ? ["--kind", kind] : [])]);
         const px = (fit.out.match(/effective label font (\d+(?:\.\d+)?)px/) || fit.out.match(/label font (\d+(?:\.\d+)?)px/) || [])[1];
-        const verdict = fit.code === 0 ? "PASS" : "FAIL";
-        if (fit.code === 1) anyFail = true;
+        const verdict = fit.code === 0 ? "PASS" : fit.code === 1 ? "FAIL" : "ERROR";
+        if (fit.code !== 0) anyFail = true;
         cells.push(`render mmdc OK · check-render-fit(${medium}) canvas ${size} ${px ? px + "px" : "?px"} ${verdict}`);
         fitLines.push(`d${n}:\n` + fit.out.trim().split("\n").map(l => "    " + l).join("\n"));
       } else {
@@ -191,25 +257,48 @@ function main(argv) {
     lines.push(`  d${n}: ${cells.join(" · ")}`);
   });
 
-  const del = run("node", [path.join(HERE, "check-delivery.js"), mirror || file]);
-  const delSummary = (del.out.trim().split("\n").pop() || "").trim();
+  // Hash covers the sources and the per-diagram verdict lines only, so the
+  // id is stable across the paste-and-rerun loop and a stale receipt
+  // (diagram edited after verification) is detectable (R7 adversary F11).
+  const id = crypto.createHash("sha256").update(sources.join("\n---\n") + lines.join("\n")).digest("hex").slice(0, 12);
+  const stale = [...md.matchAll(/verify-delivery receipt ([0-9a-f]{12})/g)].map(m => m[1]).filter(h => h !== id);
+  if (stale.length) { anyFail = true; lines.push(`  STALE RECEIPT ${stale.join(", ")} found in the delivery — sources or verdicts changed since; replace it with this one (${id})`); }
+  if (sources.length === 0) { anyFail = true; lines.push("  FAIL  no diagram sources found (no ```mermaid fences / HTML mermaid blocks)"); }
+  const blocks = (md.match(/^##\s+Diagram Delivery\b/gm) || []).length;
+  const head = `## verify-delivery receipt ${id} (bs-uml-master verify-delivery.js v${VERSION}, ${new Date().toISOString().slice(0, 16)}Z)`;
+  const meta = `input: ${path.basename(file)}${mirror ? ` (HTML → mirror ${path.relative(process.cwd(), mirror)})` : ""} · diagrams: ${sources.length} · medium=${medium}${pin ? ` · renderer pin: mermaid@${pin} (CDN)` : ""}${pinNote ? " — " + pinNote : ""}`;
+  if (blocks > 1) lines.push(`  note: ${blocks} Diagram Delivery blocks — check-delivery C8 is per block; paste this receipt into every block (checked that way below)`);
+
+  // check-delivery runs on the delivery AS IT WILL BE after the receipt is
+  // pasted into every Diagram Delivery block (C8 is per block — R7 adversary
+  // F8), so the first run already reports the post-paste state instead of a
+  // chicken-and-egg C8 failure. Summaries are worded without the FAIL token
+  // so a pasted receipt can never read as a failing fit receipt.
+  const receiptBody = [head, meta, ...lines].join("\n");
+  const withReceipt = md.replace(/^## verify-delivery receipt [0-9a-f]{12}[\s\S]*?^VERDICT:[^\n]*\n?/gm, "")
+    .split(/^(?=##\s+Diagram Delivery\b)/m)
+    .map((part, i) => (i === 0 && !/^##\s+Diagram Delivery\b/.test(part)) ? part : part.replace(/\s*$/, "") + "\n\n" + receiptBody + "\nVERDICT: (pending)\n\n")
+    .join("");
+  const pasted = path.join(out, "with-receipt.md");
+  fs.writeFileSync(pasted, withReceipt);
+  const del = run("node", [path.join(HERE, "check-delivery.js"), pasted]);
+  const dm = del.out.match(/(\d+) delivery block\(s\); (\d+) FAIL/) || [];
+  const delSummary = dm.length ? `${dm[2]} failing check(s) across ${dm[1]} block(s)` : (del.out.trim().split("\n").pop() || "no output").replace(/FAIL/g, "failing");
   if (del.code === 1) anyFail = true;
   let evSummary = "skipped (no --repo and cwd is not a git root)";
   if (repo) {
-    const ev = run("node", [path.join(HERE, "check-evidence.js"), mirror || file, "--repo", repo]);
-    evSummary = (ev.out.trim().split("\n").pop() || "").trim();
+    const ev = run("node", [path.join(HERE, "check-evidence.js"), pasted, "--repo", repo]);
+    const em = ev.out.match(/(\d+) citation\(s\) checked[^;]*; (\d+) FAIL, (\d+) WARN/) || [];
+    evSummary = em.length ? `${em[1]} citation(s), ${em[2]} failing, ${em[3]} warning(s)` : (ev.out.trim().split("\n").pop() || "no output").replace(/FAIL/g, "failing");
     if (ev.code === 1) anyFail = true;
   }
-
-  const id = crypto.createHash("sha256").update(sources.join("\n---\n") + lines.join("\n") + delSummary + evSummary).digest("hex").slice(0, 12);
-  const head = `## verify-delivery receipt ${id} (bs-uml-master verify-delivery.js v${VERSION}, ${new Date().toISOString().slice(0, 16)}Z)`;
-  const meta = `input: ${path.basename(file)}${mirror ? ` (HTML → mirror ${path.relative(process.cwd(), mirror)})` : ""} · diagrams: ${sources.length} · medium=${medium}${pin ? ` · renderer pin: mermaid@${pin} (CDN)${pinNote ? " — " + pinNote : ""}` : ""}`;
-  const tail = [`  check-delivery: ${delSummary || "no output"}`, `  check-evidence: ${evSummary}`, `VERDICT: ${anyFail ? "FAIL" : "PASS"} — ${anyFail ? "fix every FAIL above before delivering; a FAIL that stays needs a recorded trade-off" : "paste this receipt into the delivery"}`];
+  // Verdict wording deliberately avoids C8's exemption vocabulary — a pasted
+  // receipt must never supply its own override (R7 adversary F1).
+  const tail = [`  check-delivery: ${delSummary || "no output"}`, `  check-evidence: ${evSummary}`, `VERDICT: ${anyFail ? "FAIL" : "PASS"} — ${anyFail ? "repair every failing line above before delivering; keeping one requires an explicit exception note written in the delivery itself" : "paste this receipt into the delivery"}`];
   console.log([head, meta, ...lines, ...tail].join("\n"));
   if (fitLines.length) console.log("\nfit details:\n" + fitLines.join("\n"));
-  if (sources.length === 0) { console.log("\n  FAIL  no diagram sources found (no ```mermaid fences / HTML .mermaid blocks)"); return 1; }
   return anyFail ? 1 : 0;
 }
 
 if (require.main === module) process.exit(main(process.argv.slice(2)));
-module.exports = { detectPin, buildMirror, extractSources, svgSize };
+module.exports = { detectPin, buildMirror, extractSources, svgSize, hasMermaidClass, parkMermaidBlocks };

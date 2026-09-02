@@ -318,16 +318,31 @@ function checkBlock(block, idx, out) {
       //     vocabulary — catches receipts padded/smuggled outside windows
       //     while prose like "FAIL states are dashed" stays clean;
       //  3. block-wide "N FAIL" summary counts.
+      //     Summary counts bind only on a line that also carries fit
+      //     vocabulary, or standing alone as the tool prints it — another
+      //     tool's summary ("check-delivery: … 1 FAIL") is not a fit verdict
+      //     (R7.1: a pasted receipt must never fail itself).
       const failing =
         wins.some(w => /\bFAIL\b/.test(w.replace(/\b0\s+FAIL\b/g, ""))) ||
         /^\s*FAIL\b[^\n]*(?:px|screen|aspect|viewport|co-visible)/im.test(masked) ||
-        /\b[1-9]\d*\s+FAIL\b/.test(masked.replace(/\b0\s+FAIL\b/g, ""));
+        /^[^\n]*(?:px|canvas|screen|aspect|viewport)[^\n]*\b[1-9]\d*\s+FAIL\b/im.test(masked.replace(/\b0\s+FAIL\b/g, "")) ||
+        /^\s*[1-9]\d*\s+FAIL\s*$/m.test(masked);
+      // The trade-off must be recorded in the delivery's OWN prose: tool
+      // output is stripped first, because both check-render-fit's guidance
+      // ("…fit-to-screen ladder") and verify-delivery's verdict sentence
+      // contained exemption words and self-exempted a pasted FAIL (R7
+      // adversary F1).
+      const prose = masked
+        .replace(/^## verify-delivery receipt[\s\S]*?^VERDICT:[^\n]*/gm, "")
+        .replace(/^[ \t]*(?:INFO|PASS|FAIL|WARN)\s{2,}[^\n]*/gm, "")
+        .replace(/^[^\n]*check-render-fit[^\n]*/gm, "");
+      const tradeoff = /USER-OVERRIDE|trade-?off|取舍/i.test(prose);
       if (wins.length === 0) {
         SOFT("RENDER_VERIFIED without a check-render-fit receipt (tool name + canvas WxH + effective px + verdict, together within a few lines) — fit claims made in prose are self-certification, not verification (IP-20/IP-25)");
       } else if (clean.length === 0) {
         F("fit receipt window contains hedge/negation language (\"should PASS\", \"did not run\", \"roughly\") — a receipt is pasted tool output, not a prediction");
-      } else if (failing && !/USER-OVERRIDE|trade-?off|取舍|ladder/i.test(block)) {
-        F("fit receipt contains a FAIL verdict with no recorded trade-off/USER-OVERRIDE — a failing fit never ships silently (layout-craft.md trade-off ladder)");
+      } else if (failing && !tradeoff) {
+        F("fit receipt contains a FAIL verdict with no trade-off/USER-OVERRIDE recorded in the delivery's own prose (tool output does not count) — a failing fit never ships silently");
       } else {
         P("check-render-fit receipt present alongside RENDER_VERIFIED");
       }

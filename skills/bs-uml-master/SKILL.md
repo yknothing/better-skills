@@ -156,7 +156,7 @@ Run the semantic review against the rendered diagram (not the source you remembe
 
 At `authoritative` significance, this pass runs independently (fresh sub-agent reviewing rendered output + ledger) when the platform allows; otherwise perform it in-context and mark it `SELF_REVIEWED`.
 
-Draft the delivery in the output contract, run `scripts/check-delivery.js` on the draft, fix every FAIL, then deliver.
+Draft the delivery in the output contract, run `scripts/verify-delivery.js` on the draft (it includes `check-delivery`, the fit gate and citation integrity), fix every FAIL, paste the receipt, then deliver.
 
 <HARD-GATE id="verified-before-delivered">
 Do not deliver a diagram whose delivery state is unstated, or stated stronger than the evidence. Never call a diagram "verified" or "correct" on the strength of unrendered source.
@@ -180,7 +180,7 @@ Do not deliver a diagram whose delivery state is unstated, or stated stronger th
 
 For multi-diagram deliveries, repeat per diagram and add one overview line on how the set fits together. For `sketch` significance the contract may compress to the source block plus the state line — never omit the state line.
 
-Every bracketed placeholder must be replaced; an unfilled or missing field is a format-invalid delivery, not a stylistic choice. Verify mechanically before handing over: `node <skill-dir>/scripts/check-delivery.js <draft.md>` — it rejects receipt-less State lines, missing Evidence/Excluded (warns instead at sketch significance, whose compressed form is legal), declared-type-vs-source mismatches, ceiling breaches (>15 without USER-OVERRIDE; 10–15 without justification draws a warning you must still resolve), and `RENDER_VERIFIED` claims on visual backends that lack a `check-render-fit` receipt. Its element counting is heuristic — a miscount is a reason to fix the counter, never a license to trust it over your own count.
+Every bracketed placeholder must be replaced; an unfilled or missing field is a format-invalid delivery, not a stylistic choice. Verify mechanically before handing over: `node <skill-dir>/scripts/verify-delivery.js <draft.md|page.html> --medium <profile> --repo <root>` (the one-shot entry; its `check-delivery` component rejects receipt-less State lines, missing Evidence/Excluded (warns instead at sketch significance, whose compressed form is legal), declared-type-vs-source mismatches, ceiling breaches (>15 without USER-OVERRIDE; 10–15 without justification draws a warning you must still resolve), and `RENDER_VERIFIED` claims on visual backends that lack a `check-render-fit` receipt. Its element counting is heuristic — a miscount is a reason to fix the counter, never a license to trust it over your own count.
 
 **Receipts or silence.** Any verification-flavored verdict in a delivery — medium fit, crossing count, a rubric checklist, "no truncation" — may appear only next to the pasted output of the tool that produced it (`check-render-fit.js` line for fit; the render you actually inspected for crossings/overlap). A self-graded rubric table with ✅ marks and no receipts is the delivery-layer lie moved up into the review layer; write the receipt or write nothing.
 

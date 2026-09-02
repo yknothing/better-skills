@@ -156,7 +156,7 @@ run("fit-receipt-fail-silent", HDR() + FLOW4 + `
 **Excluded:** x · **Assumptions:** none
 **Evidence:** lib/cli.js:4
 **Fit:** check-render-fit.js — canvas 698x1648, FAIL 8.3px < 11px; 1 FAIL
-`, 1, [/fit receipt contains a FAIL verdict with no recorded trade-off/]);
+`, 1, [/fit receipt contains a FAIL verdict with no trade-off\/USER-OVERRIDE recorded/]);
 // …but is honest with a recorded USER-OVERRIDE trade-off
 run("fit-receipt-fail-override", HDR() + FLOW4 + `
 **Excluded:** x · **Assumptions:** none
@@ -207,7 +207,7 @@ run("fit-receipt-perline-fail-smuggle", HDR() + FLOW4 + `
 **Fit:** check-render-fit.js output:
 INFO canvas 698x1648 (aspect 0.42:1), medium=pc viewport 1470x850, label font 16px
 FAIL gestalt diagram does not fit one screen legibly: effective label font 8.3px
-`, 1, [/fit receipt contains a FAIL verdict with no recorded trade-off/]);
+`, 1, [/fit receipt contains a FAIL verdict with no trade-off\/USER-OVERRIDE recorded/]);
 
 // R6.1 (adversary F3): the four receipt tokens scattered across the
 // delivery's prose do not form a receipt — they must co-occur in a window
@@ -267,7 +267,7 @@ run("fit-receipt-dual-profile-smuggle", HDR() + FLOW4 + `
 (reading notes filler line five)
 (reading notes filler line six)
 a4 run: canvas 1200x760, 8.9px at fit; 1 FAIL
-`, 1, [/fit receipt contains a FAIL verdict with no recorded trade-off/]);
+`, 1, [/fit receipt contains a FAIL verdict with no trade-off\/USER-OVERRIDE recorded/]);
 // …and a per-line FAIL padded outside the tool window is still caught
 run("fit-receipt-padded-fail", HDR() + FLOW4 + `
 **Excluded:** x · **Assumptions:** none
@@ -282,7 +282,7 @@ PASS no edge exceeds one screen along the reading axis
 (filler five)
 (filler six)
 FAIL gestalt diagram does not fit one screen legibly: effective label font 8.9px
-`, 1, [/fit receipt contains a FAIL verdict with no recorded trade-off/]);
+`, 1, [/fit receipt contains a FAIL verdict with no trade-off\/USER-OVERRIDE recorded/]);
 
 // R6.2 (adversary F9): an honest receipt below contract fields containing
 // incidental hedge words ("roughly 20 files") must NOT be false-FAILed —
@@ -299,7 +299,7 @@ run("fit-receipt-inline-fail-no-summary", HDR() + FLOW4 + `
 **Excluded:** x · **Assumptions:** none
 **Evidence:** lib/cli.js:4
 **Fit:** check-render-fit.js — canvas 698x1648, FAIL 8.3px below the 11px floor
-`, 1, [/fit receipt contains a FAIL verdict with no recorded trade-off/]);
+`, 1, [/fit receipt contains a FAIL verdict with no trade-off\/USER-OVERRIDE recorded/]);
 
 // R6.3 (adversary F10): a legitimate failure-path node named FAIL inside a
 // diagram fence must NOT trip the verdict scan when the receipt is clean
@@ -325,6 +325,49 @@ FAIL states are drawn dashed in this notation; see the legend note.
 **Excluded:** x · **Assumptions:** none
 **Evidence:** lib/cli.js:4
 **Fit:** check-render-fit.js — canvas 1200x760, 16px at fit, PASS (pc 1470x850)
+`, 0, [/check-render-fit receipt present/]);
+
+// 20. R7.1 (adversary F1): exemption words inside pasted TOOL OUTPUT never
+//     satisfy the trade-off requirement — verify-delivery's verdict sentence
+//     and check-render-fit's "…ladder" guidance both used to self-exempt
+run("fit-fail-self-exempt-verifier-verdict", HDR() + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+## verify-delivery receipt 0123abcd4567 (bs-uml-master verify-delivery.js v1, 2026-09-02T09:00Z)
+input: d.md · diagrams: 1 · medium=pc
+  d1: parse mermaid@11.17.2 OK · render mmdc OK · check-render-fit(pc) canvas 4616x94 5.1px FAIL
+VERDICT: FAIL — fix every FAIL above before delivering; a FAIL that stays needs a recorded trade-off
+`, 1, [/FAIL verdict with no trade-off\/USER-OVERRIDE recorded in the delivery's own prose/]);
+run("fit-fail-self-exempt-ladder-guidance", HDR() + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+**Fit:** check-render-fit.js output:
+  INFO  canvas 698x1648 (aspect 0.42:1), medium=pc viewport 1470x850, label font 16px, kind=gestalt
+  FAIL  gestalt diagram does not fit one screen legibly: effective label font 8.3px < 11px — see layout-craft.md fit-to-screen ladder
+1 FAIL
+`, 1, [/FAIL verdict with no trade-off\/USER-OVERRIDE recorded/]);
+// …while an override written in the delivery's own prose still clears it
+run("fit-fail-override-in-prose", HDR() + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+**Fit:** check-render-fit.js output:
+  INFO  canvas 698x1648 (aspect 0.42:1), medium=pc viewport 1470x850, label font 16px, kind=gestalt
+  FAIL  gestalt diagram does not fit one screen legibly: effective label font 8.3px < 11px
+1 FAIL
+**Reading notes:** USER-OVERRIDE — the user asked for the full mural; a one-screen companion overview is delivered alongside.
+`, 0, [/check-render-fit receipt present/]);
+
+// 21. R7.1: a pasted verify-delivery receipt whose OTHER summaries mention
+//     failures (contract/evidence) is not a failing FIT receipt
+run("receipt-other-tool-summary-not-fit-fail", HDR() + FLOW4 + `
+**Excluded:** x · **Assumptions:** none
+**Evidence:** lib/cli.js:4
+## verify-delivery receipt 0123abcd4567 (bs-uml-master verify-delivery.js v1, 2026-09-02T09:00Z)
+input: d.md · diagrams: 1 · medium=pc
+  d1: parse mermaid@11.17.2 OK · render mmdc OK · check-render-fit(pc) canvas 362x278 16.0px PASS
+  check-delivery: 1 failing check(s) across 1 block(s)
+  check-evidence: 2 citation(s), 1 failing, 0 warning(s)
+VERDICT: PASS — paste this receipt into the delivery
 `, 0, [/check-render-fit receipt present/]);
 
 // 16. IP-24: escape entities inside quoted PlantUML display names must not
