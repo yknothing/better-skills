@@ -36,6 +36,14 @@ sources:
     skills:
       - learn-skill
 
+  humanlayer-skills:
+    name: HumanLayer Skills
+    repo: https://github.com/humanlayer/skills
+    ref: main
+    skills_path: plugins/show-me/skills
+    skills:
+      - show-me
+
   emilkowalski-skills:
     name: Emil Kowalski Skills
     repo: https://github.com/emilkowalski/skills

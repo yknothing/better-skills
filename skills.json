@@ -29,7 +29,8 @@
         "learn-skill",
         "emil-design-eng",
         "review-animations",
-        "animation-vocabulary"
+        "animation-vocabulary",
+        "show-me"
       ]
     },
     "batch-2": {
@@ -309,6 +310,15 @@
         "invocation": "model-invoked",
         "status": "active",
         "notes": "Reverse-lookup glossary for motion effect names. Narrow trigger: naming/describing effects, not implementing them."
+      },
+      "show-me": {
+        "source": "humanlayer-skills",
+        "path": "external/humanlayer-skills/show-me",
+        "batch": "batch-1",
+        "tier": "lightweight",
+        "invocation": "model-invoked",
+        "status": "active",
+        "notes": "Example-driven visual explanation skill: pseudocode, call trees, component trees, file trees, Mermaid diagrams, diffs, and focused HTML artifacts. Lightweight but well-crafted."
       }
     }
   },
