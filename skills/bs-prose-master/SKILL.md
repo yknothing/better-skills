@@ -29,6 +29,10 @@ These are defaults. Override them when the user's intent clearly calls for it. *
 - For Chinese text: prefer 四字格 (four-character idioms) sparingly — they add rhythm but too many sound pompous. Watch for 的-串 (chains of 的); break them up.
 - For bilingual text: match the register across languages. A casual English passage paired with formal Chinese creates cognitive dissonance.
 
+## Progressive Disclosure
+
+Keep routing metadata in the frontmatter, the editing workflow in this file, and recurring language-specific fixes in the reference tables below. Load only the detail needed for the requested editing mode.
+
 ## Red Flags — Editing Rationalizations
 
 These thoughts signal you are about to violate a Hard Constraint. When you catch one, stop and re-check against the constraint it threatens. (Pattern: `anti-pattern-pre-naming`.)
