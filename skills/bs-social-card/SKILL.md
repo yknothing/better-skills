@@ -15,6 +15,12 @@ You are generating a social media card image. Follow the rules below in order. D
 3. **CONTRAST**: Text must meet WCAG AA minimum (4.5:1 normal, 3:1 large). Default to black `#1A1A1A` on white `#FFFFFF`, or white on near-black `#0F172A`. Brand colors may be used for text **only** if they pass WCAG AA against the chosen background. If the user's brand color fails contrast, use it for decorative elements (accent bar, border, background pattern) and keep text in a compliant color.
 4. **LAYOUT**: Pick the variant that best fits the content (Step 2). All three variants live as templates under `assets/` — never inline them into prompts or other files.
 
+## Pattern Notes
+
+- **minimal-precision**: Keep the single-card workflow short and exact.
+- **precise-commands**: Use explicit file paths, viewport dimensions, and output checks for rendering.
+- **progressive-disclosure**: Read only the selected template and the checks required by the chosen variant.
+
 ## Step 1: Extract content
 
 From the user's request, identify:

@@ -62,6 +62,11 @@ If any phase is restarted more than 2 times due to a triggered HARD-GATE or conf
 - **NO DUAL-TONE GRADIENT HERO**: purple→blue hero sections are the fingerprint of AI-generated slop. **Detection**: hero uses a purple-to-blue gradient. **Fix**: use a solid color, a photograph, or a non-purple gradient.
 - **NO EMOJI AS FUNCTIONAL ICONS**: emojis are not iconography. **Detection**: emoji used as UI icons. **Fix**: use proper icon sets (Lucide, Phosphor, Heroicons) or custom SVG.
 
+## Pattern Notes
+
+- **format-significance-gates**: Request triage selects the process depth according to the design surface and consequence.
+- **progressive-disclosure**: Phase-specific methods and references load only when the selected triage class requires them.
+
 ***
 
 ## Phase 0: Design Audit (Brownfield Detection)

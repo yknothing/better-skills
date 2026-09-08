@@ -31,6 +31,10 @@ Violating any of these is a failure of the skill. No exceptions.
 
 7. **SVG_FIRST — SVG first.** Prefer SVG for diagrams and conceptual illustrations. Use Mermaid for flowcharts and sequence diagrams. Use HTML-to-screenshot only as a fallback when the target platform does not support SVG or Mermaid natively.
 
+## Pattern Notes
+
+- **progressive-disclosure**: Keep entry rules and the core decision flow here; load output-format details only when delivering the selected visual format.
+
 ## Confidence Anchors
 
 Every judgment in this skill carries a confidence score. Use ONLY these discrete anchors:

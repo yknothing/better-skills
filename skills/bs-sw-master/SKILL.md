@@ -45,6 +45,12 @@ Violating any of these is a failure of the skill. No exceptions.
 - **"That failure is probably pre-existing"** — Prove it. Only failures recorded in the Phase 4 baseline count as pre-existing; anything else is yours.
 - **"The suite is slow, I'll run it once at the end"** — A batched test run cannot tell you which slice broke what. Run per slice.
 
+## Pattern Notes
+
+- **pipeline-architecture**: Each phase produces a durable artifact consumed by the next phase.
+- **progressive-disclosure**: Load characterization and recovery references only when their phases or failure paths are active.
+- **precise-commands**: Use named paths and explicit commands for snapshots, tests, review, and commits.
+
 ## Visual/Manual-Only Fast Path
 
 For changes that cannot be meaningfully auto-tested (config, docs, CSS tweaks, copy changes), use this 3-step fast path instead of the full RED-GREEN-REFACTOR loop:
