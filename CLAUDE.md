@@ -20,10 +20,10 @@ This repo's central logic: **STUDY → EXTRACT → DEVELOP → REVIEW → DEPLOY
 Reference skills are not permanent. The intent is to upgrade Reference → Build when a skill accumulates enough project-specific friction to justify owning it. Concrete upgrade triggers:
 
 1. ≥20 concrete improvement points accumulated from usage *(tracking schema TBD — no skill has data yet)*
-2. ≥5 applicable extracted patterns in docs/patterns/ that the upstream version doesn't honor *(per-pattern files arrive in Phase 1.C; until then this is best-effort)*
-3. A/B comparison against ≥2 independent implementations passes *(blocked on Gate 4 wiring in Phase 2.B)*
+2. ≥5 applicable extracted patterns in docs/patterns/ that the upstream version doesn't honor *(per-pattern files now exist; the improvement-point tracking schema remains TBD)*
+3. A/B comparison against ≥2 independent implementations passes *(behavioral execution and A/B comparison remain deferred)*
 
-These triggers are documented as design intent, not as data we currently collect. They become enforceable once Phase 1.D + 2.B ship.
+These triggers are documented as design intent, not as data we currently collect. They are not yet enforceable because improvement-point tracking and behavioral A/B evaluation are still deferred.
 
 ## Depth Tiers
 
@@ -33,18 +33,20 @@ These triggers are documented as design intent, not as data we currently collect
 | **Standard** | Normal frequency + moderate cost | bs-sw-master, bs-prose-master, bs-visual-article, bs-skill-auditor, bs-skill-forge |
 | **Lightweight** | High frequency + low failure cost | bs-social-card |
 
-Tier is currently declared only in `skills.json`; SKILL.md frontmatter does not yet carry a `tier` field. Phase 1.B normalizes this by adding a structured tier field to each skill's frontmatter.
+Tier is authoritative in `skills.json` and mirrored as a `# tier:` frontmatter comment; a structured YAML tier field remains deferred.
 
 ## Review Pipeline (4 Gates)
 
-Every skill — self-developed or newly referenced — must pass:
+Every self-developed skill must pass the full 4-gate pipeline:
 
-1. **Self-Review**: Run `bash tools/validate.sh <skill-path>`. Checks frontmatter shape, name/description, body size, basic safety scans. Phase 2.A extends this to pattern-reference integrity, gate-syntax conformance, and bundled-resource existence.
+1. **Self-Review**: Run `bash tools/validate.sh <skill-path>`. The current validator runs 16 checks covering frontmatter shape, name/description, body size, safety, pattern references, gates, and bundled resources.
 2. **Peer Review**: Launch 2 sub-agents — one advocates for the skill, one tries to break it. Both return structured findings into `docs/reviews/<skill>/<date>-{advocate,adversary}-review.md`.
-3. **Pattern Alignment**: Does the skill correctly use patterns declared in `skills.json`? Does each declared pattern resolve to a documented entry under `docs/patterns/`? Phase 2.C automates this with a 100-line script once Phase 1.C lands.
-4. **Evaluation Contract**: `evaluation/harness/runner.js` validates Gate 1 plus test-prompt schema and happy/edge/adversarial coverage. Its evidence scope is `EVAL_SCHEMA_ONLY`; it does not run an agent, open artifacts, judge behavior, or compare a no-skill baseline. Actual forward or A/B results require separately recorded execution evidence.
+3. **Pattern Alignment**: Does the skill correctly use patterns declared in `skills.json`? Does each declared pattern resolve to a documented entry under `docs/patterns/`? Run `node tools/pattern-alignment.js --strict` and `bash tools/check-patterns.sh`.
+4. **Baseline Test**: Run the deterministic contract checks with `node evaluation/harness/runner.js`. The current result is `EVAL_SCHEMA_ONLY`; it does not execute an agent or establish behavioral superiority over a no-skill baseline.
 
 Record all reviews in `docs/reviews/<skill-name>/YYYY-MM-DD-<role>-review.md`. The current review records are AI-generated initial drafts dated 2026-06-17; later iterations should add `HUMAN_VERIFIED` markers and re-run dates.
+
+External references use a separate registry contract: `tools/test-cli.sh` verifies source, path, identity, and batch membership. Their upstream behavior is not locally claimed as verified by this repository's Gate 4 harness.
 
 ## Key Directories
 
@@ -55,7 +57,7 @@ Record all reviews in `docs/reviews/<skill-name>/YYYY-MM-DD-<role>-review.md`. T
 | `skills.json` | Canonical registry (the single source of truth) |
 | `docs/research/` | Analysis of 10 top skill repos. External URL citations are TBD until Phase 3 |
 | `docs/insights/` | Domain-proposition verdicts. Expert-roundtable format: parallel independent viewpoints + a red team + moderator adjudication. Subject is a claim about a domain, not a repo |
-| `docs/patterns/` | Pattern index (~60 patterns, currently consolidated in `README.md`; per-pattern files in Phase 1.C) |
+| `docs/patterns/` | Machine-readable pattern library (59 patterns, each with a per-pattern file and `README.md` index) |
 | `docs/reviews/` | Skill review records |
 | `evaluation/` | Test datasets + deterministic schema-only evaluation-contract harness |
 | `tools/` | `validate.sh` (Gate 1) and `sync.sh` (external sync) |

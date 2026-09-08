@@ -37,7 +37,7 @@ Tier is authoritative in `skills.json` and mirrored as a `# tier:` frontmatter c
 
 ## Review Pipeline (4 Gates)
 
-Every skill — self-developed or newly referenced — must pass:
+Every self-developed skill must pass the full 4-gate pipeline:
 
 1. **Self-Review**: Run `bash tools/validate.sh <skill-path>`. The current validator runs 16 checks covering frontmatter shape, name/description, body size, safety, pattern references, gates, and bundled resources.
 2. **Peer Review**: Launch 2 sub-agents — one advocates for the skill, one tries to break it. Both return structured findings into `docs/reviews/<skill>/<date>-{advocate,adversary}-review.md`.
@@ -45,6 +45,8 @@ Every skill — self-developed or newly referenced — must pass:
 4. **Baseline Test**: Run the deterministic contract checks with `node evaluation/harness/runner.js`. The current result is `EVAL_SCHEMA_ONLY`; it does not execute an agent or establish behavioral superiority over a no-skill baseline.
 
 Record all reviews in `docs/reviews/<skill-name>/YYYY-MM-DD-<role>-review.md`. The current review records are AI-generated initial drafts dated 2026-06-17; later iterations should add `HUMAN_VERIFIED` markers and re-run dates.
+
+External references use a separate registry contract: `tools/test-cli.sh` verifies source, path, identity, and batch membership. Their upstream behavior is not locally claimed as verified by this repository's Gate 4 harness.
 
 ## Key Directories
 

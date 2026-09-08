@@ -231,7 +231,8 @@ for (const [aliasName, canonicalName] of Object.entries(registry.aliases || {}))
 }
 const expectedExternal = [
   'brainstorming', 'pptx', 'grill-me', 'grilling', 'writing-great-skills',
-  'learn-skill', 'emil-design-eng', 'review-animations', 'animation-vocabulary'
+  'learn-skill', 'emil-design-eng', 'review-animations', 'animation-vocabulary',
+  'show-me'
 ].sort();
 const expectedExternalLocation = {
   'brainstorming': ['superpowers', 'external/superpowers/brainstorming'],
@@ -242,7 +243,8 @@ const expectedExternalLocation = {
   'learn-skill': ['learn-anything-skill', 'external/learn-anything-skill/learn-skill'],
   'emil-design-eng': ['emilkowalski-skills', 'external/emilkowalski-skills/emil-design-eng'],
   'review-animations': ['emilkowalski-skills', 'external/emilkowalski-skills/review-animations'],
-  'animation-vocabulary': ['emilkowalski-skills', 'external/emilkowalski-skills/animation-vocabulary']
+  'animation-vocabulary': ['emilkowalski-skills', 'external/emilkowalski-skills/animation-vocabulary'],
+  'show-me': ['humanlayer-skills', 'external/humanlayer-skills/show-me']
 };
 const actualExternal = Object.keys(registry.skills.external || {}).sort();
 if (JSON.stringify(actualExternal) !== JSON.stringify(expectedExternal)) {

@@ -2,7 +2,7 @@
 
 A curated toolkit of Agent Skills, built by studying top skill repositories across the industry.
 
-- **Status: Phase 2 shipped.** This repo currently ships 13 self-developed `SKILL.md` files plus 9 declared external references, a 59-pattern machine-readable library under `docs/patterns/`, a zero-dependency CLI (`bin/better-skills.js`) for installing skills, and mechanized repository checks: Gate 1 (`tools/validate.js`), Gate 2 (`tools/peer-review.js`), Gate 3 (`tools/pattern-alignment.js` + `tools/check-patterns.sh`), and Gate 4 evaluation-contract checks (`evaluation/harness/runner.js`). Gate 4 is explicitly `EVAL_SCHEMA_ONLY`; it does not verify behavior or artifacts. See [Roadmap](#roadmap) for what's deferred (agent execution / LLM judge / A/B tests / npm publish). Content claims that lack execution evidence are explicitly marked **TBD**.
+- **Status: Phase 2 shipped.** This repo currently ships 13 self-developed `SKILL.md` files plus 10 declared external references, a 59-pattern machine-readable library under `docs/patterns/`, a zero-dependency CLI (`bin/better-skills.js`) for installing skills, and mechanized repository checks: Gate 1 (`tools/validate.js`), Gate 2 (`tools/peer-review.js`), Gate 3 (`tools/pattern-alignment.js` + `tools/check-patterns.sh`), and Gate 4 evaluation-contract checks (`evaluation/harness/runner.js`). Gate 4 is explicitly `EVAL_SCHEMA_ONLY`; it does not verify behavior or artifacts. See [Roadmap](#roadmap) for what's deferred (agent execution / LLM judge / A/B tests / npm publish). Content claims that lack execution evidence are explicitly marked **TBD**.
 
 ## Skill namespace
 
@@ -11,8 +11,8 @@ Better-Skills self-developed skills use the `bs-` prefix, such as `bs-ui-master`
 ## What's actually in here today
 
 - **13 self-developed skills** under `skills/`: `bs-prdefine`, `bs-insight-product`, `bs-prospect-customer`, `bs-ui-master`, `bs-sw-master`, `bs-reflect-loop`, `bs-prose-master`, `bs-visual-article`, `bs-social-card`, `bs-skill-forge`, `bs-skill-auditor`, `bs-ppt-master`, `bs-uml-master`
-- **9 external references** declared in `external/sources.yaml` (`brainstorming`, `pptx`, `grill-me`, `grilling`, `writing-great-skills`, `learn-skill`, `emil-design-eng`, `review-animations`, `animation-vocabulary`); `bash tools/sync.sh` clones the upstream repos and symlinks them under `external/`
-- **Pattern index** at `docs/patterns/README.md` — currently a single-file index of ~60 named patterns; per-pattern files are coming in Phase 1.C
+- **10 external references** declared in `external/sources.yaml` (`brainstorming`, `pptx`, `grill-me`, `grilling`, `writing-great-skills`, `learn-skill`, `emil-design-eng`, `review-animations`, `animation-vocabulary`, `show-me`); `bash tools/sync.sh` clones the upstream repos and symlinks them under `external/`
+- **Pattern library** at `docs/patterns/README.md` — 59 named patterns, each backed by a machine-readable per-pattern file
 - **Research notes** at `docs/research/` — analysis of 12 top skill repositories, including [`mattpocock-analysis.md`](docs/research/mattpocock-analysis.md), [`learn-skill-analysis.md`](docs/research/learn-skill-analysis.md), and [`emilkowalski-analysis.md`](docs/research/emilkowalski-analysis.md). Other citations are missing today and will be added in Phase 3.
 - **Domain insights** at `docs/insights/` — verdicts on domain propositions, produced by a parallel expert-roundtable format (independent viewpoints + a red team + a moderator's cross-adjudication). Unlike `docs/research/`, the subject is a claim about a domain, not a skill repository. Entries: [`ppt-attention-ledger.md`](docs/insights/ppt-attention-ledger.md) (attention as a bid, not a managed resource) and [`ppt-architecture.md`](docs/insights/ppt-architecture.md) (the argument-and-exhibits foundation now incorporated into `bs-ppt-master`).
 - **Tooling**: `tools/validate.sh` (Gate 1), `tools/peer-review.js` (Gate 2), `tools/pattern-alignment.js` (Gate 3), `evaluation/harness/runner.js` (Gate 4 deterministic package/prompt checks), and `tools/sync.sh` (external sync). Gate 4 does not yet run an agent, open PPTX artifacts, use an LLM judge, or perform A/B tests.
@@ -84,7 +84,7 @@ The CLI is shipped as the npm package [`@yknothing/better-skills`](https://www.n
 > **Requires**: Node.js 18+, `git` (for cloning external skills), network access on first external-skill install.
 
 ```bash
-# List all skills in the registry (13 self-developed + 9 external references)
+# List all skills in the registry (13 self-developed + 10 external references)
 npx @yknothing/better-skills list
 
 # Install a skill into your Claude Code skills directory
@@ -118,7 +118,7 @@ bash tools/validate.sh skills/bs-ui-master/
 node bin/better-skills.js list
 node bin/better-skills.js add bs-ui-master
 
-# Or pull all external references at once (brainstorming, pptx, grill-me, grilling, writing-great-skills, learn-skill, emil-design-eng, review-animations, animation-vocabulary)
+# Or pull all external references at once (brainstorming, pptx, grill-me, grilling, writing-great-skills, learn-skill, emil-design-eng, review-animations, animation-vocabulary, show-me)
 bash tools/sync.sh
 ```
 
@@ -141,7 +141,7 @@ better-skills/
 ├── docs/
 │   ├── research/          # Analysis of 12 top skill repos (citations TBD)
 │   ├── insights/          # Domain-proposition verdicts (expert-roundtable format)
-│   ├── patterns/          # Pattern index (per-pattern files in Phase 1.C)
+│   ├── patterns/          # Pattern library (59 per-pattern files + README index)
 │   └── reviews/           # Skill review and acceptance records
 ├── evaluation/            # Deterministic Gate 4 harness + prompt datasets
 ├── tools/                 # validate.sh (Gate 1) + sync.sh (external sync)
