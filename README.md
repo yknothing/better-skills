@@ -122,6 +122,20 @@ node bin/better-skills.js add bs-ui-master
 bash tools/sync.sh
 ```
 
+### Repository shell hooks
+
+Claude Code and Codex use the same `tools/block-pipe-to-shell.sh` through their
+project hook configuration. Both commands resolve the Git root, including when
+started from a subdirectory. Run `bash tools/test-shell-hooks.sh` to check both
+configured commands with blocking and allowed payloads from both locations.
+
+The hook requires Bash, Git, jq, sed, and grep. It detects common downloader-to-shell
+patterns; it is not a complete shell parser or a security boundary. Missing jq or
+malformed JSON deliberately fails open, and quoted text can produce false positives.
+For Codex, review and trust the project hook in `/hooks` before relying on it;
+new or changed hooks are skipped until trusted ([official hook documentation](https://developers.openai.com/codex/hooks)).
+The contract tests execute the configured scripts, not the host's lifecycle dispatcher.
+
 ### For maintainers: publishing
 
 ```bash
