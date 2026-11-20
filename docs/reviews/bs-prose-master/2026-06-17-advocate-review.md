@@ -19,7 +19,7 @@ This compatibility header normalizes review metadata after the repository-wide `
 **Date**: 2026-06-17
 **Reviewer Role**: Advocate — find what is good, defend the design, surface strengths
 **Skill**: `bs-prose-master` (Standard-tier, Batch 1)
-**File**: `/Users/whatsup/workspace/2026/better-skills/skills/bs-prose-master/SKILL.md`
+**File**: `skills/bs-prose-master/SKILL.md`
 
 ---
 

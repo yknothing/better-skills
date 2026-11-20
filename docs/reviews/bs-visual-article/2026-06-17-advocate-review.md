@@ -20,7 +20,7 @@ This compatibility header normalizes review metadata after the repository-wide `
 **Date**: 2026-06-17
 **Reviewer**: code-reviewer agent
 **Skill**: bs-visual-article
-**Skill File**: /Users/whatsup/workspace/2026/better-skills/skills/bs-visual-article/SKILL.md
+**Skill File**: skills/bs-visual-article/SKILL.md
 
 ---
 
